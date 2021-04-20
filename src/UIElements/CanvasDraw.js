@@ -443,7 +443,9 @@ export function checkCollision(canvas, x, y) {
     let CollideCount = 0;
     // for loop to check all boxes in the list
     if (currentObjects.flatten() !== null && object !== null) {
+		
         currentObjects.flatten().forEach((item) => {
+		if (item.constructor.name === "Vertex") {
             //make sure coords are > coords of box u just placed + its width
             if (object.x === item.x && object.y === item.y) {
                 console.log("collides with itself");
@@ -462,6 +464,7 @@ export function checkCollision(canvas, x, y) {
                 CollideCount++;
                 console.log("Collided");
             }
+			}
         });
         // as long as never collided, change to new location
         if (CollideCount == 0) {
