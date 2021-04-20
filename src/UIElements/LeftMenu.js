@@ -375,7 +375,8 @@ export class LeftMenu extends React.Component{
                 <label className="LeftLabel">Destination Label</label>
                     <input id="DestLabel" className="LeftTitle" defaultValue={this.state.selectedObject.destEdgeEnd.label} onKeyUp={() => this.setEndLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
-
+                <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.setState({ menu: LeftMenuType.TreeView, selectedObject: null }) }}>Remove</button>
+                <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={(e) => this.stripElement(e)}>Make Straight</button>
                 <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
