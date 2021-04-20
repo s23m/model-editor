@@ -1,0 +1,351 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+.App {
+    text-align: center;
+}
+
+.Program {
+    display: flex;
+    overflow: hidden;
+    color: Black;
+    font-size: calc(0.8vh + 0.8vw);
+    width:100vw;
+    height:100vh;
+    flex-direction: column;
+}
+
+.TopMenus {
+    display: flex;
+    width: 100vw;
+    height: 5vh;
+    border: 2px groove #666666;
+    flex-direction: row;
+}
+
+#File-Menu{
+    display: flex;
+    border: 2px solid black;
+    width: 20vw;
+    align-items: center;
+    justify-content: left;
+    height: 5.1vh
+}
+
+#IconSelector{
+    background: white;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+input,button{
+    font-family: 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: Black;
+    font-size: calc(0.8vh + 0.8vw);
+}
+
+.IconSelector .dropdown-menu.show{
+    background-color: white;
+    border: 2px groove #666666;
+    overflow-y: auto;
+    max-height: 35vh;
+}
+
+#ColourSelector{
+    background: white;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.ColourSelector div.dropdown-menu.show{
+    background-color: white;
+    border: 2px groove #666666;
+    overflow-y: auto;
+    max-height: 40vh;
+    width: 200px;
+}
+
+.DropdownItem{
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+}
+
+.dropdownLabel{
+    width: 15vw;
+}
+
+.checkBoxContainer{
+    width: 5vw;
+}
+
+.CardinalityArea{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.LeftCheckboxLabel{
+    width: 10vw;
+}
+
+.LeftCheckbox{
+    width: 2vw;
+}
+
+.LowerPanel {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 95vh;
+}
+
+.TopBar {
+    display: flex;
+    border: 2px groove #666666;
+    min-height: 4.65vh;
+    width: 20vw;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    flex-direction: column;
+ }
+
+
+#downloader, #json-downloader, #File-Select, #file{
+    color: black;
+    text-decoration: none;
+    border: none;
+    background-color: white;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    word-wrap: normal;
+    white-space: normal;
+}
+
+.hidden{
+    display: none;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+
+#downloader:hover, #json-downloader:hover, #File-Select:hover{
+    cursor: pointer;
+}
+
+.DropdownItem{
+    background: white;
+}
+
+
+.TopBarLabel {
+    display: flex;
+    flex-direction: row;
+    border: 2px groove #666666;
+    height: 5vh;
+    width: 10vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.TopBarIdentifier{
+    display: block;
+    flex-direction: row;
+    border: 2px groove #666666;
+    height: 5vh;
+    width: 10vw;
+    line-height: 5vh;
+    text-align: end;
+    border-right: 0;
+}
+
+.TopBarSelector{
+    display: flex;
+    flex-direction: row;
+    border: 2px groove #666666;
+    height: 4.55vh;
+    width: 5vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.TopBarSearch {
+    display: flex;
+    flex-direction: row;
+    border: 2px groove #666666;
+    height: 4.7vh;
+    width: 15vw;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    color: Black;
+    font-size: calc(1vh + 1vw);
+}
+
+.TopBarIcon {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    height: 5vh;
+    width: 5vh;
+    border: 2px groove #666666;
+    align-items: center;
+    justify-content: center;
+}
+
+.LeftMenus{
+    display: flex;
+    height: 94.2vh;
+    width: 15vw;
+    border: 2px groove #666666;
+    flex-direction: column;
+    border-top: none;
+    background: none;
+    z-index: 5;
+    overflow: auto;
+}
+
+.Toolbar {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    border: 2px groove #666666;
+    height: 4.7vh;
+    width:15vw;
+}
+
+.ToolbarItem{
+    display: flex;
+    width: calc(15vw/4);
+    justify-content: center;
+}
+
+.VertexMenu, .ArrowMenu{
+    max-width: 15vw;
+}
+
+.LeftBar {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    border: 2px groove #666666;
+    height: calc(93vh/3);
+    justify-content: center;
+    width:14.7vw;
+}
+
+.LeftLabel, .LeftMenuButton {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    border: none;
+    border-top: 2px groove #666666;
+    border-bottom: 2px groove #666666;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    width: 15vw;
+}
+
+.LeftTitle {
+    border: none;
+    border-top: 2px groove #666666;
+    border-bottom: 2px groove #666666;
+    align-items: center;
+    justify-content: center;
+    width: 14.6vw;
+    background-color: #E0FFFF;
+}
+
+.LeftHeader{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    border: 2px groove #666666;
+    height: 7vh;
+    justify-content: center;
+    width:15vw;
+    background-color: #DDEEFF
+}
+
+.LeftContent {
+    border: none;
+    border-top: 2px groove #666666;
+    border-bottom: 2px groove #666666;
+    align-items: center;
+    justify-content: center;
+    resize:none;
+    height: 10vh;
+    width: 14.6vw;
+    background-color: #E0FFFF;
+}
+
+.jstree-node {
+    font-size: calc(0.5vh + 0.5vw);
+    text-align: left;
+}
+
+.jstree li > a > .jstree-icon {
+    display: none;
+}
+
+.LeftSelector {
+    width: 15vw;
+    text-align-last: center;
+}
+
+.CardinalityBox{
+    width: 5vw;
+}
+
+.Canvas {
+    height: 94vh;
+    width:85vw;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    border: 2px solid black;
+}
+
+.LeftSpacer {
+    align-items: center;
+    justify-content: center;
+}
+
+#drawCanvas {
+    background-color: #c0c0c0;
+}
+
+img {
+    margin: auto;
+    display: block;
+    width: 40%;
+    height: auto;
+    image-rendering: -moz-crisp-edges; /* Firefox */
+    image-rendering: -o-crisp-edges; /* Opera */
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+}
+
+.SemanticDomain {
+    position: fixed;
+    top: 5.7vh;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+    background: white; /* Just to visualize the extent */
+}
+
+.hidden {
+    display: none;
+}
