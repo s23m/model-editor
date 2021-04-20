@@ -2,10 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import {Vertex} from "../DataStructures/Vertex";
-import {Arrow} from "../DataStructures/Arrow";
-import {Tool} from "./LeftMenu";
-import {Graph} from "../DataStructures/Graph";
+import { Vertex } from "../DataStructures/Vertex";
+import { Arrow } from "../DataStructures/Arrow";
+import { Tool } from "./LeftMenu";
+import { Graph } from "../DataStructures/Graph";
 
 // Core variables
 var canvasElement;
@@ -47,10 +47,14 @@ var firstArrowJoint = true;
 
 var cancelDraw = false;
 
+//Block Past location var
+var past_location = [];
+var selectedObject;
+
 // Init
 export function assignElement(elementID) {
     canvasElement = document.getElementById(elementID);
-    canvasContext =  canvasElement.getContext("2d");
+    canvasContext = canvasElement.getContext("2d");
 
     resetMouseOrigin();
 
@@ -59,10 +63,10 @@ export function assignElement(elementID) {
 export function getModelName() {
     let nameElement = document.getElementById("ModelName")
 
-    if (nameElement === null){
+    if (nameElement === null) {
         return "Unnamed Model"
     }
-    if(nameElement.value === "" || nameElement.value === null || nameElement.value === undefined) {
+    if (nameElement.value === "" || nameElement.value === null || nameElement.value === undefined) {
         return "Unnamed Model"
     }
     return nameElement.value;
@@ -98,11 +102,11 @@ export function drawAll() {
     canvasContext.resetTransform();
     canvasContext.scale(getEffectiveZoom(), getEffectiveZoom());
 
-    for (let i = 0; i < canvasHeight; i+= (canvasHeight/yRows*zoom/100 * 200/zoom)/2) {
-        let y1 = findNearestGridY(i,1);
-        let y2 = findNearestGridY(i,0);
-        drawLine(0,y1,canvasWidth,y1,"#D0D0D0");
-        drawLine(0,y2,canvasWidth,y2,"#E0E0E0");
+    for (let i = 0; i < canvasHeight; i += (canvasHeight / yRows * zoom / 100 * 200 / zoom) / 2) {
+        let y1 = findNearestGridY(i, 1);
+        let y2 = findNearestGridY(i, 0);
+        drawLine(0, y1, canvasWidth, y1, "#D0D0D0");
+        drawLine(0, y2, canvasWidth, y2, "#E0E0E0");
     }
 
     currentObjects.flatten().forEach((item) => {
@@ -115,13 +119,13 @@ export function drawAll() {
 
 export function deleteElement(element) {
     if (element !== null) {
-        if (!currentObjects.remove(element)){
+        if (!currentObjects.remove(element)) {
             console.error("Failed to delete object with UUID %s", element.semanticIdentity.UUID);
         }
     } else {
         console.error("Attempted to delete a null element");
     }
-    
+
     drawAll()
 }
 
@@ -131,23 +135,23 @@ export function updateRows() {
 }
 
 // Format co-ordinate so that the value aligns with a row
-function findNearestGridY(y,top) {
+function findNearestGridY(y, top) {
 
     // distance to topmost top rowLine
-    let slotHeight = canvasHeight/yRows*zoom/100 * 200/zoom;
+    let slotHeight = canvasHeight / yRows * zoom / 100 * 200 / zoom;
 
     // which row to put it in
-    let slot = Math.floor(y/slotHeight);
+    let slot = Math.floor(y / slotHeight);
 
     // y co-ordinate of that row (if bottom then go up by row gap)
-    return slotHeight * slot + (slotHeight/2 * + top)
+    return slotHeight * slot + (slotHeight / 2 * + top)
 }
 
 // Checks to see which side it should resize on
 function checkResizeBounds(x, y) {
     // Iterate through all objects and only check vertices
     var currentObjectsFlattened = currentObjects.flatten();
-    for(let i = 0; i < currentObjectsFlattened.length; i++){
+    for (let i = 0; i < currentObjectsFlattened.length; i++) {
         let item = currentObjectsFlattened[i];
 
         if (item.constructor.name === "Vertex") {
@@ -165,14 +169,14 @@ function checkResizeBounds(x, y) {
             let x2 = bounds[2];
             let y2 = bounds[3];
 
-            let top = Math.abs(y1-y) < tolerance;
-            let bottom = Math.abs(y2-y) <tolerance;
-            let left = Math.abs(x1-x) < tolerance;
-            let right = Math.abs(x2-x) < tolerance;
+            let top = Math.abs(y1 - y) < tolerance;
+            let bottom = Math.abs(y2 - y) < tolerance;
+            let left = Math.abs(x1 - x) < tolerance;
+            let right = Math.abs(x2 - x) < tolerance;
             let inYbounds = y > y1 && y < y2;
             let inXbounds = x > x1 && x < x2;
 
-            if (right && inYbounds){
+            if (right && inYbounds) {
                 return [item, "right"];
             }
 
@@ -234,23 +238,23 @@ function getConnectionDataForArrow(cursorX, cursorY) {
     }
 
     // If can't snap to right angles
-    if (arrowPath.length < 1 || coordinate[0] === 0) return {coord:coordinate, snapped:nearest!== null, nearest:nearest};
+    if (arrowPath.length < 1 || coordinate[0] === 0) return { coord: coordinate, snapped: nearest !== null, nearest: nearest };
 
     // Get angle
-    let lastPathX = arrowPath[arrowPath.length-1][1];
-    let lastPathY = arrowPath[arrowPath.length-1][2];
-    let x = coordinate[1]-lastPathX;
-    let y = coordinate[2]-lastPathY;
+    let lastPathX = arrowPath[arrowPath.length - 1][1];
+    let lastPathY = arrowPath[arrowPath.length - 1][2];
+    let x = coordinate[1] - lastPathX;
+    let y = coordinate[2] - lastPathY;
 
     // must be y,x check documentation if you dont believe me
-    let angle = Math.atan2(y, x) * (180/Math.PI);
+    let angle = Math.atan2(y, x) * (180 / Math.PI);
     // Make positive
     angle = (angle + 360) % 360;
     // Get relative
     let relAngle = angle % 90;
 
     // Check if it should snap to right angles
-    if (relAngle > 90-angleThreshold || relAngle < angleThreshold) {
+    if (relAngle > 90 - angleThreshold || relAngle < angleThreshold) {
         // Get length
         let l = getDistance(0, 0, x, y);
 
@@ -258,31 +262,31 @@ function getConnectionDataForArrow(cursorX, cursorY) {
         let angles = [0, 90, 180, 270, 360];
         let nearestAngle = angles[0];
         for (let i = 1; i < angles.length; i++) {
-            if (Math.abs(angles[i]-angle) < Math.abs(nearestAngle-angle)) {
+            if (Math.abs(angles[i] - angle) < Math.abs(nearestAngle - angle)) {
                 nearestAngle = angles[i];
             }
         }
-        let nearestRad = nearestAngle * (Math.PI/180);
+        let nearestRad = nearestAngle * (Math.PI / 180);
 
         // Create vector
         let xv = l * Math.cos(nearestRad);
         let yv = l * Math.sin(nearestRad);
 
         // Create point (not vector sitting on 0,0)
-        coordinate = [coordinate[0], lastPathX+xv, lastPathY+yv];
+        coordinate = [coordinate[0], lastPathX + xv, lastPathY + yv];
     }
 
-    return {coord:coordinate, snapped:nearest!== null, nearest:nearest}
+    return { coord: coordinate, snapped: nearest !== null, nearest: nearest }
 }
 
-function getSelectedObject(canvas){
+function getSelectedObject(canvas) {
     return canvas.props.mainState.selectedObject
 }
 
-function resizeObjectOnMouseMove(e,resizeVars) {
+function resizeObjectOnMouseMove(e, resizeVars) {
     let coords = getGraphXYFromMouseEvent(e);
 
-    resizeVars[0].expandSide(resizeVars[1], coords[0], coords[1],canvasContext);
+    resizeVars[0].expandSide(resizeVars[1], coords[0], coords[1], canvasContext);
 }
 
 // Sets the objects uuid and adds it to the root of currentObjects
@@ -311,33 +315,33 @@ export function newFile() {
     drawAll(currentObjects);
 }
 
-function arrowToolSelected(){
+function arrowToolSelected() {
     return arrowType === Tool.Visibility || arrowType === Tool.Edge || arrowType === Tool.Specialisation
 }
 
 export function getObjectFromUUID(UUID) {
     let foundObject;
     currentObjects.flatten().forEach((item) => {
-        if(item.semanticIdentity.UUID === UUID){
+        if (item.semanticIdentity.UUID === UUID) {
             foundObject = item;
         }
     });
     return foundObject;
 }
 
-function findNearestArrowPointIndex(x,y){
-    let nearestPointIndex= -1;
+function findNearestArrowPointIndex(x, y) {
+    let nearestPointIndex = -1;
     // Nearest distance here is used as a tolerance variable
     let nearestDistance = 30;
     let cDist;
     let nearestArrow = null;
 
     currentObjects.flatten().forEach((item) => {
-        if(item.constructor.name === "Arrow") {
+        if (item.constructor.name === "Arrow") {
             item.path.forEach((point) => {
-                cDist = Math.hypot(x-point[0],y-point[1]);
+                cDist = Math.hypot(x - point[0], y - point[1]);
                 console.log(cDist);
-                if(cDist < nearestDistance){
+                if (cDist < nearestDistance) {
                     nearestDistance = cDist;
                     nearestPointIndex = item.path.indexOf(point);
                     nearestArrow = item
@@ -348,20 +352,20 @@ function findNearestArrowPointIndex(x,y){
     return [nearestPointIndex, nearestArrow]
 }
 
-function moveArrowPointOnMouseMove(e,index,arrow) {
-    let x,y;
-    [x,y] = getGraphXYFromMouseEvent(e);
-    let conData = getConnectionDataForArrow(x,y);
+function moveArrowPointOnMouseMove(e, index, arrow) {
+    let x, y;
+    [x, y] = getGraphXYFromMouseEvent(e);
+    let conData = getConnectionDataForArrow(x, y);
     arrow.pathData[index] = conData['nearest'];
 
-    if(conData['snapped'] === false) {
+    if (conData['snapped'] === false) {
         let coord = conData['coord'];
         arrow.path[index] = [coord[1], coord[2]]
-    }else{
+    } else {
         let vertexUUID = conData['nearest'][1];
         let vertex = getObjectFromUUID(vertexUUID);
 
-        if(vertex !== undefined) {
+        if (vertex !== undefined) {
             arrow.path[index] = arrow.rebuildPath()
         }
     }
@@ -370,7 +374,7 @@ function moveArrowPointOnMouseMove(e,index,arrow) {
 
 // Event based functions
 export function onLeftMousePress(canvas, x, y) {
-    let resizeVars = checkResizeBounds(x,y);
+    let resizeVars = checkResizeBounds(x, y);
 
 
     if (canvas.tool === Tool.Vertex || canvas.tool === Tool.Select) {
@@ -385,8 +389,8 @@ export function onLeftMousePress(canvas, x, y) {
             }
         }
 
-        let intersection = findIntersected(x,y);
-        if(canvas.tool === Tool.Vertex && intersection !== null){
+        let intersection = findIntersected(x, y);
+        if (canvas.tool === Tool.Vertex && intersection !== null) {
             console.log("Selecting intersected Vertex");
             canvas.props.setLeftMenu(intersection);
             canvas.props.setMode(Tool.Select);
@@ -395,11 +399,11 @@ export function onLeftMousePress(canvas, x, y) {
         }
     }
 
-    if(canvas.tool === Tool.Select){
-        let index,arrow;
-        [index,arrow] = findNearestArrowPointIndex(x,y);
-        console.log(index,arrow);
-        if(arrow === getSelectedObject(canvas)) {
+    if (canvas.tool === Tool.Select) {
+        let index, arrow;
+        [index, arrow] = findNearestArrowPointIndex(x, y);
+        console.log(index, arrow);
+        if (arrow === getSelectedObject(canvas)) {
             if (index !== -1) {
                 resizing = true;
                 let func = function (e) {
@@ -419,12 +423,54 @@ export function onLeftMousePress(canvas, x, y) {
     mouseStartY = y;
 
     // Enable example draw while user is deciding shape
-    canvasElement.onmousemove = function(e) { onMouseMove(e, canvas) }
+    canvasElement.onmousemove = function (e) { onMouseMove(e, canvas) }
+}
+export function onRightMousePress(canvas, x, y) {
+    selectedObject = findIntersected(x, y);
+    if (selectedObject != null) {
+        // saves position of clicked variable as global
+        past_location = [selectedObject.x, selectedObject.y];
+    }
 }
 
 export function setArrowType(type) {
     arrowType = type
 }
+
+//make sure boxes don't collide
+export function checkCollision(canvas, x, y) {
+    let object = selectedObject;
+    let CollideCount = 0;
+    // for loop to check all boxes in the list
+    if (currentObjects.flatten() !== null && object !== null) {
+        currentObjects.flatten().forEach((item) => {
+            //make sure coords are > coords of box u just placed + its width
+            if (object.x === item.x && object.y === item.y) {
+                console.log("collides with itself");
+            }
+            // error of 10 pixels for item's height
+            else if ((object.y > (item.y + item.height +10)) || (object.x > (item.x + item.width))
+                || (item.x > (object.x + object.width)) || (item.y > (object.y + object.height+10))) {
+                console.log("NoCollide");
+            }
+            else {
+                // revert to past stored location
+                object.x = past_location[0];
+                object.y = past_location[1];
+
+                drawAll(currentObjects);
+                CollideCount++;
+                console.log("Collided");
+            }
+        });
+        // as long as never collided, change to new location
+        if (CollideCount == 0) {
+            past_location = [object.x, object.y];
+            console.log(CollideCount);
+        }
+    }
+}
+
 
 export function onRightMouseRelease(canvas, x, y) {
     if (arrowToolSelected()) {
@@ -448,7 +494,7 @@ export function onRightMouseRelease(canvas, x, y) {
 }
 
 export function onLeftMouseRelease(canvas, x, y) {
-    if(cancelDraw){
+    if (cancelDraw) {
         cancelDraw = false;
         return;
     }
@@ -464,7 +510,7 @@ export function onLeftMouseRelease(canvas, x, y) {
 
     if (arrowToolSelected()) {
 
-        if (getConnectionDataForArrow(x,y).snapped && !firstArrowJoint) {
+        if (getConnectionDataForArrow(x, y).snapped && !firstArrowJoint) {
             // Create
             let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
 
@@ -518,25 +564,34 @@ function onMouseMove(e, canvas) {
 }
 
 export function onMiddleClick(canvas, x, y) {
+    // for arrows
     startMoveX = x;
     startMoveY = y;
-
+    // selecting the object based on coordinate
+    // if it doesnt find an object dont run it
     let selectedObject = findIntersected(x, y);
-    canvasElement.onmousemove = function(e) {moveObject(e, selectedObject)}
+    if (selectedObject != null) {
+        // check the distance between the mouse and the object
+        let savedisX = x - selectedObject.x;
+        let savedisY = y - selectedObject.y;
+        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, savedisX, savedisY) }
+    }
+
 }
 
 export function onMouseLeave() {
     canvasElement.onmousemove = {};
-    firstArrowJoint  = true;
+    firstArrowJoint = true;
     drawAll()
 }
 
-function moveObject(e, object) {
+// moving objects in respect to cursor values savedisX, savedisY
+function moveObject(e, object, savedisX, savedisY) {
     if (object != null) {
         if (object.constructor.name === "Vertex") {
             let position = getGraphXYFromMouseEvent(e);
-            let x = position[0];
-            let y = position[1];
+            let x = position[0] - savedisX;
+            let y = position[1] - savedisY;
 
             object.x = x;
             object.y = y;
@@ -605,10 +660,10 @@ export function drawMarker(xpos, ypos) {
     canvasContext.strokeStyle = strokeColour;
     let oldFillStyle = canvasContext.fillStyle;
     canvasContext.fillStyle = fillColour;
-    
+
     canvasContext.globalAlpha = 1.0;
     canvasContext.beginPath();
-    canvasContext.arc(xpos, ypos, radius, 0, Math.PI*2, false);
+    canvasContext.arc(xpos, ypos, radius, 0, Math.PI * 2, false);
     canvasContext.fill();
     canvasContext.stroke();
     canvasContext.closePath();
@@ -620,7 +675,7 @@ export function drawMarker(xpos, ypos) {
 
 // Gets the distance between x1, y1 and x2, y2
 export function getDistance(x1, y1, x2, y2) {
-    return Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
 
 // Finds the object that is intersected with the cursor, returns null if no objects are intersected
@@ -641,7 +696,7 @@ function createObject(canvas, x1, y1, x2, y2) {
     let newPath;
     let currentObjectsFlattened = currentObjects.flatten();
 
-    if(canvas.tool === "Vertex") {
+    if (canvas.tool === "Vertex") {
         // Get positions
         let pos = orderCoordinates(x1, y1, x2, y2);
         let vy1 = findNearestGridY(pos[1], 0);
@@ -650,7 +705,7 @@ function createObject(canvas, x1, y1, x2, y2) {
         // Add vertex
         return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
 
-    } else if(arrowToolSelected()) {
+    } else if (arrowToolSelected()) {
         // Generate path
         newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
 
@@ -672,8 +727,8 @@ function createObject(canvas, x1, y1, x2, y2) {
 export function getGraphXYFromMouseEvent(e) {
     resetMouseOrigin();
 
-    let x = (e.clientX-mouseOriginX)/getEffectiveZoom();
-    let y = (e.clientY-mouseOriginY)/getEffectiveZoom();
+    let x = (e.clientX - mouseOriginX) / getEffectiveZoom();
+    let y = (e.clientY - mouseOriginY) / getEffectiveZoom();
 
     return [x, y];
 }
@@ -700,7 +755,7 @@ function orderCoordinates(sx, sy, ex, ey) {
 
 // Gets the effective (percentage) zoom from the current zoom
 function getEffectiveZoom() {
-    return zoom/100;
+    return zoom / 100;
 }
 
 // This should be used whenever the window itself resizes
@@ -721,7 +776,7 @@ function recalculateScale() {
 }
 
 function clearCanvas() {
-     // Fill base canvas
+    // Fill base canvas
     canvasContext.fillStyle = "#ffffff";
     canvasContext.fillRect(0, 0, canvasWidth, canvasHeight);
 }
