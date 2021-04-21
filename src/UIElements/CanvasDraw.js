@@ -85,14 +85,14 @@ export function resetMouseOrigin() {
     drawAll()
 }
 
-function drawLine(x0, y0, x1, y1, color) {
+/*function drawLine(x0, y0, x1, y1, color) {
     canvasContext.beginPath();
     canvasContext.strokeStyle = color;
     canvasContext.moveTo(x0, y0);
     canvasContext.lineTo(x1, y1);
     canvasContext.stroke();
     canvasContext.strokeStyle = "#000000"
-}
+}*/
 
 // Core functions
 export function drawAll() {
@@ -102,12 +102,12 @@ export function drawAll() {
     canvasContext.resetTransform();
     canvasContext.scale(getEffectiveZoom(), getEffectiveZoom());
 
-    for (let i = 0; i < canvasHeight; i += (canvasHeight / yRows * zoom / 100 * 200 / zoom) / 2) {
-        let y1 = findNearestGridY(i, 1);
-        let y2 = findNearestGridY(i, 0);
-        drawLine(0, y1, canvasWidth, y1, "#D0D0D0");
-        drawLine(0, y2, canvasWidth, y2, "#E0E0E0");
-    }
+    //for (let i = 0; i < canvasHeight; i += (canvasHeight / yRows * zoom / 100 * 200 / zoom) / 2) {
+        //let y1 = findNearestGridY(i, 1);
+        //let y2 = findNearestGridY(i, 0);
+        //drawLine(0, y1, canvasWidth, y1, "#D0D0D0");
+        //drawLine(0, y2, canvasWidth, y2, "#E0E0E0");
+    //}
 
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
@@ -467,7 +467,7 @@ export function checkCollision(canvas, x, y) {
 			}
         });
         // as long as never collided, change to new location
-        if (CollideCount == 0) {
+        if (CollideCount === 0) {
             past_location = [object.x, object.y];
             console.log(CollideCount);
         }
