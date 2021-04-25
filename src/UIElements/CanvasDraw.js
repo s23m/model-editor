@@ -443,7 +443,6 @@ export function checkCollision(canvas, x, y) {
 	console.log(past_size);
     // for loop to check all boxes in the list
     if (currentObjects.flatten() !== null && object !== null) {
-		
         currentObjects.flatten().forEach((item) => {
 		if (item.constructor.name === "Vertex") {
             //make sure coords are > coords of box u just placed + its width
