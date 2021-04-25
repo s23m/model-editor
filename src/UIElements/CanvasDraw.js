@@ -49,7 +49,9 @@ var cancelDraw = false;
 
 //Block Past location var
 var past_location = [];
+var past_size = [];
 var selectedObject;
+export var blockBeenSelected = false;
 
 // Init
 export function assignElement(elementID) {
@@ -85,14 +87,6 @@ export function resetMouseOrigin() {
     drawAll()
 }
 
-function drawLine(x0, y0, x1, y1, color) {
-    canvasContext.beginPath();
-    canvasContext.strokeStyle = color;
-    canvasContext.moveTo(x0, y0);
-    canvasContext.lineTo(x1, y1);
-    canvasContext.stroke();
-    canvasContext.strokeStyle = "#000000"
-}
 
 // Core functions
 export function drawAll() {
@@ -101,13 +95,6 @@ export function drawAll() {
 
     canvasContext.resetTransform();
     canvasContext.scale(getEffectiveZoom(), getEffectiveZoom());
-
-    for (let i = 0; i < canvasHeight; i += (canvasHeight / yRows * zoom / 100 * 200 / zoom) / 2) {
-        let y1 = findNearestGridY(i, 1);
-        let y2 = findNearestGridY(i, 0);
-        drawLine(0, y1, canvasWidth, y1, "#D0D0D0");
-        drawLine(0, y2, canvasWidth, y2, "#E0E0E0");
-    }
 
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
@@ -279,7 +266,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
     return { coord: coordinate, snapped: nearest !== null, nearest: nearest }
 }
 
-function getSelectedObject(canvas) {
+export function getSelectedObject(canvas) {
     return canvas.props.mainState.selectedObject
 }
 
@@ -376,11 +363,11 @@ function moveArrowPointOnMouseMove(e, index, arrow) {
 export function onLeftMousePress(canvas, x, y) {
     let resizeVars = checkResizeBounds(x, y);
 
-
+	
     if (canvas.tool === Tool.Vertex || canvas.tool === Tool.Select) {
-
         if (resizeVars[0] !== null) {
             if (resizeVars[0] === getSelectedObject(canvas)) {
+				saveBlockStates(canvas,x,y);
                 resizing = true;
                 canvasElement.onmousemove = function (e) {
                     resizeObjectOnMouseMove(e, resizeVars);
@@ -397,6 +384,7 @@ export function onLeftMousePress(canvas, x, y) {
             cancelDraw = true;
             return;
         }
+		
     }
 
     if (canvas.tool === Tool.Select) {
@@ -422,15 +410,25 @@ export function onLeftMousePress(canvas, x, y) {
     mouseStartX = x;
     mouseStartY = y;
 
+	
+
     // Enable example draw while user is deciding shape
     canvasElement.onmousemove = function (e) { onMouseMove(e, canvas) }
 }
-export function onRightMousePress(canvas, x, y) {
-    selectedObject = findIntersected(x, y);
-    if (selectedObject != null) {
+export function saveBlockStates(canvas, x, y) {
+	selectedObject = getSelectedObject(canvas);
+	if(getSelectedObject(canvas) === null)
+	{
+		selectedObject = findIntersected(x, y);
+	}
+    if(selectedObject !== null) {
         // saves position of clicked variable as global
+		blockBeenSelected = true;
+		
+		console.log("Block States Have been Saved");
         past_location = [selectedObject.x, selectedObject.y];
-    }
+		past_size = [selectedObject.width, selectedObject.height];
+    } 
 }
 
 export function setArrowType(type) {
@@ -439,11 +437,12 @@ export function setArrowType(type) {
 
 //make sure boxes don't collide
 export function checkCollision(canvas, x, y) {
+	console.log("Collision Tests:");
     let object = selectedObject;
     let CollideCount = 0;
+	console.log(past_size);
     // for loop to check all boxes in the list
     if (currentObjects.flatten() !== null && object !== null) {
-		
         currentObjects.flatten().forEach((item) => {
 		if (item.constructor.name === "Vertex") {
             //make sure coords are > coords of box u just placed + its width
@@ -459,18 +458,21 @@ export function checkCollision(canvas, x, y) {
                 // revert to past stored location
                 object.x = past_location[0];
                 object.y = past_location[1];
-
-                drawAll(currentObjects);
+				object.width = past_size[0];
+				object.height = past_size[1];
                 CollideCount++;
                 console.log("Collided");
             }
 			}
         });
         // as long as never collided, change to new location
-        if (CollideCount == 0) {
+        if (CollideCount === 0) {
             past_location = [object.x, object.y];
+			past_size = [object.width, object.height]
             console.log(CollideCount);
         }
+		blockBeenSelected = false;
+		drawAll(currentObjects);
     }
 }
 
@@ -488,7 +490,6 @@ export function onRightMouseRelease(canvas, x, y) {
 
         // Disable example draw
         canvasElement.onmousemove = null;
-
         drawAll(currentObjects);
 
         canvas.props.setLeftMenu(newObject)
@@ -572,8 +573,10 @@ export function onMiddleClick(canvas, x, y) {
     startMoveY = y;
     // selecting the object based on coordinate
     // if it doesnt find an object dont run it
+	
     let selectedObject = findIntersected(x, y);
-    if (selectedObject != null) {
+    if (selectedObject !== null) {
+		saveBlockStates(canvas, x, y);
         // check the distance between the mouse and the object
         let savedisX = x - selectedObject.x;
         let savedisY = y - selectedObject.y;
@@ -687,7 +690,7 @@ export function findIntersected(x, y) {
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
             if (item.intersects(x, y)) {
-                console.log("Intersection detected with ", item.constructor.name);
+                //console.log("Intersection detected with ", item.constructor.name);
                 selectedItem = item;
             }
         }
