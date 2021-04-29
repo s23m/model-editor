@@ -4,6 +4,7 @@ import { Tool } from './LeftMenu';
 
 var movingAllowed = false;
 
+
 export class Canvas extends React.Component {
     constructor(props) {
         super();
@@ -28,7 +29,7 @@ export class Canvas extends React.Component {
     ocm = (e) => {
         e.preventDefault();
     };
-
+    // What happens if u click anywhere on the canvas
     mouseDown = (e, canvas) => {
         let position = canvasDraw.getGraphXYFromMouseEvent(e);
         let x = position[0]; let y = position[1];
@@ -39,6 +40,8 @@ export class Canvas extends React.Component {
 
         // If it was a left click
         if (e.button === 0) {
+			this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
+			canvasDraw.saveBlockStates(canvas,x,y,1);
             canvasDraw.onLeftMousePress(canvas, x, y);
         }
 
@@ -48,11 +51,11 @@ export class Canvas extends React.Component {
             canvasDraw.onMiddleClick(canvas, x, y)
         }
 
+        // function to move the box with right click
         function rightClickDrag (e){
             let newCoords = canvasDraw.getGraphXYFromMouseEvent(e);
             let x2 = newCoords[0];
             let y2 = newCoords[1];
-
             let dist = Math.hypot(x, y, x2, y2);
 
             if (dist > 10 && movingAllowed) {
@@ -60,10 +63,13 @@ export class Canvas extends React.Component {
             }
         }
 
-        //If it was a right click
-        if (e.button === 2){
+        //If it was a right click to move the box
+        if (e.button === 2) {
+		//blue select
+			this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
             movingAllowed = true;
-            document.addEventListener("mousemove", rightClickDrag,{once:true})
+            document.addEventListener("mousemove", rightClickDrag, { once: true })
+            
         }
     };
 
@@ -77,32 +83,35 @@ export class Canvas extends React.Component {
         // If it was a left click
         if (e.button === 0) {
             if(canvas.tool === Tool.Select){
-                this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
                 canvasDraw.drawAll()
-            }else {
+            }
+			else {
                 canvasDraw.onLeftMouseRelease(canvas, x, y);
             }
+
         }
 
         // if it was a right click
         if (e.button === 2) {
 
             if (movingAllowed) {
-                canvasDraw.solidifyObject();
+                canvasDraw.solidifyObject(); 
                 movingAllowed = false;
             }
-
             if (canvasDraw.arrowPath.length !== 0) {
                 canvasDraw.onRightMouseRelease(canvas, x, y)
             }
-
+			
         }
-
+		
         if (e.button === 1) {
             window.setTimeout(() => {canvasDraw.solidifyObject()},200)
 
         }
-
+		if (canvasDraw.blockBeenSelected === true){
+			canvasDraw.checkCollision(canvas, x, y);
+		}
+		
     };
 
     mouseLeave() {
