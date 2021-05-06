@@ -212,15 +212,16 @@ export class MainProgramClass extends React.Component {
 
                     <input className="TopBarSearch" id="ModelName" type = "text" name = "modelName" placeholder = "Model Name" onChange={(e) => this.setModelName(e)}/>
 
-                    <div className="TopBarIcon">&nbsp;</div>
+                    {/*<div className="TopBarIcon">&nbsp;</div>*/}
                     {/*The + and - are backwards on purpose here*/}
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>
 
-                    <div className="TopBarLabel"> {this.state.zoomLevel}% </div>
+                    {/*<div className="TopBarLabel"> {this.state.zoomLevel}% </div>*/}
+                    
                     <div className="TopBarIcon" onClick={() => this.zoom('+')}> + </div>
 
-                    <div className="TopBarIdentifier">Rows:&nbsp;</div>
-                    <input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>
+                    {/*<div className="TopBarIdentifier">Rows:&nbsp;</div>*/}
+                    {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
 
                 </div>
 
