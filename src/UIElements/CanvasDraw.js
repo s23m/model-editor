@@ -15,6 +15,9 @@ var canvasContext;
 var mouseStartX;
 var mouseStartY;
 
+var previousObject;
+var startX, startY, endX, endY;
+
 var yRows = 70;
 
 export var mouseOriginX;
@@ -29,6 +32,8 @@ var zoom = 200.0;
 
 // Renderable objects
 export var currentObjects = new Graph();
+
+export var savedArrows = [];
 
 // Arrow Path
 export var arrowPath = [];
@@ -378,7 +383,7 @@ export function onLeftMousePress(canvas, x, y) {
 
         let intersection = findIntersected(x, y);
         if (canvas.tool === Tool.Vertex && intersection !== null) {
-            console.log("Selecting intersected Vertex");
+            //console.log("Selecting intersected Vertex");
             canvas.props.setLeftMenu(intersection);
             canvas.props.setMode(Tool.Select);
             cancelDraw = true;
@@ -386,7 +391,7 @@ export function onLeftMousePress(canvas, x, y) {
         }
 		
     }
-
+	
     if (canvas.tool === Tool.Select) {
         let index, arrow;
         [index, arrow] = findNearestArrowPointIndex(x, y);
@@ -407,6 +412,7 @@ export function onLeftMousePress(canvas, x, y) {
         }
     }
 
+
     mouseStartX = x;
     mouseStartY = y;
 
@@ -415,6 +421,8 @@ export function onLeftMousePress(canvas, x, y) {
     // Enable example draw while user is deciding shape
     canvasElement.onmousemove = function (e) { onMouseMove(e, canvas) }
 }
+
+//save the position of the clicked variable as global
 export function saveBlockStates(canvas, x, y) {
 	selectedObject = getSelectedObject(canvas);
 	if(getSelectedObject(canvas) === null)
@@ -422,7 +430,6 @@ export function saveBlockStates(canvas, x, y) {
 		selectedObject = findIntersected(x, y);
 	}
     if(selectedObject !== null) {
-        // saves position of clicked variable as global
 		blockBeenSelected = true;
 		
 		console.log("Block States Have been Saved");
@@ -497,6 +504,73 @@ export function onRightMouseRelease(canvas, x, y) {
     }
 }
 
+//line intersector
+export function lineIntersector(canvas, x, y, secondObject) {
+	endX = 0;
+	endY = 0;
+
+	startX = 0;
+	startY = 0;
+
+	console.log("\n \n arrow path: " + arrowPath + "\n\n");
+	arrowPath = [];
+	
+
+	// previous object = first object clicked. need to do this for tree
+
+	//previous object is below
+    if(previousObject.y > y && previousObject.x + previousObject.width > x) {
+		console.log("\n\n\n prev object was below \n\n\n");
+		startY = previousObject.y;
+		startX = previousObject.x + (0.5*previousObject.width);
+
+		endY = secondObject.y + secondObject.height+10;
+		endX = secondObject.x + (0.5*secondObject.width);
+
+	} 
+	// previous object is above
+	else if(previousObject.y < y && previousObject.x + previousObject.width > x && previousObject.x < x) 
+	{
+		console.log("\n\n\n prev object was above \n\n\n");
+		startY = previousObject.y + previousObject.height+10; //+ means go to bottom
+		startX = previousObject.x + (0.5*previousObject.width);
+
+		endY = secondObject.y;
+		endX = secondObject.x + (0.5*secondObject.width);
+	}
+	//previous object is left of //if you click higher it counts as above
+
+	else if (previousObject.width+previousObject.x < x) {
+		console.log("\n\n\nprev object was left of\n\n\n");
+		startY = previousObject.y+(0.5*previousObject.height+10);
+		startX = previousObject.x + previousObject.width;
+
+		endX = secondObject.x;
+		endY = secondObject.y + (0.5*secondObject.height+10);
+	}
+	else if (previousObject.x > x) {
+		console.log("\n\n\nprev object was right of\n\n\n");
+		startY = previousObject.y+(0.5*previousObject.height+10);
+		startX = previousObject.x;
+
+		endX = secondObject.x+secondObject.width;
+		endY = secondObject.y + (0.5*secondObject.height+10);
+	}
+
+	arrowPath.push(getConnectionDataForArrow(startX, startY).coord);
+
+	
+	let newObject = createObject(canvas, startX, startY, endX, endY);
+
+	
+	return newObject;
+
+	
+
+}
+
+
+
 export function onLeftMouseRelease(canvas, x, y) {
     if (cancelDraw) {
         cancelDraw = false;
@@ -516,20 +590,61 @@ export function onLeftMouseRelease(canvas, x, y) {
 
         if (getConnectionDataForArrow(x, y).snapped && !firstArrowJoint) {
             // Create
-            let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+			
+			
+			var secondObject = findIntersected(x,y);
+			var newObject;
+
+			if(previousObject !== null && secondObject !== null) {
+			console.log("\n the new one \n");
+				newObject = lineIntersector(canvas, x, y,secondObject);
+				for (let j = 0; j < savedArrows.length; j++) {
+					for (let k = 1+j; k < savedArrows.length; k++){
+						if (savedArrows[j][0][0] === savedArrows[k][0][0] && savedArrows[j][0][1] === savedArrows[k][0][1] && savedArrows[j][1][0] === savedArrows[k][1][0] && savedArrows[j][1][1] === savedArrows[k][1][1]) {
+						let removethis = findIntersected(savedArrows[j][0][0],savedArrows[j][0][1]);
+						deleteElement(removethis);
+					}
+				}
+			
+			}
+
+				//set second object to be child of first object
+			} else {
+			console.log("\n the old one \n");
+			  newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+			}
 
             // Reset path
             arrowPath = [];
             firstArrowJoint = true;
+			previousObject = null;
 
             addObject(newObject);
 
             drawAll(currentObjects);
 
+
+			//converting all arrows to savedArrows array
+			let i = 0;
+			currentObjects.flatten().forEach((item) => {
+			if (item.constructor.name === "Arrow") {
+				savedArrows[i] = item.path;
+				i++;
+				}
+
+			});
+			
+
             canvas.props.setLeftMenu(newObject)
             canvas.props.setMode(Tool.Select);
 
         } else {
+
+		//save object here
+			previousObject = findIntersected(x,y);
+			console.log("previousObject has been saved");
+
+			//they first put in coords for first click
             arrowPath.push(getConnectionDataForArrow(x, y).coord);
             lastX = x;
             lastY = y;
@@ -623,7 +738,7 @@ function moveObject(e, object, savedisX, savedisY) {
 
 
             // Update index
-            console.log(index, x, y);
+            //console.log(index, x, y);
             object.pathData[index] = getConnectionDataForArrow(x, y);
             object.rebuildPath();
         }
@@ -713,8 +828,10 @@ function createObject(canvas, x1, y1, x2, y2) {
 
     } else if (arrowToolSelected()) {
         // Generate path
-        newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
+		//massive cosmic brain
 
+		newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
+		
         // Check if first path connects to a vertex, and ignore if it doesn't
         // Should be 0 if the connectable connects to a vertex
         if (newPath[0][0] !== 0) {
