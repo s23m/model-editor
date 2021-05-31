@@ -10,6 +10,7 @@ import { currentObjects, getModelName } from "./CanvasDraw";
 import { drawAll } from "./CanvasDraw";
 
 export class ContainmentTree extends React.Component {
+
     constructor(props) {
         super();
 
@@ -22,7 +23,8 @@ export class ContainmentTree extends React.Component {
             data: {
                 core: {
                     data: [
-                        { text: getModelName(), children: treeData, state: { opened: true } }
+                        { text: getModelName(), 
+						children: treeData, state: { opened: true } }
                     ]
                 }
             },

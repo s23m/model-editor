@@ -38,7 +38,7 @@ export class Vertex {
 
         // Make sure width and height meet a reasonable minimum
         this.width = Math.max(width, defaultMinimumSize);
-        this.height = Math.max(height, defaultMinimumSize)
+        this.height = Math.max(height, defaultMinimumSize);
 
         this.isAbstract = false;
     }
@@ -272,6 +272,7 @@ export class Vertex {
         canvasContext.font = this.fontSize+"px Segoe UI";
         canvasContext.fontSize = this.fontSize;
 
+
         // Find the maximum width of text and size the class accordingly
         let measuredNameText = canvasContext.measureText(this.title).width;
         let maxWidth = Math.max(measuredNameText + padding*2, this.width);
@@ -295,6 +296,7 @@ export class Vertex {
         // Configure drawing for shadows
         // And generally make it look nice
         canvasContext.shadowOffsetX = 2.0; canvasContext.shadowOffsetY = 2.0;
+
 
         this.iconAreaHeight = (iconHeight + (iconPadding * 2)) * iconListLen;
 
@@ -445,7 +447,7 @@ export class Vertex {
 
         // If can connect to top/bottom
         if (cursorX > this.x && cursorX < this.x+this.width) {
-            console.log("success");
+            //console.log("success");
             let xPercentage = (cursorX-this.x)/this.width;
 
             sides.push([Math.abs(cursorY-(this.y)), xPercentage, 0]);
@@ -454,7 +456,7 @@ export class Vertex {
 
         // If can connect to left/right
         else if (cursorY > this.y && cursorY < this.y+(this.realHeight)) {
-            console.log("success");
+            //console.log("success");
             let yPercentage = (cursorY-this.y)/(this.realHeight);
 
             sides.push([Math.abs(cursorX-(this.x)), 0, yPercentage]);
@@ -473,7 +475,7 @@ export class Vertex {
 
         if(goodSide === false && cursorX > this.x && cursorX < this.x + this.width && cursorY > this.y && cursorY < this.y+this.realHeight){
                 // click was inside the vertex but not in tolerance
-                console.log("trying things")
+                //console.log("trying things")
                 let yPercentage = (cursorY-this.y)/(this.realHeight);
                 let xPercentage = (cursorX-this.x)/this.width;
 
@@ -522,4 +524,5 @@ export class Vertex {
         }
         return shortest;
     }
+
 }
