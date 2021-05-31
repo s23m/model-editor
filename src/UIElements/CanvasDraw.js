@@ -515,28 +515,134 @@ export function lineIntersector(canvas, x, y, secondObject) {
 	console.log("\n \n arrow path: " + arrowPath + "\n\n");
 	arrowPath = [];
 	
+	//sizes
+	var blockpre = previousObject.height+ previousObject.width;
+	var blocksec = secondObject.height+ secondObject.width;
 
 	// previous object = first object clicked. need to do this for tree
 
 	//previous object is below
-    if(previousObject.y > y && previousObject.x + previousObject.width > x) {
+    if(previousObject.y > y) {
 		console.log("\n\n\n prev object was below \n\n\n");
-		startY = previousObject.y;
-		startX = previousObject.x + (0.5*previousObject.width);
+		//if previous is inside second range
+			if((previousObject.x > secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))){
+				startY = previousObject.y;
+				startX = previousObject.x + (0.5*previousObject.width);
+		
+				endY = startY - (startY-(secondObject.y + secondObject.height+10));
+				endX = startX;
+			}
+			//if second is inside previous range
+			else if((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) > (secondObject.x + secondObject.width))){
+				startY = secondObject.y + secondObject.height+10;
+				startX = secondObject.x + (0.5*secondObject.width);
+		
+				endY = startY + (previousObject.y - startY);
+				endX = startX;
+			}
+			//If pre is downleft of sec extend whichever box is better horizontally and fit
+			else if((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))){
+				if(blockpre < blocksec){
+					secondObject.width = secondObject.width + (secondObject.x-previousObject.x);
+					secondObject.x = previousObject.x;
 
-		endY = secondObject.y + secondObject.height+10;
-		endX = secondObject.x + (0.5*secondObject.width);
+					startY = secondObject.y + secondObject.height;
+					startX = secondObject.x + previousObject.width/2;
+					endY = previousObject.y;
+					endX = startX;
+				}
+				if(blockpre > blocksec){
+					previousObject.width = previousObject.width+ ((secondObject.x+secondObject.width) -(previousObject.x + previousObject.width));
+					previousObject.x = previousObject.x;
 
+					startY = secondObject.y + secondObject.height;
+					startX = secondObject.x + secondObject.width/2;
+					endY = previousObject.y;
+					endX = startX;
+				}
+			}
+			//If pre is downright of sec extend whichever box is better horizontally and fit
+			else if(previousObject.x > secondObject.x + secondObject.width){
+				if(blockpre < blocksec){
+					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width) );
+
+					startY = secondObject.y + secondObject.height;
+					startX = previousObject.x + previousObject.width/2;
+					endY = previousObject.y;
+					endX = startX;
+				}
+				if(blockpre > blocksec){
+					previousObject.width = previousObject.width + (previousObject.x-secondObject.x);
+					previousObject.x = secondObject.x;
+
+					startY = secondObject.y + secondObject.height;
+					startX = secondObject.x + secondObject.width/2;
+					endY = previousObject.y;
+					endX = startX;
+				}
+			}
 	} 
 	// previous object is above
-	else if(previousObject.y < y && previousObject.x + previousObject.width > x && previousObject.x < x) 
+	else if(previousObject.y + previousObject.height < secondObject.y) 
 	{
 		console.log("\n\n\n prev object was above \n\n\n");
-		startY = previousObject.y + previousObject.height+10; //+ means go to bottom
-		startX = previousObject.x + (0.5*previousObject.width);
+				//if previous is inside second range
+			if((previousObject.x > secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))){
+				startY = previousObject.y + previousObject.height;
+				startX = previousObject.x + (0.5*previousObject.width);
+		
+				endY = startY - (startY-(secondObject.y));
+				endX = startX;
+			}
+			//if second is inside previous range
+			else if((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) > (secondObject.x + secondObject.width))){
+				startY = secondObject.y;
+				startX = secondObject.x + (0.5*secondObject.width);
+		
+				endY = startY +previousObject.height+ (previousObject.y - startY);
+				endX = startX;
+			}
+			//If pre is upleft of sec extend which everbox is better horizontally and fit
+			else if((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))){
+				if(blockpre < blocksec){
+					secondObject.width = secondObject.width + (secondObject.x-previousObject.x);
+					secondObject.x = previousObject.x;
 
-		endY = secondObject.y;
-		endX = secondObject.x + (0.5*secondObject.width);
+					startY = secondObject.y;
+					startX = secondObject.x + previousObject.width/2;
+					endY = previousObject.y+previousObject.height;
+					endX = startX;
+				}
+				if(blockpre > blocksec){
+					previousObject.width = previousObject.width+ ((secondObject.x+secondObject.width) -(previousObject.x + previousObject.width));
+					previousObject.x = previousObject.x;
+
+					startY = secondObject.y;
+					startX = secondObject.x + secondObject.width/2;
+					endY = previousObject.y + previousObject.height;
+					endX = startX;
+				}
+			}
+			//If pre is upright of sec extend whichever box is better horizontally and fit
+			else if(previousObject.x > secondObject.x + secondObject.width){
+				if(blockpre < blocksec){
+					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width) );
+
+					startY = secondObject.y;
+					startX = previousObject.x + previousObject.width/2;
+					endY = previousObject.y + previousObject.height;
+					endX = startX;
+				}
+				if(blockpre > blocksec){
+					previousObject.width = previousObject.width + (previousObject.x-secondObject.x);
+					previousObject.x = secondObject.x;
+
+					startY = secondObject.y;
+					startX = secondObject.x + secondObject.width/2;
+					endY = previousObject.y + previousObject.height;
+					endX = startX;
+				}
+			}
 	}
 	//previous object is left of //if you click higher it counts as above
 
@@ -812,6 +918,7 @@ export function findIntersected(x, y) {
     });
     return selectedItem;
 }
+
 
 function createObject(canvas, x1, y1, x2, y2) {
     let newPath;

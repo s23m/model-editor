@@ -38,7 +38,7 @@ export class Vertex {
 
         // Make sure width and height meet a reasonable minimum
         this.width = Math.max(width, defaultMinimumSize);
-        this.height = Math.max(height, defaultMinimumSize)
+        this.height = Math.max(height, defaultMinimumSize);
 
         this.isAbstract = false;
     }
@@ -272,6 +272,7 @@ export class Vertex {
         canvasContext.font = this.fontSize+"px Segoe UI";
         canvasContext.fontSize = this.fontSize;
 
+
         // Find the maximum width of text and size the class accordingly
         let measuredNameText = canvasContext.measureText(this.title).width;
         let maxWidth = Math.max(measuredNameText + padding*2, this.width);
@@ -295,6 +296,7 @@ export class Vertex {
         // Configure drawing for shadows
         // And generally make it look nice
         canvasContext.shadowOffsetX = 2.0; canvasContext.shadowOffsetY = 2.0;
+
 
         this.iconAreaHeight = (iconHeight + (iconPadding * 2)) * iconListLen;
 
@@ -522,4 +524,5 @@ export class Vertex {
         }
         return shortest;
     }
+
 }
