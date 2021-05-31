@@ -10,7 +10,7 @@
     display: flex;
     overflow: hidden;
     color: Black;
-    font-size: calc(0.8vh + 0.8vw);
+    font-size: calc(0.6vh + 0.6vw);
     width:100vw;
     height:100vh;
     flex-direction: column;
@@ -20,24 +20,29 @@
     display: flex;
     width: 100vw;
     height: 5vh;
-    border: 2px groove #666666;
+    border: 1px groove #666666;
     flex-direction: row;
+	background-color:#D3D3D3;
 }
 
 #File-Menu{
-    display: flex;
-    border: 2px solid black;
-    width: 20vw;
+	display: flex;
+    /*border: 2px solid black;*/
+    width: 5vw;
     align-items: center;
-    justify-content: left;
-    height: 5.1vh
+    justify-content: center;
+    height: 5.1vh;
+	background-color:#D3D3D3;
+	border:none;
+	font-size: calc(0.6vh + 0.6vw);
 }
 
 #IconSelector{
-    background: white;
+    /*background: white;*/
     width: 100%;
     height: 100%;
-    border-radius: 10px;
+	font-size:calc(0.7vh + 0.7vw);
+    /*border-radius: 10px;*/
 }
 
 input,button{
@@ -52,16 +57,17 @@ input,button{
 
 .IconSelector .dropdown-menu.show{
     background-color: white;
-    border: 2px groove #666666;
+    /***border: 2px groove #666666;***/
     overflow-y: auto;
     max-height: 35vh;
 }
 
 #ColourSelector{
-    background: white;
+    /*background: white;*/
     width: 100%;
     height: 100%;
-    border-radius: 10px;
+	font-size:calc(0.7vh + 0.7vw);
+    /*border-radius: 10px;*/
 }
 
 .ColourSelector div.dropdown-menu.show{
@@ -81,6 +87,7 @@ input,button{
 
 .dropdownLabel{
     width: 15vw;
+	font-size:calc(0.7vh + 0.7vw);
 }
 
 .checkBoxContainer{
@@ -110,9 +117,9 @@ input,button{
 
 .TopBar {
     display: flex;
-    border: 2px groove #666666;
+    /*border: 2px groove #666666;*/
     min-height: 4.65vh;
-    width: 20vw;
+    width: 10vw;
     align-items: center;
     justify-content: center;
     background-color: white;
@@ -151,7 +158,7 @@ input,button{
 .TopBarLabel {
     display: flex;
     flex-direction: row;
-    border: 2px groove #666666;
+    /*border: 2px groove #666666;*/
     height: 5vh;
     width: 10vw;
     align-items: center;
@@ -161,7 +168,7 @@ input,button{
 .TopBarIdentifier{
     display: block;
     flex-direction: row;
-    border: 2px groove #666666;
+    /*border: 2px groove #666666;*/
     height: 5vh;
     width: 10vw;
     line-height: 5vh;
@@ -172,7 +179,7 @@ input,button{
 .TopBarSelector{
     display: flex;
     flex-direction: row;
-    border: 2px groove #666666;
+    /*border: 2px groove #666666;*/
     height: 4.55vh;
     width: 5vw;
     align-items: center;
@@ -182,14 +189,14 @@ input,button{
 .TopBarSearch {
     display: flex;
     flex-direction: row;
-    border: 2px groove #666666;
-    height: 4.7vh;
+    /*border: 2px groove #666666;*/
+    /*height: 4.7vh;*/
     width: 15vw;
-    border-radius: 10px;
+    /*border-radius: 10px;*/
     align-items: center;
     justify-content: center;
     color: Black;
-    font-size: calc(1vh + 1vw);
+    font-size: calc(0.6vh + 0.6vw);
 }
 
 .TopBarIcon {
@@ -198,28 +205,31 @@ input,button{
     flex-direction: row;
     height: 5vh;
     width: 5vh;
-    border: 2px groove #666666;
+    /*border: 2px groove #666666;*/
     align-items: center;
     justify-content: center;
+	background-color:#D3D3D3;
+	font-size: calc(1vh + 1vw);
 }
 
 .LeftMenus{
     display: flex;
     height: 94.2vh;
     width: 15vw;
-    border: 2px groove #666666;
+    /***border: 2px groove #666666;***/
     flex-direction: column;
     border-top: none;
     background: none;
     z-index: 5;
     overflow: auto;
+	background-color:#D3D3D3;
 }
 
 .Toolbar {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
-    border: 2px groove #666666;
+    /***border: 2px groove #666666;***/
     height: 4.7vh;
     width:15vw;
 }
@@ -238,7 +248,7 @@ input,button{
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    border: 2px groove #666666;
+    /***border: 2px groove #666666;***/
     height: calc(93vh/3);
     justify-content: center;
     width:14.7vw;
@@ -248,50 +258,56 @@ input,button{
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    border: none;
+    /***border: none;
     border-top: 2px groove #666666;
-    border-bottom: 2px groove #666666;
+    border-bottom: 2px groove #666666;***/
     align-items: center;
     justify-content: center;
-    background-color: white;
+    /*background-color: white;*/
     width: 15vw;
+	font-size:calc(0.7vh + 0.7vw);
 }
 
 .LeftTitle {
     border: none;
-    border-top: 2px groove #666666;
-    border-bottom: 2px groove #666666;
+    /***border-top: 2px groove #666666;
+    border-bottom: 2px groove #666666;***/
     align-items: center;
     justify-content: center;
     width: 14.6vw;
-    background-color: #E0FFFF;
+    /*background-color: #E0FFFF;*/
+	background-color:white;
+	font-size:calc(0.7vh + 0.7vw);
 }
 
 .LeftHeader{
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    border: 2px groove #666666;
+    /*border: 2px groove #666666;*/
     height: 7vh;
     justify-content: center;
     width:15vw;
-    background-color: #DDEEFF
+	font-size:calc(0.7vh + 0.7vw);
+    /*background-color: #DDEEFF;*/
 }
 
 .LeftContent {
     border: none;
-    border-top: 2px groove #666666;
-    border-bottom: 2px groove #666666;
+    /*border-top: 2px groove #666666;
+    border-bottom: 2px groove #666666;*/
     align-items: center;
     justify-content: center;
     resize:none;
     height: 10vh;
     width: 14.6vw;
-    background-color: #E0FFFF;
+    /*background-color: #E0FFFF;*/
+	background-color:white;
+	font-size:calc(0.7vh + 0.7vw);
 }
 
 .jstree-node {
-    font-size: calc(0.5vh + 0.5vw);
+    font-size: calc(0.6vh + 0.6vw);
     text-align: left;
 }
 
@@ -313,7 +329,7 @@ input,button{
     width:85vw;
     overflow-x: scroll;
     overflow-y: scroll;
-    border: 2px solid black;
+    border: 1px solid black;
 }
 
 .LeftSpacer {

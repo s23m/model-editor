@@ -11,28 +11,6 @@ import { drawAll } from "./CanvasDraw";
 
 export class ContainmentTree extends React.Component {
 
-	/*constructor(props) {
-	super(props);
-	this.state = {
-	data: {
-	core: {
-	data: [
-	{
-	text: 'Root node', children: [
-	{text: 'Child node 1'},
-	{text: 'Child node 2'}
-	]
-	}
-
-	]
-	}
-	},
-	selected: [],
-	};
-	}*/
-
-
-
     constructor(props) {
         super();
 
