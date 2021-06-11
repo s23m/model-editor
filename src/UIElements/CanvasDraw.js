@@ -755,13 +755,8 @@ export function onLeftMouseRelease(canvas, x, y) {
 		//save object here
 			previousObject = findIntersected(x,y);
 			console.log("previousObject has been saved");
-			//they first put in coords for first click
-			//plan
-			//go to where function starts and at the start of it 
-			//their function is working with the edge and not the box.
-			//change their old stuff to do what our one does now instead
-			//if u click on the edge it doesn't count as a box.
-			//alternative: remove all their old stuff. but has one nice thing. see where arrow's going
+			//where they first put in coords for first click
+			
             arrowPath.push(getConnectionDataForArrow(x, y).coord);
             lastX = x;
             lastY = y;
