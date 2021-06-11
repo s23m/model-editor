@@ -72,11 +72,33 @@ export class LeftMenu extends React.Component{
         this.menu = this.props.mainState.menu;
         this.selectedItem = this.props.mainState.drawMode;
         this.props.setMode(this.selectedItem)
+
+        document.addEventListener("keydown", this.onKeyPressed.bind(this));
+    }
+
+    //For quickkeys
+    onKeyPressed(e){
+        if (e.keyCode === 86){
+            this.props.setMode(Tool.Vertex);
+            //alert('yeet');
+        }
+
+        if (e.keyCode === 69){
+            this.props.setMode(Tool.Edge);
+        }
+
+        if (e.keyCode === 46){
+            deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"});
+        }
+
+        
     }
 
     componentWillReceiveProps(nextProps,nextContext) {
         this.setState({menu:nextProps.mainState.menu});
         this.setState({selectedObject:nextProps.mainState.selectedObject});
+
+        //document.removeEventListener("keydown", this.onKeyPressed.bind(this));
 
     }
 
@@ -282,11 +304,14 @@ export class LeftMenu extends React.Component{
 
 // return the correct menu based on the selected item
     getMenu = () =>{
+
+        
+
         let leftMenuContents;
 
         let toolbar = <div id = "Toolbar" className = "Toolbar">
             <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt ="Select"/></div>
-            <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Vertex)}><img src={iconVertex} alt ="Vertex"/></div>
+            <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Vertex)}  onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt ="Vertex"/></div>
             <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt ="Edge"/></div>
             <div id = "Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt ="Specialisation"/></div>
             <div id = "Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt ="Visibility"/></div>
@@ -398,6 +423,7 @@ export class LeftMenu extends React.Component{
         return <div>{toolbar}<form ref={this.setFormRef} className={this.props.className}>
             {leftMenuContents}
             </form></div>;
+        
     };
 
     render() {
