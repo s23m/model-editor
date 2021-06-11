@@ -231,7 +231,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
 
     // If can't snap to right angles
     if (arrowPath.length < 1 || coordinate[0] === 0) return { coord: coordinate, snapped: nearest !== null, nearest: nearest };
-
+	
     // Get angle
     let lastPathX = arrowPath[arrowPath.length - 1][1];
     let lastPathY = arrowPath[arrowPath.length - 1][2];
@@ -515,11 +515,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
 	console.log("\n \n arrow path: " + arrowPath + "\n\n");
 	arrowPath = [];
 	
-	//sizes
+	//sizes based on Total Area
 	var blockpre = previousObject.height+ previousObject.width;
 	var blocksec = secondObject.height+ secondObject.width;
-
-	// previous object = first object clicked. need to do this for tree
 
 	//previous object is below
     if(previousObject.y > y) {
@@ -564,7 +562,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 			//If pre is downright of sec extend whichever box is better horizontally and fit
 			else if(previousObject.x > secondObject.x + secondObject.width){
 				if(blockpre < blocksec){
-					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width) );
+					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width));
 
 					startY = secondObject.y + secondObject.height;
 					startX = previousObject.x + previousObject.width/2;
@@ -581,12 +579,13 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endX = startX;
 				}
 			}
+			
 	} 
 	// previous object is above
 	else if(previousObject.y + previousObject.height < secondObject.y) 
 	{
 		console.log("\n\n\n prev object was above \n\n\n");
-				//if previous is inside second range
+			//if previous is inside second range
 			if((previousObject.x > secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))){
 				startY = previousObject.y + previousObject.height;
 				startX = previousObject.x + (0.5*previousObject.width);
@@ -626,7 +625,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 			//If pre is upright of sec extend whichever box is better horizontally and fit
 			else if(previousObject.x > secondObject.x + secondObject.width){
 				if(blockpre < blocksec){
-					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width) );
+					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width));
 
 					startY = secondObject.y;
 					startX = previousObject.x + previousObject.width/2;
@@ -642,7 +641,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y + previousObject.height;
 					endX = startX;
 				}
-			}
+			} 
+			
 	}
 	//previous object is left of //if you click higher it counts as above
 
@@ -696,15 +696,16 @@ export function onLeftMouseRelease(canvas, x, y) {
 
         if (getConnectionDataForArrow(x, y).snapped && !firstArrowJoint) {
             // Create
-			
-			
 			var secondObject = findIntersected(x,y);
 			var newObject;
 
+			//2 separate objects - box and vertex (border)
 			if(previousObject !== null && secondObject !== null) {
 			console.log("\n the new one \n");
 				newObject = lineIntersector(canvas, x, y,secondObject);
 				for (let j = 0; j < savedArrows.length; j++) {
+
+				//delete arrow if duplicate for straight arrows (doesn't work)
 					for (let k = 1+j; k < savedArrows.length; k++){
 						if (savedArrows[j][0][0] === savedArrows[k][0][0] && savedArrows[j][0][1] === savedArrows[k][0][1] && savedArrows[j][1][0] === savedArrows[k][1][0] && savedArrows[j][1][1] === savedArrows[k][1][1]) {
 						let removethis = findIntersected(savedArrows[j][0][0],savedArrows[j][0][1]);
@@ -713,11 +714,12 @@ export function onLeftMouseRelease(canvas, x, y) {
 				}
 			
 			}
-
-				//set second object to be child of first object
-			} else {
+			}
+			else {
 			console.log("\n the old one \n");
 			  newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+			  //need to reset the other 2 coords.
+			  //newObject = createObject(canvas, 0, 0, 0, 0);
 			}
 
             // Reset path
@@ -725,7 +727,11 @@ export function onLeftMouseRelease(canvas, x, y) {
             firstArrowJoint = true;
 			previousObject = null;
 
-            addObject(newObject);
+			if (newObject !== null) {
+				addObject(newObject);
+			}
+
+            
 
             drawAll(currentObjects);
 
@@ -749,8 +755,13 @@ export function onLeftMouseRelease(canvas, x, y) {
 		//save object here
 			previousObject = findIntersected(x,y);
 			console.log("previousObject has been saved");
-
 			//they first put in coords for first click
+			//plan
+			//go to where function starts and at the start of it 
+			//their function is working with the edge and not the box.
+			//change their old stuff to do what our one does now instead
+			//if u click on the edge it doesn't count as a box.
+			//alternative: remove all their old stuff. but has one nice thing. see where arrow's going
             arrowPath.push(getConnectionDataForArrow(x, y).coord);
             lastX = x;
             lastY = y;
