@@ -560,7 +560,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 				}
 			}
 			//If pre is downright of sec extend whichever box is better horizontally and fit
-			else if(previousObject.x > secondObject.x + secondObject.width){
+            else if (previousObject.x > secondObject.x) {
 				if(blockpre < blocksec){
 					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width));
 
@@ -577,16 +577,15 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					startX = secondObject.x + secondObject.width/2;
 					endY = previousObject.y;
 					endX = startX;
-				}
-			}
-			
+                }
+        }
 	} 
 	// previous object is above
 	else if(previousObject.y + previousObject.height < secondObject.y) 
 	{
 		console.log("\n\n\n prev object was above \n\n\n");
 			//if previous is inside second range
-			if((previousObject.x > secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))){
+        if ((previousObject.x > secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))) {
 				startY = previousObject.y + previousObject.height;
 				startX = previousObject.x + (0.5*previousObject.width);
 		
@@ -594,7 +593,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 				endX = startX;
 			}
 			//if second is inside previous range
-			else if((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) > (secondObject.x + secondObject.width))){
+            else if ((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) > (secondObject.x + secondObject.width))) {
 				startY = secondObject.y;
 				startX = secondObject.x + (0.5*secondObject.width);
 		
@@ -602,7 +601,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 				endX = startX;
 			}
 			//If pre is upleft of sec extend which everbox is better horizontally and fit
-			else if((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))){
+            else if ((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))) {
 				if(blockpre < blocksec){
 					secondObject.width = secondObject.width + (secondObject.x-previousObject.x);
 					secondObject.x = previousObject.x;
@@ -623,10 +622,10 @@ export function lineIntersector(canvas, x, y, secondObject) {
 				}
 			}
 			//If pre is upright of sec extend whichever box is better horizontally and fit
-			else if(previousObject.x > secondObject.x + secondObject.width){
+        else if (previousObject.x > secondObject.x) {
 				if(blockpre < blocksec){
 					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width));
-
+                    
 					startY = secondObject.y;
 					startX = previousObject.x + previousObject.width/2;
 					endY = previousObject.y + previousObject.height;
@@ -641,7 +640,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y + previousObject.height;
 					endX = startX;
 				}
-			} 
+        }
 			
 	}
 	//previous object is left of //if you click higher it counts as above

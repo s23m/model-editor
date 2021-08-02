@@ -77,13 +77,13 @@ export class LeftMenu extends React.Component{
     }
 
     //For quickkeys
-    onKeyPressed(e){
-        if (e.keyCode === 86){
+    onKeyPressed(e) {
+        if (e.keyCode === 86 && this.state.selectedObject === null){
             this.props.setMode(Tool.Vertex);
             //alert('yeet');
         }
 
-        if (e.keyCode === 69){
+        if (e.keyCode === 69 && this.state.selectedObject === null){
             this.props.setMode(Tool.Edge);
         }
 
