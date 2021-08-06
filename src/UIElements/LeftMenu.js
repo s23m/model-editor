@@ -17,6 +17,7 @@ import iconVisibility from "../Resources/visibility.svg"
 import iconSelect from "../Resources/select.svg"
 
 import {deleteElement} from "./CanvasDraw";
+import { vertexDeleteElement } from './CanvasDraw';
 import DropdownButton from "react-bootstrap/DropdownButton";
 
 //Property Enums
@@ -345,7 +346,8 @@ export class LeftMenu extends React.Component{
 
                 <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                 <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
+                <button className="LeftMenuButton" onClick={() => {/*deleteElement(this.state.selectedObject)*/vertexDeleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
+                
             </form>;
 
         } else if (this.state.menu === LeftMenuType.Arrow) {

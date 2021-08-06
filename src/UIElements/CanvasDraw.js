@@ -110,6 +110,7 @@ export function drawAll() {
 }
 
 export function deleteElement(element) {
+
     if (element !== null) {
         if (!currentObjects.remove(element)) {
             console.error("Failed to delete object with UUID %s", element.semanticIdentity.UUID);
@@ -119,6 +120,33 @@ export function deleteElement(element) {
     }
 
     drawAll()
+}
+
+//this is the same as the above, except when you're deleting a vertex with an arrow connected the edge connection code freaks out.
+//this here deletes any arrows connected to the vertex before deleting the vertex to get around this
+export function vertexDeleteElement(element){ 
+    //find the UUID of the vertex for arrow dest and source matching
+    let selectedVertUUID = element.semanticIdentity.UUID;
+
+    //Get the arrow UUID's
+    let sourceUUIDs = currentObjects.ArrowUUIDSource(element);
+    let destUUIDs = currentObjects.ArrowUUIDDest(element);
+    //find an arrow with matching source/dest if they exist
+    
+    sourceUUIDs.forEach(element => currentObjects.remove(element.arrow));
+    destUUIDs.forEach(element => currentObjects.remove(element.arrow))
+
+    //Now that the arrows are out of the way, we're safe to delete the vertex (same code as above)
+    if (element !== null) {
+        if (!currentObjects.remove(element)) {
+            console.error("Failed to delete object with UUID %s", element.semanticIdentity.UUID);
+        }
+    } else {
+        console.error("Attempted to delete a null element");
+    }
+
+    drawAll()
+
 }
 
 export function updateRows() {
