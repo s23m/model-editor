@@ -774,6 +774,21 @@ export function onLeftMouseRelease(canvas, x, y) {
         canvas.props.setLeftMenu(newObject);
         canvas.props.setMode(Tool.Select);
     }
+    if (canvas.tool === Tool.Artifact) {
+        let newObject = createArtifact(canvas, mouseStartX, mouseStartY);
+        addObject(newObject);
+
+        canvas.props.setLeftMenu(newObject);
+        canvas.props.setMode(Tool.Select);
+    }
+    if (canvas.tool === Tool.Container) {
+        let newObject = createContainer(canvas, mouseStartX, mouseStartY);
+        newObject.setColour("#FFFFFF");
+        addObject(newObject);
+        canvas.props.setLeftMenu(newObject);
+        canvas.props.setMode(Tool.Select);
+    }
+
     drawAll(currentObjects);
 }
 
@@ -924,6 +939,39 @@ export function findIntersected(x, y) {
     return selectedItem;
 }
 
+function createArtifact(canvas, x1, y1) {
+    let newPath;
+    let currentObjectsFlattened = currentObjects.flatten();
+
+    if (canvas.tool === Tool.Artifact) {
+        // Get positions
+        let pos = orderCoordinates(x1, y1, x1 + 450, y1 + 50);
+        let vy1 = findNearestGridY(pos[1], 0);
+        let vy2 = findNearestGridY(pos[3], 0);
+
+        // Add vertex
+        return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+
+    } 
+    return null;
+}
+
+function createContainer(canvas, x1, y1) {
+    let newPath;
+    let currentObjectsFlattened = currentObjects.flatten();
+
+    if (canvas.tool === Tool.Container) {
+        // Get positions
+        let pos = orderCoordinates(x1, y1, x1 + 100, y1 + 100);
+        let vy1 = findNearestGridY(pos[1], 0);
+        let vy2 = findNearestGridY(pos[3], 0);
+
+        // Add vertex
+        return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+
+    }
+    return null;
+}
 
 function createObject(canvas, x1, y1, x2, y2) {
     let newPath;
