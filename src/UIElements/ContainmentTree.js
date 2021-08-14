@@ -15,7 +15,15 @@ export class ContainmentTree extends React.Component {
         super();
 
         let treeData = [];
-        for (let vertex of currentObjects.rootVertices) {
+ 
+        let i = 0;
+
+        for (let vertex of currentObjects.flattenVertexNodes()) { //.rootVertices() <-- original
+            if (i === 0){
+                treeData.push(vertex.toTreeViewElement(new Set(), "vertexFolder"));
+                treeData.push(vertex.toTreeViewElement(new Set(), "arrowFolder"))
+                i += 1;
+            }
             treeData.push(vertex.toTreeViewElement(new Set()));
         }
 
@@ -24,7 +32,7 @@ export class ContainmentTree extends React.Component {
                 core: {
                     data: [
                         { text: getModelName(), 
-						children: treeData, state: { opened: true } }
+						children: treeData, state: { opened: true } },
                     ]
                 }
             },

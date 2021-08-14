@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+import { currentObjects } from "../UIElements/CanvasDraw";
+
 class VertexNode {
     constructor(vertex) {
         this.vertex = vertex;
@@ -116,14 +118,91 @@ class VertexNode {
         return false;
     }
 
-    toTreeViewElement(traversedVertices) {
+    toTreeViewElement(traversedVertices, returnOption) {
+
+        //Pretty much everything that's currently on the canvas is searched and then converted into the tree appropriate struct in the below if else statements.
+        //Then, the vertices and arrows folder nodes can display their appropriate children.
+        let ArrowChildren = [];
+        let VertexChildren = [];
+
         let children = [];
         let traversed = traversedVertices.has(this);
+
+        //Check which folder we're sticking these things into
+        if (returnOption === "vertexFolder"){
+            //All objects currently on the canvas (excluding things like folders which only exist as tree view elements)
+            for(let i = 0; i < currentObjects.flatten().length; i++){
+
+                //We onlt want the vertices in this folder
+                if (currentObjects.flatten()[i].typeName === "Vertex"){
+                    //Create the appropriate struct for a tree view element from the vertex data
+                    let tempTreeObj = {
+                        text: currentObjects.flatten()[i].title,
+                        children: [],
+                        data: currentObjects.flatten()[i],
+                        state: {opened: false}
+                    };
+
+                    //So you don't have vertices that are completely blank in the tree, looks kinda weird
+                    if (tempTreeObj.text === ""){
+                        tempTreeObj.text = "Unnamed Vertex";
+                    }
+                    
+                    //Finally, push to children. Makes it look like the following:
+                    //
+                    //  Vertex --+
+                    //           |
+                    //           +-- Unnamed Vertex   
+                    
+                    VertexChildren.push(tempTreeObj);
+                }
+
+            }
+            
+            //vertices folder
+            return{
+                text: "Vertices",
+                children: VertexChildren,
+                data: null,
+                state: { opened: true }
+            }
+        }
+
+        //same as above if statement but for arrows
+        else if (returnOption === "arrowFolder"){
+            for(let i = 0; i < currentObjects.flatten().length; i++){
+
+                if (currentObjects.flatten()[i].typeName !== "Vertex"){
+                    let tempTreeObj = {
+                        text: currentObjects.flatten()[i].semanticIdentity.UUID,
+                        children: [],
+                        data: currentObjects.flatten()[i],
+                        state: {opened: false}
+                    };
+    
+                    ArrowChildren.push(tempTreeObj);
+                }
+
+            }
+
+
+            return{
+                text: "Arrows",
+                children: ArrowChildren,
+                data: null,
+                state: { opened: true }
+            }
+        }
+
+        //This down here is for vertex heirarchy stuff, not really needed anymore.
+        /*
         if (!traversed) {
             traversedVertices.add(this);
+            
             for (let child of this.children) {
-                children.push(child.toTreeViewElement(traversedVertices));
+                //children.push(child.toTreeViewElement(traversedVertices));
             }
+            
         }
 
         let text = this.vertex.title;
@@ -137,6 +216,16 @@ class VertexNode {
             children: children,
             data: this.vertex,
             state: { opened: true }
+        };
+        */
+    }
+
+    setTreeViewElement(folderTitle){ //For when you want to make a folder type of element
+        let fakeChildren = [];
+        return{
+            text: folderTitle,
+            children: fakeChildren,
+            state: {opened: true}
         };
     }
 }
