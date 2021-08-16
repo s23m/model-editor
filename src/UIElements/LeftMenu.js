@@ -296,6 +296,14 @@ export class LeftMenu extends React.Component{
         canvasDraw.drawAll();
     }
 
+    showTreeView(){
+        //this.state.menu = LeftMenuType.TreeView;
+        //console.log("HENLO: " + this.state);
+        //leftMenuContents = <ContainmentTree setLeftMenu = {this.props.setLeftMenu} />;
+        this.state.selectedObject(null)
+        canvasDraw.drawAll();
+    }
+
     stripElement(e){
         e.preventDefault()
         this.state.selectedObject.trimPath();
@@ -346,6 +354,10 @@ export class LeftMenu extends React.Component{
                 <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                 <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
+
+                <label className="LeftSpacer">&nbsp;</label>
+                <button className="LeftMenuButton" onClick={() => this.setState({menu:"TreeView"})}>Show Tree View</button>
+                
             </form>;
 
         } else if (this.state.menu === LeftMenuType.Arrow) {
