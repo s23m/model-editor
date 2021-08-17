@@ -2,12 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { currentObjects } from "../UIElements/CanvasDraw";
+import { currentObjects, getModelName } from "../UIElements/CanvasDraw";
+
 
 class VertexNode {
     constructor(vertex) {
         this.vertex = vertex;
         this.children = new Set();
+
+        //The path of this particular vertex node for displaying on the tree view element
+        this.cleanObjectPath = getModelName() + "/" + "Vertices";
+        this.vertexObjectPath = getModelName() + "/" + "Vertices";
     }
 
     add(node) {
@@ -135,6 +140,9 @@ class VertexNode {
 
                 //We onlt want the vertices in this folder
                 if (currentObjects.flatten()[i].typeName === "Vertex"){
+                    //Set the append the name of the path to include the vertex name
+                    this.setVertexTreePath(currentObjects.flatten()[i]);
+
                     //Create the appropriate struct for a tree view element from the vertex data
                     let tempTreeObj = {
                         text: currentObjects.flatten()[i].title,
@@ -227,6 +235,25 @@ class VertexNode {
             children: fakeChildren,
             state: {opened: true}
         };
+    }
+
+    //this function sets the path of a particular vertex node so that you can 
+    //1. Display that item's path in the actual vertex (if you want)
+    //2. Show a tree view that only contains the path to a desired vertex 
+    setVertexTreePath(treePath){
+        this.vertexObjectPath = this.cleanObjectPath + "/" + treePath;
+    }
+
+    //Return the vertice's object path
+    returnVertexTreePath(){
+        return this.vertexObjectPath;
+    }
+
+    //A function for collapsing every leaf bar the leaves which match the vertexTitle. Ideally this functionality would be
+    //achieved by highlighting the desired title but the tree module that's currently in place provides no documentation
+    //For how to do this.
+    focusTreeViewElement(vertexTitle){
+
     }
 }
 

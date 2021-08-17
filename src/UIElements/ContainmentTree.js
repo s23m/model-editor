@@ -19,9 +19,12 @@ export class ContainmentTree extends React.Component {
         let i = 0;
 
         for (let vertex of currentObjects.flattenVertexNodes()) { //.rootVertices() <-- original
+
+            console.log("AEYO: " + vertex.returnVertexTreePath())
+
             if (i === 0){
                 treeData.push(vertex.toTreeViewElement(new Set(), "vertexFolder"));
-                treeData.push(vertex.toTreeViewElement(new Set(), "arrowFolder"))
+                treeData.push(vertex.toTreeViewElement(new Set(), "arrowFolder"));
                 i += 1;
             }
             treeData.push(vertex.toTreeViewElement(new Set()));
