@@ -23,7 +23,8 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 export const LeftMenuType = {
     TreeView: "TreeView",
     Vertex: "Vertex",
-    Arrow: "Arrow"
+    Arrow: "Arrow",
+    //FTreeView: "FocussedTreeView"
 };
 
 export const LeftMenuTypeToString = {};

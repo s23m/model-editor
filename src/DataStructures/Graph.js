@@ -141,7 +141,14 @@ class VertexNode {
                 //We onlt want the vertices in this folder
                 if (currentObjects.flatten()[i].typeName === "Vertex"){
                     //Set the append the name of the path to include the vertex name
-                    this.setVertexTreePath(currentObjects.flatten()[i]);
+                    if(currentObjects.flatten()[i].title === ""){
+                        this.setVertexTreePath("Unnamed Vertex");
+                    }
+
+                    else{
+                        this.setVertexTreePath(currentObjects.flatten()[i].title);
+                    }
+
 
                     //Create the appropriate struct for a tree view element from the vertex data
                     let tempTreeObj = {
@@ -249,11 +256,61 @@ class VertexNode {
         return this.vertexObjectPath;
     }
 
-    //A function for collapsing every leaf bar the leaves which match the vertexTitle. Ideally this functionality would be
+    /*
+    else if (returnOption === "arrowFolder"){
+        for(let i = 0; i < currentObjects.flatten().length; i++){
+
+            if (currentObjects.flatten()[i].typeName !== "Vertex"){
+                let tempTreeObj = {
+                    text: currentObjects.flatten()[i].semanticIdentity.UUID,
+                    children: [],
+                    data: currentObjects.flatten()[i],
+                    state: {opened: false}
+                };
+
+                ArrowChildren.push(tempTreeObj);
+            }
+
+        }
+
+
+        return{
+            text: "Arrows",
+            children: ArrowChildren,
+            data: null,
+            state: { opened: true }
+        }
+    }
+    */
+
+    //A function for collapsing every leaf bar the leaves which match the object title. Ideally this functionality would be
     //achieved by highlighting the desired title but the tree module that's currently in place provides no documentation
     //For how to do this.
-    focusTreeViewElement(vertexTitle){
+    focusTreeViewElement(traversedVertices, folder, title){
+        //Look for the object in current objects
+        let children = [];
+        if (folder === "vertexFolder"){
+            for (let vertex of currentObjects.flatten()){
+                if (vertex.title === title){
+                    console.log("HERE " + vertex.title);
+                    //Find the right child and show it
+                    let tempTreeViewObj = {
+                        text: vertex.title,
+                        children: [],
+                        data: null,
+                        state: {opened: true}
+                    };
+    
+                    children.push(tempTreeViewObj);
+                }
+            }
+        }
 
+        return{
+            text: "Vertices",
+            children: children,
+            state: {opened: true},
+        };
     }
 }
 
