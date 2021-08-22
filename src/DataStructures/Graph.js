@@ -256,61 +256,69 @@ class VertexNode {
         return this.vertexObjectPath;
     }
 
-    /*
-    else if (returnOption === "arrowFolder"){
-        for(let i = 0; i < currentObjects.flatten().length; i++){
-
-            if (currentObjects.flatten()[i].typeName !== "Vertex"){
-                let tempTreeObj = {
-                    text: currentObjects.flatten()[i].semanticIdentity.UUID,
-                    children: [],
-                    data: currentObjects.flatten()[i],
-                    state: {opened: false}
-                };
-
-                ArrowChildren.push(tempTreeObj);
-            }
-
-        }
-
-
-        return{
-            text: "Arrows",
-            children: ArrowChildren,
-            data: null,
-            state: { opened: true }
-        }
-    }
-    */
-
     //A function for collapsing every leaf bar the leaves which match the object title. Ideally this functionality would be
     //achieved by highlighting the desired title but the tree module that's currently in place provides no documentation
     //For how to do this.
-    focusTreeViewElement(traversedVertices, folder, title){
+    focusTreeViewElement(traversedVertices, title){
+        let objectFolder = ""
         //Look for the object in current objects
         let children = [];
-        if (folder === "vertexFolder"){
-            for (let vertex of currentObjects.flatten()){
+        for (let vertex of currentObjects.flatten()){
+            if (vertex.typeName === "Vertex"){
+
                 if (vertex.title === title){
-                    console.log("HERE " + vertex.title);
-                    //Find the right child and show it
+                    //Find the right vertex and add it
                     let tempTreeViewObj = {
                         text: vertex.title,
                         children: [],
-                        data: null,
+                        data: currentObjects.flatten(),
                         state: {opened: true}
                     };
     
                     children.push(tempTreeViewObj);
+                    objectFolder = "V" //Determines in the object should be filed under vertices
+
+
                 }
+
+            }
+
+            else {
+
+                if(vertex.semanticIdentity.UUID === title){
+                    //Find the right arrow and add it
+                    let tempTreeViewObj = {
+                        text: vertex.semanticIdentity.UUID,
+                        children: [],
+                        data: currentObjects.flatten(),
+                        state: {opened: true}
+                    };
+
+                    children.push(tempTreeViewObj);
+                    objectFolder = "A"; //Determines if the object should be filed under arrows
+                }
+
+
             }
         }
 
-        return{
-            text: "Vertices",
-            children: children,
-            state: {opened: true},
-        };
+        if (objectFolder === "V"){
+            return{
+                text: "Vertices",
+                children: children,
+                data: null,
+                state: {opened: true},
+            };
+        }
+
+        else if (objectFolder === "A"){
+            return{
+                text: "Arrows",
+                children: children,
+                data: null,
+                state: {opened: true},
+            };
+        }
     }
 }
 
