@@ -15,9 +15,14 @@ import {LeftMenu, LeftMenuType, StringToLeftMenuType, Tool} from './LeftMenu';
 import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
+//Adding folders to the tree view
+import {handleAddFolder} from './ContainmentTree';
+
 // Simple incremental version
 // 1->2->3->4
 export const version = 1;
+
+let folderName = "Unnamed Folder";
 
 export class MainProgramClass extends React.Component {
 
@@ -54,6 +59,14 @@ export class MainProgramClass extends React.Component {
         console.log("Mode set to: " + this.state.SelectedTool);
     }
 
+    updateFolderName = (type) => {
+        folderName = document.getElementById("FolderName").value
+    }
+
+    addFolder = (type) => {
+        //handleAddFolder({modelName:document.getElementById("FolderName").value});
+        handleAddFolder(folderName);
+    }
 
     zoom = (type) => {
         let cZoom = this.state.zoomLevel;
@@ -211,6 +224,7 @@ export class MainProgramClass extends React.Component {
                     </div>
 
                     <input className="TopBarSearch" id="ModelName" type = "text" name = "modelName" placeholder = "Model Name" onChange={(e) => this.setModelName(e)}/>
+                    <input className="TopBarSearch" id="FolderName" type = "text" name = "folderName" placeholder = "New Folder" onChange={(e) => this.updateFolderName(e)}/>
 
                     {/*<div className="TopBarIcon">&nbsp;</div>*/}
                     {/*The + and - are backwards on purpose here*/}
@@ -222,6 +236,7 @@ export class MainProgramClass extends React.Component {
 
                     {/*<div className="TopBarIdentifier">Rows:&nbsp;</div>*/}
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
+                    <div className="TopBarIcon" onClick={() => this.addFolder()}> Add Folder </div>
 
                 </div>
 

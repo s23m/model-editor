@@ -26,7 +26,7 @@ let tempFolderObject = {
     children: treeData,
     data: null,
     state: {opened: true}
-}
+};
 
 folderData.push(tempFolderObject);
 
@@ -48,6 +48,26 @@ export function displayFocussedTreeView(selectedThing){
     
 }
 
+export function handleAddFolder(folderName){
+    //Create a new folder using the known node type
+    
+    let tempFolderThing = {
+        text: folderName,
+        children: [],
+        data: null,
+        state: {opened: true}
+    }
+    
+    folderData.push(tempFolderThing);
+    
+    /*
+   for(let folder in folderData){
+       console.log("STATE OF FOLDER ARRAY: " + folder);
+    }
+    */
+    
+}
+
 export class ContainmentTree extends React.Component {
 
     constructor(props) {
@@ -58,19 +78,31 @@ export class ContainmentTree extends React.Component {
         
         if (focussed === false){
             for (let vertex of currentObjects.flattenVertexNodes()) { //.rootVertices() <-- original
-
-                //console.log("AEYO: " + vertex.returnVertexTreePath())
-    
+                
                 if (i === 0){
                     treeData.push(vertex.toTreeViewElement(new Set(), "vertexFolder"));
                     treeData.push(vertex.toTreeViewElement(new Set(), "arrowFolder"));
 
                     //You need to make sure you update the folderData stuff after making a change to treeData
-                    folderData.forEach(thing => thing.children = treeData);
+                    //folderData.forEach(thing => thing.children = treeData);
+                    /*
+                    for (let folder of folderData){
+                        folder.children = treeData;
+                        console.log("STATE OF FOLDER ARRAY: " + folder);
+                    }
+                    */
+                   folderData[0].children = treeData;
                     
                     i += 1;
                 }
                 treeData.push(vertex.toTreeViewElement(new Set()));
+
+                /*
+                for (let folder of folderData){
+                    folder.children = treeData;
+                }
+                */
+                folderData[0].children = treeData;
             }
         }
 
@@ -127,17 +159,7 @@ export class ContainmentTree extends React.Component {
         drawAll();
     }
 
-    handleAddFolder(){
-        //Create a new folder using the known node type
-        let tempFolderThing = {
-            text: "New Folder",
-            children: treeData,
-            data: null,
-            state: {opened: true}
-        };
 
-        folderData.push(tempFolderThing);
-    }
 
     render() {
         const data = this.state.data;
