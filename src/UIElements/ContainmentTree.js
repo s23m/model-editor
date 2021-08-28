@@ -106,11 +106,91 @@ export class ContainmentTree extends React.Component {
             }
         }
 
+        
         else if (focussed === true){
+            let overallContainer = getModelName();
+            let container = [];
+            let vertOrEdge = [];
+            let objName = [];
+
+            let b = 0;
+            //First, we need to actually determine where the vertex is
+            //Take a look at our containor
+            for (let cont of folderData){
+                //Take a look at the children of the containors (arrows and such)                
+                for (let treeDat of cont.children){
+                    //Why is the vertex folder coming up as undefined?????
+                    if(b === 0){
+                        //console.log("SECOND LAYER: " + treeDat.children);
+                        for (let treeElement of treeDat.children){
+                            if ((treeElement.text === currentlySelectedObject.title || currentlySelectedObject.title == "Unnamed Vertex")){
+
+                                console.log("HERE: " + cont.text + " " + treeDat.text + " " + treeElement.text);
+                                //Push the matched container object
+                                let CTreeObj = {
+                                    text: cont.text,
+                                    children: vertOrEdge,
+                                    data: null,
+                                    state: {opened: true}
+                                }
+                                container.push(CTreeObj);
+
+                                //Push the proper vertex or edge folder
+                                let CVertexObj = {
+                                    text: "Vertices",
+                                    children: objName,
+                                    data: null,
+                                    state: {opened: true}
+                                }
+                                vertOrEdge.push(CVertexObj);
+
+                                //Push the proper tree element object
+                                let CElementObj = {
+                                    text: currentlySelectedObject.title,
+                                    children: [],
+                                    data: null,
+                                    state: {opened: true}
+                                }
+                                objName.push(CElementObj);
+
+                                console.log('THE FOUND PATH IS: ' + CTreeObj.text + CVertexObj.text + CElementObj.text);
+
+                                //console.log(container + " " + vertOrEdge + " " + objName);
+                            }
+                        }
+                        b = 1;
+                    }
+
+
+                    
+                    
+                    ///for (let objects of treeDat.children){
+                    ///    console.log('YA HERE' + objects);
+                    ///}
+                    
+                }
+                
+                
+            }
             
+            //Set the tree to show the matched path
+            this.state = {
+                data: {
+                    core: {
+                        data: [
+                            { text: getModelName(), 
+                            children: container, state: { opened: true } },
+                        ]
+                    }
+                },
+                selectedVertex: null
+            }
+
+            /*
             for (let vertex of currentObjects.flattenVertexNodes()){
                 //Look for our title of interest      
                 treeData = [];
+                //
                 if (currentlySelectedObject.typeName === "Vertex"){
                     treeData.push(vertex.focusTreeViewElement(new Set(), currentlySelectedObject.title));
                 }
@@ -120,22 +200,25 @@ export class ContainmentTree extends React.Component {
                 }
                 
             }
+            */
         }
 
 
 
-
-        this.state = {
-            data: {
-                core: {
-                    data: [
-                        { text: getModelName(), 
-						children: folderData, state: { opened: true } },
-                    ]
-                }
-            },
-            selectedVertex: null
+        if (focussed === false){
+            this.state = {
+                data: {
+                    core: {
+                        data: [
+                            { text: getModelName(), 
+                            children: folderData, state: { opened: true } },
+                        ]
+                    }
+                },
+                selectedVertex: null
+            }
         }
+
     }
 
     handleElementSelect(e, data) {
@@ -168,7 +251,6 @@ export class ContainmentTree extends React.Component {
             <div>
                 <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} />
                 <br></br>
-                <button onClick={() => this.handleAddFolder()}>Add Folder</button>
             </div>
         )
     }
