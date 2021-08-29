@@ -344,43 +344,51 @@ function findNearestArrowPointIndex(x, y) {
     return [nearestPointIndex, nearestArrow]
 }
 
-function moveArrowPointOnMouseMove(e, index, arrow) {
-    let x, y;
-    [x, y] = getGraphXYFromMouseEvent(e);
-    let conData = getConnectionDataForArrow(x, y);
-    arrow.pathData[index] = conData['nearest'];
-
+function StickArrorToObject(connectionData, arrow, index) {
     // so the line sticks to object
-    if (conData['snapped'] === false) {
-        let coord = conData['coord'];
+    if (connectionData['snapped'] === false) {
+        let coord = connectionData['coord'];
         // update the arrow
         arrow.path[index] = [coord[1], coord[2]]
     } else {
-        let vertexUUID = conData['nearest'][1];
+        let vertexUUID = connectionData['nearest'][1];
         let vertex = getObjectFromUUID(vertexUUID);
 
         if (vertex !== undefined) {
             arrow.path[index] = arrow.rebuildPath()
         }
     }
-
 }
+
+function moveArrowPointOnMouseMove(e, index, arrow) {
+    let x, y;
+    [x, y] = getGraphXYFromMouseEvent(e);
+    let conData = getConnectionDataForArrow(x, y);
+    arrow.pathData[index] = conData['nearest'];
+
+    StickArrorToObject(conData, arrow, index);
+    }
+
 
 // Event based functions
 export function onLeftMousePress(canvas, x, y) {
+
+    // Checks if your mouse is in range of the boarders of a box to resize them
     let resizeVars = checkResizeBounds(x, y);
-	
     if (canvas.tool === Tool.Vertex || canvas.tool === Tool.Select) {
         if (resizeVars[0] !== null) {
             if (resizeVars[0] === getSelectedObject(canvas)) {
-				saveBlockStates(canvas,x,y);
+                saveBlockStates(canvas, x, y);
                 resizing = true;
                 canvasElement.onmousemove = function (e) {
                     resizeObjectOnMouseMove(e, resizeVars);
                 };
                 return;
             }
+        } else {
         }
+       
+
 
         let intersection = findIntersected(x, y);
         if (canvas.tool === Tool.Vertex && intersection !== null) {
@@ -434,52 +442,57 @@ export function onLeftMousePress(canvas, x, y) {
 
     });*/
 
-  
-    
-    
-
 }
 
-export function checkArrowsConnectedToBox(Object, x, y) {
+export function checkArrowsConnectedToBox(Object) {
     // check arrows which one matches the box that was moved by its ID 
 
     // check how much the box has changed
-    var changeInWidth = x - Object.width;
-    var changeInHeight = y - Object.height;
     var objectID;
 
-    //Puppy
     let arrowArray = [];
-
-
 
     resizing = true;
     objectID = Object.semanticIdentity.UUID;
     console.log(objectID);
     currentObjects.flatten().forEach((item) => {
         if (item.constructor.name === "Arrow") {
-            console.log(item);
-            console.log(item.path[1][0]);
+            //console.log(item);
+            //console.log(item.path[1][0]);
             //item.path[1] = [250, 200];
-
+            let conData = 0;
+            //If the object is connected to destination
             if (objectID === item.destVertexUUID) {
                 arrowArray.push(item);
                 //item.path[1][0] += changeInWidth;
                 //item.path[1][1] += changeInHeight;
 
                 // get connection data calcs min dist to travel and hopefully it's straight up
-                let conData = getConnectionDataForArrow(Object.x, Object.y);
+                if (item.path[0][1] < Object.y) {
+                    conData = getConnectionDataForArrow(item.path[0][0], Object.y);
+                }
+                else {
+                    conData = getConnectionDataForArrow(item.path[0][0], Object.y + Object.height);
+                }
                 item.pathData[1] = conData['nearest'];
                 console.log("dest one")
+                StickArrorToObject(conData, item, 1);
                 //item.path[1] = [item.path[1][0] + changeInWidth, item.path[1][1] + changeInHeight];
 
+            //If the object is connected to Source
             } else if (objectID === item.sourceVertexUUID) {
                 arrowArray.push(item);
                 //item.path[0][0] += changeInWidth;
                 //item.path[0][1] += changeInHeight;
-                let conData = getConnectionDataForArrow(Object.x, Object.y);
+                if (item.path[1][1] < Object.y) {
+                    conData = getConnectionDataForArrow(item.path[0][0], Object.y);
+                }
+                else {
+                    conData = getConnectionDataForArrow(item.path[1][0], Object.y + Object.height);
+                }
                 item.pathData[0] = conData['nearest'];
                 console.log("source one");
+                StickArrorToObject(conData, item, 0);
                 //item.path[0] = [item.path[0][0] + changeInWidth, item.path[0][1] + changeInHeight];
 
             }
@@ -580,6 +593,7 @@ export function onRightMouseRelease(canvas, x, y) {
     }
 }
 
+
 //line intersector
 export function lineIntersector(canvas, x, y, secondObject) {
 	endX = 0;
@@ -597,8 +611,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
 
     
 
-	//previous object is below
-    if(previousObject.y > y) {
+    //previous object is below
+    if (previousObject.y > (secondObject.y + secondObject.height)) {
 		//console.log("\n\n\n prev object was below \n\n\n");
 		//if previous is inside second range
 			if((previousObject.x > secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))){
@@ -618,7 +632,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 			}
 			//If pre is downleft of sec extend whichever box is bigger horizontally and fit
 			else if((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))){
-				if(blockpre < blocksec){
+				if(blockpre <= blocksec){
 					secondObject.width = secondObject.width + (secondObject.x-previousObject.x);
 					secondObject.x = previousObject.x;
 
@@ -627,9 +641,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y;
                     endX = startX;
                     //second obj is changing size
-                    checkArrowsConnectedToBox(secondObject, endX - startX, endY - startY);
+                    checkArrowsConnectedToBox(secondObject);
 				}
-				if(blockpre > blocksec){
+				if(blockpre >= blocksec){
 					previousObject.width = previousObject.width+ ((secondObject.x+secondObject.width) -(previousObject.x + previousObject.width));
 					previousObject.x = previousObject.x;
 
@@ -638,12 +652,12 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y;
                     endX = startX;
                     //prev obj is changing size
-                    checkArrowsConnectedToBox(previousObject, endX - startX, endY - startY);
+                    checkArrowsConnectedToBox(previousObject);
 				}
 			}
 			//If pre is downright of sec extend whichever box is better horizontally and fit
             else if (previousObject.x > secondObject.x) {
-				if(blockpre < blocksec){
+				if(blockpre <= blocksec){
 					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width));
 
 					startY = secondObject.y + secondObject.height;
@@ -653,7 +667,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
                     //second obj is changing size
                     checkArrowsConnectedToBox(secondObject, endX - startX, endY - startY);
 				}
-				if(blockpre > blocksec){
+				if(blockpre >= blocksec){
 					previousObject.width = previousObject.width + (previousObject.x-secondObject.x);
 					previousObject.x = secondObject.x;
 
@@ -662,7 +676,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y;
                     endX = startX;
                     //prev obj is changing size
-                    checkArrowsConnectedToBox(previousObject, endX - startX, endY - startY);
+                    checkArrowsConnectedToBox(previousObject);
                 }
         }
 	} 
@@ -688,7 +702,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 			}
 			//If pre is upleft of sec extend which everbox is better horizontally and fit
             else if ((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))) {
-				if(blockpre < blocksec){
+				if(blockpre <= blocksec){
 					secondObject.width = secondObject.width + (secondObject.x-previousObject.x);
 					secondObject.x = previousObject.x;
 
@@ -697,9 +711,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y+previousObject.height;
                     endX = startX;
                     //second obj is changing size
-                    checkArrowsConnectedToBox(secondObject, endX - startX, endY - startY);
+                    checkArrowsConnectedToBox(secondObject);
 				}
-				if(blockpre > blocksec){
+				if(blockpre >= blocksec){
 					previousObject.width = previousObject.width+ ((secondObject.x+secondObject.width) -(previousObject.x + previousObject.width));
 					previousObject.x = previousObject.x;
 
@@ -708,12 +722,12 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y + previousObject.height;
                     endX = startX;
                     //previous obj is changing size
-                    checkArrowsConnectedToBox(previousObject, endX - startX, endY - startY);
+                    checkArrowsConnectedToBox(previousObject);
 				}
 			}
 			//If pre is upright of sec extend whichever box is bigger horizontally and fit
         else if (previousObject.x > secondObject.x) {
-				if(blockpre < blocksec){
+				if(blockpre <= blocksec){
 					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width));
                     
 					startY = secondObject.y;
@@ -721,9 +735,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y + previousObject.height;
                     endX = startX;
                     //previous obj is changing size
-                    checkArrowsConnectedToBox(secondObject, endX - startX, endY - startY);
+                    checkArrowsConnectedToBox(secondObject);
 				}
-				if(blockpre > blocksec){
+				if(blockpre >= blocksec){
 					previousObject.width = previousObject.width + (previousObject.x-secondObject.x);
 					previousObject.x = secondObject.x;
 
@@ -732,22 +746,109 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y + previousObject.height;
                     endX = startX;
                     //second obj is changing size
-                    checkArrowsConnectedToBox(previousObject, endX - startX, endY - startY);
+                    checkArrowsConnectedToBox(previousObject);
 				}
         }
 			
-	}
-	//previous object is left of //if you click higher it counts as above
+    }
 
-	else if (previousObject.width+previousObject.x < x) {
+
+    //previous object is left 
+    else if (previousObject.x + previousObject.width < secondObject.x) {
 		//console.log("\n\n\nprev object was left of\n\n\n");
-		startY = previousObject.y+(0.5*previousObject.height+10);
-		startX = previousObject.x + previousObject.width;
 
-		endX = secondObject.x;
-		endY = secondObject.y + (0.5*secondObject.height+10);
-	}
-	else if (previousObject.x > x) {
+        //Previous is smaller
+        if (previousObject.y > secondObject.y && previousObject.y + previousObject.height < secondObject.y + secondObject.height) {
+            startY = previousObject.y + (previousObject.height + 10)/2 ;
+            startX = previousObject.x + previousObject.width;
+
+            endX = secondObject.x;
+            endY = startY;
+
+            //Second is smaller
+        } else if (secondObject.y > previousObject.y && secondObject.y + secondObject.height < previousObject.y + previousObject.height) {
+            startY = secondObject.y + (secondObject.height + 10) / 2;
+            startX = secondObject.x;
+
+            endX = previousObject.x + previousObject.width;
+            endY = startY;
+            
+            //Top Left and peeking
+        } else if (previousObject.y + previousObject.height > secondObject.y && secondObject.y > previousObject.y) {
+            if (blockpre <= blocksec) {
+                secondObject.height = secondObject.height + (secondObject.y - previousObject.y);
+                secondObject.y = previousObject.y;
+
+
+                startY = previousObject.y + (previousObject.height + 10) / 2;
+                startX = previousObject.x + previousObject.width;
+                endX = secondObject.x;
+                endY = startY;
+            }
+
+            if (blockpre >= blocksec) {
+                previousObject.height = previousObject.height + ((secondObject.y + secondObject.height) - (previousObject.y + previousObject.height));
+
+                startY = secondObject.y + (secondObject.height + 10) / 2;
+                startX = secondObject.x;
+
+                endX = previousObject.x + previousObject.width;
+                endY = startY;
+
+            }
+            //Bottom Left and peeking
+        } else if (secondObject.y + secondObject.height > previousObject.y && previousObject.y + previousObject.height > secondObject.y + secondObject.height) {
+            if (blockpre <= blocksec) {
+                secondObject.height = secondObject.height + ((previousObject.y + previousObject.height) - (secondObject.y + secondObject.height));
+
+                startY = previousObject.y + (previousObject.height + 10) / 2;
+                startX = previousObject.x + previousObject.width;
+                endX = secondObject.x;
+                endY = startY;
+            }
+
+            if (blockpre >= blocksec) {
+                previousObject.height = previousObject.height + (previousObject.y - secondObject.y);
+                previousObject.y = secondObject.y;
+
+                startY = secondObject.y + (secondObject.height + 10) / 2;
+                startX = secondObject.x;
+
+                endX = previousObject.x + previousObject.width;
+                endY = startY;
+
+            }
+        }
+
+
+
+
+    }
+
+
+    // do this
+    //Previous is right side
+    else if (previousObject.x > secondObject.x + secondObject.width) {
+
+        //Previous is smaller
+        if (previousObject.y > secondObject.y && previousObject.y + previousObject.height < secondObject.y + secondObject.height) {
+
+            //Second is smaller
+        } else if (secondObject.y > previousObject.y && secondObject.y + secondObject.height < previousObject.y + previousObject.height) {
+
+            //Top Right and peeking
+        } else if (previousObject.y + previousObject.height > secondObject.y && secondObject.y > previousObject.y) {
+
+            //Bottom Left and peeking
+        } else if (secondObject.y + secondObject.height < previousObject.y + previousObject.height && previousObject.y < secondObject.y + secondObject.height) {
+
+        }
+
+
+
+
+
+
 		//console.log("\n\n\nprev object was right of\n\n\n");
 		startY = previousObject.y+(0.5*previousObject.height+10);
 		startX = previousObject.x;
@@ -772,6 +873,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
 
 
 export function onLeftMouseRelease(canvas, x, y) {
+
+
     if (cancelDraw) {
         cancelDraw = false;
         return;
@@ -883,8 +986,12 @@ export function onLeftMouseRelease(canvas, x, y) {
         canvas.props.setLeftMenu(newObject);
         canvas.props.setMode(Tool.Select);
     }
+        
+    
+
 
     drawAll(currentObjects);
+
 }
 
 function onMouseMove(e, canvas) {
@@ -1057,7 +1164,7 @@ function createContainer(canvas, x1, y1) {
 
     if (canvas.tool === Tool.Container) {
         // Get positions
-        let pos = orderCoordinates(x1, y1, x1 + 100, y1 + 100);
+        let pos = orderCoordinates(x1, y1, x1 + 100, y1 + 60);
         let vy1 = findNearestGridY(pos[1], 0);
         let vy2 = findNearestGridY(pos[3], 0);
 
@@ -1074,7 +1181,7 @@ function createObject(canvas, x1, y1, x2, y2) {
 
     if (canvas.tool === "Vertex") {
         // Get positions
-        let pos = orderCoordinates(x1, y1, x2, y2);
+        let pos = orderCoordinates(x1, y1, x2+90, y2);
         let vy1 = findNearestGridY(pos[1], 0);
         let vy2 = findNearestGridY(pos[3], 0);
 

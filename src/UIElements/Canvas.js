@@ -38,12 +38,52 @@ export class Canvas extends React.Component {
             startY: y
         });
 
+        // function to move the box with right click
+        //function rightClickDrag(e) {
+        //    let newCoords = canvasDraw.getGraphXYFromMouseEvent(e);
+        //    let x2 = newCoords[0];
+        //    let y2 = newCoords[1];
+        //    let dist = Math.hypot(x, y, x2, y2);
+
+        //    if (dist > 10 && movingAllowed) {
+        //        canvasDraw.onMiddleClick(canvas, x, y);
+        //    }
+        //}
+
+        //If it was a right click to move the box
+        //if (e.button === 0 && canmovebox === true) {
+        //    //blue select
+        //    this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
+        //    movingAllowed = true;
+        //    document.addEventListener("mousemove", rightClickDrag, { once: true })
+
+        //}
+
         // If it was a left click
         if (e.button === 0) {
-			this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
-			canvasDraw.saveBlockStates(canvas,x,y,1);
+            let intersection = canvasDraw.findIntersected(x, y);
+            // check if there's an object
+            if (intersection !== null) {
+                //if object is a box, move the object
+                if (canvas.tool === Tool.Select && intersection.constructor.name === "Vertex") {
+                    e.preventDefault();
+                    // brings up the menu
+                    this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
+                    canvasDraw.onMiddleClick(canvas, x, y)
+                } else {
+                    this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
+                    canvasDraw.saveBlockStates(canvas, x, y, 1);
+                    canvasDraw.onLeftMousePress(canvas, x, y);
+                }
+
+              } else {
+            this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
+            canvasDraw.saveBlockStates(canvas, x, y, 1);
             canvasDraw.onLeftMousePress(canvas, x, y);
+            }
         }
+
+
 
         // If it was a middle click
         if (e.button === 1) {
@@ -51,26 +91,7 @@ export class Canvas extends React.Component {
             canvasDraw.onMiddleClick(canvas, x, y)
         }
 
-        // function to move the box with right click
-        function rightClickDrag (e){
-            let newCoords = canvasDraw.getGraphXYFromMouseEvent(e);
-            let x2 = newCoords[0];
-            let y2 = newCoords[1];
-            let dist = Math.hypot(x, y, x2, y2);
 
-            if (dist > 10 && movingAllowed) {
-                canvasDraw.onMiddleClick(canvas, x, y);
-            }
-        }
-
-        //If it was a right click to move the box
-        if (e.button === 2) {
-		//blue select
-			this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
-            movingAllowed = true;
-            document.addEventListener("mousemove", rightClickDrag, { once: true })
-            
-        }
     };
 
     mouseUp = (e, canvas) =>{
@@ -82,7 +103,7 @@ export class Canvas extends React.Component {
 
         // If it was a left click
         if (e.button === 0) {
-            if(canvas.tool === Tool.Select){
+            if (canvas.tool === Tool.Select) {
                 canvasDraw.drawAll()
             }
 			else {
