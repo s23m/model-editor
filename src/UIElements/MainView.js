@@ -17,6 +17,7 @@ import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
 import {handleAddFolder} from './ContainmentTree';
+import { handleDeleteFolder } from './ContainmentTree';
 
 // Simple incremental version
 // 1->2->3->4
@@ -66,6 +67,10 @@ export class MainProgramClass extends React.Component {
     addFolder = (type) => {
         //handleAddFolder({modelName:document.getElementById("FolderName").value});
         handleAddFolder(folderName);
+    }
+
+    deleteFolder = (type) => {
+        handleDeleteFolder(folderName);
     }
 
     zoom = (type) => {
@@ -236,7 +241,10 @@ export class MainProgramClass extends React.Component {
 
                     {/*<div className="TopBarIdentifier">Rows:&nbsp;</div>*/}
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
+                    <div className="TopBarIcon">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.addFolder()}> Add Folder </div>
+                    <div className="TopBarIcon">&nbsp;</div>
+                    <div className="TopBarIcon" onClick={() => this.deleteFolder()}> Delete Folder </div>
 
                 </div>
 

@@ -20,6 +20,9 @@ import {deleteElement} from "./CanvasDraw";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import {displayFocussedTreeView} from "./ContainmentTree.js"
 
+// Show the vertex path
+import {showVertexPath} from "./ContainmentTree.js";
+
 //Property Enums
 export const LeftMenuType = {
     TreeView: "TreeView",
@@ -359,7 +362,10 @@ export class LeftMenu extends React.Component{
 
                 <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={() => {displayFocussedTreeView(this.state.selectedObject); this.setState({menu:"TreeView"})}}>Focus/Unfocus Treeview</button>
-                
+
+                <label className="LeftSpacer">&nbsp;</label>
+                <button className="LeftMenuButton" onClick={() => {showVertexPath(this.state.selectedObject); this.setState({menu:"TreeView"})}}>Toggle Vertex Path</button>
+
             </form>;
 
         } else if (this.state.menu === LeftMenuType.Arrow) {

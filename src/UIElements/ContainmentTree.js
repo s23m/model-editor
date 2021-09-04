@@ -10,8 +10,10 @@ import { currentObjects, getModelName } from "./CanvasDraw";
 import { drawAll } from "./CanvasDraw";
 
 let focussed = false; //Decides whether or not to show the normal tree view or a focussed version
-let currentlySelectedObject = null;
-let lastSelectedObject = null;
+let currentlySelectedObject = null; //The currently selected object
+let lastSelectedObject = null; // The last selected object
+
+let showingVertPath = false;
 
 // You could probably get away with not including this here, but it just makes it easier to access the tree
 // data from any function you like. It still needs to be emptied in the constructor though
@@ -66,6 +68,70 @@ export function handleAddFolder(folderName){
     }
     */
     
+}
+
+// Function to remove a folder in the tree
+export function handleDeleteFolder(folderName){
+    for (let i = 0; i < folderData.length; i++){
+        if (folderData[i].text === folderName){
+            folderData.splice(i,1); 
+        }
+    }
+}
+
+// This is a function to display the path of a given vertex
+// It's called in the left menu of a vertex
+export function showVertexPath(theObject){
+
+    console.log("HERE YA GOOF" + theObject.title);
+    currentlySelectedObject = theObject;
+    if (showingVertPath === false){
+        showingVertPath = true;
+        return;
+    }
+
+    else if (showingVertPath === true){
+        showingVertPath = false;
+        return;
+    }
+    
+    
+    //console.log("AND HERE");
+    /*
+    currentlySelectedObject = theObject;
+
+    let highestLevel = getModelName();
+    let nextLevel = "";
+    let vertexOrEdge = "";
+    let actualObject = "";
+
+    let b = 0;
+    //First, we need to actually determine where the vertex is
+    //Take a look at our containor
+    for (let cont of folderData){
+        //Take a look at the children of the containors (arrows and such)                
+        for (let treeDat of cont.children){
+            //Why is the vertex folder coming up as undefined?????
+            if(b === 0){
+                //console.log("SECOND LAYER: " + treeDat.children);
+                for (let treeElement of treeDat.children){
+                    if ((treeElement.text === currentlySelectedObject.title || currentlySelectedObject.title === "Unnamed Vertex")){
+
+                        nextLevel = cont.text;
+
+                        vertexOrEdge = "Vertices";
+
+                        actualObject = currentlySelectedObject.title;
+                    }
+                }
+                b = 1;
+            }
+            
+        }
+        
+        console.log(highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject);
+    }
+    */
 }
 
 export class ContainmentTree extends React.Component {
@@ -123,9 +189,8 @@ export class ContainmentTree extends React.Component {
                     if(b === 0){
                         //console.log("SECOND LAYER: " + treeDat.children);
                         for (let treeElement of treeDat.children){
-                            if ((treeElement.text === currentlySelectedObject.title || currentlySelectedObject.title == "Unnamed Vertex")){
+                            if ((treeElement.text === currentlySelectedObject.title || currentlySelectedObject.title === "Unnamed Vertex")){
 
-                                console.log("HERE: " + cont.text + " " + treeDat.text + " " + treeElement.text);
                                 //Push the matched container object
                                 let CTreeObj = {
                                     text: cont.text,
@@ -153,20 +218,11 @@ export class ContainmentTree extends React.Component {
                                 }
                                 objName.push(CElementObj);
 
-                                console.log('THE FOUND PATH IS: ' + CTreeObj.text + CVertexObj.text + CElementObj.text);
-
-                                //console.log(container + " " + vertOrEdge + " " + objName);
+                            
                             }
                         }
                         b = 1;
                     }
-
-
-                    
-                    
-                    ///for (let objects of treeDat.children){
-                    ///    console.log('YA HERE' + objects);
-                    ///}
                     
                 }
                 
@@ -186,24 +242,7 @@ export class ContainmentTree extends React.Component {
                 selectedVertex: null
             }
 
-            /*
-            for (let vertex of currentObjects.flattenVertexNodes()){
-                //Look for our title of interest      
-                treeData = [];
-                //
-                if (currentlySelectedObject.typeName === "Vertex"){
-                    treeData.push(vertex.focusTreeViewElement(new Set(), currentlySelectedObject.title));
-                }
-
-                else{
-                    treeData.push(vertex.focusTreeViewElement(new Set(), currentlySelectedObject.semanticIdentity.UUID));
-                }
-                
-            }
-            */
         }
-
-
 
         if (focussed === false){
             this.state = {
@@ -216,6 +255,41 @@ export class ContainmentTree extends React.Component {
                     }
                 },
                 selectedVertex: null
+            }
+        }
+
+        if(showingVertPath === true){
+
+            let highestLevel = getModelName();
+            let nextLevel = "";
+            let vertexOrEdge = "";
+            let actualObject = "";
+        
+            let b = 0;
+            //First, we need to actually determine where the vertex is
+            //Take a look at our containor
+            for (let cont of folderData){
+                //Take a look at the children of the containors (arrows and such)                
+                for (let treeDat of cont.children){
+                    //Why is the vertex folder coming up as undefined?????
+                    if(b === 0){
+                        //console.log("SECOND LAYER: " + treeDat.children);
+                        for (let treeElement of treeDat.children){
+                            if ((treeElement.text === currentlySelectedObject.title || currentlySelectedObject.title === "Unnamed Vertex")){
+        
+                                nextLevel = cont.text;
+        
+                                vertexOrEdge = "Vertices";
+        
+                                actualObject = currentlySelectedObject.title;
+                            }
+                        }
+                        b = 1;
+                    }
+                    
+                }
+                
+                console.log(highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject);
             }
         }
 
