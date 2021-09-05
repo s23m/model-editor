@@ -488,6 +488,42 @@ export class Graph {
         }
     }
 
+    //A way of returning the arrow UUID's associated with the deleted vertex. For some reason the source and ending
+    //UUID data isn't being saved properly upstream, so this is a way around that.
+    ArrowUUIDSource(object){
+        object = this.getVertexNode(object);
+        //first index is source, second is destination
+        let returnArray = [];
+
+        //Match an arrow
+        let i = 0;
+        for (let arrow of this.arrows) {
+            if (arrow.sourceVertexNode !== null && arrow.sourceVertex.semanticIdentity.UUID === object.vertex.semanticIdentity.UUID) {
+                returnArray[i] = arrow;
+                i += 1;
+            }
+        }
+
+        return returnArray;
+    }
+
+    ArrowUUIDDest(object){
+        object = this.getVertexNode(object);
+        //first index is source, second is destination
+        let returnArray = [];
+
+        //Match an arrow
+        let i = 0;
+        for (let arrow of this.arrows) {
+            if (arrow.destVertexNode !== null && arrow.destVertex.semanticIdentity.UUID === object.vertex.semanticIdentity.UUID) {
+                returnArray[i] = arrow;
+                i += 1;
+            }
+        }
+
+        return returnArray;
+    }
+
     //Removes and object while shifting it's children's position in the tree
     remove(object) {
         if (object.constructor.name === "Vertex") {
@@ -499,6 +535,7 @@ export class Graph {
             for (let child of object.children) {
                 this.rootVertices.add(child);
             }
+            console.log("It removes from the root fine")
             
             //Remove from anywhere deeper in the tree
             let traversedVertices = new Set();
@@ -508,6 +545,7 @@ export class Graph {
                     isRemoved |= vertexNode.remove(traversedVertices, object);
                 }
             }
+            
             
             if (isRemoved) {
                 //Remove the vertex from being the source or dest of any arrow
@@ -521,6 +559,7 @@ export class Graph {
                     }
                 }
             }
+            
 
             return isRemoved;
 
