@@ -23,6 +23,9 @@ import {displayFocussedTreeView} from "./ContainmentTree.js"
 // Show the vertex path
 import {showVertexPath} from "./ContainmentTree.js";
 
+// The variable that contains the found path of a given vertex
+import { someVertexPath } from './ContainmentTree';
+
 //Property Enums
 export const LeftMenuType = {
     TreeView: "TreeView",
@@ -72,6 +75,27 @@ export class LeftMenu extends React.Component{
         this.setIcons();
 
     }
+
+    /*
+    leftMenuContents = <form id = "VertexMenu">
+                <div className="LeftHeader">Vertex Properties</div>
+                <label className="LeftLabel">Title</label>
+                <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()}/>
+                <label className="LeftSpacer">&nbsp;</label>
+    
+                */
+               
+    /// This is a test function, remove it if I forget to
+    testUpdateLabel = (type) =>{
+        this.setPath("fffffffff")
+        //document.getElementById("VertPath").value = "It doth been updated";
+        
+        //console.log("RIGHT HERE " + document.getElementById("VertPath").value)
+    }
+
+
+
+    /// 
 
     componentDidMount() {
         this.menu = this.props.mainState.menu;
@@ -324,7 +348,7 @@ export class LeftMenu extends React.Component{
 
         let toolbar = <div id = "Toolbar" className = "Toolbar">
             <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt ="Select"/></div>
-            <div id = "Vertex" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Vertex)}  onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt ="Vertex"/></div>
+            <div id = "Vertex" className="ToolbarItem" onClick={() => {this.props.setMode(Tool.Vertex); showVertexPath(this.state.selectedObject); if (this.state.selectedObject !== null){showVertexPath(this.state.selectedObject); this.state.selectedObject.setPath(someVertexPath)}}} onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt ="Vertex"/></div>
             <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt ="Edge"/></div>
             <div id = "Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt ="Specialisation"/></div>
             <div id = "Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt ="Visibility"/></div>
@@ -364,7 +388,12 @@ export class LeftMenu extends React.Component{
                 <button className="LeftMenuButton" onClick={() => {displayFocussedTreeView(this.state.selectedObject); this.setState({menu:"TreeView"})}}>Focus/Unfocus Treeview</button>
 
                 <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => {showVertexPath(this.state.selectedObject); this.setState({menu:"TreeView"})}}>Toggle Vertex Path</button>
+                
+                <button className="LeftMenuButton" onClick={() => {/*this.state.selectedObject.setPath("ffffff")*//*showVertexPath(this.state.selectedObject)*/showVertexPath(this.state.selectedObject); this.state.selectedObject.setPath(someVertexPath);this.setState({menu:"TreeView"})}}>Toggle Vertex Path</button>
+
+                <input id="VertPath" className="LeftLabel" defaultValue={this.state.selectedObject.vertexPath}/>
+                
+
 
             </form>;
 

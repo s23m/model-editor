@@ -9,6 +9,9 @@ import TreeView from 'react-simple-jstree';
 import { currentObjects, getModelName } from "./CanvasDraw";
 import { drawAll } from "./CanvasDraw";
 
+// I need to export this so I can access it in the left menu and then set it to the correct vertex;
+export var someVertexPath = "";
+
 let focussed = false; //Decides whether or not to show the normal tree view or a focussed version
 let currentlySelectedObject = null; //The currently selected object
 let lastSelectedObject = null; // The last selected object
@@ -83,19 +86,20 @@ export function handleDeleteFolder(folderName){
 // It's called in the left menu of a vertex
 export function showVertexPath(theObject){
 
-    console.log("HERE YA GOOF" + theObject.title);
-    currentlySelectedObject = theObject;
-    if (showingVertPath === false){
-        showingVertPath = true;
-        return;
+    //console.log("HERE YA GOOF" + theObject.title);
+    if (currentObjects.flatten().length > 0){
+        currentlySelectedObject = theObject;
+        if (showingVertPath === false){
+            showingVertPath = true;
+            return;
+        }
+    
+        else if (showingVertPath === true){
+            showingVertPath = false;
+            return;
+        }
     }
 
-    else if (showingVertPath === true){
-        showingVertPath = false;
-        return;
-    }
-    
-    
     //console.log("AND HERE");
     /*
     currentlySelectedObject = theObject;
@@ -288,8 +292,7 @@ export class ContainmentTree extends React.Component {
                     }
                     
                 }
-                
-                console.log(highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject);
+                someVertexPath = highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject;
             }
         }
 

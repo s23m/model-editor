@@ -41,6 +41,17 @@ export class Vertex {
         this.height = Math.max(height, defaultMinimumSize);
 
         this.isAbstract = false;
+
+        //Store the path to your given vertex here
+        this.vertexpPath = "";
+    }
+
+    setPath(path){
+        this.vertexPath = path;
+    }
+
+    getPath(){
+        return this.vertexPath;
     }
 
     setSelected(selected) {

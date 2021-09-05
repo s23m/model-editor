@@ -19,6 +19,9 @@ import {resetRows} from "./SemanticDomainEditor";
 import {handleAddFolder} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
+import { showVertexPath } from './ContainmentTree';
+import { someVertexPath } from './ContainmentTree';
+
 // Simple incremental version
 // 1->2->3->4
 export const version = 1;
@@ -97,6 +100,9 @@ export class MainProgramClass extends React.Component {
             this.setState({drawMode: "Arrow"})
         }else if (mode === Tool.Vertex){
             this.setState({drawMode: "Vertex"})
+            //updating path
+            //showVertexPath(this.state.selectedObject); 
+            //this.state.selectedObject.setPath(someVertexPath);
         }else if (mode === Tool.Select){
             this.setState({drawMode: "Select"})
         }
