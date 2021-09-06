@@ -9,6 +9,8 @@ import TreeView from 'react-simple-jstree';
 import { currentObjects, getModelName } from "./CanvasDraw";
 import { drawAll } from "./CanvasDraw";
 
+import { currentRenderKey } from './CanvasDraw';
+
 // I need to export this so I can access it in the left menu and then set it to the correct vertex;
 export var someVertexPath = "";
 
@@ -307,6 +309,15 @@ export class ContainmentTree extends React.Component {
                         selectedVertex: vertex
                     });
                     this.props.setLeftMenu(this.state.selectedVertex);
+
+                    // Set the current render key to whatever object the person has clicked from
+                    // the tree view
+                    /*
+                    console.log("The old render key is: " + currentRenderKey);
+                    currentRenderKey = this.state.selectedVertex.getRenderKey();
+                    console.log("The new render key is: " + currentRenderKey);
+                    */
+                   console.log("The selected object is: " + this.state.selectedObject)
                 }
             }
             

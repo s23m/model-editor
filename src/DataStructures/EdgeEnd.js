@@ -32,6 +32,19 @@ export class EdgeEnd {
         }
 
         this.label = label;
+
+        // For rendering different graphs in the same file
+        this.edgeEndRenderKey = 0;
+    }
+
+    // Set the render key. Done in ContainmentTree.js
+    setRenderKey(key){
+        this.edgeEndRenderKey = key;
+    }
+
+    // Return the render key. Done in CanvasDraw.js
+    getRenderKey(key){
+        return this.edgeEndRenderKey;
     }
 
     set type(newType){

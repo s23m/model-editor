@@ -43,7 +43,20 @@ export class Vertex {
         this.isAbstract = false;
 
         //Store the path to your given vertex here
-        this.vertexpPath = "";
+        this.vertexPath = "";
+
+        // Used to render different graphs in the same file.
+        this.vertexRenderKey = 0;
+    }
+
+    // Set the render key. Done in ContainmentTree.js
+    setRenderKey(key){
+        this.vertexRenderKey = key;
+    }
+
+    // Get the render key. Called in CanvasDraw.js
+    getRenderKey(){
+        return this.vertexRenderKey;
     }
 
     setPath(path){

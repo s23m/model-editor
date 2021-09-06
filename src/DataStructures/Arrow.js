@@ -83,6 +83,19 @@ export class Arrow {
         this.destIsNavigable = false;
         this.sourceIsAggregation = false;
         this.destIsAggregation = false;
+
+        // Render key for the arrow for rendering different graphs
+        this.arrowRenderKey = 0;
+    }
+
+    // Set the render key. This is done in ContainmentTree.js
+    setRenderKey(key){
+        this.arrowRenderKey = key;
+    }
+
+    // Return the render key. This is called in CanvasDraw
+    getRenderKey(){
+        return this.arrowRenderKey;
     }
 
     toggleNavigable(side){

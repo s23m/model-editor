@@ -35,6 +35,8 @@ export var currentObjects = new Graph();
 
 export var savedArrows = [];
 
+export var currentRenderKey = 0;
+
 // Arrow Path
 export var arrowPath = [];
 var lastX = 0;
@@ -103,7 +105,13 @@ export function drawAll() {
 
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
-            item.draw(canvasContext);
+            //console.log("HERE " + item.typeName)
+            //Only render the objects which are in the currently selected containment
+            
+            if (item.getRenderKey() === 0){
+                item.draw(canvasContext);
+            }
+            
         }
     });
 
