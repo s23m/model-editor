@@ -348,7 +348,7 @@ export class LeftMenu extends React.Component{
 
         let toolbar = <div id = "Toolbar" className = "Toolbar">
             <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt ="Select"/></div>
-            <div id = "Vertex" className="ToolbarItem" onClick={() => {this.props.setMode(Tool.Vertex); showVertexPath(this.state.selectedObject); if (this.state.selectedObject !== null){showVertexPath(this.state.selectedObject); this.state.selectedObject.setPath(someVertexPath)}}} onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt ="Vertex"/></div>
+            <div id = "Vertex" className="ToolbarItem" onClick={() => {this.props.setMode(Tool.Vertex); }} onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt ="Vertex"/></div>
             <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt ="Edge"/></div>
             <div id = "Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt ="Specialisation"/></div>
             <div id = "Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt ="Visibility"/></div>
@@ -389,8 +389,7 @@ export class LeftMenu extends React.Component{
 
                 <label className="LeftSpacer">&nbsp;</label>
                 
-                <button className="LeftMenuButton" onClick={() => {/*this.state.selectedObject.setPath("ffffff")*//*showVertexPath(this.state.selectedObject)*/showVertexPath(this.state.selectedObject); this.state.selectedObject.setPath(someVertexPath);this.setState({menu:"TreeView"})}}>Toggle Vertex Path</button>
-
+    
                 <input id="VertPath" className="LeftLabel" defaultValue={this.state.selectedObject.vertexPath}/>
                 
 

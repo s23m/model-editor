@@ -193,7 +193,7 @@ export class ContainmentTree extends React.Component {
                     if(b === 0){
                         //console.log("SECOND LAYER: " + treeDat.children);
                         for (let treeElement of treeDat.children){
-                            if ((treeElement.text === currentlySelectedObject.title || currentlySelectedObject.title === "Unnamed Vertex")){
+                            if ((treeElement.text === currentlySelectedObject.title)){
 
                                 //Push the matched container object
                                 let CTreeObj = {

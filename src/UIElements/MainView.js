@@ -61,6 +61,15 @@ export class MainProgramClass extends React.Component {
         div.style.backgroundColor = "#CFFFFF";
 
         console.log("Mode set to: " + this.state.SelectedTool);
+
+        // This bit of code here updates the path for whatever vertex is being updated
+        if (this.state.selectedObject !== null){
+            if (this.state.selectedObject.typeName === "Vertex"){
+                showVertexPath(this.state.selectedObject)
+                this.state.selectedObject.setPath(someVertexPath)
+            }
+        }
+        
     }
 
     updateFolderName = (type) => {
@@ -100,9 +109,6 @@ export class MainProgramClass extends React.Component {
             this.setState({drawMode: "Arrow"})
         }else if (mode === Tool.Vertex){
             this.setState({drawMode: "Vertex"})
-            //updating path
-            //showVertexPath(this.state.selectedObject); 
-            //this.state.selectedObject.setPath(someVertexPath);
         }else if (mode === Tool.Select){
             this.setState({drawMode: "Select"})
         }
