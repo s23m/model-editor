@@ -35,7 +35,15 @@ export var currentObjects = new Graph();
 
 export var savedArrows = [];
 
-export var currentRenderKey = 0;
+export let currentRenderKey = 0;
+
+export function getCurrentRenderKey(){
+    return currentRenderKey;
+}
+
+export function setNewRenderKey(newKey){
+    currentRenderKey = newKey;
+}
 
 // Arrow Path
 export var arrowPath = [];
@@ -108,7 +116,7 @@ export function drawAll() {
             //console.log("HERE " + item.typeName)
             //Only render the objects which are in the currently selected containment
             
-            if (item.getRenderKey() === 0){
+            if (item.getRenderKey() === currentRenderKey){
                 item.draw(canvasContext);
             }
             

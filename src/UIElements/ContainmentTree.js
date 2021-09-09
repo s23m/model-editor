@@ -6,10 +6,10 @@
 import React from 'react';
 import TreeView from 'react-simple-jstree';
 
-import { currentObjects, getModelName } from "./CanvasDraw";
+import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey} from "./CanvasDraw";
 import { drawAll } from "./CanvasDraw";
 
-import { currentRenderKey } from './CanvasDraw';
+//import {currentRenderKey} from './CanvasDraw';
 
 // I need to export this so I can access it in the left menu and then set it to the correct vertex;
 export var someVertexPath = "";
@@ -27,12 +27,17 @@ let treeData = [];
 // I need this to store the folders. Initially, it has one folder simply titled 'Unnamed Folder'.
 let folderData = [];
 
+// This is so that when you click on some tree view element you're able to see some clearer data on the 
+// the folder
+let folderObjects = [];
+
 //This sets our first initial unnamed folder
 let tempFolderObject = {
     text: "Unnamed Folder",
     children: treeData,
-    data: null,
-    state: {opened: true}
+    data: folderData[0],
+    state: {opened: true},
+    type: "Folder"
 };
 
 folderData.push(tempFolderObject);
@@ -61,11 +66,14 @@ export function handleAddFolder(folderName){
     let tempFolderThing = {
         text: folderName,
         children: [],
-        data: null,
-        state: {opened: true}
+        data: folderData[folderData.length - 1],
+        state: {opened: true},
+        type: "Folder"
     }
     
     folderData.push(tempFolderThing);
+
+    console.log("Folder data is :" + folderData[1].data.text)
     
     /*
    for(let folder in folderData){
@@ -301,6 +309,9 @@ export class ContainmentTree extends React.Component {
     }
 
     handleElementSelect(e, data) {
+        console.log("Data is this apparently: " + data.node.data.type)
+
+        /*
         if (data.selected.length === 1 && data.node.data !== null) {
             let UUID = data.node.data.semanticIdentity.UUID;
             for (let vertex of currentObjects.flatten(true, false)) {
@@ -312,12 +323,19 @@ export class ContainmentTree extends React.Component {
 
                     // Set the current render key to whatever object the person has clicked from
                     // the tree view
-                    /*
-                    console.log("The old render key is: " + currentRenderKey);
-                    currentRenderKey = this.state.selectedVertex.getRenderKey();
-                    console.log("The new render key is: " + currentRenderKey);
-                    */
-                   console.log("The selected object is: " + this.state.selectedObject)
+                    
+                    //console.log("The old render key is: " + currentRenderKey);
+                    //this.currentRenderKey = this.state.selectedVertex.getRenderKey();
+                    //console.log("The new render key is: " + currentRenderKey);
+                    
+
+                    //currentRenderKey = 1; 
+                    console.log("Render old key is " + getCurrentRenderKey());
+                    //setNewRenderKey(this.state.selectedVertex.getRenderKey());
+                    console.log("The new render key is : " + getCurrentRenderKey());
+                    //currentRenderKey = 1;
+                    
+                    //console.log("The selected object is: " + this.state.selectedVertex.getRenderKey())
                 }
             }
             
@@ -326,6 +344,7 @@ export class ContainmentTree extends React.Component {
                 selectedVertex: null
             });
         }
+        */
 
         drawAll();
     }
@@ -334,6 +353,15 @@ export class ContainmentTree extends React.Component {
 
     render() {
         const data = this.state.data;
+        
+        /*
+        if (this.state.selectedObject !== null){
+            console.log("The old render key is: " + currentRenderKey);
+            currentRenderKey = this.state.selectedObject.getRenderKey();
+            console.log("The new render key is: " + currentRenderKey);
+        }
+        */
+        
 
         return (
             <div>
