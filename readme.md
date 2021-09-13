@@ -1,5 +1,6 @@
 ## Capstone S23M Graph Editor
 A repository to house all code and configuration artefacts produced by the OverDrive Development team in collaboration with S23M
+as well as the code for the Ponos team's continuation of the project.
 
 This project is licensed under the MP2 license, and this project includes a copy of said license in the LICENSE file. For more information visit: https://www.mozilla.org/en-US/MPL/2.0/FAQ/
 

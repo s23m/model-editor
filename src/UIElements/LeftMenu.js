@@ -15,6 +15,9 @@ import iconEdge from "../Resources/edge.svg";
 import iconSpecialisation from "../Resources/specialisation.svg";
 import iconVisibility from "../Resources/visibility.svg"
 import iconSelect from "../Resources/select.svg"
+import iconArtifact from "../Resources/artifact.svg"
+import iconContainer from "../Resources/container.svg"
+
 
 import {deleteElement} from "./CanvasDraw";
 import { vertexDeleteElement } from './CanvasDraw';
@@ -32,25 +35,36 @@ export const LeftMenuType = {
     TreeView: "TreeView",
     Vertex: "Vertex",
     Arrow: "Arrow",
+
     //FTreeView: "FocussedTreeView"
+
+    Artifact: "Artifact",
+    Container:"Container"
+
 };
 
 export const LeftMenuTypeToString = {};
 LeftMenuTypeToString[LeftMenuType.TreeView] = "TreeView";
 LeftMenuTypeToString[LeftMenuType.Vertex] = "Vertex";
 LeftMenuTypeToString[LeftMenuType.Arrow] = "Arrow";
+LeftMenuTypeToString[LeftMenuType.Arrow] = "Artifact";
+LeftMenuTypeToString[LeftMenuType.Arrow] = "Container";
 
 export const StringToLeftMenuType = {};
 LeftMenuTypeToString["TreeView"] = LeftMenuType.TreeView;
 LeftMenuTypeToString["Vertex"] = LeftMenuType.Vertex;
 LeftMenuTypeToString["Arrow"] = LeftMenuType.Arrow;
+LeftMenuTypeToString["Artifact"] = LeftMenuType.Artifact;
+LeftMenuTypeToString["Container"] = LeftMenuType.Container;
 
 export const Tool = {
     Select: "Select",
     Vertex: "Vertex",
     Visibility: "Visibility",
     Edge: "Edge",
-    Specialisation: "Specialisation"
+    Specialisation: "Specialisation",
+    Artifact: "Artifact",
+    Container: "Container",
 };
 
 // class to display the left hand menu, where we will be showing
@@ -107,13 +121,15 @@ export class LeftMenu extends React.Component{
     }
 
     //For quickkeys
-    onKeyPressed(e){
-        if (e.keyCode === 86){
+
+
+    onKeyPressed(e) {
+        if (e.keyCode === 86 && this.state.selectedObject === null){
             this.props.setMode(Tool.Vertex);
-            //alert('yeet');
         }
 
-        if (e.keyCode === 69){
+
+        if (e.keyCode === 69 && this.state.selectedObject === null){
             this.props.setMode(Tool.Edge);
         }
 
@@ -349,7 +365,12 @@ export class LeftMenu extends React.Component{
 
         let toolbar = <div id = "Toolbar" className = "Toolbar">
             <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt ="Select"/></div>
+
             <div id = "Vertex" className="ToolbarItem" onClick={() => {this.props.setMode(Tool.Vertex); }} onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt ="Vertex"/></div>
+
+            <div id="Artifact" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Artifact)} onKeyDown={() => this.onKeyPressed()}    ><img src={iconArtifact} alt="Artifact" /></div>
+            <div id="Container" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Container)} onKeyDown={() => this.onKeyPressed()}    ><img src={iconContainer} alt="Container" /></div>
+
             <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt ="Edge"/></div>
             <div id = "Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt ="Specialisation"/></div>
             <div id = "Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt ="Visibility"/></div>
@@ -397,7 +418,59 @@ export class LeftMenu extends React.Component{
 
             </form>;
 
-        } else if (this.state.menu === LeftMenuType.Arrow) {
+        } else if (this.state.menu === LeftMenuType.Artifact) {
+            canvasDraw.drawAll();
+
+            leftMenuContents = <form id="VertexMenu">
+                <div className="LeftHeader">Vertex Properties</div>
+                <label className="LeftLabel">Title</label>
+                <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()} />
+                <label className="LeftSpacer">&nbsp;</label>
+
+                <label className="LeftLabel">Content</label>
+                <textarea id="LeftContent" className="LeftContent" defaultValue={this.state.selectedObject.getContentAsString()} onKeyUp={() => this.setContent()} />
+                <label className="LeftSpacer">&nbsp;</label>
+
+                {this.getS23MIconsSelector()}
+                <label className="LeftSpacer">&nbsp;</label>
+
+                {this.getColourPicker()}
+                <label className="LeftSpacer">&nbsp;</label>
+
+                <label className="LeftLabel">Is Abstract?</label>
+                <input type="checkbox" id="IsAbstract" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAbstract()} onClick={() => this.toggleAbstract()} />
+                <label className="LeftSpacer">&nbsp;</label>
+
+                <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
+                <label className="LeftSpacer">&nbsp;</label>
+                <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.setState({ menu: "TreeView" }) }} placeholder="NoTabIndex">Remove</button>
+            </form>;
+
+        } else if (this.state.menu === LeftMenuType.Container) {
+            canvasDraw.drawAll();
+            leftMenuContents = <form id="VertexMenu">
+                <div className="LeftHeader">Vertex Properties</div>
+                <label className="LeftLabel">Title</label>
+                <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()} />
+                <label className="LeftSpacer">&nbsp;</label>
+
+                <label className="LeftLabel">Content</label>
+                <textarea id="LeftContent" className="LeftContent" defaultValue={this.state.selectedObject.getContentAsString()} onKeyUp={() => this.setContent()} />
+                <label className="LeftSpacer">&nbsp;</label>
+
+                {this.getS23MIconsSelector()}
+                <label className="LeftSpacer">&nbsp;</label>
+
+                <label className="LeftLabel">Is Abstract?</label>
+                <input type="checkbox" id="IsAbstract" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAbstract()} onClick={() => this.toggleAbstract()} />
+                <label className="LeftSpacer">&nbsp;</label>
+
+                <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
+                <label className="LeftSpacer">&nbsp;</label>
+                <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.setState({ menu: "TreeView" }) }} placeholder="NoTabIndex">Remove</button>
+            </form>;
+
+        }else if (this.state.menu === LeftMenuType.Arrow) {
             console.log("Arrow Selected");
 
             if(this.state.selectedObject.edgeType === Tool.Edge){
