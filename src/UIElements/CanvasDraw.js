@@ -36,6 +36,7 @@ export var currentObjects = new Graph();
 export var savedArrows = [];
 
 export let currentRenderKey = 0;
+export let totalRenderKeys = 0;
 
 export function getCurrentRenderKey(){
     return currentRenderKey;
@@ -43,6 +44,14 @@ export function getCurrentRenderKey(){
 
 export function setNewRenderKey(newKey){
     currentRenderKey = newKey;
+}
+
+export function getTotalRenderKeys(){
+    return totalRenderKeys;
+}
+
+export function incrementTotalRenderKeys(){
+    totalRenderKeys = totalRenderKeys += 1;
 }
 
 // Arrow Path

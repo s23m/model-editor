@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { drawMarker, distanceThreshold } from "../UIElements/CanvasDraw";
+import { drawMarker, distanceThreshold, getCurrentRenderKey } from "../UIElements/CanvasDraw";
 import { SemanticIdentity } from "./SemanticIdentity";
 
 export var padding = 5;
@@ -46,7 +46,7 @@ export class Vertex {
         this.vertexPath = "";
 
         // Used to render different graphs in the same file.
-        this.vertexRenderKey = 0;
+        this.vertexRenderKey = getCurrentRenderKey();
     }
 
     // Set the render key. Done in ContainmentTree.js
