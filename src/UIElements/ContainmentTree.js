@@ -149,12 +149,36 @@ export function showVertexPath(theObject){
     */
 }
 
+// This function is used to determine which object should be owned by which folder object.
+// Works by taking a look at the children of the treeData array and seeing if their render 
+// key matches the one parsed to the function
+function determineOwnership(parsedRenderKey){
+    let returnArray = []
+    let i = 0
+    for (let vertexorarrow of treeData){
+        if(vertexorarrow !== undefined){
+            for (let child of vertexorarrow.children){
+                // Check if the render key of the child matches 
+                if (child.renderkey === parsedRenderKey){
+                    console.log("Matched tree data: " + treeData[i])
+                    returnArray.push(treeData[i])
+                    break
+                }
+            }
+            
+        }
+        i += 1
+    }
+
+    return returnArray
+}
+
 export class ContainmentTree extends React.Component {
 
     constructor(props) {
         super();
 
-        treeData = [[],[],[]]; 
+        treeData = []; 
         let i = 0;
         
         if (focussed === false){
@@ -168,38 +192,58 @@ export class ContainmentTree extends React.Component {
                     renderIndex = vertex.vertex.getRenderKey();
                 }
                 
+                console.log("The renderIndex variable is: " + renderIndex)
                 
                 if (i === 0){
 
                     //console.log("Object's key: " + vertex.typeName)
                     //The zero here should be renderIndex
 
-                    treeData[renderIndex].push(vertex.toTreeViewElement(new Set(), "vertexFolder"));
-                    treeData[renderIndex].push(vertex.toTreeViewElement(new Set(), "arrowFolder"));
+                    treeData.push(vertex.toTreeViewElement(new Set(), "vertexFolder"));
+                    treeData.push(vertex.toTreeViewElement(new Set(), "arrowFolder"));
 
                     //You need to make sure you update the folderData stuff after making a change to treeData
-                    
+                    /*
                     for (let folder of folderData){
                         if (folder.renderkey === renderIndex){
-                            folder.children = treeData[renderIndex];  
+                            folder.children = treeData;  
                         }
 
                         //console.log("This is folder: " + folder.text)
                     }
+                    */
                     
                     //folderData[0].children = treeData;
                     
-                    i += 1;
+                    //i += 1;
                 }
-                treeData[renderIndex].push(vertex.toTreeViewElement(new Set()));
 
-                /*
+                treeData.push(vertex.toTreeViewElement(new Set()));
+
+                
                 for (let folder of folderData){
-                    folder.children = treeData;
+                    //console.log("The result: " + determineOwnership(folder.renderkey))
+                    folder.children = determineOwnership(folder.renderkey)
+                    console.log("Folder " + folder.text + "has " + folder.children)
+                    console.log("The treeData array is " + treeData)
                 }
-                */
+                
                 //folderData[0].children = treeData;
+                
             }
+
+            /* Doing nothing, you can delete this if you spot it
+            for (let treething of treeData){
+                if(treething !== undefined){
+                    for(let children of treething.children){
+                        if (children !== undefined){
+                            console.log("Render keys: " + children.renderkey)
+                        }
+                        
+                    }
+                }
+            }
+            */
         }
 
         

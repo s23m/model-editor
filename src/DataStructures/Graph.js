@@ -155,6 +155,7 @@ class VertexNode {
                         text: currentObjects.flatten()[i].title,
                         children: [],
                         data: currentObjects.flatten()[i],
+                        renderkey: currentObjects.flatten()[i].getRenderKey(),
                         state: {opened: false}
                     };
 
@@ -192,6 +193,7 @@ class VertexNode {
                         text: currentObjects.flatten()[i].semanticIdentity.UUID,
                         children: [],
                         data: currentObjects.flatten()[i],
+                        renderkey: currentObjects.flatten()[i].getRenderKey(),
                         state: {opened: false}
                     };
     
