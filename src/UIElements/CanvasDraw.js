@@ -717,7 +717,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 		endX = secondObject.x + (0.5*secondObject.width);
 	}
 	//previous object is left of //if you click higher it counts as above
-=======
+
 	//sizes based on Total Area
 	var blockpre = previousObject.height+ previousObject.width;
     var blocksec = secondObject.height + secondObject.width;
