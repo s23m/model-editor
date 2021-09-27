@@ -306,6 +306,8 @@ function resizeObjectOnMouseMove(e, resizeVars) {
     let coords = getGraphXYFromMouseEvent(e);
 
     resizeVars[0].expandSide(resizeVars[1], coords[0], coords[1], canvasContext);
+
+    // update arrows
 }
 
 // Sets the objects uuid and adds it to the root of currentObjects
@@ -462,6 +464,7 @@ export function onLeftMousePress(canvas, x, y) {
 
 }
 
+//aligning lines when large box moved
 export function checkArrowsConnectedToBox(Object) {
     // check arrows which one matches the box that was moved by its ID 
 
@@ -563,6 +566,7 @@ export function checkHorizArrowsConnectedToBox(Object) {
 
 }
 
+
 //save the position of the clicked variable as global
 export function saveBlockStates(canvas, x, y) {
 	selectedObject = getSelectedObject(canvas);
@@ -645,7 +649,7 @@ export function onRightMouseRelease(canvas, x, y) {
     }
 }
 
-export function moveAll(Object) {
+export function compareSizesToMoveAll(Object) {
 
     //for loop to get all the arrows
     //for loop to check destination and source
@@ -654,7 +658,8 @@ export function moveAll(Object) {
     // if it's smaller move it else do nothing
 
     var objectID;
-    let arrowArray = [];
+    let verticalArray=[];
+    let horizontalArray=[];
     let box;
     let boxArray = [];
 
@@ -677,12 +682,23 @@ export function moveAll(Object) {
                 if ((box.height + 10) * box.width < (Object.height + 10) * Object.width) {
                     boxArray.push(box);
                 }
+                //check if arrow is on top/ below
+                else if (item.path[1][1] < Object.y || item.path[1][1] > Object.y+Object.height+10){
+                    //push to vertical array
+                    verticalArray.push(item);
+                    
+                } 
+                //check if arrow is left/ right
+                else if (item.path[1][0] < Object.x || item.path[1][0] > Object.x+Object.width) {
+                    //push to horizontal array
+                    horizontalArray.push(item);
+                }
 
             }
         }
 
     });
-    return boxArray;
+    return [boxArray,verticalArray,horizontalArray];
 }
 
 //line intersector
@@ -717,7 +733,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 		endX = secondObject.x + (0.5*secondObject.width);
 	}
 	//previous object is left of //if you click higher it counts as above
-=======
+
 	//sizes based on Total Area
 	var blockpre = previousObject.height+ previousObject.width;
     var blocksec = secondObject.height + secondObject.width;
@@ -753,6 +769,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
                     endX = startX;
                     //second obj is changing size
                     checkArrowsConnectedToBox(secondObject);
+                   
 				}
 				if(blockpre >= blocksec){
 					previousObject.width = previousObject.width+ ((secondObject.x+secondObject.width) -(previousObject.x + previousObject.width));
@@ -1186,7 +1203,7 @@ export function onMiddleClick(canvas, x, y) {
 	
     let selectedObject = findIntersected(x, y);
 
-    let friendObject = moveAll(selectedObject);
+    let [friendObject, arrowsVert, arrowsHoriz] = compareSizesToMoveAll(selectedObject);
     var F = [];
     if (friendObject !== null) {
         let i = 0;
@@ -1202,8 +1219,7 @@ export function onMiddleClick(canvas, x, y) {
         let savedisX = x - selectedObject.x;
         let savedisY = y - selectedObject.y;
 
-
-        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, friendObject, F, savedisX, savedisY) }
+        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, friendObject, F, savedisX, savedisY,arrowsVert,arrowsHoriz) }
     }
 
 }
@@ -1215,7 +1231,8 @@ export function onMouseLeave() {
 }
 
 // moving objects in respect to cursor values savedisX, savedisY
-function moveObject(e, object, friends,F, savedisX, savedisY) {
+// friends = the smaller boxes that are connected to the bigger box
+function moveObject(e, object, friends,F, savedisX, savedisY, arrowsVert, arrowsHoriz) {
     if (object != null) {
         if (object.constructor.name === "Vertex") {
             let position = getGraphXYFromMouseEvent(e);
@@ -1225,17 +1242,60 @@ function moveObject(e, object, friends,F, savedisX, savedisY) {
             //for loop iterate through all boxes assume they not empty
             if (friends !== null) {
                 let i = 0;
+                //check friends' previous location and cursors location
                 for (i; i < friends.length; i++) {
-                    
                     friends[i].x =  position[0] - F[i][0];
                     friends[i].y = position[1] - F[i][1];
                 }
+            }
+
+            if (arrowsVert !== null){
+            let conData = 0;
+            let j = 0;
+            
+            for (j; j < arrowsVert.length; j++) {
+                // source = one that's been clicked
+                arrowsVert[j].path[1][0] = arrowsVert[j].path[0][0];
+                conData = getConnectionDataForArrow(arrowsVert[j].path[1][0],arrowsVert[j].path[1][1] );
+
+                
+                
+                if (conData['nearest'] !== null){
+                    
+                arrowsVert[j].pathData[1] = conData['nearest'];
+                StickArrowToObject(conData, arrowsVert[j], 0);
+                //console.log(arrowsVert[j].path);
+                }else {
+                    //delete arrow                        
+                    deleteElement(arrowsVert[j]);
+                }
+            }
+            }
+            if (arrowsHoriz !== null){
+                let conData = 0;
+                let k = 0;
+            for (k; k < arrowsHoriz.length; k++) {
+                // source = one that's been clicked
+                arrowsHoriz[k].path[1][1] = arrowsHoriz[k].path[0][1];
+                conData = getConnectionDataForArrow(arrowsHoriz[k].path[1][0],arrowsHoriz[k].path[1][1] );
+
+                if (conData['nearest'] !== null){
+                    
+                arrowsHoriz[k].pathData[1] = conData['nearest'];
+                StickArrowToObject(conData, arrowsHoriz[k], 0);
+                //console.log(arrowsHoriz[k].path);
+                }else {
+                    //delete arrow
+                    deleteElement(arrowsHoriz[k]);
+                }
+            }
             }
 
             object.x = x;
             object.y = y;
 
             updateArrows();
+            
 
         } else if (object.constructor.name === "Arrow") {
             return;
@@ -1371,7 +1431,7 @@ function createObject(canvas, x1, y1, x2, y2) {
 
     if (canvas.tool === "Vertex") {
         // Get positions
-        let pos = orderCoordinates(x1, y1, x2+90, y2);
+        let pos = orderCoordinates(x1, y1, x2+10, y2);
         let vy1 = findNearestGridY(pos[1], 0);
         let vy2 = findNearestGridY(pos[3], 0);
 
