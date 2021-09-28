@@ -795,9 +795,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					secondObject.width = secondObject.width + (secondObject.x-previousObject.x);
 					secondObject.x = previousObject.x;
 
-					startY = secondObject.y + secondObject.height;
+					startY = previousObject.y;
 					startX = secondObject.x + previousObject.width/2;
-					endY = previousObject.y;
+					endY = secondObject.y + secondObject.height;
                     endX = startX;
                     //second obj is changing size
                     checkArrowsConnectedToBox(secondObject);
@@ -812,6 +812,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y;
                     endX = startX;
                     //prev obj is changing size
+
+                    //this one works
                     checkArrowsConnectedToBox(previousObject);
 				}
 			}
@@ -820,11 +822,12 @@ export function lineIntersector(canvas, x, y, secondObject) {
 				if(blockpre <= blocksec){
 					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width));
 
-					startY = secondObject.y + secondObject.height;
+					startY = previousObject.y;
 					startX = previousObject.x + previousObject.width/2;
-					endY = previousObject.y;
+					endY = secondObject.y + secondObject.height;
                     endX = startX;
                     //second obj is changing size
+
                     checkArrowsConnectedToBox(secondObject, endX - startX, endY - startY);
 				}
 				if(blockpre >= blocksec){
@@ -836,6 +839,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y;
                     endX = startX;
                     //prev obj is changing size
+
                     checkArrowsConnectedToBox(previousObject);
                 }
         }
@@ -866,11 +870,13 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					secondObject.width = secondObject.width + (secondObject.x-previousObject.x);
 					secondObject.x = previousObject.x;
 
-					startY = secondObject.y;
+					startY = previousObject.y+previousObject.height;
 					startX = secondObject.x + previousObject.width/2;
-					endY = previousObject.y+previousObject.height;
+					endY = secondObject.y;
                     endX = startX;
                     //second obj is changing size
+
+                    //fixed
                     checkArrowsConnectedToBox(secondObject);
 				}
 				if(blockpre >= blocksec){
@@ -882,6 +888,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y + previousObject.height;
                     endX = startX;
                     //previous obj is changing size
+
                     checkArrowsConnectedToBox(previousObject);
 				}
 			}
@@ -890,11 +897,13 @@ export function lineIntersector(canvas, x, y, secondObject) {
 				if(blockpre <= blocksec){
 					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width));
                     
-					startY = secondObject.y;
+					startY = previousObject.y + previousObject.height;
 					startX = previousObject.x + previousObject.width/2;
-					endY = previousObject.y + previousObject.height;
+					endY = secondObject.y;
                     endX = startX;
                     //previous obj is changing size
+                   
+                    //this one is fixed
                     checkArrowsConnectedToBox(secondObject);
 				}
 				if(blockpre >= blocksec){
@@ -905,7 +914,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					startX = secondObject.x + secondObject.width/2;
 					endY = previousObject.y + previousObject.height;
                     endX = startX;
+
                     //second obj is changing size
+
                     checkArrowsConnectedToBox(previousObject);
 				}
         }
@@ -923,6 +934,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
 
             endX = secondObject.x;
             endY = startY;
+
+            //console.log("k");
         }
         //Second is smaller
         else if (secondObject.y > previousObject.y && secondObject.y + secondObject.height+10 < previousObject.y + previousObject.height+10) {
@@ -931,6 +944,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
 
             endX = previousObject.x + previousObject.width;
             endY = startY;
+
+            //console.log("l");
 
         }
         //Top Left and peeking
@@ -945,6 +960,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
+
+                //console.log("m");
             }
 
             if (blockpre >= blocksec) {
@@ -957,6 +974,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(previousObject);
+
+                //console.log("n");
             }
         }
         //Bottom Left and peeking
@@ -971,6 +990,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
+
+                //console.log("o");
             }
 
             if (blockpre >= blocksec) {
@@ -984,6 +1005,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(previousObject);
+
+                //console.log("p");
             }
         }
 
@@ -1003,6 +1026,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
             endX = previousObject.x;
             endY = startY;
 
+            //console.log("q");
+
         }
         //Second is smaller and on inside
         else if (secondObject.y > previousObject.y && secondObject.y + secondObject.height < previousObject.y + previousObject.height) {
@@ -1012,6 +1037,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
             endX = previousObject.x;
             endY = startY;
             
+            //console.log("r");
         }
         //Top Right and peeking
         else if (previousObject.y + previousObject.height+10 > secondObject.y && secondObject.y > previousObject.y) {
@@ -1026,6 +1052,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
+
+                //console.log("s");
             }
 
             if (blockpre >= blocksec) {
@@ -1038,6 +1066,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(previousObject);
+
+                //console.log("t");
             }
             
         }
@@ -1053,6 +1083,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
+
+                //console.log("u");
             }
 
             if (blockpre >= blocksec) {
@@ -1067,6 +1099,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(previousObject);
+
+                //console.log("v");
             }
         }
 
