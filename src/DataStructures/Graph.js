@@ -123,7 +123,7 @@ class VertexNode {
         return false;
     }
 
-    toTreeViewElement(traversedVertices, returnOption) {
+    toTreeViewElement(traversedVertices, returnOption, parsedRenderKey) {
 
         //Pretty much everything that's currently on the canvas is searched and then converted into the tree appropriate struct in the below if else statements.
         //Then, the vertices and arrows folder nodes can display their appropriate children.
@@ -139,7 +139,7 @@ class VertexNode {
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
                 //We onlt want the vertices in this folder
-                if (currentObjects.flatten()[i].typeName === "Vertex"){
+                if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
                     //Set the append the name of the path to include the vertex name
                     if(currentObjects.flatten()[i].title === ""){
                         this.setVertexTreePath("Unnamed Vertex");

@@ -22,7 +22,7 @@ let showingVertPath = false;
 
 // You could probably get away with not including this here, but it just makes it easier to access the tree
 // data from any function you like. It still needs to be emptied in the constructor though
-let treeData = [[],[],[]];
+let treeData = [];
 
 // I need this to store the folders. Initially, it has one folder simply titled 'Unnamed Folder'.
 let folderData = [];
@@ -32,6 +32,7 @@ let folderData = [];
 let folderObjects = [];
 
 //This sets our first initial unnamed folder
+/*
 let tempFolderObject = {
     text: "Unnamed Folder",
     children: treeData[0],
@@ -42,6 +43,7 @@ let tempFolderObject = {
 };
 
 folderData.push(tempFolderObject);
+*/
 
 // A function to be called in the left menu to 
 // 1. Return the name of the currently selected vertex for displaying purposes and
@@ -74,6 +76,7 @@ export function handleAddFolder(folderName){
     }
     
     folderData.push(tempFolderThing);
+    
 
     //console.log("Folder data is :" + folderData[1].text)
     
@@ -173,6 +176,7 @@ function determineOwnership(parsedRenderKey){
     return returnArray
 }
 
+let initialfolderadded = false;
 export class ContainmentTree extends React.Component {
 
     constructor(props) {
@@ -181,55 +185,73 @@ export class ContainmentTree extends React.Component {
         treeData = []; 
         let i = 0;
         
+        if (initialfolderadded === false){
+            handleAddFolder("temp folder");
+            initialfolderadded = true;
+        }
+        
         if (focussed === false){
-            for (let vertex of currentObjects.flattenVertexNodes()) { //.rootVertices() <-- original
+            for (let vertex of currentObjects.flattenVertexNodes()) { //.rootVertices() <-- original // for (let vertex of currentObjects.flattenVertexNodes()) 
 
-                let renderIndex = 0;
+                for (let folder of folderData){
+                    let renderIndex = 0;
 
-                //Look at the render key of the object and determine where to put it
-                //GET THIS TO WORK WITH THINGS OTHER THAN VERTICES
-                if (vertex.vertex.getRenderKey() !== undefined){
-                    renderIndex = vertex.vertex.getRenderKey();
-                }
-                
-                console.log("The renderIndex variable is: " + renderIndex)
-                
-                if (i === 0){
-
-                    //console.log("Object's key: " + vertex.typeName)
-                    //The zero here should be renderIndex
-
-                    treeData.push(vertex.toTreeViewElement(new Set(), "vertexFolder"));
-                    treeData.push(vertex.toTreeViewElement(new Set(), "arrowFolder"));
-
-                    //You need to make sure you update the folderData stuff after making a change to treeData
+                    //Look at the render key of the object and determine where to put it
+                    //GET THIS TO WORK WITH THINGS OTHER THAN VERTICES
                     /*
-                    for (let folder of folderData){
-                        if (folder.renderkey === renderIndex){
-                            folder.children = treeData;  
-                        }
-
-                        //console.log("This is folder: " + folder.text)
+                    if (vertex.vertex.getRenderKey() !== undefined){
+                        renderIndex = vertex.vertex.getRenderKey();
                     }
                     */
+
+                    if (folder.renderkey !== undefined){
+                        renderIndex = folder.renderkey;
+                    }
+                    
+                    
+                    console.log("The renderIndex variable is: " + renderIndex)
+                    
+                    if (i === 0){
+
+                        //console.log("Object's key: " + vertex.typeName)
+                        //The zero here should be renderIndex
+
+                        treeData.push(vertex.toTreeViewElement(new Set(), "vertexFolder", renderIndex));
+                        treeData.push(vertex.toTreeViewElement(new Set(), "arrowFolder", renderIndex));
+
+                        //You need to make sure you update the folderData stuff after making a change to treeData
+                        /*
+                        for (let folder of folderData){
+                            if (folder.renderkey === renderIndex){
+                                folder.children = treeData;  
+                            }
+
+                            //console.log("This is folder: " + folder.text)
+                        }
+                        */
+                        
+                        //folderData[0].children = treeData;
+                        
+                        //i += 1;
+                    }
+
+                    treeData.push(vertex.toTreeViewElement(new Set()));
+
+                    
+                    for (let folder of folderData){
+                        //console.log("The result: " + determineOwnership(folder.renderkey))
+                        folder.children = determineOwnership(folder.renderkey)
+                        console.log("Folder: " + folder.text)
+                        //console.log("Folder " + folder.text + "has " + folder.children)
+                        //console.log("The treeData array is " + treeData)
+                    }
                     
                     //folderData[0].children = treeData;
+
                     
-                    //i += 1;
-                }
-
-                treeData.push(vertex.toTreeViewElement(new Set()));
-
-                
-                for (let folder of folderData){
-                    //console.log("The result: " + determineOwnership(folder.renderkey))
-                    folder.children = determineOwnership(folder.renderkey)
-                    console.log("Folder " + folder.text + "has " + folder.children)
-                    console.log("The treeData array is " + treeData)
                 }
                 
-                //folderData[0].children = treeData;
-                
+                break;
             }
 
             /* Doing nothing, you can delete this if you spot it
