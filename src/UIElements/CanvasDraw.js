@@ -307,7 +307,9 @@ function resizeObjectOnMouseMove(e, resizeVars) {
 
     resizeVars[0].expandSide(resizeVars[1], coords[0], coords[1], canvasContext);
 
+    //grab object and arrows connected to it
     // update arrows
+    updateA();
 }
 
 // Sets the objects uuid and adds it to the root of currentObjects
@@ -403,7 +405,7 @@ function moveArrowPointOnMouseMove(e, index, arrow) {
 // Event based functions
 export function onLeftMousePress(canvas, x, y) {
 
-    // Checks if your mouse is in range of the boarders of a box to resize them
+    // Checks if your mouse is in range of the borders of a box to resize them
     let resizeVars = checkResizeBounds(x, y);
     if (canvas.tool === Tool.Vertex || canvas.tool === Tool.Select) {
         if (resizeVars[0] !== null) {
@@ -412,6 +414,7 @@ export function onLeftMousePress(canvas, x, y) {
                 resizing = true;
                 canvasElement.onmousemove = function (e) {
                     resizeObjectOnMouseMove(e, resizeVars);
+                    
                 };
                 return;
             }
@@ -649,6 +652,27 @@ export function onRightMouseRelease(canvas, x, y) {
     }
 }
 
+export function updateA(){
+    //objectID = Object.semanticIdentity.UUID;
+    //console.log(ObjectID);
+    let conData = 0;
+    currentObjects.flatten().forEach((item) => {
+        if (item.constructor.name === "Arrow") {  
+            console.log('hi I am working');
+            //if (objectID === item.destVertexUUID || objectID === item.sourceVertexUUID) {
+                //only works for big box
+            conData = getConnectionDataForArrow(item.path[1][0],item.path[1][1] );
+            item.pathData[1] = conData['nearest'];
+            StickArrowToObject(conData, item, 0);
+
+            //conData = getConnectionDataForArrow(item.path[0][0],item.path[0][1] );
+            //item.pathData[0] = conData['nearest'];
+            //StickArrowToObject(conData, item, 0);
+            //}
+
+        }
+    });
+}
 export function compareSizesToMoveAll(Object) {
 
     //for loop to get all the arrows
@@ -699,6 +723,14 @@ export function compareSizesToMoveAll(Object) {
 
     });
     return [boxArray,verticalArray,horizontalArray];
+}
+
+export function checkBoxSizesAndReturnBigBox(first,second) {
+    if ((first.width)*(first.height+10) <= (second.width)*(second.height+10)){
+        return [second, first];
+    }else{
+        return [first, second];
+    }
 }
 
 //line intersector
@@ -763,9 +795,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					secondObject.width = secondObject.width + (secondObject.x-previousObject.x);
 					secondObject.x = previousObject.x;
 
-					startY = secondObject.y + secondObject.height;
+					startY = previousObject.y;
 					startX = secondObject.x + previousObject.width/2;
-					endY = previousObject.y;
+					endY = secondObject.y + secondObject.height;
                     endX = startX;
                     //second obj is changing size
                     checkArrowsConnectedToBox(secondObject);
@@ -780,6 +812,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y;
                     endX = startX;
                     //prev obj is changing size
+
+                    //this one works
                     checkArrowsConnectedToBox(previousObject);
 				}
 			}
@@ -788,11 +822,12 @@ export function lineIntersector(canvas, x, y, secondObject) {
 				if(blockpre <= blocksec){
 					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width));
 
-					startY = secondObject.y + secondObject.height;
+					startY = previousObject.y;
 					startX = previousObject.x + previousObject.width/2;
-					endY = previousObject.y;
+					endY = secondObject.y + secondObject.height;
                     endX = startX;
                     //second obj is changing size
+
                     checkArrowsConnectedToBox(secondObject, endX - startX, endY - startY);
 				}
 				if(blockpre >= blocksec){
@@ -804,6 +839,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y;
                     endX = startX;
                     //prev obj is changing size
+
                     checkArrowsConnectedToBox(previousObject);
                 }
         }
@@ -834,11 +870,13 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					secondObject.width = secondObject.width + (secondObject.x-previousObject.x);
 					secondObject.x = previousObject.x;
 
-					startY = secondObject.y;
+					startY = previousObject.y+previousObject.height;
 					startX = secondObject.x + previousObject.width/2;
-					endY = previousObject.y+previousObject.height;
+					endY = secondObject.y;
                     endX = startX;
                     //second obj is changing size
+
+                    //fixed
                     checkArrowsConnectedToBox(secondObject);
 				}
 				if(blockpre >= blocksec){
@@ -850,6 +888,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					endY = previousObject.y + previousObject.height;
                     endX = startX;
                     //previous obj is changing size
+
                     checkArrowsConnectedToBox(previousObject);
 				}
 			}
@@ -858,11 +897,13 @@ export function lineIntersector(canvas, x, y, secondObject) {
 				if(blockpre <= blocksec){
 					secondObject.width = secondObject.width + ((previousObject.x + previousObject.width)-(secondObject.x+secondObject.width));
                     
-					startY = secondObject.y;
+					startY = previousObject.y + previousObject.height;
 					startX = previousObject.x + previousObject.width/2;
-					endY = previousObject.y + previousObject.height;
+					endY = secondObject.y;
                     endX = startX;
                     //previous obj is changing size
+                   
+                    //this one is fixed
                     checkArrowsConnectedToBox(secondObject);
 				}
 				if(blockpre >= blocksec){
@@ -873,7 +914,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
 					startX = secondObject.x + secondObject.width/2;
 					endY = previousObject.y + previousObject.height;
                     endX = startX;
+
                     //second obj is changing size
+
                     checkArrowsConnectedToBox(previousObject);
 				}
         }
@@ -891,6 +934,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
 
             endX = secondObject.x;
             endY = startY;
+
+            //console.log("k");
         }
         //Second is smaller
         else if (secondObject.y > previousObject.y && secondObject.y + secondObject.height+10 < previousObject.y + previousObject.height+10) {
@@ -899,6 +944,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
 
             endX = previousObject.x + previousObject.width;
             endY = startY;
+
+            //console.log("l");
 
         }
         //Top Left and peeking
@@ -913,6 +960,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
+
+                //console.log("m");
             }
 
             if (blockpre >= blocksec) {
@@ -925,6 +974,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(previousObject);
+
+                //console.log("n");
             }
         }
         //Bottom Left and peeking
@@ -939,6 +990,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
+
+                //console.log("o");
             }
 
             if (blockpre >= blocksec) {
@@ -952,6 +1005,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(previousObject);
+
+                //console.log("p");
             }
         }
 
@@ -971,6 +1026,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
             endX = previousObject.x;
             endY = startY;
 
+            //console.log("q");
+
         }
         //Second is smaller and on inside
         else if (secondObject.y > previousObject.y && secondObject.y + secondObject.height < previousObject.y + previousObject.height) {
@@ -980,6 +1037,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
             endX = previousObject.x;
             endY = startY;
             
+            //console.log("r");
         }
         //Top Right and peeking
         else if (previousObject.y + previousObject.height+10 > secondObject.y && secondObject.y > previousObject.y) {
@@ -994,6 +1052,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
+
+                //console.log("s");
             }
 
             if (blockpre >= blocksec) {
@@ -1006,6 +1066,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(previousObject);
+
+                //console.log("t");
             }
             
         }
@@ -1021,6 +1083,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
+
+                //console.log("u");
             }
 
             if (blockpre >= blocksec) {
@@ -1035,6 +1099,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(previousObject);
+
+                //console.log("v");
             }
         }
 
@@ -1053,8 +1119,107 @@ export function lineIntersector(canvas, x, y, secondObject) {
 	
 
 }
+//
+export function collectmehbox(boxes,arrows,bigbox, item,index){
+
+    console.log("runningcollect");
+    if (bigbox.semanticIdentity.UUID === item.destVertexUUID) {
+        let box = getObjectFromUUID(item.sourceVertexUUID);
+        if((bigbox.y)*index + (box.y)*(1-index)> (box.y + box.height + 10)*index + (bigbox.y + bigbox.height + 10)*(1-index)){
+            boxes.push(box);
+            arrows.push(item);
+        }
 
 
+    }else if (bigbox.semanticIdentity.UUID === item.sourceVertexUUID){
+        let box = getObjectFromUUID(item.destVertexUUID);
+        if((bigbox.y)*index + (box.y)*(1-index)> (box.y + box.height + 10)*index + (bigbox.y + bigbox.height + 10)*(1-index)){
+            boxes.push(box);
+            arrows.push(item);
+        }
+    }
+    return [boxes,arrows];
+}
+//Will arrange boxes and arrows in linked order above or below the big box.
+//Bigbox - The larger important box
+//boxes - list of all the boxes being moved
+//arrows - arrows connect to the above boxes
+//index - denotes the side that boxes are connected to 
+export function arrangeboxesandarrows(bigbox,boxes, arrows,index){
+    //index = 1 = up
+    if(boxes.length >= 2){
+        let b = 0;
+        let x =bigbox.x;
+        let y = bigbox.y + (bigbox.height+30)*(1-index) ; 
+        for(b;b<boxes.length;b++){
+            boxes[b].x = x;
+            boxes[b].y = y - ((boxes[b].height+30)*index);
+            x = x + boxes[b].width + 20;
+
+            if(boxes[b].x + boxes[b].width > bigbox.x + bigbox.width){
+                bigbox.width = bigbox.width + boxes[b].width
+            }
+
+
+            
+
+        }
+
+        b = 0;
+        for(b;b<boxes.length;b++){
+            console.log(arrows[b]);
+            let conData = getConnectionDataForArrow(boxes[b].x + boxes[b].width/2,bigbox.y + (bigbox.height+10) * (1-index));
+            arrows[b].pathData[1] = conData['nearest'];
+            StickArrowToObject(conData, arrows[b], 1);
+
+        }
+
+    }
+
+    
+}
+export function shiftBoxes(secondObject){
+    //if box is within horizontal bounds
+
+    let upboxes = [];
+    let uparrows = [];
+    let downboxes = [];
+    let downarrows = [];
+    let leftboxes = [];
+    let rightboxes = [];
+    let [bigbox, smallbox] = checkBoxSizesAndReturnBigBox(previousObject,secondObject);
+
+        //grab all arrows connected to either object
+        //Index 0 means down index 1 means up
+
+        currentObjects.flatten().forEach((item) => {
+            if (item.constructor.name === "Arrow") {
+                //get the big box because it has all the arrows connected
+                if ( bigbox.y+bigbox.height+10< smallbox.y && smallbox.x > bigbox.x && smallbox.x + smallbox.width < bigbox.x + bigbox.width ){
+                    [downboxes,downarrows] = collectmehbox(downboxes,downarrows,bigbox, item,0);
+                     
+
+                }else if (bigbox.y> (smallbox.y+smallbox.height+10)&& smallbox.x > bigbox.x && smallbox.x + smallbox.width < bigbox.x + bigbox.width){
+                    [upboxes,uparrows] = collectmehbox(upboxes,uparrows,bigbox, item,1);
+
+                }else if(bigbox.x< smallbox.x){
+                   // rightboxes = collectmehbox(bigbox, item);
+
+                }else if (bigbox.x> smallbox.x+smallbox.width){
+                   // leftboxes = collectmehbox(bigbox, item);
+                }
+            }
+        });
+        //Do stuff to boxes
+        //1 = up
+        //0 = down
+        arrangeboxesandarrows(bigbox,downboxes,downarrows, 0);
+        arrangeboxesandarrows(bigbox,upboxes,uparrows, 1);
+        //console.log(downboxes.length);
+
+
+
+}
 
 export function onLeftMouseRelease(canvas, x, y) {
 
@@ -1103,19 +1268,20 @@ export function onLeftMouseRelease(canvas, x, y) {
 			  //newObject = createObject(canvas, 0, 0, 0, 0);
 			}
 
+
             // Reset path
             arrowPath = [];
             firstArrowJoint = true;
-			previousObject = null;
+			
 
 			if (newObject !== null) {
 				addObject(newObject);
 			}
 
             
-
             drawAll(currentObjects);
-
+            
+            
 
 			//converting all arrows to savedArrows array
 			let i = 0;
@@ -1130,6 +1296,13 @@ export function onLeftMouseRelease(canvas, x, y) {
 
             canvas.props.setLeftMenu(newObject)
             canvas.props.setMode(Tool.Select);
+            if (previousObject !== null && secondObject !== null){
+                console.log(' shoftboxesabout to run');
+                shiftBoxes(secondObject);
+            }
+            previousObject = null;
+            
+
 
         } else {
 
@@ -1173,7 +1346,7 @@ export function onLeftMouseRelease(canvas, x, y) {
         
     
 
-
+    
     drawAll(currentObjects);
 
 }
