@@ -16,7 +16,7 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder} from './ContainmentTree';
+import {handleAddFolder, handleDeleteModel, handleAddModel} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
@@ -83,6 +83,14 @@ export class MainProgramClass extends React.Component {
 
     deleteFolder = (type) => {
         handleDeleteFolder(folderName);
+    }
+
+    addModel = (type) => {
+        handleAddModel(folderName);
+    }
+
+    deleteModel = (type) => {
+        handleDeleteModel(folderName);
     }
 
     zoom = (type) => {
@@ -257,6 +265,12 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarIcon" onClick={() => this.addFolder()}> Add Folder </div>
                     <div className="TopBarIcon">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.deleteFolder()}> Delete Folder </div>
+                    <div className="TopBarIcon">&nbsp;</div>
+                    <div className="TopBarIcon">&nbsp;</div>
+                    <div className="TopBarIcon" onClick={() => this.addModel()}> Add Model </div>
+                    <div className="TopBarIcon">&nbsp;</div>
+                    <div className="TopBarIcon" onClick={() => this.deleteModel()}> Delete Model </div>
+                    
 
                 </div>
 

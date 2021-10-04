@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { SemanticIdentity } from "./SemanticIdentity";
-import {drawMarker, getDistance} from "../UIElements/CanvasDraw";
+import {drawMarker, getDistance, getCurrentRenderKey} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
 import {Tool} from "../UIElements/LeftMenu";
@@ -85,7 +85,7 @@ export class Arrow {
         this.destIsAggregation = false;
 
         // Render key for the arrow for rendering different graphs
-        this.arrowRenderKey = 0;
+        this.arrowRenderKey = getCurrentRenderKey();
     }
 
     // Set the render key. This is done in ContainmentTree.js

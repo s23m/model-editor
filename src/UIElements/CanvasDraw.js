@@ -35,8 +35,15 @@ export var currentObjects = new Graph();
 
 export var savedArrows = [];
 
+// The naming conventions here are terrible, but basically the render keys determine where
+// a tree view element is placed in the graph while the model functions determine what's 
+// actually being rendered
+
 export let currentRenderKey = 0;
-export let totalRenderKeys = 0;
+export let totalRenderKeys = 0
+
+export let currentModel = 0;
+export let totalModels = 0;
 
 export function getCurrentRenderKey(){
     return currentRenderKey;
@@ -54,6 +61,23 @@ export function incrementTotalRenderKeys(){
     totalRenderKeys = totalRenderKeys += 1;
 }
 
+// --- Model Key Stuff --- //
+
+export function getCurrentModel(){
+    return currentModel;
+}
+
+export function setNewModel(newModel){
+    currentModel = newModel;
+}
+
+export function getTotalModels(){
+    return totalModels;
+}
+
+export function incrementTotalModels(){
+    totalModels = totalModels += 1;
+}
 // Arrow Path
 export var arrowPath = [];
 var lastX = 0;

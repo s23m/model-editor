@@ -6,7 +6,10 @@
 import React from 'react';
 import TreeView from 'react-simple-jstree';
 
-import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey, getTotalRenderKeys, incrementTotalRenderKeys, currentRenderKey} from "./CanvasDraw";
+import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey, 
+    getTotalRenderKeys, incrementTotalRenderKeys, currentRenderKey,
+    getCurrentModel, setNewModel, getTotalModels, incrementTotalModels} from "./CanvasDraw";
+
 import { drawAll } from "./CanvasDraw";
 
 //import {currentRenderKey} from './CanvasDraw';
@@ -30,6 +33,9 @@ let folderData = [];
 // This is so that when you click on some tree view element you're able to see some clearer data on the 
 // the folder ||| REDUNDANT 
 let folderObjects = [];
+
+// An array for holding model names
+let modelObjects = [];
 
 //This sets our first initial unnamed folder
 /*
@@ -68,7 +74,7 @@ export function handleAddFolder(folderName){
     incrementTotalRenderKeys();
     let tempFolderThing = {
         text: folderName,
-        children: [treeData[getTotalRenderKeys()]],
+        children: treeData[getTotalRenderKeys()],
         data: folderData[folderData.length - 1],
         state: {opened: true},
         type: "Folder",
@@ -95,6 +101,26 @@ export function handleDeleteFolder(folderName){
             folderData.splice(i,1); 
         }
     }
+}
+
+export function handleAddModel(modelName){
+    incrementTotalModels();
+    let tempModelThing = {
+        text: modelName,
+        children: [],
+        data: modelObjects[0],
+        state: {opened: true},
+        type: "Model",
+        renderkey: getCurrentRenderKey(),
+        modelkey: getTotalModels()
+    };
+
+    
+    modelObjects.push(tempModelThing);
+}
+
+export function handleDeleteModel(){
+
 }
 
 // This is a function to display the path of a given vertex
@@ -160,10 +186,19 @@ function determineOwnership(parsedRenderKey){
     let i = 0
     for (let vertexorarrow of treeData){
         if(vertexorarrow !== undefined){
+            //console.log("treeData object name: " + vertexorarrow.text)
+
+            if (vertexorarrow.type === "Model"){
+                if (vertexorarrow.renderkey === parsedRenderKey){
+                    returnArray.push(treeData[i])
+                }
+                
+            }
+
             for (let child of vertexorarrow.children){
                 // Check if the render key of the child matches 
                 if (child.renderkey === parsedRenderKey){
-                    console.log("Matched tree data: " + treeData[i])
+                    //console.log("Matched tree data: " + treeData[i])
                     returnArray.push(treeData[i])
                     break
                 }
@@ -192,6 +227,12 @@ export class ContainmentTree extends React.Component {
         
         if (focussed === false){
             for (let vertex of currentObjects.flattenVertexNodes()) { //.rootVertices() <-- original // for (let vertex of currentObjects.flattenVertexNodes()) 
+                
+                // Push the model objects in
+                for (let model of modelObjects){
+                    treeData.push(model);
+                    
+                }
 
                 for (let folder of folderData){
                     let renderIndex = 0;
@@ -209,7 +250,10 @@ export class ContainmentTree extends React.Component {
                     }
                     
                     
-                    console.log("The renderIndex variable is: " + renderIndex)
+                    //console.log("The renderIndex variable is: " + renderIndex)
+
+                    //console.log("Length of tree data after adding objects: " + j)
+
                     
                     if (i === 0){
 
@@ -393,11 +437,15 @@ export class ContainmentTree extends React.Component {
     handleElementSelect(e, data) {
 
         //If the user selects a folder, switch the current render key to that folder
-        if(data.node.data.type == "Folder"){
+        if(data.node.data.type === "Folder"){
             console.log("The render key is now" + data.node.data.renderkey);
             setNewRenderKey(data.node.data.renderkey)
 
 
+        }
+
+        if (data.node.data.type === "Model"){
+            console.log("The selected model is: " + data.node.data.modelkey)
         }
         
        //console.log("The data is: " + data.node.data);

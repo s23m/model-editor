@@ -188,7 +188,7 @@ class VertexNode {
         else if (returnOption === "arrowFolder"){
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
-                if (currentObjects.flatten()[i].typeName !== "Vertex"){
+                if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
                     let tempTreeObj = {
                         text: currentObjects.flatten()[i].semanticIdentity.UUID,
                         children: [],
@@ -211,6 +211,7 @@ class VertexNode {
             }
         }
 
+        
         //This down here is for vertex heirarchy stuff, not really needed anymore.
         /*
         if (!traversed) {
