@@ -149,7 +149,7 @@ export function drawAll() {
             //console.log("HERE " + item.typeName)
             //Only render the objects which are in the currently selected containment
             
-            if (item.getRenderKey() === currentRenderKey){
+            if (item.getModelKey() === currentModel){
                 item.draw(canvasContext);
             }
             

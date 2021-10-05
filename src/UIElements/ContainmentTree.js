@@ -108,7 +108,7 @@ export function handleAddModel(modelName){
     let tempModelThing = {
         text: modelName,
         children: [],
-        data: modelObjects[0],
+        data: modelObjects[modelObjects.length - 1],
         state: {opened: true},
         type: "Model",
         renderkey: getCurrentRenderKey(),
@@ -436,7 +436,6 @@ export class ContainmentTree extends React.Component {
 
     handleElementSelect(e, data) {
 
-        //If the user selects a folder, switch the current render key to that folder
         if(data.node.data.type === "Folder"){
             console.log("The render key is now" + data.node.data.renderkey);
             setNewRenderKey(data.node.data.renderkey)
@@ -446,6 +445,7 @@ export class ContainmentTree extends React.Component {
 
         if (data.node.data.type === "Model"){
             console.log("The selected model is: " + data.node.data.modelkey)
+            setNewModel(data.node.data.modelkey);
         }
         
        //console.log("The data is: " + data.node.data);
