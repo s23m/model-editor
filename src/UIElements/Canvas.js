@@ -3,7 +3,7 @@ import * as canvasDraw from "./CanvasDraw";
 import { Tool } from './LeftMenu';
 
 var movingAllowed = false;
-
+var selectMultiple = false;
 
 export class Canvas extends React.Component {
     constructor(props) {
@@ -60,7 +60,7 @@ export class Canvas extends React.Component {
         //}
 
         // If it was a left click
-        if (e.button === 0) {
+        if (e.button === 0 && !selectMultiple) {
             let intersection = canvasDraw.findIntersected(x, y);
             // check if there's an object
             if (intersection !== null) {
@@ -82,7 +82,20 @@ export class Canvas extends React.Component {
             canvasDraw.onLeftMousePress(canvas, x, y);
             }
         }
+        
+        //if control worked (to select multiple objects)
+        /*if (e.button === 0 && selectMultiple) {
+            let intersection = canvasDraw.findIntersected(x, y);
+            // check if there's an object
+            if (intersection !== null) {
+                this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
+            }
+        }
 
+        if (e.ctrlKey) {
+            selectMultiple = true;
+
+        }*/
 
 
         // If it was a middle click
