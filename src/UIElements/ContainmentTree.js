@@ -75,12 +75,13 @@ export function handleAddFolder(folderName){
     let tempFolderThing = {
         text: folderName,
         children: treeData[getTotalRenderKeys()],
-        data: folderData[folderData.length - 1],
+        data: folderData[folderData.length-1],
         state: {opened: true},
         type: "Folder",
         renderkey: getTotalRenderKeys()
     }
     
+    console.log("folderlength-1" + folderData.length-1)
     folderData.push(tempFolderThing);
     
 
@@ -285,7 +286,7 @@ export class ContainmentTree extends React.Component {
                     for (let folder of folderData){
                         //console.log("The result: " + determineOwnership(folder.renderkey))
                         folder.children = determineOwnership(folder.renderkey)
-                        console.log("Folder: " + folder.text)
+                        //console.log("Folder: " + folder.text)
                         //console.log("Folder " + folder.text + "has " + folder.children)
                         //console.log("The treeData array is " + treeData)
                     }
@@ -323,14 +324,19 @@ export class ContainmentTree extends React.Component {
             //First, we need to actually determine where the vertex is
             //Take a look at our containor
             for (let cont of folderData){
+                console.log("folder text: " + cont.text)
                 //Take a look at the children of the containors (arrows and such)                
                 for (let treeDat of cont.children){
+                    console.log("treeDat text: " + treeDat.text)
                     //Why is the vertex folder coming up as undefined?????
+                    console.log(treeDat.children)
                     if(b === 0){
                         //console.log("SECOND LAYER: " + treeDat.children);
                         for (let treeElement of treeDat.children){
+                            console.log("Vertices text: " + treeElement)
                             if ((treeElement.text === currentlySelectedObject.title)){
-
+                                
+                                console.log("A match was had")
                                 //Push the matched container object
                                 let CTreeObj = {
                                     text: cont.text,
@@ -358,10 +364,12 @@ export class ContainmentTree extends React.Component {
                                 }
                                 objName.push(CElementObj);
 
+                                b = 1;
+
                             
                             }
                         }
-                        b = 1;
+                        
                     }
                     
                 }
@@ -436,6 +444,10 @@ export class ContainmentTree extends React.Component {
 
     handleElementSelect(e, data) {
 
+        console.log("Selected Length: " + data.selected.length)
+        console.log("Selected Data: " + data.node.data)
+        console.log("Selected Type: " + data.node.data.type)
+
         if(data.node.data.type === "Folder"){
             console.log("The render key is now" + data.node.data.renderkey);
             setNewRenderKey(data.node.data.renderkey)
@@ -443,14 +455,28 @@ export class ContainmentTree extends React.Component {
 
         }
 
-        if (data.node.data.type === "Model"){
+        else if (data.node.data.type === "Model"){
             console.log("The selected model is: " + data.node.data.modelkey)
             setNewModel(data.node.data.modelkey);
+
+            // Move everything away
+            for (let item of currentObjects.flatten()){
+                if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
+                    //console.log("Item is set as present")
+                    item.setPresent();
+                }
+
+                else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
+                    //console.log("Item is sent away")
+                    item.setAway();
+                    //console.log("The item to not be rendered is" + item.typeName);
+                }
+            }
         }
         
        //console.log("The data is: " + data.node.data);
 
-        if (data.selected.length === 1 && data.node.data !== null && data.node.data.type === null) {
+        else if (data.selected.length === 1 && data.node.data !== null && data.node.data.type === undefined) {
             let UUID = data.node.data.semanticIdentity.UUID;
             for (let vertex of currentObjects.flatten(true, false)) {
                 if (vertex.semanticIdentity.UUID === UUID) {
@@ -477,6 +503,7 @@ export class ContainmentTree extends React.Component {
                 }
             }
             
+
         } else {
             this.setState({
                 selectedVertex: null

@@ -150,8 +150,23 @@ export function drawAll() {
             //Only render the objects which are in the currently selected containment
             
             if (item.getModelKey() === currentModel){
+                /*
+                if (item.typeName === "Vertex"){
+                    console.log("Item is set as present")
+                    item.setPresent();
+                }
+                */
                 item.draw(canvasContext);
+                
             }
+
+            /*
+            else if (item.getModelKey() !== currentModel && item.typeName === "Vertex"){
+                console.log("Item is sent away")
+                item.setAway();
+                //console.log("The item to not be rendered is" + item.typeName);
+            }
+            */
             
         }
     });

@@ -50,6 +50,46 @@ export class Vertex {
 
         // USed to decide where to render the object
         this.vertexModelKey = getCurrentModel();
+
+        // Used for moving vertices out of the way when they're not being rendered to prevent invisible overlap
+        this.renderedx = x;
+        this.renderedy = y;
+
+        this.awayx = Math.floor(Math.random() * 2000000)+100000;
+        this.awayy = Math.floor(Math.random() * 2000000)+100000;
+
+        this.status = "present"
+        
+    }
+
+    // Save a vertice's proper x and y coordinate for later rendering and then send the vertex somewhere else
+    setAway(){
+        if (this.status === "present"){
+            this.renderedx = this.x;
+            this.renderedy = this.y;
+
+            this.x = this.awayx;
+            this.y = this.awayy;
+
+            this.status = "away"
+
+            console.log("awayx: " + this.x)
+            console.log("awayy: " + this.y)
+        }
+        
+    }
+
+    setPresent(){
+
+        if (this.status === "away"){
+            this.x = this.renderedx;
+            this.y = this.renderedy;
+
+            this.status = "present"
+
+            console.log("X " + this.x)
+            console.log("Y " + this.y)
+        }
         
     }
 
