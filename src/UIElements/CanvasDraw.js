@@ -6,6 +6,7 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
+import { ArrowBackIos } from "@material-ui/icons";
 
 // Core variables
 var canvasElement;
@@ -293,6 +294,8 @@ function getConnectionDataForArrow(cursorX, cursorY) {
 
         // Create point (not vector sitting on 0,0)
         coordinate = [coordinate[0], lastPathX + xv, lastPathY + yv];
+
+
     }
 
     return { coord: coordinate, snapped: nearest !== null, nearest: nearest }
@@ -397,9 +400,10 @@ function moveArrowPointOnMouseMove(e, index, arrow) {
     [x, y] = getGraphXYFromMouseEvent(e);
     let conData = getConnectionDataForArrow(x, y);
     arrow.pathData[index] = conData['nearest'];
-
     StickArrowToObject(conData, arrow, index);
-    }
+
+    
+}
 
 
 // Event based functions
@@ -633,8 +637,10 @@ export function checkCollision(canvas, x, y) {
 
 
 export function onRightMouseRelease(canvas, x, y) {
-    if (arrowToolSelected()) {
+    var ET = findIntersected(x,y);
+    if (arrowToolSelected() && ET !== null) {
         // Create
+        
         let newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
 
         // Reset path
@@ -653,22 +659,14 @@ export function onRightMouseRelease(canvas, x, y) {
 }
 
 export function updateA(){
-    //objectID = Object.semanticIdentity.UUID;
-    //console.log(ObjectID);
     let conData = 0;
     currentObjects.flatten().forEach((item) => {
         if (item.constructor.name === "Arrow") {  
-            console.log('hi I am working');
-            //if (objectID === item.destVertexUUID || objectID === item.sourceVertexUUID) {
-                //only works for big box
+
             conData = getConnectionDataForArrow(item.path[1][0],item.path[1][1] );
             item.pathData[1] = conData['nearest'];
             StickArrowToObject(conData, item, 0);
 
-            //conData = getConnectionDataForArrow(item.path[0][0],item.path[0][1] );
-            //item.pathData[0] = conData['nearest'];
-            //StickArrowToObject(conData, item, 0);
-            //}
 
         }
     });
@@ -1138,7 +1136,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 //
 export function collectmehbox(boxes,arrows,bigbox, item,index){
 
-    console.log("runningcollect");
+    //console.log("runningcollect");
     if (bigbox.semanticIdentity.UUID === item.destVertexUUID) {
         let box = getObjectFromUUID(item.sourceVertexUUID);
         if((bigbox.y)*index + (box.y)*(1-index)> (box.y + box.height + 10)*index + (bigbox.y + bigbox.height + 10)*(1-index)){
@@ -1188,7 +1186,6 @@ export function arrangeboxesandarrows(bigbox,boxes, arrows,index){
 //
 export function collectsidebox(boxes,arrows,bigbox, item,index){
 
-    console.log("runningcollect");
     if (bigbox.semanticIdentity.UUID === item.destVertexUUID) {
         let box = getObjectFromUUID(item.sourceVertexUUID);
         if((bigbox.x)*index + (box.x)*(1-index)> (box.x + box.width)*index + (bigbox.x + bigbox.width)*(1-index)){
@@ -1304,32 +1301,22 @@ export function onLeftMouseRelease(canvas, x, y) {
         if (getConnectionDataForArrow(x, y).snapped && !firstArrowJoint) {
             // Create
 			var secondObject = findIntersected(x,y);
-			var newObject;
+			var newObject = null;
 
 			//2 separate objects - box and vertex (border)
-			if(previousObject !== null && secondObject !== null) {
+			if(previousObject !== null && secondObject !== null && savedArrows !== null) {
 			//console.log("\n the new one \n");
 				newObject = lineIntersector(canvas, x, y,secondObject);
 				for (let j = 0; j < savedArrows.length; j++) {
-
 				//delete arrow if duplicate for straight arrows (doesn't work)
 					for (let k = 1+j; k < savedArrows.length; k++){
-						if (savedArrows[j][0][0] === savedArrows[k][0][0] && savedArrows[j][0][1] === savedArrows[k][0][1] && savedArrows[j][1][0] === savedArrows[k][1][0] && savedArrows[j][1][1] === savedArrows[k][1][1]) {
-						let removethis = findIntersected(savedArrows[j][0][0],savedArrows[j][0][1]);
-						deleteElement(removethis);
-					}
-				}
-			
+                        if (savedArrows[j][0][0] === savedArrows[k][0][0] && savedArrows[j][0][1] === savedArrows[k][0][1] && savedArrows[j][1][0] === savedArrows[k][1][0] && savedArrows[j][1][1] === savedArrows[k][1][1]) {
+						    let removethis = findIntersected(savedArrows[j][0][0],savedArrows[j][0][1]);
+						    deleteElement(removethis);
+					    }
+				    }   
+			    }
 			}
-			}
-			else {
-			//console.log("\n the old one \n");
-			  newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
-			  //need to reset the other 2 coords.
-			  //newObject = createObject(canvas, 0, 0, 0, 0);
-			}
-
-            
 
             // Reset path
             arrowPath = [];
@@ -1355,17 +1342,19 @@ export function onLeftMouseRelease(canvas, x, y) {
 
 			});
 			
-
-            canvas.props.setLeftMenu(newObject)
+            if (newObject !== null) {
+                canvas.props.setLeftMenu(newObject);
+            }
+            
             canvas.props.setMode(Tool.Select);
             if (previousObject !== null && secondObject !== null){
                 shiftBoxes(secondObject);
             }
             previousObject = null;
-            
 
 
         } else {
+            //maybe here where we can disable compound lines
 
 		//save object here
 			previousObject = findIntersected(x,y);
@@ -1428,7 +1417,7 @@ function onMouseMove(e, canvas) {
     canvasContext.globalAlpha = 1.0;
 }
 
-export function onMiddleClick(canvas, x, y) {
+export function onMiddleClick(canvas, x, y, savedObjects = null) {
     // for arrows
     startMoveX = x;
     startMoveY = y;
@@ -1438,12 +1427,21 @@ export function onMiddleClick(canvas, x, y) {
     let selectedObject = findIntersected(x, y);
 
     let [friendObject, arrowsVert, arrowsHoriz] = compareSizesToMoveAll(selectedObject);
-    var F = [];
+    var F = []; 
     if (friendObject !== null) {
         let i = 0;
         for (i; i<friendObject.length; i++) {
-            F.push([x - friendObject[i].x,y -friendObject[i].y]);
-            console.log(F);
+            F.push([x - friendObject[i].x,y -friendObject[i].y]); //distance from mouse to actual object's x, y
+            //console.log(F);
+        }
+    }
+
+    var S = []; //previous coords
+    if (savedObjects !== null) {
+        let i = 0;
+        for (i; i<savedObjects.length; i++) {
+            S.push([x - savedObjects[i].x,y -savedObjects[i].y]);
+            //console.log(F);
         }
     }
 
@@ -1452,8 +1450,7 @@ export function onMiddleClick(canvas, x, y) {
         // check the distance between the mouse and the object
         let savedisX = x - selectedObject.x;
         let savedisY = y - selectedObject.y;
-
-        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, friendObject, F, savedisX, savedisY,arrowsVert,arrowsHoriz) }
+        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, friendObject, F, savedObjects,S, savedisX, savedisY,arrowsVert,arrowsHoriz) }
     }
 
 }
@@ -1466,7 +1463,7 @@ export function onMouseLeave() {
 
 // moving objects in respect to cursor values savedisX, savedisY
 // friends = the smaller boxes that are connected to the bigger box
-function moveObject(e, object, friends,F, savedisX, savedisY, arrowsVert, arrowsHoriz) {
+function moveObject(e, object, friends,F,savedObjects = null,S, savedisX, savedisY, arrowsVert, arrowsHoriz) {
     if (object != null) {
         if (object.constructor.name === "Vertex") {
             let position = getGraphXYFromMouseEvent(e);
@@ -1482,6 +1479,17 @@ function moveObject(e, object, friends,F, savedisX, savedisY, arrowsVert, arrows
                     friends[i].y = position[1] - F[i][1];
                 }
             }
+
+            if (savedObjects !== null) {
+                let i = 0;
+                //check friends' previous location and cursors location
+                for (i; i < savedObjects.length; i++) {
+                    savedObjects[i].x =  position[0] - S[i][0];
+                    savedObjects[i].y = position[1] - S[i][1];
+                }
+            }
+
+
 
             if (arrowsVert !== null){
             let conData = 0;
@@ -1533,26 +1541,7 @@ function moveObject(e, object, friends,F, savedisX, savedisY, arrowsVert, arrows
 
         } else if (object.constructor.name === "Arrow") {
             return;
-            let position = getGraphXYFromMouseEvent(e);
-            let x = position[0];
-            let y = position[1];
-
-            // Find index for arrow path
-            var index = 0;
-            var distance = getDistance(startMoveX, startMoveY, object.path[0][0], object.path[0][1]);
-            for (let i = 1; i < object.path.length; i++) {
-                let checkDistance = getDistance(startMoveX, startMoveY, object.path[i][0], object.path[i][1]);
-                if (checkDistance < distance) {
-                    index = i;
-                    distance = checkDistance;
-                }
-            }
-
-
-            // Update index
-            //console.log(index, x, y);
-            object.pathData[index] = getConnectionDataForArrow(x, y);
-            object.rebuildPath();
+            
         }
     }
 }
@@ -1674,12 +1663,18 @@ function createObject(canvas, x1, y1, x2, y2) {
 
     } else if (arrowToolSelected()) {
         // Generate path
-		//massive cosmic brain
 
 		newPath = arrowPath.concat([getConnectionDataForArrow(x2, y2).coord]);
 		
         // Check if first path connects to a vertex, and ignore if it doesn't
         // Should be 0 if the connectable connects to a vertex
+        //
+        //
+        //because createObject is always running when moving mouse
+        //
+        // if current mouse pos is not over a box, don't create arrow
+        // if removed here, it is still removed in another function 
+        //let intersection = findIntersected(x2, y2);
         if (newPath[0][0] !== 0) {
             return null;
         }
