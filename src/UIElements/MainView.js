@@ -126,9 +126,17 @@ export class MainProgramClass extends React.Component {
     };
 
     // chooses which left hand menu to display, based on the selected item
-    setLeftMenu(nearestObject) {
-
-        if (this.state.selectedObject !== null) {
+    setLeftMenu(nearestObject, ctrl = false, OP = []) {
+        
+        if (OP !== null){
+            for(let i = 0;i<OP.length;i++){
+                OP[i].setSelected(false); //visually deselects elements
+            }
+        }
+        // checks if that specific object was clicked
+        // if it wasn't then deselect it
+        // i.e. determines if objects are selected or not
+        if (this.state.selectedObject !== null && ctrl == false) {
             this.state.selectedObject.setSelected(false);
         }
 

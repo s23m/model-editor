@@ -4,6 +4,7 @@ import { Tool } from './LeftMenu';
 
 var movingAllowed = false;
 var selectMultiple = false;
+var savedObjects = [];
 
 export class Canvas extends React.Component {
     constructor(props) {
@@ -38,26 +39,6 @@ export class Canvas extends React.Component {
             startY: y
         });
 
-        // function to move the box with right click
-        //function rightClickDrag(e) {
-        //    let newCoords = canvasDraw.getGraphXYFromMouseEvent(e);
-        //    let x2 = newCoords[0];
-        //    let y2 = newCoords[1];
-        //    let dist = Math.hypot(x, y, x2, y2);
-
-        //    if (dist > 10 && movingAllowed) {
-        //        canvasDraw.onMiddleClick(canvas, x, y);
-        //    }
-        //}
-
-        //If it was a right click to move the box
-        //if (e.button === 0 && canmovebox === true) {
-        //    //blue select
-        //    this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
-        //    movingAllowed = true;
-        //    document.addEventListener("mousemove", rightClickDrag, { once: true })
-
-        //}
 
         // If it was a left click
         if (e.button === 0 && !selectMultiple) {
@@ -69,33 +50,69 @@ export class Canvas extends React.Component {
                     e.preventDefault();
                     // brings up the menu
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
-                    canvasDraw.onMiddleClick(canvas, x, y)
+                    canvasDraw.onMiddleClick(canvas, x, y);
+                    
+
                 } else {
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
                     canvasDraw.saveBlockStates(canvas, x, y, 1);
                     canvasDraw.onLeftMousePress(canvas, x, y);
                 }
 
-              } else {
+              } else { //clicked nothing
             this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
             canvasDraw.saveBlockStates(canvas, x, y, 1);
             canvasDraw.onLeftMousePress(canvas, x, y);
             }
         }
         
-        //if control worked (to select multiple objects)
-        /*if (e.button === 0 && selectMultiple) {
+        //toggles ctrl key to be active for selecting multiple.
+        //detoggles in mouseup
+        if (e.ctrlKey && !selectMultiple) {
+            selectMultiple = true;
+        }
+
+        //mouse down
+        if (e.button === 0 && selectMultiple) {
+            
             let intersection = canvasDraw.findIntersected(x, y);
             // check if there's an object
+            if (intersection === null) {
+                this.props.setLeftMenu(intersection, false, savedObjects);
+                savedObjects = [];
+                selectMultiple = false;
+
+            }
             if (intersection !== null) {
-                this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
+                //console.log(selectMultiple);
+                // Remove dupes
+                let foundend = 0;
+                //start at 0
+                while (foundend < savedObjects.length-1){
+                    //stop @ second last one
+                    //check RHS for duplicates
+                    //found+1 because wanna look at box after the one we looking at
+                    for (let ob = foundend+1; ob < savedObjects.length; ob++){
+                        if(savedObjects[foundend].x === savedObjects[ob].x && savedObjects[foundend].y === savedObjects[ob].y ){
+                            savedObjects.splice(ob); // if it's the same, delete it and slide array back one
+                        }
+                    }
+                    foundend++;
+                }
+                //ideally want to push in the first object that has already been selected
+                console.log(savedObjects);
+                savedObjects.push(canvasDraw.findIntersected(x, y));
+                canvasDraw.onMiddleClick(canvas, x, y, savedObjects)
+                
+                for(let i = 0; i <savedObjects.length; i++) {
+                    this.props.setLeftMenu(savedObjects[i], selectMultiple);
+                }
+                
+
             }
         }
 
-        if (e.ctrlKey) {
-            selectMultiple = true;
 
-        }*/
 
 
         // If it was a middle click
