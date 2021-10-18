@@ -73,8 +73,6 @@ export class Vertex {
 
             this.status = "away"
 
-            console.log("awayx: " + this.x)
-            console.log("awayy: " + this.y)
         }
         
     }
@@ -86,9 +84,6 @@ export class Vertex {
             this.y = this.renderedy;
 
             this.status = "present"
-
-            console.log("X " + this.x)
-            console.log("Y " + this.y)
         }
         
     }

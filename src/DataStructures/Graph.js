@@ -189,15 +189,19 @@ class VertexNode {
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
                 if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
+                    console.log(currentObjects.flatten()[i].semanticIdentity.UUID)
                     let tempTreeObj = {
-                        text: currentObjects.flatten()[i].semanticIdentity.UUID,
+                        text: currentObjects.flatten()[i].typeName,
                         children: [],
                         data: currentObjects.flatten()[i],
                         renderkey: currentObjects.flatten()[i].getRenderKey(),
                         state: {opened: false}
                     };
-    
+
                     ArrowChildren.push(tempTreeObj);
+                    
+    
+                    
                 }
 
             }

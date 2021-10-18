@@ -214,13 +214,14 @@ input,button{
 
 .LeftMenus{
     display: flex;
-    height: 94.2vh;
+    height: 90vh;
     width: 15vw;
     /***border: 2px groove #666666;***/
     flex-direction: column;
     border-top: none;
     background: none;
     z-index: 5;
+    resize:horizontal;
     overflow: auto;
 	background-color:#D3D3D3;
 }

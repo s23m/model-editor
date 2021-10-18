@@ -478,7 +478,8 @@ export class ContainmentTree extends React.Component {
 
         else if (data.selected.length === 1 && data.node.data !== null && data.node.data.type === undefined) {
             let UUID = data.node.data.semanticIdentity.UUID;
-            for (let vertex of currentObjects.flatten(true, false)) {
+            console.log("UUID: " + UUID)
+            for (let vertex of currentObjects.flatten()) {
                 if (vertex.semanticIdentity.UUID === UUID) {
                     this.setState({
                         selectedVertex: vertex
