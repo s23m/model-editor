@@ -30,9 +30,15 @@ let treeData = [];
 // I need this to store the folders. Initially, it has one folder simply titled 'Unnamed Folder'.
 let folderData = [];
 
+// This is to do with getting the data indexing to be
+let decoyFolderData = [];
+
 // This is so that when you click on some tree view element you're able to see some clearer data on the 
 // the folder ||| REDUNDANT 
 let folderObjects = [];
+
+// Same use as the above decoy array
+//let decoyModelObjects = []
 
 // An array for holding model names
 let modelObjects = [];
@@ -69,22 +75,50 @@ export function displayFocussedTreeView(selectedThing){
     
 }
 
+/*
+function render_on_add_folder_or_continator() {
+    const data = this.state.data;
+    
+    return (
+        <div>
+            <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} />
+            <br></br>
+        </div>
+    )
+}
+*/
+
 export function handleAddFolder(folderName){
     //Create a new folder using the known node type
+
     incrementTotalRenderKeys();
+
     let tempFolderThing = {
         text: folderName,
         children: treeData[getTotalRenderKeys()],
-        data: folderData[folderData.length-1],
+        data: NaN,
+        state: {opened: true},
+        type: "Folder",
+        renderkey: getTotalRenderKeys()
+    }
+
+    decoyFolderData.push(tempFolderThing)
+
+    let folderThing2 = {
+        text: folderName,
+        children: treeData[getTotalRenderKeys()],
+        data: decoyFolderData[folderData.length],
         state: {opened: true},
         type: "Folder",
         renderkey: getTotalRenderKeys()
     }
     
-    console.log("folderlength-1" + folderData.length-1)
-    folderData.push(tempFolderThing);
-    
+    //console.log("theActualData: " + folderData.length)
+    folderData.push(folderThing2);
+    console.log("Folder data apprent: " + folderData[folderData.length-1].data)
 
+    //folderData[folderData.length-1].data = folderData[folderData.length]
+    
     //console.log("Folder data is :" + folderData[1].text)
     
     /*
@@ -106,6 +140,7 @@ export function handleDeleteFolder(folderName){
 
 export function handleAddModel(modelName){
     incrementTotalModels();
+
     let tempModelThing = {
         text: modelName,
         children: [],
@@ -115,9 +150,10 @@ export function handleAddModel(modelName){
         renderkey: getCurrentRenderKey(),
         modelkey: getTotalModels()
     };
+ 
+    modelObjects.push(tempModelThing);
 
     
-    modelObjects.push(tempModelThing);
 }
 
 export function handleDeleteModel(){
@@ -222,7 +258,8 @@ export class ContainmentTree extends React.Component {
         let i = 0;
         
         if (initialfolderadded === false){
-            handleAddFolder("temp folder");
+            handleAddFolder("---");
+            handleAddModel("---")
             initialfolderadded = true;
         }
         
@@ -281,7 +318,6 @@ export class ContainmentTree extends React.Component {
                     }
 
                     treeData.push(vertex.toTreeViewElement(new Set()));
-
                     
                     for (let folder of folderData){
                         //console.log("The result: " + determineOwnership(folder.renderkey))
@@ -444,12 +480,13 @@ export class ContainmentTree extends React.Component {
 
     handleElementSelect(e, data) {
 
-        console.log("Selected Length: " + data.selected.length)
-        console.log("Selected Data: " + data.node.data)
-        console.log("Selected Type: " + data.node.data.type)
+        //console.log("Selected Length: " + data.selected.length)
+        //console.log("Selected Data: " + data.node.data)
+        //console.log("Selected Type: " + data.node.data.type)
 
         if(data.node.data.type === "Folder"){
             console.log("The render key is now" + data.node.data.renderkey);
+            console.log("Clicked Folder: " + data.node.data.text)
             setNewRenderKey(data.node.data.renderkey)
 
 
@@ -495,9 +532,9 @@ export class ContainmentTree extends React.Component {
                     
 
                     //currentRenderKey = 1; 
-                    console.log("Render old key is " + getCurrentRenderKey());
+                    //console.log("Render old key is " + getCurrentRenderKey());
                     //setNewRenderKey(this.state.selectedVertex.getRenderKey());
-                    console.log("The new render key is : " + getCurrentRenderKey());
+                    //console.log("The new render key is : " + getCurrentRenderKey());
                     //currentRenderKey = 1;
                     
                     //console.log("The selected object is: " + this.state.selectedVertex.getRenderKey())
