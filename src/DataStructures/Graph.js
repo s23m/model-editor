@@ -133,6 +133,10 @@ class VertexNode {
         let children = [];
         let traversed = traversedVertices.has(this);
 
+        for (let element in currentObjects.flatten()){
+            console.log("The objects: " + element.typeName)
+        }
+
         //Check which folder we're sticking these things into
         if (returnOption === "vertexFolder"){
             //All objects currently on the canvas (excluding things like folders which only exist as tree view elements)
@@ -189,7 +193,8 @@ class VertexNode {
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
                 if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
-                    console.log(currentObjects.flatten()[i].semanticIdentity.UUID)
+                    console.log("Arrow Information: " + currentObjects.flatten()[i])
+                    
                     let tempTreeObj = {
                         text: currentObjects.flatten()[i].typeName,
                         children: [],
