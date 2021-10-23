@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+import { CollectionsBookmarkOutlined } from "@material-ui/icons";
 import { currentObjects, getModelName } from "../UIElements/CanvasDraw";
 
 
@@ -134,7 +135,6 @@ class VertexNode {
         let traversed = traversedVertices.has(this);
 
         for (let element in currentObjects.flatten()){
-            console.log("The objects: " + element.typeName)
         }
 
         //Check which folder we're sticking these things into
@@ -160,6 +160,7 @@ class VertexNode {
                         children: [],
                         data: currentObjects.flatten()[i],
                         renderkey: currentObjects.flatten()[i].getRenderKey(),
+                        modelkey: currentObjects.flatten()[i].getModelKey(),
                         state: {opened: false}
                     };
 
@@ -193,13 +194,43 @@ class VertexNode {
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
                 if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
-                    console.log("Arrow Information: " + currentObjects.flatten()[i])
+
+                    // Find the source and destination vertex as Keith defined in spec
+                    let ourSourceEnd = currentObjects.flatten()[i].pathData[1][1]
+                    let ourDestEnd = currentObjects.flatten()[i].pathData[0][1]
+
+                    let textSource = "N/A"
+                    let textDest = "N/A"
+                    let finalString = "N/A"
+
+                    // Looking through all of the current objects and matching the uuids
+                    for (let j = 0; j <currentObjects.flatten().length; j++){
+                    
+                        let someObject = currentObjects.flatten()[j]
+                        
+                        if (someObject.typeName === "Vertex"){
+                        
+                            if (ourSourceEnd === someObject.semanticIdentity.UUID){
+                                console.log("Matched1")
+                                textDest = someObject.title
+                            }
+
+                            else if (ourDestEnd === someObject.semanticIdentity.UUID){
+                                console.log("Matched2")
+                                textSource = someObject.title
+                            }
+                        }
+                        
+                    }
+
+                    finalString = textSource + " to " + textDest
                     
                     let tempTreeObj = {
-                        text: currentObjects.flatten()[i].typeName,
+                        text: currentObjects.flatten()[i].typeName + " - " + finalString,
                         children: [],
                         data: currentObjects.flatten()[i],
                         renderkey: currentObjects.flatten()[i].getRenderKey(),
+                        modelkey: currentObjects.flatten()[i].getModelKey(),
                         state: {opened: false}
                     };
 

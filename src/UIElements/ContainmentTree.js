@@ -43,20 +43,6 @@ let folderObjects = [];
 // An array for holding model names
 let modelObjects = [];
 
-//This sets our first initial unnamed folder
-/*
-let tempFolderObject = {
-    text: "Unnamed Folder",
-    children: treeData[0],
-    data: folderData[0],
-    state: {opened: true},
-    type: "Folder",
-    renderkey: 0
-};
-
-folderData.push(tempFolderObject);
-*/
-
 // A function to be called in the left menu to 
 // 1. Return the name of the currently selected vertex for displaying purposes and
 // 2. Set the 'focussed' keyword to true
@@ -88,6 +74,9 @@ function render_on_add_folder_or_continator() {
 }
 */
 
+let folderAltered = false;
+let modelAltered = false;
+
 export function handleAddFolder(folderName){
     //Create a new folder using the known node type
 
@@ -117,15 +106,7 @@ export function handleAddFolder(folderName){
     folderData.push(folderThing2);
     console.log("Folder data apprent: " + folderData[folderData.length-1].data)
 
-    //folderData[folderData.length-1].data = folderData[folderData.length]
-    
-    //console.log("Folder data is :" + folderData[1].text)
-    
-    /*
-   for(let folder in folderData){
-       console.log("STATE OF FOLDER ARRAY: " + folder);
-    }
-    */
+    folderAltered = true;
     
 }
 
@@ -136,6 +117,8 @@ export function handleDeleteFolder(folderName){
             folderData.splice(i,1); 
         }
     }
+
+    folderAltered = true;
 }
 
 export function handleAddModel(modelName){
@@ -153,10 +136,20 @@ export function handleAddModel(modelName){
  
     modelObjects.push(tempModelThing);
 
+    modelAltered = true;
+
     
 }
 
-export function handleDeleteModel(){
+export function handleDeleteModel(modelName){
+
+    for (let i = 0; i < modelObjects.length; i++){
+        if (modelObjects[i].text === modelName){
+
+            modelObjects.splice(i,1); 
+
+        }
+    }
 
 }
 
@@ -177,42 +170,6 @@ export function showVertexPath(theObject){
         }
     }
 
-    //console.log("AND HERE");
-    /*
-    currentlySelectedObject = theObject;
-
-    let highestLevel = getModelName();
-    let nextLevel = "";
-    let vertexOrEdge = "";
-    let actualObject = "";
-
-    let b = 0;
-    //First, we need to actually determine where the vertex is
-    //Take a look at our containor
-    for (let cont of folderData){
-        //Take a look at the children of the containors (arrows and such)                
-        for (let treeDat of cont.children){
-            //Why is the vertex folder coming up as undefined?????
-            if(b === 0){
-                //console.log("SECOND LAYER: " + treeDat.children);
-                for (let treeElement of treeDat.children){
-                    if ((treeElement.text === currentlySelectedObject.title || currentlySelectedObject.title === "Unnamed Vertex")){
-
-                        nextLevel = cont.text;
-
-                        vertexOrEdge = "Vertices";
-
-                        actualObject = currentlySelectedObject.title;
-                    }
-                }
-                b = 1;
-            }
-            
-        }
-        
-        console.log(highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject);
-    }
-    */
 }
 
 // This function is used to determine which object should be owned by which folder object.
@@ -275,80 +232,30 @@ export class ContainmentTree extends React.Component {
                 for (let folder of folderData){
                     let renderIndex = 0;
 
-                    //Look at the render key of the object and determine where to put it
-                    //GET THIS TO WORK WITH THINGS OTHER THAN VERTICES
-                    /*
-                    if (vertex.vertex.getRenderKey() !== undefined){
-                        renderIndex = vertex.vertex.getRenderKey();
-                    }
-                    */
-
                     if (folder.renderkey !== undefined){
                         renderIndex = folder.renderkey;
                     }
-                    
-                    
-                    //console.log("The renderIndex variable is: " + renderIndex)
 
-                    //console.log("Length of tree data after adding objects: " + j)
-
-                    
                     if (i === 0){
-
-                        //console.log("Object's key: " + vertex.typeName)
-                        //The zero here should be renderIndex
 
                         treeData.push(vertex.toTreeViewElement(new Set(), "vertexFolder", renderIndex));
                         treeData.push(vertex.toTreeViewElement(new Set(), "arrowFolder", renderIndex));
 
                         //You need to make sure you update the folderData stuff after making a change to treeData
-                        /*
-                        for (let folder of folderData){
-                            if (folder.renderkey === renderIndex){
-                                folder.children = treeData;  
-                            }
-
-                            //console.log("This is folder: " + folder.text)
-                        }
-                        */
-                        
-                        //folderData[0].children = treeData;
-                        
-                        //i += 1;
+    
                     }
 
                     treeData.push(vertex.toTreeViewElement(new Set()));
                     
                     for (let folder of folderData){
-                        //console.log("The result: " + determineOwnership(folder.renderkey))
                         folder.children = determineOwnership(folder.renderkey)
-                        //console.log("Folder: " + folder.text)
-                        //console.log("Folder " + folder.text + "has " + folder.children)
-                        //console.log("The treeData array is " + treeData)
                     }
-                    
-                    //folderData[0].children = treeData;
-
                     
                 }
                 
                 break;
             }
 
-            /* Doing nothing, you can delete this if you spot it
-            for (let treething of treeData){
-                if(treething !== undefined){
-                    for(let children of treething.children){
-                        if (children !== undefined){
-                            console.log("Render keys: " + children.renderkey)
-                        }
-                        
-                    }
-                }
-            }
-            */
-
-           
         }
 
         
@@ -476,6 +383,13 @@ export class ContainmentTree extends React.Component {
                 }
                 someVertexPath = highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject;
             }
+        }
+
+        if (folderAltered === true){
+
+           // this.forceUpdate()
+
+            folderAltered = false
         }
 
     }
