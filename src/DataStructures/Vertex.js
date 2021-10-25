@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { drawMarker, distanceThreshold } from "../UIElements/CanvasDraw";
+import { drawMarker, distanceThreshold, getCurrentRenderKey, getCurrentModel } from "../UIElements/CanvasDraw";
 import { SemanticIdentity } from "./SemanticIdentity";
 
 export var padding = 5;
@@ -43,7 +43,67 @@ export class Vertex {
         this.isAbstract = false;
 
         //Store the path to your given vertex here
-        this.vertexpPath = "";
+        this.vertexPath = "";
+
+        // Used to decide where the object goes in the tree
+        this.vertexRenderKey = getCurrentRenderKey();
+
+        // USed to decide where to render the object
+        this.vertexModelKey = getCurrentModel();
+
+        // Used for moving vertices out of the way when they're not being rendered to prevent invisible overlap
+        this.renderedx = x;
+        this.renderedy = y;
+
+        this.awayx = Math.floor(Math.random() * 2000000)+100000;
+        this.awayy = Math.floor(Math.random() * 2000000)+100000;
+
+        this.status = "present"
+        
+    }
+
+    // Save a vertice's proper x and y coordinate for later rendering and then send the vertex somewhere else
+    setAway(){
+        if (this.status === "present"){
+            this.renderedx = this.x;
+            this.renderedy = this.y;
+
+            this.x = this.awayx;
+            this.y = this.awayy;
+
+            this.status = "away"
+
+        }
+        
+    }
+
+    setPresent(){
+
+        if (this.status === "away"){
+            this.x = this.renderedx;
+            this.y = this.renderedy;
+
+            this.status = "present"
+        }
+        
+    }
+
+    setModelKey(key){
+        this.vertexModelKey = key;
+    }
+
+    getModelKey(){
+        return this.vertexModelKey;
+    }
+
+    // Set the render key. Done in ContainmentTree.js
+    setRenderKey(key){
+        this.vertexRenderKey = key;
+    }
+
+    // Get the render key. Called in CanvasDraw.js
+    getRenderKey(){
+        return this.vertexRenderKey;
     }
 
     setPath(path){

@@ -5,6 +5,8 @@
 import { SemanticIdentity } from "./SemanticIdentity";
 import { Cardinality } from "./Cardinality";
 import * as ArrowProps from "./ArrowProperties";
+import { getCurrentModel, getCurrentRenderKey } from "../UIElements/CanvasDraw";
+
 
 // Object that contains all the parts of an arrow ending including:
 // Head type
@@ -32,6 +34,32 @@ export class EdgeEnd {
         }
 
         this.label = label;
+
+        // For deciding where it goes in the graph
+        this.edgeEndRenderKey = getCurrentRenderKey();
+
+        // For rendering the object
+        this.edgeEndModelKey = getCurrentModel();
+    }
+
+    // Set the model key
+    setModelKey(key){
+        this.edgeEndModelKey = key;
+    }
+
+    // Return the model key
+    getModelKey(){
+        return this.edgeEndModelKey;
+    }
+
+    // Set the render key. Done in ContainmentTree.js
+    setRenderKey(key){
+        this.edgeEndRenderKey = key;
+    }
+
+    // Return the render key. Done in CanvasDraw.js
+    getRenderKey(key){
+        return this.edgeEndRenderKey;
     }
 
     set type(newType){

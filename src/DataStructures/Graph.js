@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+import { CollectionsBookmarkOutlined } from "@material-ui/icons";
 import { currentObjects, getModelName } from "../UIElements/CanvasDraw";
 
 
@@ -123,7 +124,7 @@ class VertexNode {
         return false;
     }
 
-    toTreeViewElement(traversedVertices, returnOption) {
+    toTreeViewElement(traversedVertices, returnOption, parsedRenderKey) {
 
         //Pretty much everything that's currently on the canvas is searched and then converted into the tree appropriate struct in the below if else statements.
         //Then, the vertices and arrows folder nodes can display their appropriate children.
@@ -133,13 +134,16 @@ class VertexNode {
         let children = [];
         let traversed = traversedVertices.has(this);
 
+        for (let element in currentObjects.flatten()){
+        }
+
         //Check which folder we're sticking these things into
         if (returnOption === "vertexFolder"){
             //All objects currently on the canvas (excluding things like folders which only exist as tree view elements)
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
                 //We onlt want the vertices in this folder
-                if (currentObjects.flatten()[i].typeName === "Vertex"){
+                if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
                     //Set the append the name of the path to include the vertex name
                     if(currentObjects.flatten()[i].title === ""){
                         this.setVertexTreePath("Unnamed Vertex");
@@ -155,6 +159,8 @@ class VertexNode {
                         text: currentObjects.flatten()[i].title,
                         children: [],
                         data: currentObjects.flatten()[i],
+                        renderkey: currentObjects.flatten()[i].getRenderKey(),
+                        modelkey: currentObjects.flatten()[i].getModelKey(),
                         state: {opened: false}
                     };
 
@@ -187,15 +193,51 @@ class VertexNode {
         else if (returnOption === "arrowFolder"){
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
-                if (currentObjects.flatten()[i].typeName !== "Vertex"){
+                if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
+
+                    // Find the source and destination vertex as Keith defined in spec
+                    let ourSourceEnd = currentObjects.flatten()[i].pathData[1][1]
+                    let ourDestEnd = currentObjects.flatten()[i].pathData[0][1]
+
+                    let textSource = "N/A"
+                    let textDest = "N/A"
+                    let finalString = "N/A"
+
+                    // Looking through all of the current objects and matching the uuids
+                    for (let j = 0; j <currentObjects.flatten().length; j++){
+                    
+                        let someObject = currentObjects.flatten()[j]
+                        
+                        if (someObject.typeName === "Vertex"){
+                        
+                            if (ourSourceEnd === someObject.semanticIdentity.UUID){
+                                console.log("Matched1")
+                                textDest = someObject.title
+                            }
+
+                            else if (ourDestEnd === someObject.semanticIdentity.UUID){
+                                console.log("Matched2")
+                                textSource = someObject.title
+                            }
+                        }
+                        
+                    }
+
+                    finalString = textSource + " to " + textDest
+                    
                     let tempTreeObj = {
-                        text: currentObjects.flatten()[i].semanticIdentity.UUID,
+                        text: currentObjects.flatten()[i].typeName + " - " + finalString,
                         children: [],
                         data: currentObjects.flatten()[i],
+                        renderkey: currentObjects.flatten()[i].getRenderKey(),
+                        modelkey: currentObjects.flatten()[i].getModelKey(),
                         state: {opened: false}
                     };
-    
+
                     ArrowChildren.push(tempTreeObj);
+                    
+    
+                    
                 }
 
             }
@@ -209,6 +251,7 @@ class VertexNode {
             }
         }
 
+        
         //This down here is for vertex heirarchy stuff, not really needed anymore.
         /*
         if (!traversed) {

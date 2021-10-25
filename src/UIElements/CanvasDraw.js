@@ -36,6 +36,49 @@ export var currentObjects = new Graph();
 
 export var savedArrows = [];
 
+// The naming conventions here are terrible, but basically the render keys determine where
+// a tree view element is placed in the graph while the model functions determine what's 
+// actually being rendered
+
+export let currentRenderKey = 0;
+export let totalRenderKeys = 0
+
+export let currentModel = 0;
+export let totalModels = 0;
+
+export function getCurrentRenderKey(){
+    return currentRenderKey;
+}
+
+export function setNewRenderKey(newKey){
+    currentRenderKey = newKey;
+}
+
+export function getTotalRenderKeys(){
+    return totalRenderKeys;
+}
+
+export function incrementTotalRenderKeys(){
+    totalRenderKeys = totalRenderKeys += 1;
+}
+
+// --- Model Key Stuff --- //
+
+export function getCurrentModel(){
+    return currentModel;
+}
+
+export function setNewModel(newModel){
+    currentModel = newModel;
+}
+
+export function getTotalModels(){
+    return totalModels;
+}
+
+export function incrementTotalModels(){
+    totalModels = totalModels += 1;
+}
 // Arrow Path
 export var arrowPath = [];
 var lastX = 0;
@@ -104,7 +147,28 @@ export function drawAll() {
 
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
-            item.draw(canvasContext);
+            //console.log("HERE " + item.typeName)
+            //Only render the objects which are in the currently selected containment
+            
+            if (item.getModelKey() === currentModel){
+                /*
+                if (item.typeName === "Vertex"){
+                    console.log("Item is set as present")
+                    item.setPresent();
+                }
+                */
+                item.draw(canvasContext);
+                
+            }
+
+            /*
+            else if (item.getModelKey() !== currentModel && item.typeName === "Vertex"){
+                console.log("Item is sent away")
+                item.setAway();
+                //console.log("The item to not be rendered is" + item.typeName);
+            }
+            */
+            
         }
     });
 

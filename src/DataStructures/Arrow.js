@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { SemanticIdentity } from "./SemanticIdentity";
-import {drawMarker, getDistance} from "../UIElements/CanvasDraw";
+import {drawMarker, getDistance, getCurrentRenderKey, getCurrentModel} from "../UIElements/CanvasDraw";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
 import {Tool} from "../UIElements/LeftMenu";
@@ -83,6 +83,31 @@ export class Arrow {
         this.destIsNavigable = false;
         this.sourceIsAggregation = false;
         this.destIsAggregation = false;
+
+        // Render key for the arrow for placing in tree
+        this.arrowRenderKey = getCurrentRenderKey();
+
+        // Model key for rendering
+        this.arrowModelKey = canvasDraw.getCurrentModel();
+    }
+
+    // Set the model key
+    setModelKey(key){
+        this.arrowModelKey = key;
+    }
+
+    getModelKey(){
+        return this.arrowModelKey;
+    }
+
+    // Set the render key. This is done in ContainmentTree.js
+    setRenderKey(key){
+        this.arrowRenderKey = key;
+    }
+
+    // Return the render key. This is called in CanvasDraw
+    getRenderKey(){
+        return this.arrowRenderKey;
     }
 
     toggleNavigable(side){

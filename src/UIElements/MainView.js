@@ -16,11 +16,16 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder} from './ContainmentTree';
+import {handleAddFolder, handleDeleteModel, handleAddModel, ContainmentTree} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
 import { someVertexPath } from './ContainmentTree';
+
+import iconNewFolder from "../Resources/create_folder.svg"
+import iconDeleteFolder from "../Resources/delete_folder.svg"
+import iconNewModel from "../Resources/NewModel.svg"
+import iconDeleteModel from "../Resources/DeleteModel.svg"
 
 // Simple incremental version
 // 1->2->3->4
@@ -83,6 +88,14 @@ export class MainProgramClass extends React.Component {
 
     deleteFolder = (type) => {
         handleDeleteFolder(folderName);
+    }
+
+    addModel = (type) => {
+        handleAddModel(folderName);
+    }
+
+    deleteModel = (type) => {
+        handleDeleteModel(folderName);
     }
 
     zoom = (type) => {
@@ -267,9 +280,15 @@ export class MainProgramClass extends React.Component {
                     {/*<div className="TopBarIdentifier">Rows:&nbsp;</div>*/}
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
                     <div className="TopBarIcon">&nbsp;</div>
-                    <div className="TopBarIcon" onClick={() => this.addFolder()}> Add Folder </div>
+                    <div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt ="Add Container"/></div>
+                    <div className="TopBarIcon">&nbsp;</div> 
+                    <div className="TopBarIcon" onClick={() => this.deleteFolder()}><img src={iconDeleteFolder} alt ="Delete Container"/></div>
                     <div className="TopBarIcon">&nbsp;</div>
-                    <div className="TopBarIcon" onClick={() => this.deleteFolder()}> Delete Folder </div>
+                    <div className="TopBarIcon">&nbsp;</div>
+                    <div className="TopBarIcon" onClick={() => this.addModel()}><img src={iconNewModel} alt ="Add Model"/></div>
+                    <div className="TopBarIcon">&nbsp;</div>
+                    <div className="TopBarIcon" onClick={() => this.deleteModel()}><img src={iconDeleteModel} alt ="Delete Model"/></div>
+                    
 
 
                 </div>
