@@ -269,7 +269,7 @@ export class ContainmentTree extends React.Component {
             //First, we need to actually determine where the vertex is
             //Take a look at our containor
             for (let cont of folderData){
-                console.log("folder text: " + cont.text)
+                //console.log("folder text: " + cont.text)
                 //Take a look at the children of the containors (arrows and such)                
                 for (let treeDat of cont.children){
                     console.log("treeDat text: " + treeDat.text)
@@ -281,7 +281,7 @@ export class ContainmentTree extends React.Component {
                             console.log("Vertices text: " + treeElement)
                             if ((treeElement.text === currentlySelectedObject.title)){
                                 
-                                console.log("A match was had")
+                                //console.log("A match was had")
                                 //Push the matched container object
                                 let CTreeObj = {
                                     text: cont.text,
@@ -352,7 +352,7 @@ export class ContainmentTree extends React.Component {
         }
 
         if(showingVertPath === true){
-
+            /*
             let highestLevel = getModelName();
             let nextLevel = "";
             let vertexOrEdge = "";
@@ -383,6 +383,46 @@ export class ContainmentTree extends React.Component {
                 }
                 someVertexPath = highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject;
             }
+            */
+
+            let highestLevel = getModelName();
+            let nextLevel = "";
+            let vertexOrEdge = "";
+            let actualObject = "";
+
+            let b = 0;
+            //First, we need to actually determine where the vertex is
+            //Take a look at our containor
+            for (let cont of folderData){
+                //console.log("folder text: " + cont.text)
+                //Take a look at the children of the containors (arrows and such)                
+                for (let treeDat of cont.children){
+                    console.log("treeDat text: " + treeDat.text)
+                    //Why is the vertex folder coming up as undefined?????
+                    console.log(treeDat.children)
+                    if(b === 0){
+                        //console.log("SECOND LAYER: " + treeDat.children);
+                        for (let treeElement of treeDat.children){
+                            console.log("Vertices text: " + treeElement)
+                            if ((treeElement.text === currentlySelectedObject.title)){
+                                
+                                nextLevel = cont.text;
+
+                                vertexOrEdge = "Vertices"
+                                actualObject = currentlySelectedObject.title
+
+                                someVertexPath = highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject;
+                                b = 1;
+
+                            
+                            }
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
         }
 
         if (folderAltered === true){
@@ -399,8 +439,11 @@ export class ContainmentTree extends React.Component {
         //console.log("Selected Length: " + data.selected.length)
         //console.log("Selected Data: " + data.node.data)
         //console.log("Selected Type: " + data.node.data.type)
+        if(data.node.data.type === "Vertex Folder"){
+            //do nothing
+        }
 
-        if(data.node.data.type === "Folder"){
+        else if(data.node.data.type === "Folder"){
             console.log("The render key is now" + data.node.data.renderkey);
             console.log("Clicked Folder: " + data.node.data.text)
             setNewRenderKey(data.node.data.renderkey)
@@ -410,7 +453,9 @@ export class ContainmentTree extends React.Component {
 
         else if (data.node.data.type === "Model"){
             console.log("The selected model is: " + data.node.data.modelkey)
+            //console.log("The current folder is: " + data.node.data.renderkey)
             setNewModel(data.node.data.modelkey);
+            //setNewRenderKey(data.node.data.renderkey)
 
             // Move everything away
             for (let item of currentObjects.flatten()){
@@ -434,7 +479,10 @@ export class ContainmentTree extends React.Component {
             console.log("UUID: " + UUID)
             for (let vertex of currentObjects.flatten()) {
                 if (vertex.semanticIdentity.UUID === UUID) {
+                    //setNewRenderKey(vertex.getRenderKey())
+                    //setNewModel(vertex.getModelKey())
                     this.setState({
+                        
                         selectedVertex: vertex
                     });
                     this.props.setLeftMenu(this.state.selectedVertex);

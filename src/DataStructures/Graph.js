@@ -185,7 +185,8 @@ class VertexNode {
                 text: "Vertices",
                 children: VertexChildren,
                 data: null,
-                state: { opened: true }
+                state: { opened: true },
+                type: "Vertex Folder"
             }
         }
 
@@ -247,7 +248,8 @@ class VertexNode {
                 text: "Arrows",
                 children: ArrowChildren,
                 data: null,
-                state: { opened: true }
+                state: { opened: true },
+                type: "ArrowFolder"
             }
         }
 

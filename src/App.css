@@ -53,6 +53,7 @@ input,button{
     -moz-osx-font-smoothing: grayscale;
     color: Black;
     font-size: calc(0.8vh + 0.8vw);
+    display: flex;
 }
 
 .IconSelector .dropdown-menu.show{
@@ -79,6 +80,13 @@ input,button{
 }
 
 .DropdownItem{
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+}
+
+.buttonOfSomeForm{
     display: flex;
     flex-direction: row;
     justify-content: right;
@@ -266,6 +274,20 @@ input,button{
     justify-content: center;
     /*background-color: white;*/
     width: 15vw;
+	font-size:calc(0.7vh + 0.7vw);
+}
+
+.vertexPath{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    /***border: none;
+    border-top: 2px groove #666666;
+    border-bottom: 2px groove #666666;***/
+    align-items: center;
+    justify-content: center;
+    /*background-color: white;*/
+    width: 35vw;
 	font-size:calc(0.7vh + 0.7vw);
 }
 
