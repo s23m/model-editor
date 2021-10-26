@@ -40,7 +40,7 @@ export class Canvas extends React.Component {
             startY: y
         });
 
-
+        //toggle shift key to move all connected
         if (e.shiftKey && !selectdown) {
             selectdown = true;
         }
