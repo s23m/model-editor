@@ -4,6 +4,7 @@ import { Tool } from './LeftMenu';
 
 var movingAllowed = false;
 var selectMultiple = false;
+var selectdown = false;
 var savedObjects = [];
 
 export class Canvas extends React.Component {
@@ -40,6 +41,9 @@ export class Canvas extends React.Component {
         });
 
 
+        if (e.shiftKey && !selectdown) {
+            selectdown = true;
+        }
         // If it was a left click
         if (e.button === 0 && !selectMultiple) {
             let intersection = canvasDraw.findIntersected(x, y);
@@ -50,8 +54,8 @@ export class Canvas extends React.Component {
                     e.preventDefault();
                     // brings up the menu
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
-                    canvasDraw.onMiddleClick(canvas, x, y);
-                    
+                    canvasDraw.onMiddleClick(canvas, x, y,null,selectdown);
+                    console.log(selectdown);
 
                 } else {
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
@@ -154,7 +158,10 @@ export class Canvas extends React.Component {
             }
 			
         }
-		
+		if (e.shiftKey && selectdown) {
+            selectdown = false;
+        }
+
         if (e.button === 1) {
             window.setTimeout(() => {canvasDraw.solidifyObject()},200)
 

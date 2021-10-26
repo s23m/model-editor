@@ -759,7 +759,22 @@ export function compareSizesToMoveAll(Object) {
                 box = getObjectFromUUID(item.sourceVertexUUID);
                 if ((box.height + 10) * box.width < (Object.height + 10) * Object.width) {
                     boxArray.push(box);
+
                 }
+                                //check if arrow is on top/ below
+                if (item.path[0][1] < Object.y || item.path[0][1] > Object.y+Object.height+10){
+                    //push to vertical array
+                    verticalArray.push(item);
+                    console.log("this one ran");
+                } 
+                //check if arrow is left/ right
+                else if (item.path[0][0] < Object.x || item.path[0][0] > Object.x+Object.width) {
+                    //push to horizontal array
+                    horizontalArray.push(item);
+                    console.log("this one ran too");
+                }
+
+
                 
             }
             //If the object is connected to Source
@@ -769,7 +784,7 @@ export function compareSizesToMoveAll(Object) {
                     boxArray.push(box);
                 }
                 //check if arrow is on top/ below
-                else if (item.path[1][1] < Object.y || item.path[1][1] > Object.y+Object.height+10){
+                if (item.path[1][1] < Object.y || item.path[1][1] > Object.y+Object.height+10){
                     //push to vertical array
                     verticalArray.push(item);
                     
@@ -1056,9 +1071,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
             
 
                 startY = previousObject.y + (previousObject.height + 10) / 2;
-                startX = previousObject.x + previousObject.width;
+                startX = secondObject.x;
 
-                endX = secondObject.x;
+                endX = previousObject.x + previousObject.width;
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
@@ -1116,9 +1131,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 secondObject.y = previousObject.y;
 
                 startY = previousObject.y + (previousObject.height + 10) / 2;
-                startX = secondObject.x + secondObject.width;
+                startX = previousObject.x;
 
-                endX = previousObject.x;
+                endX = secondObject.x + secondObject.width;
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
@@ -1380,7 +1395,10 @@ export function onLeftMouseRelease(canvas, x, y) {
 					    }
 				    }   
 			    }
-			}
+			}else {
+                //console.log("\n the old one \n");
+                  newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+            }
 
             // Reset path
             arrowPath = [];
@@ -1481,7 +1499,7 @@ function onMouseMove(e, canvas) {
     canvasContext.globalAlpha = 1.0;
 }
 
-export function onMiddleClick(canvas, x, y, savedObjects = null) {
+export function onMiddleClick(canvas, x, y, savedObjects = null,shiftdown = false) {
     // for arrows
     startMoveX = x;
     startMoveY = y;
@@ -1491,6 +1509,47 @@ export function onMiddleClick(canvas, x, y, savedObjects = null) {
     let selectedObject = findIntersected(x, y);
 
     let [friendObject, arrowsVert, arrowsHoriz] = compareSizesToMoveAll(selectedObject);
+    if(friendObject !== null || friendObject.length >= 1){
+    let keeplooking = true;
+    let ObjectsToCheck = friendObject;
+       // while (keeplooking === true){
+
+        for (let n= 0;n<ObjectsToCheck.length; n++){
+            let [newfriendObject, newarrowsVert, newarrowsHoriz] = compareSizesToMoveAll(ObjectsToCheck[n]);
+            if(newfriendObject !== null || newfriendObject.length >= 1){
+            //console.log('This is NN')
+            //console.log(ObjectsToCheck);
+            //console.log('This is NNF')
+            //console.log(newfriendObject);
+            for (let nf = 0; nf<newfriendObject.length;nf++){
+                for (let of = 0; of<ObjectsToCheck.length;of++){
+                if (newfriendObject[nf].semanticIdentity.UUID === ObjectsToCheck[of].semanticIdentity.UUID ){
+                    newfriendObject.splice(nf,1);
+                    newarrowsVert.splice(nf,1);
+                    newarrowsHoriz.splice(nf,1);
+                    console.log('Splice!')
+                }
+            }
+            }
+
+            if (newfriendObject.length >= 1){
+                ObjectsToCheck = newfriendObject;
+                for(let p = 0; p<newfriendObject.length;p++){
+                    friendObject.push(newfriendObject[p]);
+                }
+
+                    //arrowsVert.push(newarrowsVert);
+                    //arrowsHoriz.push(newarrowsHoriz);
+                    
+            }else{
+                keeplooking = false;
+            }
+        }
+       // }
+    }
+
+
+}
     var F = []; 
     if (friendObject !== null) {
         let i = 0;
@@ -1514,7 +1573,10 @@ export function onMiddleClick(canvas, x, y, savedObjects = null) {
         // check the distance between the mouse and the object
         let savedisX = x - selectedObject.x;
         let savedisY = y - selectedObject.y;
-        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, friendObject, F, savedObjects,S, savedisX, savedisY,arrowsVert,arrowsHoriz) }
+
+        console.log(friendObject);
+
+        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, friendObject, F, savedObjects,S, savedisX, savedisY,arrowsVert,arrowsHoriz, shiftdown) }
     }
 
 }
@@ -1527,7 +1589,7 @@ export function onMouseLeave() {
 
 // moving objects in respect to cursor values savedisX, savedisY
 // friends = the smaller boxes that are connected to the bigger box
-function moveObject(e, object, friends,F,savedObjects = null,S, savedisX, savedisY, arrowsVert, arrowsHoriz) {
+function moveObject(e, object, friends,F,savedObjects = null,S, savedisX, savedisY, arrowsVert, arrowsHoriz,shiftdown) {
     if (object != null) {
         if (object.constructor.name === "Vertex") {
             let position = getGraphXYFromMouseEvent(e);
@@ -1535,6 +1597,7 @@ function moveObject(e, object, friends,F,savedObjects = null,S, savedisX, savedi
             let y = position[1] - savedisY;
 
             //for loop iterate through all boxes assume they not empty
+            if (shiftdown){
             if (friends !== null) {
                 let i = 0;
                 //check friends' previous location and cursors location
@@ -1543,6 +1606,7 @@ function moveObject(e, object, friends,F,savedObjects = null,S, savedisX, savedi
                     friends[i].y = position[1] - F[i][1];
                 }
             }
+        }
 
             if (savedObjects !== null) {
                 let i = 0;
@@ -1577,6 +1641,7 @@ function moveObject(e, object, friends,F,savedObjects = null,S, savedisX, savedi
                 }
             }
             }
+
             if (arrowsHoriz !== null){
                 let conData = 0;
                 let k = 0;
