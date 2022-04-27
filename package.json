@@ -50,6 +50,7 @@
   "devDependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "cypress": "^9.6.0",
     "eslint-plugin-react": "^7.20.6",
     "express": "^4.17.1",
     "express-pino-logger": "^5.0.0",
