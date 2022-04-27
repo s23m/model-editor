@@ -35,7 +35,7 @@ let folderName = "Unnamed Folder";
 
 export class MainProgramClass extends React.Component {
 
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             zoomLevel: 200,
@@ -77,20 +77,20 @@ export class MainProgramClass extends React.Component {
         
     }
 
-    updateFolderName = (type) => {
+    updateFolderName = () => {
         folderName = document.getElementById("FolderName").value
     }
 
-    addFolder = (type) => {
+    addFolder = () => {
         //handleAddFolder({modelName:document.getElementById("FolderName").value});
         handleAddFolder(folderName);
     }
 
-    deleteFolder = (type) => {
+    deleteFolder = () => {
         handleDeleteFolder(folderName);
     }
 
-    addModel = (type) => {
+    addModel = () => {
         handleAddModel(folderName);
     }
 
@@ -149,7 +149,7 @@ export class MainProgramClass extends React.Component {
         // checks if that specific object was clicked
         // if it wasn't then deselect it
         // i.e. determines if objects are selected or not
-        if (this.state.selectedObject !== null && ctrl == false) {
+        if (this.state.selectedObject !== null && ctrl === false) {
             this.state.selectedObject.setSelected(false);
         }
 
@@ -224,7 +224,7 @@ export class MainProgramClass extends React.Component {
 
 
     render() {
-        var GUI =
+        let GUI =
             <div className="Program">
                 <div className={this.semanticTableEnabled ? "SemanticDomain" : "hidden"}>
                     <SemanticDomainEditor/>

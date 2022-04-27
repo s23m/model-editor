@@ -11,6 +11,8 @@ import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey,
     getCurrentModel, setNewModel, getTotalModels, incrementTotalModels} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
+import * as canvasDraw from "./CanvasDraw";
+
 
 //import {currentRenderKey} from './CanvasDraw';
 
@@ -50,7 +52,6 @@ export function displayFocussedTreeView(selectedThing){
 
     if(focussed === true){
         focussed = false;
-        return;
     }
 
     else if (focussed === false){
@@ -178,18 +179,18 @@ export function showVertexPath(theObject){
 function determineOwnership(parsedRenderKey){
     let returnArray = []
     let i = 0
-    for (let vertexorarrow of treeData){
-        if(vertexorarrow !== undefined){
-            //console.log("treeData object name: " + vertexorarrow.text)
+    for (let vertexOrArrow of treeData){
+        if(vertexOrArrow !== undefined){
+            //console.log("treeData object name: " + vertexOrArrow.text)
 
-            if (vertexorarrow.type === "Model"){
-                if (vertexorarrow.renderkey === parsedRenderKey){
+            if (vertexOrArrow.type === "Model"){
+                if (vertexOrArrow.renderkey === parsedRenderKey){
                     returnArray.push(treeData[i])
                 }
                 
             }
 
-            for (let child of vertexorarrow.children){
+            for (let child of vertexOrArrow.children){
                 // Check if the render key of the child matches 
                 if (child.renderkey === parsedRenderKey){
                     //console.log("Matched tree data: " + treeData[i])
@@ -205,7 +206,7 @@ function determineOwnership(parsedRenderKey){
     return returnArray
 }
 
-let initialfolderadded = false;
+let initialFolderAdded = false;
 export class ContainmentTree extends React.Component {
 
     constructor(props) {
@@ -214,10 +215,10 @@ export class ContainmentTree extends React.Component {
         treeData = []; 
         let i = 0;
         
-        if (initialfolderadded === false){
-            handleAddFolder("---");
-            handleAddModel("---")
-            initialfolderadded = true;
+        if (initialFolderAdded === false){
+            handleAddFolder("This is an initial container/folder");
+            //handleAddModel("This is an initial model")
+            initialFolderAdded = true;
         }
         
         if (focussed === false){
@@ -253,7 +254,7 @@ export class ContainmentTree extends React.Component {
                     
                 }
                 
-                break;
+
             }
 
         }
@@ -392,10 +393,10 @@ export class ContainmentTree extends React.Component {
 
             let b = 0;
             //First, we need to actually determine where the vertex is
-            //Take a look at our containor
+            //Take a look at our container
             for (let cont of folderData){
                 //console.log("folder text: " + cont.text)
-                //Take a look at the children of the containors (arrows and such)                
+                //Take a look at the children of the containers (arrows and such)
                 for (let treeDat of cont.children){
                     console.log("treeDat text: " + treeDat.text)
                     //Why is the vertex folder coming up as undefined?????
@@ -533,7 +534,7 @@ export class ContainmentTree extends React.Component {
         return (
             <div>
                 <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} />
-                <br></br>
+
             </div>
         )
     }
