@@ -42,10 +42,10 @@ import {
 import {currentObjects} from "./CanvasDraw";
 
 // Globals
-var rows;
-var setRows = null;
-var setColumns = null;
-var textInput = React.createRef();
+let rows;
+let setRows = null;
+let setColumns = null;
+let textInput = React.createRef();
 export var translationColumns = [];
 
 const onSave = (workbook) => {
@@ -142,7 +142,7 @@ const FocusableCell = ({ onClick, ...restProps }) => (
 
 export default () => {
     // Create columns
-    var [columns, setColumnsRet] = useState(createColumns());
+    let [columns, setColumnsRet] = useState(createColumns());
     setColumns = setColumnsRet;
 
     // Disable editing state
@@ -311,8 +311,8 @@ function getRowForObject(object) {
 }
 
 export function resetRows() {
-    var newRows = []
-    var currentObjectsFlattened = currentObjects.flatten();
+    let newRows = [];
+    let currentObjectsFlattened = currentObjects.flatten();
 
     for (let i = 0; i < currentObjectsFlattened.length; i++) {
         newRows.push(getRowForObject(currentObjectsFlattened[i]));
@@ -334,13 +334,13 @@ export function resetRows() {
 
 function createColumns() {
     // Create default columns
-    var columnNames = [
-        { name: 'UUID', title: 'UUID' },
-        { name: 'type', title: 'Type' },
-        { name: 'name', title: 'Name' },
-        { name: 'description', title: 'Description' },
-        { name: 'abbreviation', title: 'Abbreviation' },
-        { name: 'shortAbbreviation', title: 'Short Abbreviation' },
+    let columnNames = [
+        {name: 'UUID', title: 'UUID'},
+        {name: 'type', title: 'Type'},
+        {name: 'name', title: 'Name'},
+        {name: 'description', title: 'Description'},
+        {name: 'abbreviation', title: 'Abbreviation'},
+        {name: 'shortAbbreviation', title: 'Short Abbreviation'},
     ];
 
     // Add translation columns
@@ -363,7 +363,7 @@ function updateChangedObject(object, row) {
         // Translations
         for (let translation of translationColumns) {
             // Find translation in list
-            var set = false;
+            let set = false;
             for (let i = 0; i < object.semanticIdentity.translations.length; i++) {
                 if (object.semanticIdentity.translations[i][0] === translation) {
                     object.semanticIdentity.translations[i][1] = row[translation];
@@ -382,8 +382,8 @@ function updateChangedObject(object, row) {
 }
 
 function updateChangedObjects(rows) {
-    var currentObjectsFlattened = currentObjects.flatten();
-    
+    let currentObjectsFlattened = currentObjects.flatten();
+
     // Iterate through all rows
     for (let i = 0; i < rows.length; i++) {
         // Iterate through all objects

@@ -2,14 +2,14 @@ import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
 import { Tool } from './LeftMenu';
 
-var movingAllowed = false;
-var selectMultiple = false;
-var selectdown = false;
-var savedObjects = [];
+let movingAllowed = false;
+let selectMultiple = false;
+let selectDown = false;
+let savedObjects = [];
 
 export class Canvas extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.canvasRef = React.createRef();
 
         this.state = {}
@@ -41,8 +41,8 @@ export class Canvas extends React.Component {
         });
 
         //toggle shift key to move all connected
-        if (e.shiftKey && !selectdown) {
-            selectdown = true;
+        if (e.shiftKey && !selectDown) {
+            selectDown = true;
         }
         // If it was a left click
         if (e.button === 0 && !selectMultiple) {
@@ -54,8 +54,8 @@ export class Canvas extends React.Component {
                     e.preventDefault();
                     // brings up the menu
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
-                    canvasDraw.onMiddleClick(canvas, x, y,null,selectdown);
-                    console.log(selectdown);
+                    canvasDraw.onMiddleClick(canvas, x, y,null,selectDown);
+                    console.log(selectDown);
 
                 } else {
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
@@ -90,18 +90,18 @@ export class Canvas extends React.Component {
             if (intersection !== null) {
                 //console.log(selectMultiple);
                 // Remove dupes
-                let foundend = 0;
+                let foundEnd = 0;
                 //start at 0
-                while (foundend < savedObjects.length-1){
+                while (foundEnd < savedObjects.length-1){
                     //stop @ second last one
                     //check RHS for duplicates
                     //found+1 because wanna look at box after the one we looking at
-                    for (let ob = foundend+1; ob < savedObjects.length; ob++){
-                        if(savedObjects[foundend].x === savedObjects[ob].x && savedObjects[foundend].y === savedObjects[ob].y ){
+                    for (let ob = foundEnd+1; ob < savedObjects.length; ob++){
+                        if(savedObjects[foundEnd].x === savedObjects[ob].x && savedObjects[foundEnd].y === savedObjects[ob].y ){
                             savedObjects.splice(ob); // if it's the same, delete it and slide array back one
                         }
                     }
-                    foundend++;
+                    foundEnd++;
                 }
                 //ideally want to push in the first object that has already been selected
                 console.log(savedObjects);
@@ -158,8 +158,8 @@ export class Canvas extends React.Component {
             }
 			
         }
-		if (e.shiftKey && selectdown) {
-            selectdown = false;
+		if (e.shiftKey && selectDown) {
+            selectDown = false;
         }
 
         if (e.button === 1) {
