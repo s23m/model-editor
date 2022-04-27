@@ -12,7 +12,7 @@ import { drawAll } from "./CanvasDraw";
 export class FocussedContainmentTree extends React.Component {
 
     constructor(props) {
-        super();
+        super(props);
 
         let treeData = [];
         let i = 0;

@@ -72,7 +72,7 @@ export const Tool = {
 export class LeftMenu extends React.Component{
 
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             menu: LeftMenuType.TreeView,
             selectedObject: null,
@@ -101,7 +101,7 @@ export class LeftMenu extends React.Component{
                 */
                
     /// This is a test function, remove it if I forget to
-    testUpdateLabel = (type) =>{
+    testUpdateLabel = () =>{
         this.setPath("fffffffff")
         //document.getElementById("VertPath").value = "It doth been updated";
         
@@ -120,7 +120,7 @@ export class LeftMenu extends React.Component{
         document.addEventListener("keydown", this.onKeyPressed.bind(this));
     }
 
-    //For quickkeys
+    //For quickKeys
 
 
     onKeyPressed(e) {
@@ -156,12 +156,12 @@ export class LeftMenu extends React.Component{
                 elem.click()
             }
         }
-        let leftmenu = document.getElementById("VertexMenu");
-        if(leftmenu === null){
-            leftmenu = document.getElementById("ArrowMenu");
+        let leftMenu = document.getElementById("VertexMenu");
+        if(leftMenu === null){
+            leftMenu = document.getElementById("ArrowMenu");
         }
-        if(leftmenu !== null){
-            leftmenu.addEventListener("keypress", (e) => {
+        if(leftMenu !== null){
+            leftMenu.addEventListener("keypress", (e) => {
                 if(e.key === "Enter") {
                     e.preventDefault();
                 }

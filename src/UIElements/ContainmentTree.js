@@ -63,7 +63,7 @@ export function displayFocussedTreeView(selectedThing){
 }
 
 /*
-function render_on_add_folder_or_continator() {
+function render_on_add_folder_or_container() {
     const data = this.state.data;
     
     return (
@@ -89,7 +89,7 @@ export function handleAddFolder(folderName){
         data: NaN,
         state: {opened: true},
         type: "Folder",
-        renderkey: getTotalRenderKeys()
+        renderKey: getTotalRenderKeys()
     }
 
     decoyFolderData.push(tempFolderThing)
@@ -100,12 +100,12 @@ export function handleAddFolder(folderName){
         data: decoyFolderData[folderData.length],
         state: {opened: true},
         type: "Folder",
-        renderkey: getTotalRenderKeys()
+        renderKey: getTotalRenderKeys()
     }
     
     //console.log("theActualData: " + folderData.length)
     folderData.push(folderThing2);
-    console.log("Folder data apprent: " + folderData[folderData.length-1].data)
+    console.log("Folder data apparent: " + folderData[folderData.length-1].data)
 
     folderAltered = true;
     
@@ -131,8 +131,8 @@ export function handleAddModel(modelName){
         data: modelObjects[modelObjects.length - 1],
         state: {opened: true},
         type: "Model",
-        renderkey: getCurrentRenderKey(),
-        modelkey: getTotalModels()
+        renderKey: getCurrentRenderKey(),
+        modelKey: getTotalModels()
     };
  
     modelObjects.push(tempModelThing);
@@ -162,12 +162,12 @@ export function showVertexPath(theObject){
         currentlySelectedObject = theObject;
         if (showingVertPath === false){
             showingVertPath = true;
-            return;
+
         }
     
         else if (showingVertPath === true){
             showingVertPath = false;
-            return;
+
         }
     }
 
@@ -210,7 +210,7 @@ let initialFolderAdded = false;
 export class ContainmentTree extends React.Component {
 
     constructor(props) {
-        super();
+        super(props);
 
         treeData = []; 
         let i = 0;
@@ -268,10 +268,10 @@ export class ContainmentTree extends React.Component {
 
             let b = 0;
             //First, we need to actually determine where the vertex is
-            //Take a look at our containor
+            //Take a look at our container
             for (let cont of folderData){
                 //console.log("folder text: " + cont.text)
-                //Take a look at the children of the containors (arrows and such)                
+                //Take a look at the children of the containers (arrows and such)
                 for (let treeDat of cont.children){
                     console.log("treeDat text: " + treeDat.text)
                     //Why is the vertex folder coming up as undefined?????
@@ -361,9 +361,9 @@ export class ContainmentTree extends React.Component {
         
             let b = 0;
             //First, we need to actually determine where the vertex is
-            //Take a look at our containor
+            //Take a look at our container
             for (let cont of folderData){
-                //Take a look at the children of the containors (arrows and such)                
+                //Take a look at the children of the containers (arrows and such)
                 for (let treeDat of cont.children){
                     //Why is the vertex folder coming up as undefined?????
                     if(b === 0){
@@ -454,9 +454,9 @@ export class ContainmentTree extends React.Component {
 
         else if (data.node.data.type === "Model"){
             console.log("The selected model is: " + data.node.data.modelkey)
-            //console.log("The current folder is: " + data.node.data.renderkey)
+            //console.log("The current folder is: " + data.node.data.renderKey)
             setNewModel(data.node.data.modelkey);
-            //setNewRenderKey(data.node.data.renderkey)
+            //setNewRenderKey(data.node.data.renderKey)
 
             // Move everything away
             for (let item of currentObjects.flatten()){

@@ -9,27 +9,27 @@ import { Graph } from "../DataStructures/Graph";
 import { ArrowBackIos, ContactsOutlined } from "@material-ui/icons";
 
 // Core variables
-var canvasElement;
-var canvasContext;
+let canvasElement;
+let canvasContext;
 
 // Mouse / Cursor
-var mouseStartX;
-var mouseStartY;
+let mouseStartX;
+let mouseStartY;
 
-var previousObject;
-var startX, startY, endX, endY;
+let previousObject;
+let startX, startY, endX, endY;
 
-var yRows = 70;
+let yRows = 70;
 
 export var mouseOriginX;
 export var mouseOriginY;
 
 // Non zoomed in Width/Height (in pixels)
-var canvasWidth;
-var canvasHeight;
+let canvasWidth;
+let canvasHeight;
 
 // Zoom and Pan
-var zoom = 200.0;
+let zoom = 200.0;
 
 // Renderable objects
 export var currentObjects = new Graph();
@@ -81,25 +81,25 @@ export function incrementTotalModels() {
 }
 // Arrow Path
 export var arrowPath = [];
-var lastX = 0;
-var lastY = 0;
+let lastX = 0;
+let lastY = 0;
 
 // Arrow moving
-var startMoveX = 0;
-var startMoveY = 0;
+let startMoveX = 0;
+let startMoveY = 0;
 
 // Resize status
-var resizing = false;
+let resizing = false;
 
-var arrowType = 0;
-var firstArrowJoint = true;
+let arrowType = 0;
+let firstArrowJoint = true;
 
-var cancelDraw = false;
+let cancelDraw = false;
 
 //Block Past location var
-var past_location = [];
-var past_size = [];
-var selectedObject;
+let past_location = [];
+let past_size = [];
+let selectedObject;
 export var blockBeenSelected = false;
 
 // Init
@@ -131,7 +131,7 @@ export function resetMouseOrigin() {
         recalculateScale();
         clearCanvas();
     } catch {
-        console.error("Failed to aquire canvas element");
+        console.error("Failed to acquire canvas element");
     }
     drawAll()
 }
@@ -235,7 +235,7 @@ function findNearestGridY(y, top) {
 // Checks to see which side it should resize on
 function checkResizeBounds(x, y) {
     // Iterate through all objects and only check vertices
-    var currentObjectsFlattened = currentObjects.flatten();
+    let currentObjectsFlattened = currentObjects.flatten();
     for (let i = 0; i < currentObjectsFlattened.length; i++) {
         let item = currentObjectsFlattened[i];
 
@@ -258,10 +258,10 @@ function checkResizeBounds(x, y) {
             let bottom = Math.abs(y2 - y) < tolerance;
             let left = Math.abs(x1 - x) < tolerance;
             let right = Math.abs(x2 - x) < tolerance;
-            let inYbounds = y > y1 && y < y2;
-            let inXbounds = x > x1 && x < x2;
+            let inYBounds = y > y1 && y < y2;
+            let inXBounds = x > x1 && x < x2;
 
-            if (right && inYbounds) {
+            if (right && inYBounds) {
                 return [item, "right"];
             }
 
@@ -273,13 +273,13 @@ function checkResizeBounds(x, y) {
                 return [item, "bottomLeft"];
             } else if (bottom && right) {
                 return [item, "bottomRight"];
-            } else if (left && inYbounds) {
+            } else if (left && inYBounds) {
                 return [item, "left"];
-            } if (right && inYbounds) {
+            } if (right && inYBounds) {
                 return [item, "right"];
-            } else if (top && inXbounds) {
+            } else if (top && inXBounds) {
                 return [item, "top"];
-            } else if (bottom && inXbounds) {
+            } else if (bottom && inXBounds) {
                 return [item, "bottom"];
             }
         }
@@ -393,7 +393,7 @@ export function setCurrentObjects(newObjects) {
 
 export function newFile() {
     // Confirm
-    var r = window.confirm("Are you sure, this will clear the current canvas!");
+    let r = window.confirm("Are you sure, this will clear the current canvas!");
     if (r === true) {
         console.log("Clearing canvas");
         window.location.reload();
@@ -540,7 +540,7 @@ export function checkArrowsConnectedToBox(Object) {
     // check arrows which one matches the box that was moved by its ID 
 
     // check how much the box has changed
-    var objectID;
+    let objectID;
 
     let arrowArray = [];
 
@@ -590,7 +590,7 @@ export function checkArrowsConnectedToBox(Object) {
 }
 
 export function checkHorizArrowsConnectedToBox(Object) {
-    var objectID;
+    let objectID;
 
     let arrowArray = [];
 
@@ -700,7 +700,7 @@ export function checkCollision(canvas, x, y) {
 
 
 export function onRightMouseRelease(canvas, x, y) {
-    var ET = findIntersected(x, y);
+    let ET = findIntersected(x, y);
     if (arrowToolSelected() && ET !== null) {
         // Create
 
@@ -742,7 +742,7 @@ export function compareSizesToMoveAll(Object) {
     //find whichever one is not the currently selected block
     // if it's smaller move it else do nothing
 
-    var objectID;
+    let objectID;
     let verticalArray = [];
     let horizontalArray = [];
     let box;
@@ -807,8 +807,8 @@ export function checkBoxSizesAndReturnBigBox(first, second) {
     }
 }
 
-//line intersector
-export function lineIntersector(canvas, x, y, secondObject) {
+//line intersect
+export function lineIntersect(canvas, x, y, secondObject) {
     endX = 0;
     endY = 0;
 
@@ -840,8 +840,8 @@ export function lineIntersector(canvas, x, y, secondObject) {
     //previous object is left of //if you click higher it counts as above
 
     //sizes based on Total Area
-    var blockpre = previousObject.height + previousObject.width;
-    var blocksec = secondObject.height + secondObject.width;
+    let blockPre = previousObject.height + previousObject.width;
+    let blockSec = secondObject.height + secondObject.width;
 
     //previous object is below
     if (previousObject.y > (secondObject.y + secondObject.height + 10)) {
@@ -862,9 +862,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
             endY = startY + (previousObject.y - startY);
             endX = startX;
         }
-        //If pre is downleft of sec extend whichever box is bigger horizontally and fit
+        //If pre is downLeft of sec extend whichever box is bigger horizontally and fit
         else if ((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))) {
-            if (blockpre <= blocksec) {
+            if (blockPre <= blockSec) {
                 secondObject.width = secondObject.width + (secondObject.x - previousObject.x);
                 secondObject.x = previousObject.x;
 
@@ -876,7 +876,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 checkArrowsConnectedToBox(secondObject);
 
             }
-            if (blockpre >= blocksec) {
+            if (blockPre >= blockSec) {
                 previousObject.width = previousObject.width + ((secondObject.x + secondObject.width) - (previousObject.x + previousObject.width));
                 previousObject.x = previousObject.x;
 
@@ -892,7 +892,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
         }
         //If pre is downright of sec extend whichever box is better horizontally and fit
         else if (previousObject.x > secondObject.x) {
-            if (blockpre <= blocksec) {
+            if (blockPre <= blockSec) {
                 secondObject.width = secondObject.width + ((previousObject.x + previousObject.width) - (secondObject.x + secondObject.width));
 
                 startY = previousObject.y;
@@ -903,7 +903,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 
                 checkArrowsConnectedToBox(secondObject, endX - startX, endY - startY);
             }
-            if (blockpre >= blocksec) {
+            if (blockPre >= blockSec) {
                 previousObject.width = previousObject.width + (previousObject.x - secondObject.x);
                 previousObject.x = secondObject.x;
 
@@ -936,9 +936,9 @@ export function lineIntersector(canvas, x, y, secondObject) {
             endY = startY + previousObject.height + (previousObject.y - startY);
             endX = startX;
         }
-        //If pre is upleft of sec extend which everbox is better horizontally and fit
+        //If pre is upLeft of sec extend whichever box is better horizontally and fit
         else if ((previousObject.x < secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))) {
-            if (blockpre <= blocksec) {
+            if (blockPre <= blockSec) {
                 secondObject.width = secondObject.width + (secondObject.x - previousObject.x);
                 secondObject.x = previousObject.x;
 
@@ -951,7 +951,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 //fixed
                 checkArrowsConnectedToBox(secondObject);
             }
-            if (blockpre >= blocksec) {
+            if (blockPre >= blockSec) {
                 previousObject.width = previousObject.width + ((secondObject.x + secondObject.width) - (previousObject.x + previousObject.width));
                 previousObject.x = previousObject.x;
 
@@ -966,7 +966,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
         }
         //If pre is upright of sec extend whichever box is bigger horizontally and fit
         else if (previousObject.x > secondObject.x) {
-            if (blockpre <= blocksec) {
+            if (blockPre <= blockSec) {
                 secondObject.width = secondObject.width + ((previousObject.x + previousObject.width) - (secondObject.x + secondObject.width));
 
                 startY = previousObject.y + previousObject.height;
@@ -978,7 +978,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 //this one is fixed
                 checkArrowsConnectedToBox(secondObject);
             }
-            if (blockpre >= blocksec) {
+            if (blockPre >= blockSec) {
                 previousObject.width = previousObject.width + (previousObject.x - secondObject.x);
                 previousObject.x = secondObject.x;
 
@@ -1019,7 +1019,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
         }
         //Top Left and peeking
         else if (previousObject.y + previousObject.height + 10 > secondObject.y && secondObject.y > previousObject.y) {
-            if (blockpre <= blocksec) {
+            if (blockPre <= blockSec) {
                 secondObject.height = secondObject.height + (secondObject.y - previousObject.y);
                 secondObject.y = previousObject.y;
 
@@ -1033,7 +1033,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 console.log("m");
             }
 
-            if (blockpre >= blocksec) {
+            if (blockPre >= blockSec) {
                 let increase = previousObject.height + 10 + ((secondObject.y + secondObject.height) - (previousObject.y + previousObject.height));
                 //looks at x coord and y coord and @ that coord checks if there's a box
                 //resizeVars[0] returns the box if there is a
@@ -1056,7 +1056,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
         }
         //Bottom Left and peeking
         else if (secondObject.y + secondObject.height + 10 > previousObject.y && previousObject.y + previousObject.height + 10 > secondObject.y + secondObject.height + 10) {
-            if (blockpre <= blocksec) {
+            if (blockPre <= blockSec) {
 
                 let increase = secondObject.y + secondObject.height + 10 + ((previousObject.y + previousObject.height + 10) - (secondObject.y + secondObject.height + 10));
 
@@ -1076,7 +1076,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 console.log("o");
             }
 
-            if (blockpre >= blocksec) {
+            if (blockPre >= blockSec) {
                 previousObject.height = previousObject.height + 10 + (previousObject.y - secondObject.y);
                 previousObject.y = secondObject.y;
 
@@ -1121,7 +1121,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
         }
         //Top Right and peeking
         else if (previousObject.y + previousObject.height + 10 > secondObject.y && secondObject.y > previousObject.y) {
-            if (blockpre <= blocksec) {
+            if (blockPre <= blockSec) {
                 secondObject.height = secondObject.height + 10 + (secondObject.y - previousObject.y);
                 secondObject.y = previousObject.y;
 
@@ -1136,7 +1136,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 console.log("s");
             }
 
-            if (blockpre >= blocksec) {
+            if (blockPre >= blockSec) {
                 previousObject.height = previousObject.height + 10 + ((secondObject.y + secondObject.height + 10) - (previousObject.y + previousObject.height + 10));
 
                 startX = secondObject.x + secondObject.width;
@@ -1153,7 +1153,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
         }
         //Bottom Left and peeking
         else if (secondObject.y + secondObject.height + 10 < previousObject.y + previousObject.height + 10 && previousObject.y < secondObject.y + secondObject.height + 10) {
-            if (blockpre <= blocksec) {
+            if (blockPre <= blockSec) {
                 let increase = secondObject.height + 10 + ((previousObject.y + previousObject.height + 10) - (secondObject.y + secondObject.height + 10));
                 let resizeVars = checkResizeBounds(secondObject.x + secondObject.width, secondObject.y + secondObject.height + 10);
                 console.log(resizeVars);
@@ -1171,7 +1171,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
                 console.log("u");
             }
 
-            if (blockpre >= blocksec) {
+            if (blockPre >= blockSec) {
                 let increase = previousObject.height + 10 + (previousObject.y - secondObject.y);
                 let resizeVars = checkResizeBounds(previousObject.x + previousObject.width, previousObject.y + previousObject.height + 10);
                 console.log(resizeVars);
@@ -1208,7 +1208,7 @@ export function lineIntersector(canvas, x, y, secondObject) {
 
 }
 //
-export function collectmehbox(boxes, arrows, bigbox, item, index) {
+export function collectMehBox(boxes, arrows, bigbox, item, index) {
 
     //console.log("runningcollect");
     if (bigbox.semanticIdentity.UUID === item.destVertexUUID) {
@@ -1305,15 +1305,15 @@ export function arrangeboxesandarrowshorizontal(bigbox, boxes, arrows, index) {
 export function shiftBoxes(secondObject) {
     //if box is within horizontal bounds
 
-    let upboxes = [];
-    let uparrows = [];
-    let downboxes = [];
-    let downarrows = [];
-    let leftboxes = [];
-    let leftarrows = [];
-    let rightboxes = [];
-    let rightarrows = [];
-    let [bigbox, smallbox] = checkBoxSizesAndReturnBigBox(previousObject, secondObject);
+    let upBoxes = [];
+    let upArrows = [];
+    let downBoxes = [];
+    let downArrows = [];
+    let leftBoxes = [];
+    let leftArrows = [];
+    let rightBoxes = [];
+    let rightArrows = [];
+    let [bigBox, smallBox] = checkBoxSizesAndReturnBigBox(previousObject, secondObject);
 
     //grab all arrows connected to either object
     //Index 0 means down index 1 means up
@@ -1321,31 +1321,31 @@ export function shiftBoxes(secondObject) {
     currentObjects.flatten().forEach((item) => {
         if (item.constructor.name === "Arrow") {
             //get the big box because it has all the arrows connected
-            if (bigbox.y + bigbox.height + 10 < smallbox.y && smallbox.x > bigbox.x && smallbox.x + smallbox.width < bigbox.x + bigbox.width) {
-                [downboxes, downarrows] = collectmehbox(downboxes, downarrows, bigbox, item, 0);
+            if (bigBox.y + bigBox.height + 10 < smallBox.y && smallBox.x > bigBox.x && smallBox.x + smallBox.width < bigBox.x + bigBox.width) {
+                [downBoxes, downArrows] = collectMehBox(downBoxes, downArrows, bigBox, item, 0);
 
 
-            } else if (bigbox.y > (smallbox.y + smallbox.height + 10) && smallbox.x > bigbox.x && smallbox.x + smallbox.width < bigbox.x + bigbox.width) {
-                [upboxes, uparrows] = collectmehbox(upboxes, uparrows, bigbox, item, 1);
+            } else if (bigBox.y > (smallBox.y + smallBox.height + 10) && smallBox.x > bigBox.x && smallBox.x + smallBox.width < bigBox.x + bigBox.width) {
+                [upBoxes, upArrows] = collectMehBox(upBoxes, upArrows, bigBox, item, 1);
 
-            } else if (bigbox.x > smallbox.x + smallbox.width && smallbox.y > bigbox.y && smallbox.y + smallbox.height + 10 < bigbox.y + bigbox.height + 10) {
+            } else if (bigBox.x > smallBox.x + smallBox.width && smallBox.y > bigBox.y && smallBox.y + smallBox.height + 10 < bigBox.y + bigBox.height + 10) {
                 console.log("left ran");
-                [leftboxes, leftarrows] = collectsidebox(leftboxes, leftarrows, bigbox, item, 1);
+                [leftBoxes, leftArrows] = collectsidebox(leftBoxes, leftArrows, bigBox, item, 1);
 
-            } else if (bigbox.x + bigbox.width < smallbox.x && smallbox.y > bigbox.y && smallbox.y + smallbox.height + 10 < bigbox.y + bigbox.height + 10) {
+            } else if (bigBox.x + bigBox.width < smallBox.x && smallBox.y > bigBox.y && smallBox.y + smallBox.height + 10 < bigBox.y + bigBox.height + 10) {
                 console.log("right ran");
-                [rightboxes, rightarrows] = collectsidebox(rightboxes, rightarrows, bigbox, item, 0);
+                [rightBoxes, rightArrows] = collectsidebox(rightBoxes, rightArrows, bigBox, item, 0);
             }
         }
     });
     //Do stuff to boxes
     //1 = up
     //0 = down
-    arrangeboxesandarrows(bigbox, downboxes, downarrows, 0);
-    arrangeboxesandarrows(bigbox, upboxes, uparrows, 1);
+    arrangeboxesandarrows(bigBox, downBoxes, downArrows, 0);
+    arrangeboxesandarrows(bigBox, upBoxes, upArrows, 1);
 
-    arrangeboxesandarrowshorizontal(bigbox, leftboxes, leftarrows, 1);
-    arrangeboxesandarrowshorizontal(bigbox, rightboxes, rightarrows, 0);
+    arrangeboxesandarrowshorizontal(bigBox, leftBoxes, leftArrows, 1);
+    arrangeboxesandarrowshorizontal(bigBox, rightBoxes, rightArrows, 0);
 
     //console.log(downboxes.length);
 
@@ -1374,13 +1374,13 @@ export function onLeftMouseRelease(canvas, x, y) {
 
         if (getConnectionDataForArrow(x, y).snapped && !firstArrowJoint) {
             // Create
-            var secondObject = findIntersected(x, y);
-            var newObject = null;
+            let secondObject = findIntersected(x, y);
+            let newObject = null;
 
             //2 separate objects - box and vertex (border)
             if (previousObject !== null && secondObject !== null && savedArrows !== null) {
                 //console.log("\n the new one \n");
-                newObject = lineIntersector(canvas, x, y, secondObject);
+                newObject = lineIntersect(canvas, x, y, secondObject);
                 for (let j = 0; j < savedArrows.length; j++) {
                     //delete arrow if duplicate for straight arrows (doesn't work)
                     for (let k = 1 + j; k < savedArrows.length; k++) {
@@ -1494,7 +1494,7 @@ function onMouseMove(e, canvas) {
     canvasContext.globalAlpha = 1.0;
 }
 
-export function onMiddleClick(canvas, x, y, savedObjects = null, shiftdown = false) {
+export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = false) {
     // for arrows
     startMoveX = x;
     startMoveY = y;
@@ -1543,7 +1543,7 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftdown = fal
 
 
     }
-    var F = [];
+    let F = [];
     if (friendObject !== null) {
         let i = 0;
         for (i; i < friendObject.length; i++) {
@@ -1552,7 +1552,7 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftdown = fal
         }
     }
 
-    var S = []; //previous coords
+    let S = []; //previous coords
     if (savedObjects !== null) {
         let i = 0;
         for (i; i < savedObjects.length; i++) {
@@ -1564,11 +1564,11 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftdown = fal
     if (selectedObject !== null) {
         saveBlockStates(canvas, x, y);
         // check the distance between the mouse and the object
-        let savedisX = x - selectedObject.x;
-        let savedisY = y - selectedObject.y;
+        let saveDisX = x - selectedObject.x;
+        let saveDisY = y - selectedObject.y;
 
 
-        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, friendObject, F, savedObjects, S, savedisX, savedisY, arrowsVert, arrowsHoriz, shiftdown) }
+        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, friendObject, F, savedObjects, S, saveDisX, saveDisY, arrowsVert, arrowsHoriz, shiftDown) }
     }
 
 }
@@ -1579,17 +1579,17 @@ export function onMouseLeave() {
     drawAll()
 }
 
-// moving objects in respect to cursor values savedisX, savedisY
+// moving objects in respect to cursor values saveDisX, saveDisY
 // friends = the smaller boxes that are connected to the bigger box
-function moveObject(e, object, friends, F, savedObjects = null, S, savedisX, savedisY, arrowsVert, arrowsHoriz, shiftdown) {
+function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, saveDisY, arrowsVert, arrowsHoriz, shiftDown) {
     if (object != null) {
         if (object.constructor.name === "Vertex") {
             let position = getGraphXYFromMouseEvent(e);
-            let x = position[0] - savedisX;
-            let y = position[1] - savedisY;
+            let x = position[0] - saveDisX;
+            let y = position[1] - saveDisY;
 
             //for loop iterate through all boxes assume they not empty
-            if (shiftdown) {
+            if (shiftDown) {
                 if (friends !== null) {
                     let i = 0;
                     //check friends' previous location and cursors location
@@ -1667,7 +1667,7 @@ function moveObject(e, object, friends, F, savedObjects = null, S, savedisX, sav
     }
 }
 export function updateArrows() {
-    var flattenedObjects = currentObjects.flatten();
+    let flattenedObjects = currentObjects.flatten();
     flattenedObjects.forEach((item) => {
         if (item !== null) {
             if (item.constructor.name === "Arrow") {
@@ -1801,7 +1801,7 @@ function createObject(canvas, x1, y1, x2, y2) {
         }
 
         // Create arrow
-        var arrow = new Arrow(currentObjectsFlattened, newPath, arrowType);
+        let arrow = new Arrow(currentObjectsFlattened, newPath, arrowType);
         arrow.rebuildPath(currentObjectsFlattened);
         return arrow;
     }

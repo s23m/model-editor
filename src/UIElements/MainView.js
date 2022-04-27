@@ -35,8 +35,8 @@ let folderName = "Unnamed Folder";
 
 export class MainProgramClass extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             zoomLevel: 200,
             drawMode: Tool.Vertex,
@@ -94,7 +94,7 @@ export class MainProgramClass extends React.Component {
         handleAddModel(folderName);
     }
 
-    deleteModel = (type) => {
+    deleteModel = () => {
         handleDeleteModel(folderName);
     }
 
