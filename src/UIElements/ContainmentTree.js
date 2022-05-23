@@ -74,7 +74,7 @@ function render_on_add_folder_or_container() {
 */
 
 let folderAltered = false;
-//let modelAltered = false;
+let modelAltered = false;
 
 export function handleAddFolder(folderName){
     //Create a new folder using the known node type
@@ -135,7 +135,7 @@ export function handleAddModel(modelName){
  
     modelObjects.push(tempModelThing);
 
-    //modelAltered = true;
+    modelAltered = true;
 
 
 }
@@ -521,7 +521,7 @@ export class ContainmentTree extends React.Component {
         }
         catch(e){
             console.log(e instanceof TypeError)
-            console.log("If False, this error is not TypeError and should be investigated")
+            console.log("If True, this is a type error, If the selected object should be selectable, this is an issue")
         }
 
     }
