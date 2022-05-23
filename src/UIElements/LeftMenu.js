@@ -141,8 +141,8 @@ export class LeftMenu extends React.Component{
     }
 
     componentWillReceiveProps(nextProps,nextContext) {
-        this.setState({menu:nextProps.mainState.menu});
-        this.setState({selectedObject:nextProps.mainState.selectedObject});
+        this.setState({menu:nextProps.mainState.menu,selectedObject:nextProps.mainState.selectedObject});
+        //this.setState({selectedObject:nextProps.mainState.selectedObject});
 
         //document.removeEventListener("keydown", this.onKeyPressed.bind(this));
 

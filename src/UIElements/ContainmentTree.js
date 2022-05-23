@@ -6,12 +6,15 @@
 import React from 'react';
 import TreeView from 'react-simple-jstree';
 
+
+
+
 import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey, 
-    getTotalRenderKeys, incrementTotalRenderKeys, currentRenderKey,
+    getTotalRenderKeys, incrementTotalRenderKeys, 
     getCurrentModel, setNewModel, getTotalModels, incrementTotalModels} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
-import * as canvasDraw from "./CanvasDraw";
+
 
 
 //import {currentRenderKey} from './CanvasDraw';
@@ -21,7 +24,7 @@ export var someVertexPath = "";
 
 let focussed = false; //Decides whether or not to show the normal tree view or a focussed version
 let currentlySelectedObject = null; //The currently selected object
-let lastSelectedObject = null; // The last selected object
+//let lastSelectedObject = null; // The last selected object
 
 let showingVertPath = false;
 
@@ -35,12 +38,7 @@ let folderData = [];
 // This is to do with getting the data indexing to be
 let decoyFolderData = [];
 
-// This is so that when you click on some tree view element you're able to see some clearer data on the 
-// the folder ||| REDUNDANT 
-let folderObjects = [];
 
-// Same use as the above decoy array
-//let decoyModelObjects = []
 
 // An array for holding model names
 let modelObjects = [];
@@ -56,13 +54,13 @@ export function displayFocussedTreeView(selectedThing){
 
     else if (focussed === false){
         focussed = true;
-        lastSelectedObject = currentlySelectedObject;
+        //lastSelectedObject = currentlySelectedObject;
         currentlySelectedObject = selectedThing;
     }
     
 }
 
-/*
+/** 
 function render_on_add_folder_or_container() {
     const data = this.state.data;
     
@@ -76,7 +74,7 @@ function render_on_add_folder_or_container() {
 */
 
 let folderAltered = false;
-let modelAltered = false;
+//let modelAltered = false;
 
 export function handleAddFolder(folderName){
     //Create a new folder using the known node type
@@ -137,9 +135,9 @@ export function handleAddModel(modelName){
  
     modelObjects.push(tempModelThing);
 
-    modelAltered = true;
+    //modelAltered = true;
 
-    
+
 }
 
 export function handleDeleteModel(modelName){
@@ -216,7 +214,7 @@ export class ContainmentTree extends React.Component {
         let i = 0;
         
         if (initialFolderAdded === false){
-            handleAddFolder("This is an initial container/folder");
+            handleAddFolder("This is an initial container");
             //handleAddModel("This is an initial model")
             initialFolderAdded = true;
         }
@@ -261,7 +259,7 @@ export class ContainmentTree extends React.Component {
 
         
         else if (focussed === true){
-            let overallContainer = getModelName();
+            //let overallContainer = getModelName();
             let container = [];
             let vertOrEdge = [];
             let objName = [];
@@ -438,83 +436,94 @@ export class ContainmentTree extends React.Component {
     handleElementSelect(e, data) {
 
         //console.log("Selected Length: " + data.selected.length)
-        //console.log("Selected Data: " + data.node.data)
-        //console.log("Selected Type: " + data.node.data.type)
-        if(data.node.data.type === "Vertex Folder"){
-            //do nothing
-        }
-
-        else if(data.node.data.type === "Folder"){
-            console.log("The render key is now" + data.node.data.renderkey);
-            console.log("Clicked Folder: " + data.node.data.text)
-            setNewRenderKey(data.node.data.renderkey)
-
-
-        }
-
-        else if (data.node.data.type === "Model"){
-            console.log("The selected model is: " + data.node.data.modelkey)
-            //console.log("The current folder is: " + data.node.data.renderKey)
-            setNewModel(data.node.data.modelkey);
-            //setNewRenderKey(data.node.data.renderKey)
-
-            // Move everything away
-            for (let item of currentObjects.flatten()){
-                if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
-                    //console.log("Item is set as present")
-                    item.setPresent();
-                }
-
-                else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
-                    //console.log("Item is sent away")
-                    item.setAway();
-                    //console.log("The item to not be rendered is" + item.typeName);
-                }
-            }
-        }
         
-       //console.log("The data is: " + data.node.data);
+        // Try catch used to catch error whe selecting a treeview item with no data type eg. root - Lachlan
+        
+        try{
+            console.log("Selected Data: " + data.node.data)
+            console.log("Selected Type: " + data.node.data.type)
 
-        else if (data.selected.length === 1 && data.node.data !== null && data.node.data.type === undefined) {
-            let UUID = data.node.data.semanticIdentity.UUID;
-            console.log("UUID: " + UUID)
-            for (let vertex of currentObjects.flatten()) {
-                if (vertex.semanticIdentity.UUID === UUID) {
-                    //setNewRenderKey(vertex.getRenderKey())
-                    //setNewModel(vertex.getModelKey())
-                    this.setState({
-                        
-                        selectedVertex: vertex
-                    });
-                    this.props.setLeftMenu(this.state.selectedVertex);
+            if(data.node.data.type === "Vertex Folder"){
+                //do nothing
+            }
 
-                    // Set the current render key to whatever object the person has clicked from
-                    // the tree view
-                    
-                    //console.log("The old render key is: " + currentRenderKey);
-                    //this.currentRenderKey = this.state.selectedVertex.getRenderKey();
-                    //console.log("The new render key is: " + currentRenderKey);
-                    
+            else if(data.node.data.type === "Folder"){
+                console.log("The render key is now" + data.node.data.renderkey);
+                console.log("Clicked Folder: " + data.node.data.text)
+                setNewRenderKey(data.node.data.renderkey)
 
-                    //currentRenderKey = 1; 
-                    //console.log("Render old key is " + getCurrentRenderKey());
-                    //setNewRenderKey(this.state.selectedVertex.getRenderKey());
-                    //console.log("The new render key is : " + getCurrentRenderKey());
-                    //currentRenderKey = 1;
-                    
-                    //console.log("The selected object is: " + this.state.selectedVertex.getRenderKey())
+
+            }
+
+            else if (data.node.data.type === "Model"){
+                console.log("The selected model is: " + data.node.data)
+                //console.log("The current folder is: " + data.node.data.renderKey)
+                setNewModel(data.node.data.modelkey);
+                //setNewRenderKey(data.node.data.renderKey)
+
+                // Move everything away
+                for (let item of currentObjects.flatten()){
+                    if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
+                        //console.log("Item is set as present")
+                        item.setPresent();
+                    }
+
+                    else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
+                        //console.log("Item is sent away")
+                        item.setAway();
+                        //console.log("The item to not be rendered is" + item.typeName);
+                    }
                 }
             }
             
+        //console.log("The data is: " + data.node.data);
 
-        } else {
-            this.setState({
-                selectedVertex: null
-            });
+            else if (data.selected.length === 1 && data.node.data !== null && data.node.data.type === undefined) {
+                let UUID = data.node.data.semanticIdentity.UUID;
+                console.log("UUID: " + UUID)
+                for (let vertex of currentObjects.flatten()) {
+                    if (vertex.semanticIdentity.UUID === UUID) {
+                        //setNewRenderKey(vertex.getRenderKey())
+                        //setNewModel(vertex.getModelKey())
+                        this.setState({
+                            
+                            selectedVertex: vertex
+                        });
+                        this.props.setLeftMenu(this.state.selectedVertex);
+
+                        // Set the current render key to whatever object the person has clicked from
+                        // the tree view
+                        
+                        //console.log("The old render key is: " + currentRenderKey);
+                        //this.currentRenderKey = this.state.selectedVertex.getRenderKey();
+                        //console.log("The new render key is: " + currentRenderKey);
+                        
+
+                        //currentRenderKey = 1; 
+                        //console.log("Render old key is " + getCurrentRenderKey());
+                        //setNewRenderKey(this.state.selectedVertex.getRenderKey());
+                        //console.log("The new render key is : " + getCurrentRenderKey());
+                        //currentRenderKey = 1;
+                        
+                        //console.log("The selected object is: " + this.state.selectedVertex.getRenderKey())
+                    }
+                }
+                
+
+            } else {
+                this.setState({
+                    selectedVertex: null
+                });
+            }
+            
+
+            drawAll();
         }
-        
+        catch(e){
+            console.log(e instanceof TypeError)
+            console.log("If False, this error is not TypeError and should be investigated")
+        }
 
-        drawAll();
     }
 
 

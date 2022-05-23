@@ -84,6 +84,8 @@ export class MainProgramClass extends React.Component {
     addFolder = () => {
         //handleAddFolder({modelName:document.getElementById("FolderName").value});
         handleAddFolder(folderName);
+        //ContainmentTree.state = ContainmentTree.state;
+        //LeftMenu.state = LeftMenu.state;
     }
 
     deleteFolder = () => {
@@ -92,6 +94,7 @@ export class MainProgramClass extends React.Component {
 
     addModel = () => {
         handleAddModel(folderName);
+
     }
 
     deleteModel = () => {
@@ -267,7 +270,6 @@ export class MainProgramClass extends React.Component {
 
                     <input className="TopBarSearch" id="ModelName" type = "text" name = "modelName" placeholder = "Graph Name" onChange={(e) => this.setModelName(e)}/>
                     <input className="TopBarSearch" id="FolderName" type = "text" name = "folderName" placeholder = "New Container/Model" onChange={(e) => this.updateFolderName(e)}/>
-
                     {/*<div className="TopBarIcon">&nbsp;</div>*/}
                     {/*The + and - are backwards on purpose here*/}
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>
