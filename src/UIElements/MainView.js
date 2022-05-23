@@ -16,7 +16,7 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder, handleDeleteModel, handleAddModel, ContainmentTree} from './ContainmentTree';
+import {handleAddFolder, handleDeleteModel, handleAddModel} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
@@ -81,21 +81,39 @@ export class MainProgramClass extends React.Component {
         folderName = document.getElementById("FolderName").value
     }
 
+    //The following add/delete functions Now reload the treeview on add/deleteing folders and models - Lachlan
+    //The async function is due to javascript executing SetLeftMenuToTree without waiting for handleadd/delete to manipulate data for the new tree - LAchlan
     addFolder = () => {
         //handleAddFolder({modelName:document.getElementById("FolderName").value});
-        handleAddFolder(folderName);
+        //ContainmentTree.state = ContainmentTree.state;
+        //LeftMenu.state = LeftMenu.state;
+        (async() => {
+        await handleAddFolder(folderName);
+        this.setLeftMenuToTree();
+        })();
+        
     }
 
     deleteFolder = () => {
-        handleDeleteFolder(folderName);
+        (async() => {
+            await handleDeleteFolder(folderName);
+            this.setLeftMenuToTree();
+            })();
     }
 
     addModel = () => {
-        handleAddModel(folderName);
+        (async() => {
+            await handleAddModel(folderName);
+            this.setLeftMenuToTree();
+            })();
     }
 
     deleteModel = () => {
-        handleDeleteModel(folderName);
+        
+        (async() => {
+            await handleDeleteModel(folderName);
+            this.setLeftMenuToTree();
+            })();
     }
 
     zoom = (type) => {
@@ -180,6 +198,22 @@ export class MainProgramClass extends React.Component {
             });
         }
 
+    }
+
+    //Function for setting left menu to tree
+    //This function serves as a direct way to "statechange" the treeview menu - Lachlan
+    setLeftMenuToTree(){
+        if (this.state.selectedObject !== null) {
+            canvasDraw.drawAll();
+        }
+        this.setState({
+            menu: LeftMenuType.None,
+        });
+        this.setState({
+            menu: LeftMenuType.TreeView,
+            selectedObject: null
+        });
+        console.log("set left menu To Tree enacted")
     }
 
     setModelName = () => {
@@ -267,7 +301,6 @@ export class MainProgramClass extends React.Component {
 
                     <input className="TopBarSearch" id="ModelName" type = "text" name = "modelName" placeholder = "Graph Name" onChange={(e) => this.setModelName(e)}/>
                     <input className="TopBarSearch" id="FolderName" type = "text" name = "folderName" placeholder = "New Container/Model" onChange={(e) => this.updateFolderName(e)}/>
-
                     {/*<div className="TopBarIcon">&nbsp;</div>*/}
                     {/*The + and - are backwards on purpose here*/}
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>

@@ -6,7 +6,7 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import { ArrowBackIos, ContactsOutlined } from "@material-ui/icons";
+
 
 // Core variables
 let canvasElement;
