@@ -104,6 +104,8 @@ export function handleAddFolder(folderName){
     //console.log("theActualData: " + folderData.length)
     folderData.push(folderThing2);
     console.log("Folder data apparent: " + folderData[folderData.length-1].data)
+    console.log(folderData)
+    console.log(folderThing2.renderKey)
 
     folderAltered = true;
     
@@ -119,21 +121,21 @@ export function handleDeleteFolder(folderName){
 
     folderAltered = true;
 }
-
-export function handleAddModel(modelName){
+// Added optional parameter render key, atm used to handle create a model with no folder selected - Lachlan
+export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
     incrementTotalModels();
-
     let tempModelThing = {
         text: modelName,
         children: [],
         data: modelObjects[modelObjects.length - 1],
         state: {opened: true},
         type: "Model",
-        renderKey: getCurrentRenderKey(),
+        renderKey: rKey,
         modelKey: getTotalModels()
     };
  
     modelObjects.push(tempModelThing);
+    console.log(modelObjects)
 
     modelAltered = true;
 
@@ -182,7 +184,7 @@ function determineOwnership(parsedRenderKey){
             //console.log("treeData object name: " + vertexOrArrow.text)
 
             if (vertexOrArrow.type === "Model"){
-                if (vertexOrArrow.renderkey === parsedRenderKey){
+                if (vertexOrArrow.renderKey === parsedRenderKey){
                     returnArray.push(treeData[i])
                 }
                 
@@ -190,7 +192,7 @@ function determineOwnership(parsedRenderKey){
 
             for (let child of vertexOrArrow.children){
                 // Check if the render key of the child matches 
-                if (child.renderkey === parsedRenderKey){
+                if (child.renderKey === parsedRenderKey){
                     //console.log("Matched tree data: " + treeData[i])
                     returnArray.push(treeData[i])
                     break
@@ -215,7 +217,8 @@ export class ContainmentTree extends React.Component {
         
         if (initialFolderAdded === false){
             handleAddFolder("This is an initial container");
-            //handleAddModel("This is an initial model")
+            //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
+            handleAddModel("This is an initial model",1)
             initialFolderAdded = true;
         }
         
@@ -231,8 +234,8 @@ export class ContainmentTree extends React.Component {
                 for (let folder of folderData){
                     let renderIndex = 0;
 
-                    if (folder.renderkey !== undefined){
-                        renderIndex = folder.renderkey;
+                    if (folder.renderKey !== undefined){
+                        renderIndex = folder.renderKey;
                     }
 
                     if (i === 0){
@@ -247,7 +250,7 @@ export class ContainmentTree extends React.Component {
                     treeData.push(vertex.toTreeViewElement(new Set()));
                     
                     for (let folder of folderData){
-                        folder.children = determineOwnership(folder.renderkey)
+                        folder.children = determineOwnership(folder.renderKey)
                     }
                     
                 }
@@ -441,21 +444,25 @@ export class ContainmentTree extends React.Component {
         
         try{
             console.log("Selected Data: " + data.node.data)
+            console.log("Selected Data: " + data.node.type)
             console.log("Selected Type: " + data.node.data.type)
+            console.log("Selected Name: " + data.node.data.text)
+            console.log(folderData);
+            console.log(modelObjects)
 
             if(data.node.data.type === "Vertex Folder"){
                 //do nothing
             }
 
             else if(data.node.data.type === "Folder"){
-                console.log("The render key is now" + data.node.data.renderkey);
                 console.log("Clicked Folder: " + data.node.data.text)
-                setNewRenderKey(data.node.data.renderkey)
+                setNewRenderKey(data.node.data.renderKey)
+                console.log("The render key is now " + data.node.data.renderKey);
 
 
             }
 
-            else if (data.node.data.type === "Model"){
+            else if (data.node.type === "Model"){
                 console.log("The selected model is: " + data.node.data)
                 //console.log("The current folder is: " + data.node.data.renderKey)
                 setNewModel(data.node.data.modelkey);
