@@ -11,10 +11,10 @@ import TreeView from 'react-simple-jstree';
 
 import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey, 
     getTotalRenderKeys, incrementTotalRenderKeys, 
-    getCurrentModel, setNewModel, getTotalModels, incrementTotalModels} from "./CanvasDraw";
+    getCurrentModel, setNewModel, getTotalModels, incrementTotalModels, decreaseTotalModels, decreaseTotalRenderKeys} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
-
+import { VertexNode } from "../DataStructures/Graph";
 
 
 //import {currentRenderKey} from './CanvasDraw';
@@ -42,7 +42,8 @@ let decoyFolderData = [];
 
 // An array for holding model names
 let modelObjects = [];
-
+let decoyModelObjects = []; // doing the same data referencing as folder data because currently the data being referenced in the models is the model beforehand which
+                            // i dont tink is intended. - cooper
 // A function to be called in the left menu to 
 // 1. Return the name of the currently selected vertex for displaying purposes and
 // 2. Set the 'focussed' keyword to true
@@ -118,16 +119,28 @@ export function handleDeleteFolder(folderName){
             folderData.splice(i,1); 
         }
     }
-
+    decreaseTotalRenderKeys();
     folderAltered = true;
 }
 // Added optional parameter render key, atm used to handle create a model with no folder selected - Lachlan
 export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
     incrementTotalModels();
+    let decoyModelThing = {
+        text: modelName,
+        children: [],
+        data: NaN,
+        state: {opened: true},
+        type: "Model",
+        renderKey: rKey,
+        modelKey: getTotalModels()
+    }
+    decoyModelObjects.push(decoyModelThing);
+
+
     let tempModelThing = {
         text: modelName,
         children: [],
-        data: modelObjects[modelObjects.length - 1],
+        data: decoyModelObjects[modelObjects.length],
         state: {opened: true},
         type: "Model",
         renderKey: rKey,
@@ -151,7 +164,7 @@ export function handleDeleteModel(modelName){
 
         }
     }
-
+    decreaseTotalModels(); 
 }
 
 // This is a function to display the path of a given vertex
@@ -189,7 +202,7 @@ function determineOwnership(parsedRenderKey){
                 }
                 
             }
-
+/*
             for (let child of vertexOrArrow.children){
                 // Check if the render key of the child matches 
                 if (child.renderKey === parsedRenderKey){
@@ -198,7 +211,7 @@ function determineOwnership(parsedRenderKey){
                     break
                 }
             }
-            
+            */
         }
         i += 1
     }
@@ -218,46 +231,54 @@ export class ContainmentTree extends React.Component {
         if (initialFolderAdded === false){
             handleAddFolder("This is an initial container");
             //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
-            handleAddModel("This is an initial model",1)
+            handleAddModel("This is an initial model",1) 
             initialFolderAdded = true;
         }
         
         if (focussed === false){
-            for (let vertex of currentObjects.flattenVertexNodes()) { //.rootVertices() <-- original // for (let vertex of currentObjects.flattenVertexNodes()) 
-                
-                // Push the model objects in
-                for (let model of modelObjects){
-                    treeData.push(model);
-                    
-                }
 
+              // Push the model objects in. --- I moved the position of these for loops outside of the vertex for loop as it was creating a few problems - cooper
+            for (let model of modelObjects){
+                treeData.push(model);           
+                
+            }
+            for (let folder of folderData){ // this for loop is to define the ownership of the models - cooper
+                let renderIndex = 0;
+
+                if (folder.renderKey !== undefined){
+                    renderIndex = folder.renderKey;
+                }
                 for (let folder of folderData){
-                    let renderIndex = 0;
-
-                    if (folder.renderKey !== undefined){
-                        renderIndex = folder.renderKey;
-                    }
-
-                    if (i === 0){
-
-                        treeData.push(vertex.toTreeViewElement(new Set(), "vertexFolder", renderIndex));
-                        treeData.push(vertex.toTreeViewElement(new Set(), "arrowFolder", renderIndex));
-
-                        //You need to make sure you update the folderData stuff after making a change to treeData
-    
-                    }
-
-                    treeData.push(vertex.toTreeViewElement(new Set()));
-                    
-                    for (let folder of folderData){
-                        folder.children = determineOwnership(folder.renderKey)
-                    }
-                    
+                    folder.children = determineOwnership(folder.renderKey)   
                 }
-                
+                   // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
+                }
+            for (let folder of folderData){ // this for loop is to define the ownership of the vertices & arrows - cooper
+                let renderIndex = 0;
+
+                if (folder.renderKey !== undefined){
+                    renderIndex = folder.renderKey;
+                }
+
+                for (let model of treeData){
+                    let modelIndex = 0;
+                    if (model.modelKey !== undefined){
+                        modelIndex = model.renderKey;
+                    }
+                    for (let vertex of currentObjects.flattenVertexNodes()){
+                        if (vertex.toTreeViewElement("Vertex Folder", renderIndex) !== undefined && model.renderKey === renderIndex && model.modelKey === modelIndex)
+                        model.children = vertex.toTreeViewElement("Vertex Folder", renderIndex)
+                    }
+
+
+                }
+
 
             }
-
+            
+            console.log(currentObjects);
+            console.log(treeData);
+            console.log(currentObjects.flatten())
         }
 
         
@@ -353,6 +374,7 @@ export class ContainmentTree extends React.Component {
             }
         }
 
+
         if(showingVertPath === true){
             /*
             let highestLevel = getModelName();
@@ -399,9 +421,11 @@ export class ContainmentTree extends React.Component {
                 //console.log("folder text: " + cont.text)
                 //Take a look at the children of the containers (arrows and such)
                 for (let treeDat of cont.children){
-                    console.log("treeDat text: " + treeDat.text)
+                    console.log("treeDat text: " + treeDat.text) 
+                    console.log("num of rkeys is:", getTotalRenderKeys())
+                    console.log(folderData)
                     //Why is the vertex folder coming up as undefined?????
-                    console.log(treeDat.children)
+                    console.log(cont.children)
                     if(b === 0){
                         //console.log("SECOND LAYER: " + treeDat.children);
                         for (let treeElement of treeDat.children){
@@ -409,8 +433,9 @@ export class ContainmentTree extends React.Component {
                             if ((treeElement.text === currentlySelectedObject.title)){
                                 
                                 nextLevel = cont.text;
-
+                                
                                 vertexOrEdge = "Vertices"
+                                
                                 actualObject = currentlySelectedObject.title
 
                                 someVertexPath = highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject;
@@ -448,7 +473,8 @@ export class ContainmentTree extends React.Component {
             console.log("Selected Type: " + data.node.data.type)
             console.log("Selected Name: " + data.node.data.text)
             console.log(folderData);
-            console.log(modelObjects)
+            console.log(modelObjects);
+            
 
             if(data.node.data.type === "Vertex Folder"){
                 //do nothing
@@ -462,12 +488,14 @@ export class ContainmentTree extends React.Component {
 
             }
 
-            else if (data.node.type === "Model"){
-                console.log("The selected model is: " + data.node.data)
+            else if (data.node.data.type === "Model"){
+                console.log("The selected model is: " + data.node.data.text)
                 //console.log("The current folder is: " + data.node.data.renderKey)
-                setNewModel(data.node.data.modelkey);
+                setNewModel(data.node.data.modelKey);
+                console.log("The model key is now " + data.node.data.modelKey); // there were issues here with camelCasing causing no modelKey to be selected- cooper
                 //setNewRenderKey(data.node.data.renderKey)
-
+                setNewRenderKey(data.node.data.renderKey); // automatically sets the renderkey to be the same as the models as this was causing issues - cooper
+                console.log("The render key is now " + data.node.data.renderKey);
                 // Move everything away
                 for (let item of currentObjects.flatten()){
                     if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
@@ -537,7 +565,7 @@ export class ContainmentTree extends React.Component {
 
     render() {
         const data = this.state.data;
-        
+        console.log(data)
         /*
         if (this.state.selectedObject !== null){
             console.log("The old render key is: " + currentRenderKey);
