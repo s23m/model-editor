@@ -6,10 +6,11 @@ import { CollectionsBookmarkOutlined } from "@material-ui/icons";
 import { currentObjects, getModelName } from "../UIElements/CanvasDraw";
 
 
-class VertexNode {
+export class VertexNode {
     constructor(vertex) {
         this.vertex = vertex;
         this.children = new Set();
+        this.typeName = "Vertex";
 
         //The path of this particular vertex node for displaying on the tree view element
         this.cleanObjectPath = getModelName() + "/" + "Vertices";
@@ -124,21 +125,21 @@ class VertexNode {
         return false;
     }
 
-    toTreeViewElement(traversedVertices, returnOption, parsedRenderKey) {
-
+    toTreeViewElement(returnOption, parsedRenderKey) {
+        console.log("toTreeViewElement called successfully")
         //Pretty much everything that's currently on the canvas is searched and then converted into the tree appropriate struct in the below if else statements.
         //Then, the vertices and arrows folder nodes can display their appropriate children.
         let ArrowChildren = [];
         let VertexChildren = [];
-
-        let children = [];
-        let traversed = traversedVertices.has(this);
+        let verticies = []; // need to store the 'verticies folder' in an array for it to be iterable in a for loop - cooper
+        
+        
 
         for (let element in currentObjects.flatten()){
         }
 
         //Check which folder we're sticking these things into
-        if (returnOption === "vertexFolder"){
+        if (returnOption === "Vertex Folder"){                  // they had a different spelling for vertex folder :DDDDD - cooper
             //All objects currently on the canvas (excluding things like folders which only exist as tree view elements)
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
@@ -179,19 +180,22 @@ class VertexNode {
                 }
 
             }
-            
-            //vertices folder
-            return{
+            let verticiesObject = { // push the vertex folder into an array of vertex folders - cooper
                 text: "Vertices",
                 children: VertexChildren,
                 data: null,
                 state: { opened: true },
                 type: "Vertex Folder"
             }
+            verticies.push(verticiesObject)
+            //vertices folder
+            return verticies
+                
+            
         }
 
         //same as above if statement but for arrows
-        else if (returnOption === "arrowFolder"){
+        else if (returnOption === "ArrowFolder"){
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
                 if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
@@ -252,7 +256,7 @@ class VertexNode {
                 type: "ArrowFolder"
             }
         }
-
+            
         
         //This down here is for vertex heirarchy stuff, not really needed anymore.
         /*
@@ -279,7 +283,7 @@ class VertexNode {
         };
         */
     }
-
+    
     setTreeViewElement(folderTitle){ //For when you want to make a folder type of element
         let fakeChildren = [];
         return{

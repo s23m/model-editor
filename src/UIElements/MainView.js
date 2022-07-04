@@ -203,17 +203,22 @@ export class MainProgramClass extends React.Component {
     //Function for setting left menu to tree
     //This function serves as a direct way to "statechange" the treeview menu - Lachlan
     setLeftMenuToTree(){
+        
         if (this.state.selectedObject !== null) {
+            
             canvasDraw.drawAll();
         }
         this.setState({
+            
             menu: LeftMenuType.None,
         });
         this.setState({
             menu: LeftMenuType.TreeView,
             selectedObject: null
+            
         });
         console.log("set left menu To Tree enacted")
+        
     }
 
     setModelName = () => {
