@@ -461,11 +461,13 @@ export class ContainmentTree extends React.Component {
 
     }
 
+
+
     handleElementSelect(e, data) {
 
         //console.log("Selected Length: " + data.selected.length)
-        
-        // Try catch used to catch error whe selecting a treeview item with no data type eg. root - Lachlan
+
+        // Try catch used to catch error whe selecting a treeview item with no data type eg. root
         
         try{
             console.log("Selected Data: " + data.node.data)
@@ -558,6 +560,10 @@ export class ContainmentTree extends React.Component {
             console.log(e instanceof TypeError)
             console.log("If True, this is a type error, If the selected object should be selectable, this is an issue")
         }
+
+        //used to update the temporary selection classes
+        document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey = getCurrentRenderKey()}).text
+        document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey = getCurrentModel()}).text
 
     }
 
