@@ -336,8 +336,8 @@ export class MainProgramClass extends React.Component {
                 <div className="LowerPanel">
                     <LeftMenu setMode = {this.setMode} setLeftMenu = {this.setLeftMenu} mainState = {this.state} className = "LeftMenus"/>
                     {/*following 2 classes are temporary for displaying currently selected model and container */}
-                    <input className="SelectedContainer" id="SelectedContainer" type = "text" name = "selectedContainer" value = "select a container" readonly='readonly'/>
-                    <input className="SelectedModel" id="SelectedModel" type = "text" name = "selectedModel" value = "select a model" readonly='readonly'/>
+                    <input className="SelectedContainer" id="SelectedContainer" type = "text" name = "selectedContainer"  readonly='readonly'/>
+                    <input className="SelectedModel" id="SelectedModel" type = "text" name = "selectedModel"  readonly='readonly'/>
                     <div className="Canvas">
                         <Canvas setLeftMenu = {this.setLeftMenu} setMode = {this.setMode} mainState = {this.state}/>
                     </div>
