@@ -77,6 +77,8 @@ function render_on_add_folder_or_container() {
 let folderAltered = false;
 let modelAltered = false;
 
+
+
 export function handleAddFolder(folderName){
     //Create a new folder using the known node type
 
@@ -279,6 +281,8 @@ export class ContainmentTree extends React.Component {
             console.log(currentObjects);
             console.log(treeData);
             console.log(currentObjects.flatten())
+            setNewRenderKey(1);
+            setNewModel(1);
         }
 
         
@@ -562,8 +566,9 @@ export class ContainmentTree extends React.Component {
         }
 
         //used to update the temporary selection classes
-        document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey = getCurrentRenderKey()}).text
-        document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey = getCurrentModel()}).text
+        document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
+        document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
+        console.log(modelObjects)
 
     }
 
