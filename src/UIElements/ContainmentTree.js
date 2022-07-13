@@ -11,10 +11,11 @@ import TreeView from 'react-simple-jstree';
 
 import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey, 
     getTotalRenderKeys, incrementTotalRenderKeys, 
-    getCurrentModel, setNewModel, getTotalModels, incrementTotalModels, decreaseTotalModels, decreaseTotalRenderKeys} from "./CanvasDraw";
+    getCurrentModel, setNewModel, getTotalModels, incrementTotalModels, decreaseTotalModels, decreaseTotalRenderKeys, deleteElement} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
-import { VertexNode } from "../DataStructures/Graph";
+import { remove } from "../DataStructures/Graph";
+import { Remove } from '@material-ui/icons';
 
 
 //import {currentRenderKey} from './CanvasDraw';
@@ -113,14 +114,39 @@ export function handleAddFolder(folderName){
 }
 
 // Function to remove a folder in the tree
-export function handleDeleteFolder(folderName){
+export function handleDeleteFolder(selectedRenderKey){ // changing the deleting functions to delete based on renderkey & modelkeys - cooper
     for (let i = 0; i < folderData.length; i++){
-        if (folderData[i].text === folderName){
+        if (folderData[i].renderKey === selectedRenderKey){
+            deleteFolderChildren(folderData[i]);
+            decoyFolderData.splice(i,1); // have to delete from this array as well because this is where folders obtain the data of themselves 
             folderData.splice(i,1); 
         }
     }
-    decreaseTotalRenderKeys();
+    
     folderAltered = true;
+}
+
+function deleteFolderChildren(selectedFolder){ // function for deleting all the children of a folder.
+    let folderChildren = selectedFolder.children;
+    for (let i = 0; i < folderChildren.length; i++){
+         let selectedModelKey = folderChildren[i].modelKey;
+         handleDeleteModel(selectedModelKey);
+    }
+}
+
+function deleteModelChildren(selectedModel){ // function for deleting all the children of the model.
+    if(selectedModel.children.length > 0){
+        let verticesFolder = selectedModel.children;
+        for (let i = 0; i < verticesFolder.length; i++){ // had to make a nested for loop due to the encompassing 'vertices' folder
+            let vertices = verticesFolder[i].children;
+            for (let v = 0; v < vertices.length; v++){
+                if (vertices[v].modelkey === selectedModel.modelKey){
+                    let chosenObject = vertices[v].data
+                    deleteElement(chosenObject);
+                }
+            }    
+        }
+    }   
 }
 // Added optional parameter render key, atm used to handle create a model with no folder selected - Lachlan
 export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
@@ -155,17 +181,23 @@ export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
 
 }
 
-export function handleDeleteModel(modelName){
+export function handleDeleteModel(selectedModelKey){
 
     for (let i = 0; i < modelObjects.length; i++){
-        if (modelObjects[i].text === modelName){
-
-            modelObjects.splice(i,1); 
-
+        if (modelObjects[i].modelKey === selectedModelKey){
+            console.log("model deleted below")
+            console.log(modelObjects[i])
+            deleteModelChildren(modelObjects[i]);
+            modelObjects.splice(i, 1);
+            decoyModelObjects.splice(i, 1);
         }
     }
-    decreaseTotalModels(); 
+    
 }
+
+
+
+
 
 // This is a function to display the path of a given vertex
 // It's called in the left menu of a vertex
@@ -229,6 +261,8 @@ export class ContainmentTree extends React.Component {
         let i = 0;
         
         if (initialFolderAdded === false){
+            setNewRenderKey(1);
+            setNewModel(1);
             handleAddFolder("This is an initial container");
             //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
             handleAddModel("This is an initial model",1) 
@@ -492,7 +526,7 @@ export class ContainmentTree extends React.Component {
                 console.log("The selected model is: " + data.node.data.text)
                 //console.log("The current folder is: " + data.node.data.renderKey)
                 setNewModel(data.node.data.modelKey);
-                console.log("The model key is now " + data.node.data.modelKey); // there were issues here with camelCasing causing no modelKey to be selected- cooper
+                console.log("The model key is now " + getCurrentModel()); // there were issues here with camelCasing causing no modelKey to be selected- cooper
                 //setNewRenderKey(data.node.data.renderKey)
                 setNewRenderKey(data.node.data.renderKey); // automatically sets the renderkey to be the same as the models as this was causing issues - cooper
                 console.log("The render key is now " + data.node.data.renderKey);

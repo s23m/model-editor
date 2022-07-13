@@ -134,6 +134,7 @@ export class LeftMenu extends React.Component{
         }
 
         if (e.keyCode === 46){
+            console.log(this.state.selectedObject);
             deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"});
         }
 
