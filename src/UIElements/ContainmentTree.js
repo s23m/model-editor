@@ -86,7 +86,7 @@ export function handleAddFolder(folderName){
     incrementTotalRenderKeys();
 
     let tempFolderThing = {
-        text: folderName,
+        text: folderName + "&#128193;",
         children: treeData[getTotalRenderKeys()],
         data: NaN,
         state: {opened: true},
@@ -97,7 +97,7 @@ export function handleAddFolder(folderName){
     decoyFolderData.push(tempFolderThing)
 
     let folderThing2 = {
-        text: folderName,
+        text: folderName + "&#128193;",
         children: treeData[getTotalRenderKeys()],
         data: decoyFolderData[folderData.length],
         state: {opened: true},
@@ -117,15 +117,18 @@ export function handleAddFolder(folderName){
 
 // Function to remove a folder in the tree
 export function handleDeleteFolder(selectedRenderKey){ // changing the deleting functions to delete based on renderkey & modelkeys - cooper
-    for (let i = 0; i < folderData.length; i++){
-        if (folderData[i].renderKey === selectedRenderKey){
-            deleteFolderChildren(folderData[i]);
-            decoyFolderData.splice(i,1); // have to delete from this array as well because this is where folders obtain the data of themselves 
-            folderData.splice(i,1); 
+    if(folderData.length > 1){ //cannot delete folder if it is the only one excluding root - Lachlan
+        for (let i = 0; i < folderData.length; i++){
+            if (folderData[i].renderKey === selectedRenderKey){
+                deleteFolderChildren(folderData[i]);
+                decoyFolderData.splice(i,1); // have to delete from this array as well because this is where folders obtain the data of themselves 
+                folderData.splice(i,1); 
+            }
         }
-    }
     
     folderAltered = true;
+    }
+    else{console.log("Cannot delete only folder")}
 }
 
 function deleteFolderChildren(selectedFolder){ // function for deleting all the children of a folder.
@@ -154,7 +157,7 @@ function deleteModelChildren(selectedModel){ // function for deleting all the ch
 export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
     incrementTotalModels();
     let decoyModelThing = {
-        text: modelName,
+        text: modelName + "&#128200",
         children: [],
         data: NaN,
         state: {opened: true},
@@ -166,7 +169,7 @@ export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
 
 
     let tempModelThing = {
-        text: modelName,
+        text: modelName + "&#128200",
         children: [],
         data: decoyModelObjects[modelObjects.length],
         state: {opened: true},
