@@ -62,9 +62,7 @@ export function incrementTotalRenderKeys() {
     totalRenderKeys = totalRenderKeys += 1;
 }
 
-export function decreaseTotalRenderKeys() { // created function to decrease the total render keys whenever folder is deleted - cooper
-    totalRenderKeys = totalRenderKeys -= 1;
-}
+
 // --- Model Key Stuff --- //
 
 export function getCurrentModel() {
@@ -83,9 +81,7 @@ export function incrementTotalModels() {
     totalModels = totalModels += 1;
 }
 
-export function decreaseTotalModels() { // created function to decrease the model count whenever models deleted - cooper
-    totalModels = totalModels -=1;
-}
+
 // Arrow Path
 export var arrowPath = [];
 let lastX = 0;
