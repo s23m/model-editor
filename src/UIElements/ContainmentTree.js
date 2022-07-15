@@ -357,7 +357,7 @@ export class ContainmentTree extends React.Component {
 
                                 //Push the proper vertex or edge folder
                                 let CVertexObj = {
-                                    text: "Vertices",
+                                    text: "Vertices " ,
                                     children: objName,
                                     data: null,
                                     state: {opened: true}
