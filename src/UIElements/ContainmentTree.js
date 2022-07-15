@@ -14,7 +14,7 @@ import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey,
     getCurrentModel, setNewModel, getTotalModels, incrementTotalModels, decreaseTotalModels, decreaseTotalRenderKeys, deleteElement} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
-import { remove } from "../DataStructures/Graph";
+import { remove,toTreeViewElement } from "../DataStructures/Graph";
 import { Remove } from '@material-ui/icons';
 
 
@@ -86,7 +86,7 @@ export function handleAddFolder(folderName){
     incrementTotalRenderKeys();
 
     let tempFolderThing = {
-        text: folderName,
+        text: folderName + " &#128193;",
         children: treeData[getTotalRenderKeys()],
         data: NaN,
         state: {opened: true},
@@ -97,7 +97,7 @@ export function handleAddFolder(folderName){
     decoyFolderData.push(tempFolderThing)
 
     let folderThing2 = {
-        text: folderName,
+        text: folderName + " &#128193;",
         children: treeData[getTotalRenderKeys()],
         data: decoyFolderData[folderData.length],
         state: {opened: true},
@@ -117,15 +117,18 @@ export function handleAddFolder(folderName){
 
 // Function to remove a folder in the tree
 export function handleDeleteFolder(selectedRenderKey){ // changing the deleting functions to delete based on renderkey & modelkeys - cooper
-    for (let i = 0; i < folderData.length; i++){
-        if (folderData[i].renderKey === selectedRenderKey){
-            deleteFolderChildren(folderData[i]);
-            decoyFolderData.splice(i,1); // have to delete from this array as well because this is where folders obtain the data of themselves 
-            folderData.splice(i,1); 
+    if(folderData.length > 1){ //cannot delete folder if it is the only one excluding root - Lachlan
+        for (let i = 0; i < folderData.length; i++){
+            if (folderData[i].renderKey === selectedRenderKey){
+                deleteFolderChildren(folderData[i]);
+                decoyFolderData.splice(i,1); // have to delete from this array as well because this is where folders obtain the data of themselves 
+                folderData.splice(i,1); 
+            }
         }
-    }
     
     folderAltered = true;
+    }
+    else{console.log("Cannot delete only folder")}
 }
 
 function deleteFolderChildren(selectedFolder){ // function for deleting all the children of a folder.
@@ -154,7 +157,7 @@ function deleteModelChildren(selectedModel){ // function for deleting all the ch
 export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
     incrementTotalModels();
     let decoyModelThing = {
-        text: modelName,
+        text: modelName + " &#128200",
         children: [],
         data: NaN,
         state: {opened: true},
@@ -166,7 +169,7 @@ export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
 
 
     let tempModelThing = {
-        text: modelName,
+        text: modelName + " &#128200",
         children: [],
         data: decoyModelObjects[modelObjects.length],
         state: {opened: true},
@@ -295,19 +298,36 @@ export class ContainmentTree extends React.Component {
                 if (folder.renderKey !== undefined){
                     renderIndex = folder.renderKey;
                 }
+                
 
                 for (let model of treeData){
                     let modelIndex = 0;
                     if (model.modelKey !== undefined){
                         modelIndex = model.renderKey;
                     }
+                    console.log("Arrow testing ",currentObjects)
                     for (let vertex of currentObjects.flattenVertexNodes()){
-                        if (vertex.toTreeViewElement("Vertex Folder", renderIndex) !== undefined && model.renderKey === renderIndex && model.modelKey === modelIndex)
-                        model.children = vertex.toTreeViewElement("Vertex Folder", renderIndex)
+
+
+                        //Reverted the graph fix for the iteration problem caused by directly assigning model children as manually assigning the vertex folder 
+                        //to index 0 and the arrow folder to index 1 (creating an interable by default) fixes this issue and prevents the folders overwriting eachother - Lachlan
+
+                        if (vertex.toTreeViewElement("Vertex Folder", renderIndex) !== undefined && model.renderKey === renderIndex && model.modelKey === modelIndex){
+                        console.log("a vertexorarrow: ",vertex)
+                        model.children[0] = vertex.toTreeViewElement("Vertex Folder", renderIndex)
+                        }
+
+                        if (vertex.toTreeViewElement("Arrow Folder", renderIndex) !== undefined && model.renderKey === renderIndex && model.modelKey === modelIndex){
+                            console.log("a vertexorarrow: ",vertex)
+                            model.children[1] = vertex.toTreeViewElement("Arrow Folder", renderIndex)
+                        }
+                        
+                        console.log("model children: ",model.children)
                     }
 
 
                 }
+
 
 
             }
@@ -315,13 +335,11 @@ export class ContainmentTree extends React.Component {
             console.log(currentObjects);
             console.log(treeData);
             console.log(currentObjects.flatten())
-            setNewRenderKey(1);
-            setNewModel(1);
         }
 
         
         else if (focussed === true){
-            //let overallContainer = getModelName();
+            let overallContainer = getModelName();
             let container = [];
             let vertOrEdge = [];
             let objName = [];
@@ -354,7 +372,7 @@ export class ContainmentTree extends React.Component {
 
                                 //Push the proper vertex or edge folder
                                 let CVertexObj = {
-                                    text: "Vertices",
+                                    text: "Vertices " ,
                                     children: objName,
                                     data: null,
                                     state: {opened: true}
@@ -456,6 +474,7 @@ export class ContainmentTree extends React.Component {
             //First, we need to actually determine where the vertex is
             //Take a look at our container
             for (let cont of folderData){
+                console.log("This is active test ". cont)
                 //console.log("folder text: " + cont.text)
                 //Take a look at the children of the containers (arrows and such)
                 for (let treeDat of cont.children){

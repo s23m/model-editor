@@ -475,6 +475,7 @@ export class LeftMenu extends React.Component{
 
         }else if (this.state.menu === LeftMenuType.Arrow) {
             console.log("Arrow Selected");
+            console.log(this.state.selectedObject)
 
             if(this.state.selectedObject.edgeType === Tool.Edge){
 

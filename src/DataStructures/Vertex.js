@@ -11,7 +11,7 @@ export var defaultMinimumSize = 30;
 
 export class Vertex {
 
-    constructor(title, content, x, y, width, height, semanticIdentity) {
+    constructor(title = "unnamed", content, x, y, width, height, semanticIdentity) {
         this.typeName = "Vertex";
 
         if (semanticIdentity !== undefined){
@@ -21,6 +21,7 @@ export class Vertex {
         }
 
         this.title = title;
+        this.icon = "&#8414";
         this.content = content;
         this.x = x;
         this.y = y;

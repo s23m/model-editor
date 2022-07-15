@@ -131,7 +131,12 @@ export class VertexNode {
         //Then, the vertices and arrows folder nodes can display their appropriate children.
         let ArrowChildren = [];
         let VertexChildren = [];
+
+        //These are no longer needed due to rework of assigning model children - Lachlan
+        /*
         let verticies = []; // need to store the 'verticies folder' in an array for it to be iterable in a for loop - cooper
+        let arrows = []; // same issue as vertices not being iterable - Lachlan
+        */
         
         
 
@@ -180,6 +185,18 @@ export class VertexNode {
                 }
 
             }
+
+            return{
+                text: "Vertices",
+                children: VertexChildren,
+                data: null,
+                state: { opened: true },
+                type: "Vertex Folder"
+            }
+        }
+
+        //No longer necessary due to the rework of assigning model children - Lachlan
+            /*
             let verticiesObject = { // push the vertex folder into an array of vertex folders - cooper
                 text: "Vertices",
                 children: VertexChildren,
@@ -193,9 +210,10 @@ export class VertexNode {
                 
             
         }
+        */
 
         //same as above if statement but for arrows
-        else if (returnOption === "ArrowFolder"){
+        else if (returnOption === "Arrow Folder"){ //same thing but arrows folder - Lachlan
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
                 if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
@@ -241,21 +259,34 @@ export class VertexNode {
 
                     ArrowChildren.push(tempTreeObj);
                     
-    
-                    
                 }
 
             }
 
-
-            return{
+            return {
                 text: "Arrows",
                 children: ArrowChildren,
                 data: null,
                 state: { opened: true },
-                type: "ArrowFolder"
+                type: "Arrow Folder"
             }
         }
+
+        //No longer necessary due to the rework of assigning model children - Lachlan
+            /*
+            let arrowsObject = { //create the arrows folder as an object to push to the arrows array - Lachlan
+                text: "Arrows",
+                children: ArrowChildren,
+                data: null,
+                state: { opened: true },
+                type: "Arrow Folder"
+            }
+
+            arrows.push(arrowsObject)
+            //vertices folder
+            return arrows
+        }
+            */
             
         
         //This down here is for vertex heirarchy stuff, not really needed anymore.
