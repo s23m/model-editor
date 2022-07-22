@@ -125,8 +125,8 @@ export class VertexNode {
         return false;
     }
 
-    toTreeViewElement(returnOption, parsedRenderKey) {
-        console.log("toTreeViewElement called successfully")
+    toTreeViewElement(returnOption, parsedRenderKey, parsedModelKey) { //added the model key parameter to we can specifiy what models vertexes belong to
+        //console.log("toTreeViewElement called successfully")
         //Pretty much everything that's currently on the canvas is searched and then converted into the tree appropriate struct in the below if else statements.
         //Then, the vertices and arrows folder nodes can display their appropriate children.
         let ArrowChildren = [];
@@ -138,10 +138,7 @@ export class VertexNode {
         let arrows = []; // same issue as vertices not being iterable - Lachlan
         */
         
-        
 
-        for (let element in currentObjects.flatten()){
-        }
 
         //Check which folder we're sticking these things into
         if (returnOption === "Vertex Folder"){                  // they had a different spelling for vertex folder :DDDDD - cooper
@@ -150,6 +147,7 @@ export class VertexNode {
 
                 //We onlt want the vertices in this folder
                 if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
+                    if(currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getModelKey() === parsedModelKey){
                     //Set the append the name of the path to include the vertex name
                     if(currentObjects.flatten()[i].title === ""){
                         this.setVertexTreePath("Unnamed Vertex");
@@ -158,6 +156,8 @@ export class VertexNode {
                     else{
                         this.setVertexTreePath(currentObjects.flatten()[i].title);
                     }
+                
+                
 
 
                     //Create the appropriate struct for a tree view element from the vertex data
@@ -182,9 +182,10 @@ export class VertexNode {
                     //           +-- Unnamed Vertex   
                     
                     VertexChildren.push(tempTreeObj);
-                }
 
+                }
             }
+        }
 
             return{
                 text: "Vertices",

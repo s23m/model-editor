@@ -15,7 +15,7 @@ import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey,
 
 import { drawAll } from "./CanvasDraw";
 import { remove,toTreeViewElement } from "../DataStructures/Graph";
-import { Remove } from '@material-ui/icons';
+import { ContactsOutlined, Remove } from '@material-ui/icons';
 
 
 //import {currentRenderKey} from './CanvasDraw';
@@ -107,9 +107,9 @@ export function handleAddFolder(folderName){
     
     //console.log("theActualData: " + folderData.length)
     folderData.push(folderThing2);
-    console.log("Folder data apparent: " + folderData[folderData.length-1].data)
-    console.log(folderData)
-    console.log(folderThing2.renderKey)
+    //console.log("Folder data apparent: " + folderData[folderData.length-1].data)
+    //console.log(folderData)
+    //console.log(folderThing2.renderKey)
 
     folderAltered = true;
     
@@ -129,6 +129,7 @@ export function handleDeleteFolder(selectedRenderKey){ // changing the deleting 
     folderAltered = true;
     }
     else{console.log("Cannot delete only folder")}
+    
 }
 
 function deleteFolderChildren(selectedFolder){ // function for deleting all the children of a folder.
@@ -154,11 +155,12 @@ function deleteModelChildren(selectedModel){ // function for deleting all the ch
     }   
 }
 // Added optional parameter render key, atm used to handle create a model with no folder selected - Lachlan
+//initial "children" are to prevent erros caused by children initialy not being iterable - Lachlan
 export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
     incrementTotalModels();
     let decoyModelThing = {
         text: modelName + " &#128200",
-        children: [],
+        children: ["Vertices","Arrows"],
         data: NaN,
         state: {opened: true},
         type: "Model",
@@ -170,7 +172,7 @@ export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
 
     let tempModelThing = {
         text: modelName + " &#128200",
-        children: [],
+        children: ["Vertices","Arrows"],
         data: decoyModelObjects[modelObjects.length],
         state: {opened: true},
         type: "Model",
@@ -293,48 +295,41 @@ export class ContainmentTree extends React.Component {
                    // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
                 }
             for (let folder of folderData){ // this for loop is to define the ownership of the vertices & arrows - cooper
-                let renderIndex = 0;
-
-                if (folder.renderKey !== undefined){
-                    renderIndex = folder.renderKey;
-                }
-                
-
                 for (let model of treeData){
-                    let modelIndex = 0;
-                    if (model.modelKey !== undefined){
-                        modelIndex = model.renderKey;
-                    }
-                    console.log("Arrow testing ",currentObjects)
-                    for (let vertex of currentObjects.flattenVertexNodes()){
 
+                    for (let vertex of currentObjects.flattenVertexNodes()){
 
                         //Reverted the graph fix for the iteration problem caused by directly assigning model children as manually assigning the vertex folder 
                         //to index 0 and the arrow folder to index 1 (creating an interable by default) fixes this issue and prevents the folders overwriting eachother - Lachlan
+                        //removed alot of the weird renames and unnesecary logic and changed it so that multiples vert/arrow folders can exist in a parent folder ie. one set per model 
+                        //and that verts/arrows are added only where they share a matching modelkey - Lachlan
 
-                        if (vertex.toTreeViewElement("Vertex Folder", renderIndex) !== undefined && model.renderKey === renderIndex && model.modelKey === modelIndex){
-                        console.log("a vertexorarrow: ",vertex)
-                        model.children[0] = vertex.toTreeViewElement("Vertex Folder", renderIndex)
+                        if (vertex.toTreeViewElement("Vertex Folder", folder.renderKey, model.modelKey) !== undefined && model.renderKey === folder.renderKey){
+                        //console.log("a vertexorarrow: ",vertex)
+                            model.children[0] = vertex.toTreeViewElement("Vertex Folder", folder.renderKey, model.modelKey)
+
                         }
 
-                        if (vertex.toTreeViewElement("Arrow Folder", renderIndex) !== undefined && model.renderKey === renderIndex && model.modelKey === modelIndex){
-                            console.log("a vertexorarrow: ",vertex)
-                            model.children[1] = vertex.toTreeViewElement("Arrow Folder", renderIndex)
+                        if (vertex.toTreeViewElement("Arrow Folder", folder.renderKey, model.modelKey) !== undefined && model.renderKey === folder.renderKey){
+                             //console.log("a vertexorarrow: ",vertex)
+                            model.children[1] = vertex.toTreeViewElement("Arrow Folder", folder.renderKey, model.modelKey)
                         }
-                        
-                        console.log("model children: ",model.children)
+                            
+                        //console.log(model.text," children: ",model.children)
+                        break; //break exists as for loop is leftover and useless but we need the "vertex" object to be able to call toTreeviewElement and currentObjects isnt always indexable
                     }
-
-
                 }
 
 
-
             }
+
+
+
             
-            console.log(currentObjects);
-            console.log(treeData);
-            console.log(currentObjects.flatten())
+            
+            //console.log(currentObjects);
+            //console.log(treeData);
+            //console.log(currentObjects.flatten())
         }
 
         
@@ -351,13 +346,13 @@ export class ContainmentTree extends React.Component {
                 //console.log("folder text: " + cont.text)
                 //Take a look at the children of the containers (arrows and such)
                 for (let treeDat of cont.children){
-                    console.log("treeDat text: " + treeDat.text)
+                    //console.log("treeDat text: " + treeDat.text)
                     //Why is the vertex folder coming up as undefined?????
-                    console.log(treeDat.children)
+                    //console.log(treeDat.children)
                     if(b === 0){
                         //console.log("SECOND LAYER: " + treeDat.children);
                         for (let treeElement of treeDat.children){
-                            console.log("Vertices text: " + treeElement)
+                            //console.log("Vertices text: " + treeElement)
                             if ((treeElement.text === currentlySelectedObject.title)){
                                 
                                 //console.log("A match was had")
@@ -474,32 +469,33 @@ export class ContainmentTree extends React.Component {
             //First, we need to actually determine where the vertex is
             //Take a look at our container
             for (let cont of folderData){
-                console.log("This is active test ". cont)
+                //console.log("This is active test ". cont)
                 //console.log("folder text: " + cont.text)
                 //Take a look at the children of the containers (arrows and such)
                 for (let treeDat of cont.children){
-                    console.log("treeDat text: " + treeDat.text) 
-                    console.log("num of rkeys is:", getTotalRenderKeys())
-                    console.log(folderData)
+                    //console.log("treeDat text: " + treeDat.text) 
+                    //console.log("num of rkeys is:", getTotalRenderKeys())
+                    //console.log(folderData)
                     //Why is the vertex folder coming up as undefined?????
-                    console.log(cont.children)
+                    //console.log(cont.children)
                     if(b === 0){
                         //console.log("SECOND LAYER: " + treeDat.children);
                         for (let treeElement of treeDat.children){
-                            console.log("Vertices text: " + treeElement)
-                            if ((treeElement.text === currentlySelectedObject.title)){
-                                
-                                nextLevel = cont.text;
-                                
-                                vertexOrEdge = "Vertices"
-                                
-                                actualObject = currentlySelectedObject.title
+                            //console.log("Vertices text: " + treeElement)
+                                if ((treeElement.text === currentlySelectedObject.title)){
+                                    
+                                    nextLevel = cont.text;
+                                    
+                                    vertexOrEdge = "Vertices"
+                                    
+                                    actualObject = currentlySelectedObject.title
 
-                                someVertexPath = highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject;
-                                b = 1;
+                                    someVertexPath = highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject;
+                                    b = 1;
 
-                            
-                            }
+                                
+                                }
+
                         }
                         
                     }
@@ -527,34 +523,36 @@ export class ContainmentTree extends React.Component {
         // Try catch used to catch error whe selecting a treeview item with no data type eg. root
         
         try{
-            console.log("Selected Data: " + data.node.data)
-            console.log("Selected Data: " + data.node.type)
-            console.log("Selected Type: " + data.node.data.type)
-            console.log("Selected Name: " + data.node.data.text)
+            //console.log("Selected Data 1: " + data.node.data)
+            //console.log("Selected type 1: " + data.node.original.type)
+            //console.log("Selected text 1: " + data.node.text)
+            //console.log(data.node)
+            //console.log("Selected Type 2: " + data.node.data.type)
+            //console.log("Selected Name 2: " + data.node.data.text)
             console.log(folderData);
             console.log(modelObjects);
             
 
-            if(data.node.data.type === "Vertex Folder"){
-                //do nothing
+            if(data.node.type === "Vertex Folder"){
+                //console.log("You clicked a vertex folder")
             }
 
             else if(data.node.data.type === "Folder"){
-                console.log("Clicked Folder: " + data.node.data.text)
+                //console.log("Clicked Folder: " + data.node.data.text)
                 setNewRenderKey(data.node.data.renderKey)
-                console.log("The render key is now " + data.node.data.renderKey);
+                //console.log("The render key is now " + data.node.data.renderKey);
 
 
             }
 
             else if (data.node.data.type === "Model"){
-                console.log("The selected model is: " + data.node.data.text)
+                //console.log("The selected model is: " + data.node.data.text)
                 //console.log("The current folder is: " + data.node.data.renderKey)
                 setNewModel(data.node.data.modelKey);
-                console.log("The model key is now " + getCurrentModel()); // there were issues here with camelCasing causing no modelKey to be selected- cooper
+                //console.log("The model key is now " + getCurrentModel()); // there were issues here with camelCasing causing no modelKey to be selected- cooper
                 //setNewRenderKey(data.node.data.renderKey)
                 setNewRenderKey(data.node.data.renderKey); // automatically sets the renderkey to be the same as the models as this was causing issues - cooper
-                console.log("The render key is now " + data.node.data.renderKey);
+                //console.log("The render key is now " + data.node.data.renderKey);
                 // Move everything away
                 for (let item of currentObjects.flatten()){
                     if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
@@ -574,7 +572,7 @@ export class ContainmentTree extends React.Component {
 
             else if (data.selected.length === 1 && data.node.data !== null && data.node.data.type === undefined) {
                 let UUID = data.node.data.semanticIdentity.UUID;
-                console.log("UUID: " + UUID)
+                //console.log("UUID: " + UUID)
                 for (let vertex of currentObjects.flatten()) {
                     if (vertex.semanticIdentity.UUID === UUID) {
                         //setNewRenderKey(vertex.getRenderKey())
@@ -614,14 +612,14 @@ export class ContainmentTree extends React.Component {
             drawAll();
         }
         catch(e){
-            console.log(e instanceof TypeError)
-            console.log("If True, this is a type error, If the selected object should be selectable, this is an issue")
+            //console.log(e instanceof TypeError)
+            //console.log("If True,a null type error has been caught, If the selected object should be selectable, this is an issue")
         }
 
-        //used to update the temporary selection classes
+        //used to update the currently selected model/folders fields - Lachlan
         document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
         document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
-        console.log(modelObjects)
+        //console.log(modelObjects)
 
     }
 
@@ -629,7 +627,7 @@ export class ContainmentTree extends React.Component {
 
     render() {
         const data = this.state.data;
-        console.log(data)
+        //console.log(data)
         /*
         if (this.state.selectedObject !== null){
             console.log("The old render key is: " + currentRenderKey);
