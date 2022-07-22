@@ -86,7 +86,7 @@ export function handleAddFolder(folderName){
     incrementTotalRenderKeys();
 
     let tempFolderThing = {
-        text: folderName + " &#128193;",
+        text: folderName + " &#128193",
         children: treeData[getTotalRenderKeys()],
         data: NaN,
         state: {opened: true},
@@ -97,7 +97,7 @@ export function handleAddFolder(folderName){
     decoyFolderData.push(tempFolderThing)
 
     let folderThing2 = {
-        text: folderName + " &#128193;",
+        text: folderName + " &#128193",
         children: treeData[getTotalRenderKeys()],
         data: decoyFolderData[folderData.length],
         state: {opened: true},
@@ -160,7 +160,7 @@ export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
     incrementTotalModels();
     let decoyModelThing = {
         text: modelName + " &#128200",
-        children: ["Vertices","Arrows"],
+        children: ["Vertices &#128193","Arrows &#128193"],
         data: NaN,
         state: {opened: true},
         type: "Model",
@@ -172,7 +172,7 @@ export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
 
     let tempModelThing = {
         text: modelName + " &#128200",
-        children: ["Vertices","Arrows"],
+        children: ["Vertices &#128193","Arrows &#128193"],
         data: decoyModelObjects[modelObjects.length],
         state: {opened: true},
         type: "Model",
