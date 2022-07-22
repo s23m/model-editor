@@ -125,8 +125,8 @@ export class VertexNode {
         return false;
     }
 
-    toTreeViewElement(returnOption, parsedRenderKey) {
-        console.log("toTreeViewElement called successfully")
+    toTreeViewElement(returnOption, parsedRenderKey, parsedModelKey) { //added the model key parameter to we can specifiy what models vertexes belong to
+        //console.log("toTreeViewElement called successfully")
         //Pretty much everything that's currently on the canvas is searched and then converted into the tree appropriate struct in the below if else statements.
         //Then, the vertices and arrows folder nodes can display their appropriate children.
         let ArrowChildren = [];
@@ -138,10 +138,7 @@ export class VertexNode {
         let arrows = []; // same issue as vertices not being iterable - Lachlan
         */
         
-        
 
-        for (let element in currentObjects.flatten()){
-        }
 
         //Check which folder we're sticking these things into
         if (returnOption === "Vertex Folder"){                  // they had a different spelling for vertex folder :DDDDD - cooper
@@ -150,6 +147,7 @@ export class VertexNode {
 
                 //We onlt want the vertices in this folder
                 if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
+                    if(currentObjects.flatten()[i].getModelKey() === parsedModelKey){
                     //Set the append the name of the path to include the vertex name
                     if(currentObjects.flatten()[i].title === ""){
                         this.setVertexTreePath("Unnamed Vertex");
@@ -158,6 +156,8 @@ export class VertexNode {
                     else{
                         this.setVertexTreePath(currentObjects.flatten()[i].title);
                     }
+                
+                
 
 
                     //Create the appropriate struct for a tree view element from the vertex data
@@ -182,12 +182,13 @@ export class VertexNode {
                     //           +-- Unnamed Vertex   
                     
                     VertexChildren.push(tempTreeObj);
-                }
 
+                }
             }
+        }
 
             return{
-                text: "Vertices",
+                text: "Vertices &#128193",
                 children: VertexChildren,
                 data: null,
                 state: { opened: true },
@@ -212,65 +213,72 @@ export class VertexNode {
         }
         */
 
-        //same as above if statement but for arrows
+        //same typo as above if statement but for arrows
         else if (returnOption === "Arrow Folder"){ //same thing but arrows folder - Lachlan
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
                 if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
-
-                    // Find the source and destination vertex as Keith defined in spec
-                    let ourSourceEnd = currentObjects.flatten()[i].pathData[1][1]
-                    let ourDestEnd = currentObjects.flatten()[i].pathData[0][1]
-
-                    let textSource = "N/A"
-                    let textDest = "N/A"
-                    let finalString = "N/A"
-
-                    // Looking through all of the current objects and matching the uuids
-                    for (let j = 0; j <currentObjects.flatten().length; j++){
-                    
-                        let someObject = currentObjects.flatten()[j]
+                    console.log("arrow key")
+                    console.log(currentObjects.flatten()[i].getModelKey())
+                    console.log(parsedModelKey)
+                    if(currentObjects.flatten()[i].getModelKey() === parsedModelKey){
                         
-                        if (someObject.typeName === "Vertex"){
-                        
-                            if (ourSourceEnd === someObject.semanticIdentity.UUID){
-                                console.log("Matched1")
-                                textDest = someObject.title
-                            }
 
-                            else if (ourDestEnd === someObject.semanticIdentity.UUID){
-                                console.log("Matched2")
-                                textSource = someObject.title
+                        // Find the source and destination vertex as Keith defined in spec
+                        let ourSourceEnd = currentObjects.flatten()[i].pathData[1][1]
+                        let ourDestEnd = currentObjects.flatten()[i].pathData[0][1]
+
+                        let textSource = "N/A"
+                        let textDest = "N/A"
+                        let finalString = "N/A"
+
+                        // Looking through all of the current objects and matching the uuids
+                        for (let j = 0; j <currentObjects.flatten().length; j++){
+                        
+                            let someObject = currentObjects.flatten()[j]
+                            
+                            if (someObject.typeName === "Vertex"){
+                            
+                                if (ourSourceEnd === someObject.semanticIdentity.UUID){
+                                    console.log("Matched1")
+                                    textDest = someObject.title
+                                }
+
+                                else if (ourDestEnd === someObject.semanticIdentity.UUID){
+                                    console.log("Matched2")
+                                    textSource = someObject.title
+                                }
                             }
+                            
                         }
+
+                        finalString = textSource + " to " + textDest
                         
+                        let tempTreeObj = {
+                            text: currentObjects.flatten()[i].typeName + " - " + finalString,
+                            children: [],
+                            data: currentObjects.flatten()[i],
+                            renderkey: currentObjects.flatten()[i].getRenderKey(),
+                            modelkey: currentObjects.flatten()[i].getModelKey(),
+                            state: {opened: false}
+                        };
+
+                        ArrowChildren.push(tempTreeObj);
+                    
                     }
-
-                    finalString = textSource + " to " + textDest
-                    
-                    let tempTreeObj = {
-                        text: currentObjects.flatten()[i].typeName + " - " + finalString,
-                        children: [],
-                        data: currentObjects.flatten()[i],
-                        renderkey: currentObjects.flatten()[i].getRenderKey(),
-                        modelkey: currentObjects.flatten()[i].getModelKey(),
-                        state: {opened: false}
-                    };
-
-                    ArrowChildren.push(tempTreeObj);
-                    
                 }
 
             }
 
             return {
-                text: "Arrows",
+                text: "Arrows &#128193",
                 children: ArrowChildren,
                 data: null,
                 state: { opened: true },
                 type: "Arrow Folder"
             }
         }
+    
 
         //No longer necessary due to the rework of assigning model children - Lachlan
             /*
