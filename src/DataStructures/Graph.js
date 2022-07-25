@@ -218,9 +218,11 @@ export class VertexNode {
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
                 if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
-                    console.log("arrow key")
-                    console.log(currentObjects.flatten()[i].getModelKey())
-                    console.log(parsedModelKey)
+                    //console.log("arrow key")
+                    //console.log(currentObjects.flatten()[i].getModelKey())
+                    //console.log(parsedModelKey)
+
+
                     if(currentObjects.flatten()[i].getModelKey() === parsedModelKey){
                         
 
@@ -252,8 +254,36 @@ export class VertexNode {
                             
                         }
 
-                        finalString = textSource + " to " + textDest
-                        
+                        //this array stores whether source/destination is Navigable/Aggregation so we can display the required icons in the tree
+                        //array is ordered source nav, dest nav, source agg, dest agg 
+                        //if adding more properties, such ass a dotted arrow, just increase array size and adjust the if statements for constructing icon
+                        let treeAppearanceSwitches = [false,false,false,false]
+                        treeAppearanceSwitches[0] = currentObjects.flatten()[i].getNavigable(0)
+                        treeAppearanceSwitches[1] = currentObjects.flatten()[i].getNavigable(1)
+                        treeAppearanceSwitches[2] = currentObjects.flatten()[i].getAggregation(0)
+                        treeAppearanceSwitches[3] = currentObjects.flatten()[i].getAggregation(1)
+                        console.log(treeAppearanceSwitches);
+                        //unicode icon of the arrow properties/relations we want to display
+                        let arrowIcon = "";
+
+                        if(treeAppearanceSwitches[2] === true){
+                            arrowIcon = "&#9670"
+                            }
+                        else if(treeAppearanceSwitches[0] === true){
+                            arrowIcon = "&#10229"
+                        }
+
+                        arrowIcon += "&#8213"
+
+                        if(treeAppearanceSwitches[3] === true){
+                            arrowIcon += "&#9670"
+                            }
+                        else if(treeAppearanceSwitches[1] === true){
+                            arrowIcon += "&#10230"
+                        }
+
+                        finalString = textSource + " " + arrowIcon + " " + textDest
+
                         let tempTreeObj = {
                             text: currentObjects.flatten()[i].typeName + " - " + finalString,
                             children: [],
