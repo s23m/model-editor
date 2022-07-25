@@ -194,7 +194,7 @@ export function deleteElement(element) {
 //this here deletes any arrows connected to the vertex before deleting the vertex to get around this
 export function vertexDeleteElement(element) {
     //find the UUID of the vertex for arrow dest and source matching
-    let selectedVertUUID = element.semanticIdentity.UUID;
+    //let selectedVertUUID = element.semanticIdentity.UUID;
 
     //Get the arrow UUID's
     let sourceUUIDs = currentObjects.ArrowUUIDSource(element);

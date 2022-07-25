@@ -14,8 +14,8 @@ import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey,
     getCurrentModel, setNewModel, getTotalModels, incrementTotalModels, decreaseTotalModels, decreaseTotalRenderKeys, deleteElement} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
-import { remove,toTreeViewElement } from "../DataStructures/Graph";
-import { ContactsOutlined, Remove } from '@material-ui/icons';
+//import { remove,toTreeViewElement } from "../DataStructures/Graph";
+//import { ContactsOutlined, Remove } from '@material-ui/icons';
 
 
 //import {currentRenderKey} from './CanvasDraw';
@@ -265,7 +265,7 @@ export class ContainmentTree extends React.Component {
         super(props);
 
         treeData = []; 
-        let i = 0;
+        //let i = 0;
         
         if (initialFolderAdded === false){
             setNewRenderKey(1);
@@ -284,11 +284,6 @@ export class ContainmentTree extends React.Component {
                 
             }
             for (let folder of folderData){ // this for loop is to define the ownership of the models - cooper
-                let renderIndex = 0;
-
-                if (folder.renderKey !== undefined){
-                    renderIndex = folder.renderKey;
-                }
                 for (let folder of folderData){
                     folder.children = determineOwnership(folder.renderKey)   
                 }
@@ -334,7 +329,7 @@ export class ContainmentTree extends React.Component {
 
         
         else if (focussed === true){
-            let overallContainer = getModelName();
+            //let overallContainer = getModelName();
             let container = [];
             let vertOrEdge = [];
             let objName = [];

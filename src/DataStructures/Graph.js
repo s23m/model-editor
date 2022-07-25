@@ -13,8 +13,8 @@ export class VertexNode {
         this.typeName = "Vertex";
 
         //The path of this particular vertex node for displaying on the tree view element
-        this.cleanObjectPath = getModelName() + "/" + "Vertices";
-        this.vertexObjectPath = getModelName() + "/" + "Vertices";
+        this.cleanObjectPath = (getModelName(),"/","Vertices")
+        this.vertexObjectPath = (getModelName(),"/","Vertices")
     }
 
     add(node) {
