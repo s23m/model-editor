@@ -284,11 +284,10 @@ export class ContainmentTree extends React.Component {
                 
             }
             for (let folder of folderData){ // this for loop is to define the ownership of the models - cooper
-                for (let folder of folderData){
                     folder.children = determineOwnership(folder.renderKey)   
                 }
                    // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
-                }
+                
             for (let folder of folderData){ // this for loop is to define the ownership of the vertices & arrows - cooper
                 for (let model of treeData){
 
