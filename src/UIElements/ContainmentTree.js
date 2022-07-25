@@ -78,6 +78,27 @@ function render_on_add_folder_or_container() {
 let folderAltered = false;
 let modelAltered = false;
 
+//This function is used to load the first available model and canvas from the modelObjects array
+//Used to fix thye tree/canvas desync bug when deleting - Lachlan
+function loadFirstModel(){
+    //set selected model/render key to the 1st available as so a canvas isnt loaded for a nonexistant model
+    setNewRenderKey(modelObjects[0].data.renderKey)
+    setNewModel(modelObjects[0].data.modelKey)
+
+    //taken from handleElementSelect for loading the new models canvas
+    for (let item of currentObjects.flatten()){
+        if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
+            item.setPresent();
+        }
+        else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
+            item.setAway();
+        }
+    }
+    drawAll()
+    document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
+    document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
+}
+
 
 
 export function handleAddFolder(folderName){
@@ -130,6 +151,7 @@ export function handleDeleteFolder(selectedRenderKey){ // changing the deleting 
     }
     else{console.log("Cannot delete only folder")}
     
+    loadFirstModel()
 }
 
 function deleteFolderChildren(selectedFolder){ // function for deleting all the children of a folder.
@@ -190,6 +212,7 @@ export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
 
 export function handleDeleteModel(selectedModelKey){
 
+
     for (let i = 0; i < modelObjects.length; i++){
         if (modelObjects[i].modelKey === selectedModelKey){
             console.log("model deleted below")
@@ -199,7 +222,8 @@ export function handleDeleteModel(selectedModelKey){
             decoyModelObjects.splice(i, 1);
         }
     }
-    
+
+    loadFirstModel()
 }
 
 
