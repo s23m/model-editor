@@ -65,7 +65,7 @@ export class MainProgramClass extends React.Component {
 
         div.style.backgroundColor = "#CFFFFF";
 
-        console.log("Mode set to: " + this.state.SelectedTool);
+        //console.log("Mode set to: " + this.state.SelectedTool);
 
         // This bit of code here updates the path for whatever vertex is being updated
         if (this.state.selectedObject !== null){
@@ -150,7 +150,7 @@ export class MainProgramClass extends React.Component {
             this.setState({ drawMode: "Container" })
         }
 
-        console.log(Tool[mode]);
+        //console.log(Tool[mode]);
 
         this.setState({SelectedTool: Tool[mode]});
 

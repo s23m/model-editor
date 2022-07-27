@@ -380,7 +380,7 @@ export class LeftMenu extends React.Component{
 
         if (this.state.menu === LeftMenuType.TreeView) {
             leftMenuContents = <ContainmentTree setLeftMenu = {this.props.setLeftMenu} />
-            console.log("A new tree has been created");
+            //console.log("A new tree has been created");
 
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();

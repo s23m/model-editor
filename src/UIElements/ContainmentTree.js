@@ -14,6 +14,7 @@ import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey,
     getCurrentModel, setNewModel, getTotalModels, incrementTotalModels, decreaseTotalModels, decreaseTotalRenderKeys, deleteElement} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
+import {VertexNode} from "../DataStructures/Graph.js"
 //import { remove,toTreeViewElement } from "../DataStructures/Graph";
 //import { ContactsOutlined, Remove } from '@material-ui/icons';
 
@@ -315,7 +316,9 @@ export class ContainmentTree extends React.Component {
             for (let folder of folderData){ // this for loop is to define the ownership of the vertices & arrows - cooper
                 for (let model of treeData){
 
-                    for (let vertex of currentObjects.flattenVertexNodes()){
+                    //for (let vertex of currentObjects.flattenVertexNodes()){ - Loop removes as onyl calls toTreeview when currentObjects is not empty - Lachlan
+                        let vertex = new VertexNode() //we need a vertex object to call the toTreeViewElement function, however the function ignores the calling vertex so we just make an 
+                        //empty one so that toTreeview will always be called regardless of what in "currentObjects" - Lachlan
 
                         //Reverted the graph fix for the iteration problem caused by directly assigning model children as manually assigning the vertex folder 
                         //to index 0 and the arrow folder to index 1 (creating an interable by default) fixes this issue and prevents the folders overwriting eachother - Lachlan
@@ -334,8 +337,8 @@ export class ContainmentTree extends React.Component {
                         }
                             
                         //console.log(model.text," children: ",model.children)
-                        break; //break exists as for loop is leftover and useless but we need the "vertex" object to be able to call toTreeviewElement and currentObjects isnt always indexable
-                    }
+                        //break; //break exists as for loop is leftover and useless but we need the "vertex" object to be able to call toTreeviewElement and currentObjects isnt always indexable
+                    //}
                 }
 
 
@@ -547,7 +550,9 @@ export class ContainmentTree extends React.Component {
             //console.log(data.node)
             //console.log("Selected Type 2: " + data.node.data.type)
             //console.log("Selected Name 2: " + data.node.data.text)
-            console.log(folderData);
+            //console.log(folderData);
+
+            console.log("model objects testing")
             console.log(modelObjects);
             
 
@@ -599,6 +604,22 @@ export class ContainmentTree extends React.Component {
                             
                             selectedVertex: vertex
                         });
+
+                        //The following is required to change canvas to the selected vertex's model preventing desync issues of tree and canvas - Lachlan
+                    
+                        setNewRenderKey(vertex.vertexRenderKey);
+                        setNewModel(vertex.vertexModelKey); 
+                        
+                        for (let item of currentObjects.flatten()){
+                            if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
+                                item.setPresent();
+                            }
+                            else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
+                                item.setAway();
+                            }
+                        }
+                    
+
                         this.props.setLeftMenu(this.state.selectedVertex);
 
                         // Set the current render key to whatever object the person has clicked from
