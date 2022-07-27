@@ -599,6 +599,24 @@ export class ContainmentTree extends React.Component {
                             
                             selectedVertex: vertex
                         });
+
+                        //The following is required to change canvas to the selected vertex's model preventing desync issues of tree and canvas - Lachlan
+                        console.log("desync testing")
+                        console.log(vertex)
+                        
+                        setNewRenderKey(vertex.vertexRenderKey);
+                        setNewModel(vertex.vertexModelKey); 
+                        
+                        for (let item of currentObjects.flatten()){
+                            if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
+                                item.setPresent();
+                            }
+                            else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
+                                item.setAway();
+                            }
+                        }
+                    
+
                         this.props.setLeftMenu(this.state.selectedVertex);
 
                         // Set the current render key to whatever object the person has clicked from
