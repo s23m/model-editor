@@ -55,7 +55,7 @@ export class Canvas extends React.Component {
                     // brings up the menu
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
                     canvasDraw.onMiddleClick(canvas, x, y,null,selectDown);
-                    console.log(selectDown);
+                    //console.log(selectDown);
 
                 } else {
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));

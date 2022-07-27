@@ -22,6 +22,7 @@ export class VertexNode {
     }
 
     remove(traversedVertices, node) {
+        console.log("remove is called")
         let isRemoved = false;
         traversedVertices.add(this);
 
@@ -33,7 +34,7 @@ export class VertexNode {
         for (let child of this.children) {
             if (!traversedVertices.has(child)) {
                 traversedVertices.add(child);
-                isRemoved |= child.remove(traversedVertices, node);
+                isRemoved = child.remove(traversedVertices, node);
             }
         }
 
@@ -131,6 +132,7 @@ export class VertexNode {
         //Then, the vertices and arrows folder nodes can display their appropriate children.
         let ArrowChildren = [];
         let VertexChildren = [];
+        console.log(currentObjects)
 
         //These are no longer needed due to rework of assigning model children - Lachlan
         /*
@@ -580,35 +582,41 @@ export class Graph {
 
     //Removes and object while shifting it's children's position in the tree
     remove(object) {
+        console.log("remove 2 is called")
+        //By this point rootVertices doesnt actually contain the vertex we want to delete which makes the isRemoved Logic hard to follow as has returns true when the item is present- Lachlan
+        console.log(this.rootVertices)
         if (object.constructor.name === "Vertex") {
-            object = this.getVertexNode(object);
-            let isRemoved = this.rootVertices.has(object);
+            let newobject = this.getVertexNode(object);
+            let isRemoved = this.rootVertices.has(newobject);
+            console.log(isRemoved)
+
 
             //Remove from the root
-            this.rootVertices.delete(object);
-            for (let child of object.children) {
+            this.rootVertices.delete(newobject);
+            for (let child of newobject.children) {
                 this.rootVertices.add(child);
             }
-            console.log("It removes from the root fine")
+            //console.log("It removes from the root fine")
+
             
             //Remove from anywhere deeper in the tree
             let traversedVertices = new Set();
             for (let vertexNode of this.rootVertices) {
                 if (!traversedVertices.has(vertexNode)) {
                     traversedVertices.add(vertexNode);
-                    isRemoved |= vertexNode.remove(traversedVertices, object);
+                    vertexNode.remove(traversedVertices, newobject);
+                    console.log(isRemoved)
                 }
             }
-            
             
             if (isRemoved) {
                 //Remove the vertex from being the source or dest of any arrow
                 for (let arrow of this.arrows) {
-                    if (arrow.sourceVertexNode !== null && arrow.sourceVertex.semanticIdentity.UUID === object.vertex.semanticIdentity.UUID) {
+                    if (arrow.sourceVertexNode !== null && arrow.sourceVertex.semanticIdentity.UUID === newobject.vertex.semanticIdentity.UUID) {
                         arrow.sourceVertexNode = null;
                     }
                     
-                    if (arrow.destVertexNode !== null && arrow.destVertex.semanticIdentity.UUID === object.vertex.semanticIdentity.UUID) {
+                    if (arrow.destVertexNode !== null && arrow.destVertex.semanticIdentity.UUID === newobject.vertex.semanticIdentity.UUID) {
                         arrow.destVertexNode = null;
                     }
                 }
@@ -618,20 +626,20 @@ export class Graph {
             return isRemoved;
 
         } else if (object.constructor.name === "Arrow") {
-            object = this.getArrowEdge(object);
+            let newobject = this.getArrowEdge(object);
 
-            if (object !== null) {
-                this.arrows.delete(object);
+            if (newobject !== null) {
+                this.arrows.delete(newobject);
                 //IF arrow has a sourceVertex AND destVertex
-                if (object.sourceVertexNode !== null && object.destVertexNode !== null) {
+                if (newobject.sourceVertexNode !== null && newobject.destVertexNode !== null) {
                     //IF there is no other arrow from sourceVertex to destVertex, remove the sourceVertex from the children of destVertex
                     //AND move the sourceVertex to root, if there is no other arrow with the same sourceVertex
                     let isEquivalentArrow = false;
                     let isArrowWithSameSource = false;
                     
                     for (let arrow of this.arrows) {
-                        let isEquivalentSource = arrow.sourceVertexNode !== null && arrow.sourceVertex.semanticIdentity.UUID === object.sourceVertex.semanticIdentity.UUID;
-                        let isEquivalentDest = arrow.destVertexNode !== null && arrow.destVertex.semanticIdentity.UUID === object.destVertex.semanticIdentity.UUID;
+                        let isEquivalentSource = arrow.sourceVertexNode !== null && arrow.sourceVertex.semanticIdentity.UUID === newobject.sourceVertex.semanticIdentity.UUID;
+                        let isEquivalentDest = arrow.destVertexNode !== null && arrow.destVertex.semanticIdentity.UUID === newobject.destVertex.semanticIdentity.UUID;
                         
                         if (isEquivalentSource && isEquivalentDest) {
                             isEquivalentArrow = true;
@@ -642,15 +650,15 @@ export class Graph {
                     }
                     
                     if (!isEquivalentArrow) {
-                        object.destVertexNode.removeFromChildren(object.sourceVertexNode);
+                        newobject.destVertexNode.removeFromChildren(newobject.sourceVertexNode);
                     }
                     if (!isArrowWithSameSource) {
-                        this.add(object.sourceVertexNode);
+                        this.add(newobject.sourceVertexNode);
                     }
 
                     //Remove vertex from the root if removing this arrow has resolved a cycle
-                    if (object.sourceVertexNode.has(new Set(), object.destVertexNode)) {
-                        this.rootVertices.delete(object.destVertexNode);
+                    if (newobject.sourceVertexNode.has(new Set(), newobject.destVertexNode)) {
+                        this.rootVertices.delete(newobject.destVertexNode);
                     }
                 }
 

@@ -178,7 +178,6 @@ export function drawAll() {
 }
 
 export function deleteElement(element) {
-
     if (element !== null) {
         if (!currentObjects.remove(element)) {
             console.error("Failed to delete object with UUID %s", element.semanticIdentity.UUID);
@@ -193,6 +192,7 @@ export function deleteElement(element) {
 //this is the same as the above, except when you're deleting a vertex with an arrow connected the edge connection code freaks out.
 //this here deletes any arrows connected to the vertex before deleting the vertex to get around this
 export function vertexDeleteElement(element) {
+    console.log("vDeleteE occurs")
     //find the UUID of the vertex for arrow dest and source matching
     //let selectedVertUUID = element.semanticIdentity.UUID;
 
@@ -206,7 +206,9 @@ export function vertexDeleteElement(element) {
 
     //Now that the arrows are out of the way, we're safe to delete the vertex (same code as above)
     if (element !== null) {
+        console.log("vdl if staement pass")
         if (!currentObjects.remove(element)) {
+            
             console.error("Failed to delete object with UUID %s", element.semanticIdentity.UUID);
         }
     } else {
@@ -508,7 +510,7 @@ export function onLeftMousePress(canvas, x, y) {
     if (canvas.tool === Tool.Select) {
         let index, arrow;
         [index, arrow] = findNearestArrowPointIndex(x, y);
-        console.log(index, arrow);
+        //console.log(index, arrow);
         if (arrow === getSelectedObject(canvas)) {
             if (index !== -1) {
                 resizing = true;
