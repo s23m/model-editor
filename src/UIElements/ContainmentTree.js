@@ -15,6 +15,7 @@ import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey,
 
 import { drawAll } from "./CanvasDraw";
 import {VertexNode} from "../DataStructures/Graph.js"
+import { ContactsOutlined } from '@material-ui/icons';
 //import { remove,toTreeViewElement } from "../DataStructures/Graph";
 //import { ContactsOutlined, Remove } from '@material-ui/icons';
 
@@ -36,6 +37,9 @@ let treeData = [];
 
 // I need this to store the folders. Initially, it has one folder simply titled 'Unnamed Folder'.
 let folderData = [];
+
+//This variable will be used to store the "selected folder" for creating new folders as renderKey is too ingrained in other functions to repurpose - Lachlan
+let selectedFolder = 0;
 
 // This is to do with getting the data indexing to be
 let decoyFolderData = [];
@@ -70,8 +74,8 @@ function loadFirstModel(){
 }
 
 
-
-export function handleAddFolder(folderName){
+//parent key is for dictating subfolders where 0 is root, else pKey is a folder renderKey - Lachlan
+export function handleAddFolder(folderName, parentKey = 0){
     //Create a new folder using the known node type
 
     incrementTotalRenderKeys();
@@ -82,7 +86,8 @@ export function handleAddFolder(folderName){
         data: NaN,
         state: {opened: true},
         type: "Folder",
-        renderKey: getTotalRenderKeys()
+        renderKey: getTotalRenderKeys(),
+        parentRenderKey: parentKey
     }
 
     decoyFolderData.push(tempFolderThing)
@@ -93,7 +98,8 @@ export function handleAddFolder(folderName){
         data: decoyFolderData[folderData.length],
         state: {opened: true},
         type: "Folder",
-        renderKey: getTotalRenderKeys()
+        renderKey: getTotalRenderKeys(),
+        parentRenderKey: parentKey
     }
     
     //console.log("theActualData: " + folderData.length)
@@ -252,6 +258,18 @@ function determineOwnership(parsedRenderKey){
     return returnArray
 }
 
+//function used for determineing which folders are owned by a higher folder - Lachlan
+function determineSubFolders(parsedRenderKey){
+    let returnArray = []
+    for (let folder of folderData){
+        if(folder.parentRenderKey === parsedRenderKey)
+        returnArray.push(folder)
+    }
+    //console.log("subfolder return")
+    //console.log(returnArray)
+    return returnArray
+}
+
 let initialFolderAdded = false;
 export class ContainmentTree extends React.Component {
 
@@ -268,6 +286,7 @@ export class ContainmentTree extends React.Component {
             //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
             handleAddModel("This is an initial model",1) 
             initialFolderAdded = true;
+            handleAddFolder("This is a test subfolder",getCurrentRenderKey())
         }
         
 
@@ -277,7 +296,15 @@ export class ContainmentTree extends React.Component {
             
         }
         for (let folder of folderData){ // this for loop is to define the ownership of the models - cooper
-                folder.children = determineOwnership(folder.renderKey)   
+                //folder.children = determineOwnership(folder.renderKey)  
+                //folder.children = determineSubFolders(folder.renderKey)
+                let canvasItems = determineOwnership(folder.renderKey) 
+                let subFolderItems = determineSubFolders(folder.renderKey)
+                let combinedItems = canvasItems.concat(subFolderItems)
+                console.log("test")
+                console.log(combinedItems)
+                folder.children = combinedItems;
+
             }
                // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
             
@@ -441,7 +468,7 @@ export class ContainmentTree extends React.Component {
             //console.log("Selected Type 2: " + data.node.data.type)
             //console.log("Selected Name 2: " + data.node.data.text)
             //console.log(folderData);
-            console.log(data)
+            console.log(data.node)
 
             
 
@@ -544,8 +571,24 @@ export class ContainmentTree extends React.Component {
             //console.log("If True,a null type error has been caught, If the selected object should be selectable, this is an issue")
         }
 
+        //If the user clicks the root folder       -Lachlan
+        try{
+            if(data.node.original.root === true){
+                //console.log("This is root")
+                setNewRenderKey(0) //renderkey 0 will be used for root
+            }
+        }
+        catch(e){
+            //console.log("This is not root")
+        }
+
         //used to update the currently selected model/folders fields - Lachlan
+        if(getCurrentRenderKey() === 0){
+            document.getElementById("SelectedContainer").value = "Root"
+        }
+        else{
         document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
+        }
         document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
         //console.log(modelObjects)
 

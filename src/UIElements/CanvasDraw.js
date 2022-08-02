@@ -118,10 +118,10 @@ export function getModelName() {
     let nameElement = document.getElementById("ModelName")
 
     if (nameElement === null) {
-        return "Unnamed Graph"
+        return "Root"
     }
     if (nameElement.value === "" || nameElement.value === null || nameElement.value === undefined) {
-        return "Unnamed Model"
+        return "Root"
     }
     return nameElement.value;
 }
