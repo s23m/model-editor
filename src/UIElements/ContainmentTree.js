@@ -40,13 +40,10 @@ let folderData = [];
 // This is to do with getting the data indexing to be
 let decoyFolderData = [];
 
-
-
 // An array for holding model names
 let modelObjects = [];
 let decoyModelObjects = []; // doing the same data referencing as folder data because currently the data being referenced in the models is the model beforehand which
                             // i dont tink is intended. - cooper
-
 
 let folderAltered = false;
 let modelAltered = false;
@@ -330,7 +327,8 @@ export class ContainmentTree extends React.Component {
                 core: {
                     data: [
                         { text: getModelName(), 
-                        children: folderData, state: { opened: true } },
+                        children: folderData, state: { opened: true }, 
+                        root: true},
                     ]
                 }
             },
@@ -428,7 +426,7 @@ export class ContainmentTree extends React.Component {
     }
 
 
-
+    //Function called when an object in treeview is clicked
     handleElementSelect(e, data) {
 
         //console.log("Selected Length: " + data.selected.length)
@@ -443,9 +441,8 @@ export class ContainmentTree extends React.Component {
             //console.log("Selected Type 2: " + data.node.data.type)
             //console.log("Selected Name 2: " + data.node.data.text)
             //console.log(folderData);
+            console.log(data)
 
-            console.log("model objects testing")
-            console.log(modelObjects);
             
 
             if(data.node.type === "Vertex Folder"){
