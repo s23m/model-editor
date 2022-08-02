@@ -132,7 +132,7 @@ export class VertexNode {
         //Then, the vertices and arrows folder nodes can display their appropriate children.
         let ArrowChildren = [];
         let VertexChildren = [];
-        console.log(currentObjects)
+    
 
         //These are no longer needed due to rework of assigning model children - Lachlan
         /*
