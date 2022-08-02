@@ -24,7 +24,7 @@ import {VertexNode} from "../DataStructures/Graph.js"
 // I need to export this so I can access it in the left menu and then set it to the correct vertex;
 export var someVertexPath = "";
 
-let focussed = false; //Decides whether or not to show the normal tree view or a focussed version
+let focussed = false; //leftover from a depricated feature, should always be false until removed fully- Lachlan
 let currentlySelectedObject = null; //The currently selected object
 //let lastSelectedObject = null; // The last selected object
 
@@ -46,35 +46,7 @@ let decoyFolderData = [];
 let modelObjects = [];
 let decoyModelObjects = []; // doing the same data referencing as folder data because currently the data being referenced in the models is the model beforehand which
                             // i dont tink is intended. - cooper
-// A function to be called in the left menu to 
-// 1. Return the name of the currently selected vertex for displaying purposes and
-// 2. Set the 'focussed' keyword to true
-export function displayFocussedTreeView(selectedThing){
 
-    if(focussed === true){
-        focussed = false;
-    }
-
-    else if (focussed === false){
-        focussed = true;
-        //lastSelectedObject = currentlySelectedObject;
-        currentlySelectedObject = selectedThing;
-    }
-    
-}
-
-/** 
-function render_on_add_folder_or_container() {
-    const data = this.state.data;
-    
-    return (
-        <div>
-            <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} />
-            <br></br>
-        </div>
-    )
-}
-*/
 
 let folderAltered = false;
 let modelAltered = false;
@@ -301,48 +273,46 @@ export class ContainmentTree extends React.Component {
             initialFolderAdded = true;
         }
         
-        if (focussed === false){
 
-              // Push the model objects in. --- I moved the position of these for loops outside of the vertex for loop as it was creating a few problems - cooper
-            for (let model of modelObjects){
-                treeData.push(model);           
-                
+            // Push the model objects in. --- I moved the position of these for loops outside of the vertex for loop as it was creating a few problems - cooper
+        for (let model of modelObjects){
+            treeData.push(model);           
+            
+        }
+        for (let folder of folderData){ // this for loop is to define the ownership of the models - cooper
+                folder.children = determineOwnership(folder.renderKey)   
             }
-            for (let folder of folderData){ // this for loop is to define the ownership of the models - cooper
-                    folder.children = determineOwnership(folder.renderKey)   
-                }
-                   // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
-                
-            for (let folder of folderData){ // this for loop is to define the ownership of the vertices & arrows - cooper
-                for (let model of treeData){
+               // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
+            
+        for (let folder of folderData){ // this for loop is to define the ownership of the vertices & arrows - cooper
+            for (let model of treeData){
 
-                    //for (let vertex of currentObjects.flattenVertexNodes()){ - Loop removes as onyl calls toTreeview when currentObjects is not empty - Lachlan
-                        let vertex = new VertexNode() //we need a vertex object to call the toTreeViewElement function, however the function ignores the calling vertex so we just make an 
-                        //empty one so that toTreeview will always be called regardless of what in "currentObjects" - Lachlan
-
+                //for (let vertex of currentObjects.flattenVertexNodes()){ - Loop removes as onyl calls toTreeview when currentObjects is not empty - Lachlan
+                    let vertex = new VertexNode() //we need a vertex object to call the toTreeViewElement function, however the function ignores the calling vertex so we just make an 
+                    //empty one so that toTreeview will always be called regardless of what in "currentObjects" - Lachlan
                         //Reverted the graph fix for the iteration problem caused by directly assigning model children as manually assigning the vertex folder 
-                        //to index 0 and the arrow folder to index 1 (creating an interable by default) fixes this issue and prevents the folders overwriting eachother - Lachlan
-                        //removed alot of the weird renames and unnesecary logic and changed it so that multiples vert/arrow folders can exist in a parent folder ie. one set per model 
-                        //and that verts/arrows are added only where they share a matching modelkey - Lachlan
+                    //to index 0 and the arrow folder to index 1 (creating an interable by default) fixes this issue and prevents the folders overwriting eachother - Lachlan
+                    //removed alot of the weird renames and unnesecary logic and changed it so that multiples vert/arrow folders can exist in a parent folder ie. one set per model 
+                    //and that verts/arrows are added only where they share a matching modelkey - Lachlan
 
-                        if (vertex.toTreeViewElement("Vertex Folder", folder.renderKey, model.modelKey) !== undefined && model.renderKey === folder.renderKey){
-                        //console.log("a vertexorarrow: ",vertex)
-                            model.children[0] = vertex.toTreeViewElement("Vertex Folder", folder.renderKey, model.modelKey)
+                    if (vertex.toTreeViewElement("Vertex Folder", folder.renderKey, model.modelKey) !== undefined && model.renderKey === folder.renderKey){
+                    //console.log("a vertexorarrow: ",vertex)
+                        model.children[0] = vertex.toTreeViewElement("Vertex Folder", folder.renderKey, model.modelKey)
 
-                        }
+                    }
 
-                        if (vertex.toTreeViewElement("Arrow Folder", folder.renderKey, model.modelKey) !== undefined && model.renderKey === folder.renderKey){
-                             //console.log("a vertexorarrow: ",vertex)
-                            model.children[1] = vertex.toTreeViewElement("Arrow Folder", folder.renderKey, model.modelKey)
-                        }
+                    if (vertex.toTreeViewElement("Arrow Folder", folder.renderKey, model.modelKey) !== undefined && model.renderKey === folder.renderKey){
+                         //console.log("a vertexorarrow: ",vertex)
+                        model.children[1] = vertex.toTreeViewElement("Arrow Folder", folder.renderKey, model.modelKey)
+                    }
                             
-                        //console.log(model.text," children: ",model.children)
-                        //break; //break exists as for loop is leftover and useless but we need the "vertex" object to be able to call toTreeviewElement and currentObjects isnt always indexable
-                    //}
-                }
-
-
+                    //console.log(model.text," children: ",model.children)
+                    //break; //break exists as for loop is leftover and useless but we need the "vertex" object to be able to call toTreeviewElement and currentObjects isnt always indexable
+                //}
             }
+
+
+        }
 
 
 
@@ -351,100 +321,22 @@ export class ContainmentTree extends React.Component {
             //console.log(currentObjects);
             //console.log(treeData);
             //console.log(currentObjects.flatten())
-        }
+        
 
         
-        else if (focussed === true){
-            //let overallContainer = getModelName();
-            let container = [];
-            let vertOrEdge = [];
-            let objName = [];
-
-            let b = 0;
-            //First, we need to actually determine where the vertex is
-            //Take a look at our container
-            for (let cont of folderData){
-                //console.log("folder text: " + cont.text)
-                //Take a look at the children of the containers (arrows and such)
-                for (let treeDat of cont.children){
-                    //console.log("treeDat text: " + treeDat.text)
-                    //Why is the vertex folder coming up as undefined?????
-                    //console.log(treeDat.children)
-                    if(b === 0){
-                        //console.log("SECOND LAYER: " + treeDat.children);
-                        for (let treeElement of treeDat.children){
-                            //console.log("Vertices text: " + treeElement)
-                            if ((treeElement.text === currentlySelectedObject.title)){
-                                
-                                //console.log("A match was had")
-                                //Push the matched container object
-                                let CTreeObj = {
-                                    text: cont.text,
-                                    children: vertOrEdge,
-                                    data: null,
-                                    state: {opened: true}
-                                }
-                                container.push(CTreeObj);
-
-                                //Push the proper vertex or edge folder
-                                let CVertexObj = {
-                                    text: "Vertices " ,
-                                    children: objName,
-                                    data: null,
-                                    state: {opened: true}
-                                }
-                                vertOrEdge.push(CVertexObj);
-
-                                //Push the proper tree element object
-                                let CElementObj = {
-                                    text: currentlySelectedObject.title,
-                                    children: [],
-                                    data: null,
-                                    state: {opened: true}
-                                }
-                                objName.push(CElementObj);
-
-                                b = 1;
-
-                            
-                            }
-                        }
-                        
-                    }
-                    
+        
+        this.state = {
+            data: {
+                core: {
+                    data: [
+                        { text: getModelName(), 
+                        children: folderData, state: { opened: true } },
+                    ]
                 }
-                
-                
-            }
-            
-            //Set the tree to show the matched path
-            this.state = {
-                data: {
-                    core: {
-                        data: [
-                            { text: getModelName(), 
-                            children: container, state: { opened: true } },
-                        ]
-                    }
-                },
-                selectedVertex: null
-            }
-
+            },
+            selectedVertex: null
         }
 
-        if (focussed === false){
-            this.state = {
-                data: {
-                    core: {
-                        data: [
-                            { text: getModelName(), 
-                            children: folderData, state: { opened: true } },
-                        ]
-                    }
-                },
-                selectedVertex: null
-            }
-        }
 
 
         if(showingVertPath === true){

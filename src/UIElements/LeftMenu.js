@@ -409,8 +409,7 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={() => {/*deleteElement(this.state.selectedObject)*/vertexDeleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
 
-                <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => {displayFocussedTreeView(this.state.selectedObject); this.setState({menu:"TreeView"})}}>Focus/Unfocus Treeview</button>
+
 
                 <label className="LeftSpacer">&nbsp;</label>
                 
@@ -542,8 +541,7 @@ export class LeftMenu extends React.Component{
                     <label className="LeftSpacer">&nbsp;</label>
                     <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
 
-                    <div className="LeftSpacer">&nbsp;</div>
-                    <button className="LeftMenuButton" onClick={() => {displayFocussedTreeView(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Focus/Unfocus Treeview</button>
+                    
 
                     </form>
             }
