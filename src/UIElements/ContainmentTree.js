@@ -166,6 +166,21 @@ function deleteModelChildren(selectedModel){ // function for deleting all the ch
         }
     }   
 }
+
+
+export function handleRenameFolder(newName,rKey){
+    for (let i = 0; i < folderData.length; i++){
+        if (folderData[i].renderKey === rKey){
+            folderData[i].text = newName + " &#128193";
+            break;
+        }
+    }
+}
+
+
+
+
+
 // Added optional parameter render key, atm used to handle create a model with no folder selected - Lachlan
 //initial "children" are to prevent erros caused by children initialy not being iterable - Lachlan
 export function handleAddModel(modelName, rKey=getSelectedFolderKey()){
@@ -215,6 +230,16 @@ export function handleDeleteModel(selectedModelKey){
 
     loadFirstModel()
 }
+
+export function handleRenameModel(newName,mKey){
+    for (let i = 0; i < modelObjects.length; i++){
+        if (modelObjects[i].modelKey === mKey){
+            modelObjects[i].text = newName + " &#128200";
+            break;
+        }
+    }
+}
+
 
 export function getModelRenderKey(selectedModelKey){ // this function is to fetch the renderkey of the selected model to ensure verticies get created with the correct renderkey -- cooper
     for(let i = 0; i < modelObjects.length; i++){
