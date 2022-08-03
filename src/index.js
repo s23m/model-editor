@@ -23,19 +23,23 @@ ReactDOM.render(<MainProgramClass />,document.getElementById("program"));
 assignElement("drawCanvas");
 
 // save to server every interval
-setInterval(() => {
-    let data = JSON.stringify(getSaveData());
 
-    fetch('http://localhost:8080/serialisation/save',{
-        method:'POST',
-        headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json',
-            'Content-Length':data.length
-        },
-        body: data
-    });
-},60000);
+
+//setInterval(() => {
+//    let data = JSON.stringify(getSaveData());
+//
+//    fetch('http://localhost:8080/serialisation/save',{
+//        method:'POST',
+//        headers: {
+//            'Accept': '*/*',
+//            'Content-Type': 'application/json',
+//            'Content-Length':data.length
+//        },
+//        body: data
+//    });
+//},60000);
+
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
