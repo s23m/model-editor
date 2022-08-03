@@ -38,6 +38,9 @@ let treeData = [];
 // I need this to store the folders. Initially, it has one folder simply titled 'Unnamed Folder'.
 let folderData = [];
 
+//used as a container to seperate "root" folders and subfolders so that only the root folders are pushed to root.children in the constructor - Lachlan
+let folderDataRoot = [];
+
 //This variable will be used to store the "selected folder" for creating new folders as renderKey is too ingrained in other functions to repurpose - Lachlan
 let selectedFolder = 0;
 
@@ -310,7 +313,6 @@ export class ContainmentTree extends React.Component {
             
         for (let folder of folderData){ // this for loop is to define the ownership of the vertices & arrows - cooper
             for (let model of treeData){
-
                 //for (let vertex of currentObjects.flattenVertexNodes()){ - Loop removes as onyl calls toTreeview when currentObjects is not empty - Lachlan
                     let vertex = new VertexNode() //we need a vertex object to call the toTreeViewElement function, however the function ignores the calling vertex so we just make an 
                     //empty one so that toTreeview will always be called regardless of what in "currentObjects" - Lachlan
@@ -322,19 +324,23 @@ export class ContainmentTree extends React.Component {
                     if (vertex.toTreeViewElement("Vertex Folder", folder.renderKey, model.modelKey) !== undefined && model.renderKey === folder.renderKey){
                     //console.log("a vertexorarrow: ",vertex)
                         model.children[0] = vertex.toTreeViewElement("Vertex Folder", folder.renderKey, model.modelKey)
-
                     }
 
                     if (vertex.toTreeViewElement("Arrow Folder", folder.renderKey, model.modelKey) !== undefined && model.renderKey === folder.renderKey){
                          //console.log("a vertexorarrow: ",vertex)
                         model.children[1] = vertex.toTreeViewElement("Arrow Folder", folder.renderKey, model.modelKey)
-                    }
-                            
+                    }       
                     //console.log(model.text," children: ",model.children)
                     //break; //break exists as for loop is leftover and useless but we need the "vertex" object to be able to call toTreeviewElement and currentObjects isnt always indexable
                 //}
             }
+        }
 
+        folderDataRoot = [];
+        for (let folder of folderData){
+            if(folder.parentRenderKey ===0){
+                folderDataRoot.push(folder)
+            }
 
         }
 
@@ -354,7 +360,7 @@ export class ContainmentTree extends React.Component {
                 core: {
                     data: [
                         { text: getModelName(), 
-                        children: folderData, state: { opened: true }, 
+                        children: folderDataRoot, state: { opened: true }, 
                         root: true},
                     ]
                 }
