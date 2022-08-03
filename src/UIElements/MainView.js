@@ -98,7 +98,7 @@ export class MainProgramClass extends React.Component {
 
     deleteFolder = () => {
         (async() => {
-            await handleDeleteFolder(canvasDraw.getCurrentRenderKey());
+            await handleDeleteFolder(getSelectedFolderKey());
             this.setLeftMenuToTree();
             })();
     }
