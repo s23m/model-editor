@@ -71,6 +71,7 @@ function loadFirstModel(){
     //set selected model/render key to the 1st available as so a canvas isnt loaded for a nonexistant model
     setNewRenderKey(modelObjects[0].data.renderKey)
     setNewModel(modelObjects[0].data.modelKey)
+    setSelectedFolderKey(modelObjects[0].data.renderKey)
 
     //taken from handleElementSelect for loading the new models canvas
     for (let item of currentObjects.flatten()){
@@ -128,9 +129,13 @@ export function handleAddFolder(folderName, parentKey = 0){
 
 // Function to remove a folder in the tree
 export function handleDeleteFolder(selectedRenderKey){ // changing the deleting functions to delete based on renderkey & modelkeys - cooper
+    console.log("below is the selected render key")
+    console.log(selectedRenderKey)
     if(folderData.length > 1){ //cannot delete folder if it is the only one excluding root - Lachlan
         for (let i = 0; i < folderData.length; i++){
             if (folderData[i].renderKey === selectedRenderKey){
+                console.log("below is folderdata")
+                console.log(folderData)
                 deleteFolderChildren(folderData[i]);
                 decoyFolderData.splice(i,1); // have to delete from this array as well because this is where folders obtain the data of themselves 
                 folderData.splice(i,1); 
@@ -147,8 +152,15 @@ export function handleDeleteFolder(selectedRenderKey){ // changing the deleting 
 function deleteFolderChildren(selectedFolder){ // function for deleting all the children of a folder.
     let folderChildren = selectedFolder.children;
     for (let i = 0; i < folderChildren.length; i++){
-         let selectedModelKey = folderChildren[i].modelKey;
-         handleDeleteModel(selectedModelKey);
+        if (folderChildren.type === "Folder"){
+            let selectedRenderKey = folderChildren[i].renderKey;
+            handleDeleteFolder(selectedRenderKey);
+
+        }
+        else if (folderChildren.type === "Model"){
+            let selectedModelKey = folderChildren[i].modelKey;
+            handleDeleteModel(selectedModelKey);
+        }
     }
 }
 
@@ -520,7 +532,7 @@ export class ContainmentTree extends React.Component {
             //console.log("Selected Type 2: " + data.node.data.type)
             //console.log("Selected Name 2: " + data.node.data.text)
             //console.log(folderData);
-            console.log(data.node)
+            console.log(data.node.data)
 
             
 
