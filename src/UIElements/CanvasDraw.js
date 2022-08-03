@@ -1806,6 +1806,7 @@ function createObject(canvas, x1, y1, x2, y2) {
         }
 
         // Create arrow
+        
         let arrow = new Arrow(currentObjectsFlattened, newPath, arrowType);
         arrow.rebuildPath(currentObjectsFlattened);
         return arrow;

@@ -171,6 +171,7 @@ export class MainProgramClass extends React.Component {
         // i.e. determines if objects are selected or not
         if (this.state.selectedObject !== null && ctrl === false) {
             this.state.selectedObject.setSelected(false);
+            
         }
 
         // check if the nearest object was too far away or didnt exist
@@ -188,6 +189,8 @@ export class MainProgramClass extends React.Component {
                 menu: nearestObject.constructor.name,
                 selectedObject: nearestObject
             });
+            console.log("below should be selectedObject");
+            console.log(this.state.selectedObject)
             nearestObject.setSelected(true);
         } else {
             if (this.state.selectedObject !== null) {
@@ -306,7 +309,7 @@ export class MainProgramClass extends React.Component {
                         Semantic Editor
                     </div>
 
-                    <input className="TopBarSearch" id="ModelName" type = "text" name = "modelName" placeholder = "Root/Graph Name" onChange={(e) => this.setModelName(e)}/>
+                    <input className="TopBarSearch" id="ModelName" type = "text" name = "modelName" placeholder = "Graph Name" onChange={(e) => this.setModelName(e)}/>
                     <input className="TopBarSearch" id="FolderName" type = "text" name = "folderName" placeholder = "New Container/Model" onChange={(e) => this.updateFolderName(e)}/>
                     {/*<div className="TopBarIcon">&nbsp;</div>*/}
                     {/*The + and - are backwards on purpose here*/}

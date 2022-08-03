@@ -4,6 +4,7 @@
 
 import { SemanticIdentity } from "./SemanticIdentity";
 import {drawMarker, getDistance, getCurrentRenderKey} from "../UIElements/CanvasDraw";
+import {getModelRenderKey} from "../UIElements/ContainmentTree";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
 import {Tool} from "../UIElements/LeftMenu";
@@ -84,11 +85,11 @@ export class Arrow {
         this.sourceIsAggregation = false;
         this.destIsAggregation = false;
 
-        // Render key for the arrow for placing in tree
-        this.arrowRenderKey = getCurrentRenderKey();
-
         // Model key for rendering
         this.arrowModelKey = canvasDraw.getCurrentModel();
+
+        // Render key for the arrow for placing in tree
+        this.arrowRenderKey = getModelRenderKey(this.arrowModelKey);
     }
 
     // Set the model key
@@ -246,8 +247,14 @@ export class Arrow {
     }
 
     // Gets pathItem from object (hopefully a vertex) based on UUID
+    // will come back to this to sort out arrows overlapping on creation
+    // for extra clarity pathItem[2] is where the arrow from/end is on the x axis of the vertex(0..1)
+    // and pathItem[3] is where the arrow is from/end is on the y axis of the vertex(0..1) - cooper
     getZerothCasePathItem(objects, pathItem) {
         for (let i = 0; i < objects.length; i++) {
+           // if(objects[0].semanticIdentity.UUID === objects[1].semanticIdentity.UUID){
+
+           // }
             if (objects[i] !== null && objects[i] !== undefined) {
                 if (objects[i].semanticIdentity.UUID === pathItem[1]) {
                     let x = pathItem[2]*objects[i].width + objects[i].x;

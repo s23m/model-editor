@@ -202,6 +202,13 @@ export function handleDeleteModel(selectedModelKey){
     loadFirstModel()
 }
 
+export function getModelRenderKey(selectedModelKey){ // this function is to fetch the renderkey of the selected model to ensure verticies get created with the correct renderkey -- cooper
+    for(let i = 0; i < modelObjects.length; i++){
+        if (modelObjects[i].modelKey === selectedModelKey){
+            return modelObjects[i].renderKey
+        }
+    }
+}
 
 
 
@@ -302,6 +309,8 @@ export class ContainmentTree extends React.Component {
                 let subFolderItems = determineSubFolders(folder.renderKey)
                 let combinedItems = canvasItems.concat(subFolderItems)
                 console.log("test")
+                console.log("treedata");
+                console.log(treeData);
                 console.log(combinedItems)
                 folder.children = combinedItems;
 
