@@ -41,8 +41,10 @@ let folderData = [];
 //used as a container to seperate "root" folders and subfolders so that only the root folders are pushed to root.children in the constructor - Lachlan
 let folderDataRoot = [];
 
-//This variable will be used to store the "selected folder" for creating new folders as renderKey is too ingrained in other functions to repurpose - Lachlan
-let selectedFolder = 0;
+//This variable will be used to store the "selected folder" for creating new folders or models
+// As renderKey is tied too many methods related to syncing data between canvas and tree/ creating data in tree control of the current renderkey 
+//has been taken away from the user and will always be set to the parent folder of the selected model (this happens in elementSelect on a model click) - Lachlan
+let selectedFolderKey = 0;
 
 // This is to do with getting the data indexing to be
 let decoyFolderData = [];
@@ -54,6 +56,14 @@ let decoyModelObjects = []; // doing the same data referencing as folder data be
 
 let folderAltered = false;
 let modelAltered = false;
+
+export function setSelectedFolderKey(newKey){
+    selectedFolderKey = newKey;
+}
+
+export function getSelectedFolderKey(){
+    return selectedFolderKey;
+}
 
 //This function is used to load the first available model and canvas from the modelObjects array
 //Used to fix thye tree/canvas desync bug when deleting - Lachlan
@@ -72,6 +82,7 @@ function loadFirstModel(){
         }
     }
     drawAll()
+    document.getElementById("SelectedFolder").value = folderData.find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
     document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
     document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
 }
@@ -157,7 +168,7 @@ function deleteModelChildren(selectedModel){ // function for deleting all the ch
 }
 // Added optional parameter render key, atm used to handle create a model with no folder selected - Lachlan
 //initial "children" are to prevent erros caused by children initialy not being iterable - Lachlan
-export function handleAddModel(modelName, rKey=getCurrentRenderKey()){
+export function handleAddModel(modelName, rKey=getSelectedFolderKey()){
     incrementTotalModels();
     let decoyModelThing = {
         text: modelName + " &#128200",
@@ -285,6 +296,7 @@ export class ContainmentTree extends React.Component {
         if (initialFolderAdded === false){
             setNewRenderKey(1);
             setNewModel(1);
+            setSelectedFolderKey(1);
             handleAddFolder("This is an initial container");
             //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
             handleAddModel("This is an initial model",1) 
@@ -484,7 +496,10 @@ export class ContainmentTree extends React.Component {
 
             else if(data.node.data.type === "Folder"){
                 //console.log("Clicked Folder: " + data.node.data.text)
-                setNewRenderKey(data.node.data.renderKey)
+                //setNewRenderKey(data.node.data.renderKey)
+                setSelectedFolderKey(data.node.data.renderKey)
+                
+
                 //console.log("The render key is now " + data.node.data.renderKey);
 
 
@@ -497,6 +512,7 @@ export class ContainmentTree extends React.Component {
                 //console.log("The model key is now " + getCurrentModel()); // there were issues here with camelCasing causing no modelKey to be selected- cooper
                 //setNewRenderKey(data.node.data.renderKey)
                 setNewRenderKey(data.node.data.renderKey); // automatically sets the renderkey to be the same as the models as this was causing issues - cooper
+                setSelectedFolderKey(data.node.data.renderKey)
                 //console.log("The render key is now " + data.node.data.renderKey);
                 // Move everything away
                 for (let item of currentObjects.flatten()){
@@ -531,6 +547,7 @@ export class ContainmentTree extends React.Component {
                     
                         setNewRenderKey(vertex.vertexRenderKey);
                         setNewModel(vertex.vertexModelKey); 
+                        setSelectedFolderKey(vertex.vertexRenderKey)
                         
                         for (let item of currentObjects.flatten()){
                             if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
@@ -581,7 +598,7 @@ export class ContainmentTree extends React.Component {
         try{
             if(data.node.original.root === true){
                 //console.log("This is root")
-                setNewRenderKey(0) //renderkey 0 will be used for root
+                setSelectedFolderKey(0) //renderkey 0 will be used for root
             }
         }
         catch(e){
@@ -589,12 +606,13 @@ export class ContainmentTree extends React.Component {
         }
 
         //used to update the currently selected model/folders fields - Lachlan
-        if(getCurrentRenderKey() === 0){
-            document.getElementById("SelectedContainer").value = "Root"
+        if(getSelectedFolderKey() === 0){
+            document.getElementById("SelectedFolder").value = "Root"
         }
         else{
-        document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
+        document.getElementById("SelectedFolder").value = folderData.find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
         }
+        document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
         document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
         //console.log(modelObjects)
 

@@ -16,7 +16,7 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder, handleDeleteModel, handleAddModel} from './ContainmentTree';
+import {handleAddFolder, handleDeleteModel, handleAddModel, getSelectedFolderKey} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
@@ -90,7 +90,7 @@ export class MainProgramClass extends React.Component {
         //ContainmentTree.state = ContainmentTree.state;
         //LeftMenu.state = LeftMenu.state;
         (async() => {
-        await handleAddFolder(folderName);
+        await handleAddFolder(folderName,getSelectedFolderKey());
         this.setLeftMenuToTree();
         })();
         
@@ -335,9 +335,11 @@ export class MainProgramClass extends React.Component {
 
                 <div className="LowerPanel">
                     <LeftMenu setMode = {this.setMode} setLeftMenu = {this.setLeftMenu} mainState = {this.state} className = "LeftMenus"/>
-                    {/*following 2 classes are temporary for displaying currently selected model and container */}
+                    {/*following 3 classes are temporary for displaying currently selected model and container(renderKey) and folder(selectedFolderKey) */}
+                    <input className="SelectedFolder" id="SelectedFolder" type = "text" name = "selectedFolder"  readonly='readonly'/>
                     <input className="SelectedContainer" id="SelectedContainer" type = "text" name = "selectedContainer"  readonly='readonly'/>
                     <input className="SelectedModel" id="SelectedModel" type = "text" name = "selectedModel"  readonly='readonly'/>
+
                     <div className="Canvas">
                         <Canvas setLeftMenu = {this.setLeftMenu} setMode = {this.setMode} mainState = {this.state}/>
                     </div>
