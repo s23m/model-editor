@@ -82,6 +82,8 @@ export function incrementTotalModels() {
 }
 
 
+
+
 // Arrow Path
 export var arrowPath = [];
 let lastX = 0;
@@ -1376,29 +1378,21 @@ export function onLeftMouseRelease(canvas, x, y) {
     canvasElement.onmousemove = null;
 
     if (arrowToolSelected()) {
+        
 
         if (getConnectionDataForArrow(x, y).snapped && !firstArrowJoint) {
             // Create
             let secondObject = findIntersected(x, y);
             let newObject = null;
-
-            //2 separate objects - box and vertex (border)
-            if (previousObject !== null && secondObject !== null && savedArrows !== null) {
-                //console.log("\n the new one \n");
-                newObject = lineIntersect(canvas, x, y, secondObject);
-                for (let j = 0; j < savedArrows.length; j++) {
-                    //delete arrow if duplicate for straight arrows (doesn't work)
-                    for (let k = 1 + j; k < savedArrows.length; k++) {
-                        if (savedArrows[j][0][0] === savedArrows[k][0][0] && savedArrows[j][0][1] === savedArrows[k][0][1] && savedArrows[j][1][0] === savedArrows[k][1][0] && savedArrows[j][1][1] === savedArrows[k][1][1]) {
-                            let removethis = findIntersected(savedArrows[j][0][0], savedArrows[j][0][1]);
-                            deleteElement(removethis);
-                        }
-                    }
-                }
-            } else {
-                //console.log("\n the old one \n");
-                //newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
-            }
+            let firstObject = arrowPath[0] // the first position in the arrowpath array will either be null or the first vertex that is clicked with an arrow. 
+                                            // therefor the arrow will not be created unless the first object that is clicked with the arrow tool is a vertex. - cooper
+            
+            if (firstObject !== null && secondObject !== null && savedArrows !== null) {
+                // create the arrow using the createObject function rather than the other function they were using as this seems much more stable - cooper
+                // also deleted a weird forloop that they had that i assume was for stopping the arrow overlap issue, but they themselves commented that it doesnt work
+                newObject = createObject(canvas, mouseStartX, mouseStartY, x, y); 
+               
+            } 
 
             // Reset path
             arrowPath = [];
@@ -1440,8 +1434,8 @@ export function onLeftMouseRelease(canvas, x, y) {
 
             //save object here
             previousObject = findIntersected(x, y);
-            //console.log("previousObject has been saved");
-            //where they first put in coords for first click
+            
+        
 
             arrowPath.push(getConnectionDataForArrow(x, y).coord);
             lastX = x;

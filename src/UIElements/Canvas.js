@@ -149,13 +149,8 @@ export class Canvas extends React.Component {
         // if it was a right click
         if (e.button === 2) {
 
-            if (movingAllowed) {
-                canvasDraw.solidifyObject(); 
-                movingAllowed = false;
-            }
-            if (canvasDraw.arrowPath.length !== 0) {
-                canvasDraw.onRightMouseRelease(canvas, x, y)
-            }
+           // deleted the old rightclick functionality and will leave this if statement here for when we implement right click menu - cooper
+           
 			
         }
 		if (e.shiftKey && selectDown) {
