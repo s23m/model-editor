@@ -70,6 +70,10 @@ export function getFolderData(){
     return folderData;
 }
 
+export function setFolderData(newFolderData){
+    folderData = newFolderData;
+}
+
 export function getModelData(){
     return modelObjects;
 }
@@ -270,6 +274,21 @@ export function getModelRenderKey(selectedModelKey){ // this function is to fetc
     }
 }
 
+//Function for changing the parent folder of a model - Lachlan
+export function handleModelRebase(mKey,newRkey){
+    console.log("Rebase test")
+    console.log(modelObjects)
+    for(let model of modelObjects){
+        if(model.modelKey === mKey){
+            console.log(model)
+            model.renderKey = newRkey;
+            console.log(model)
+        }
+    }
+    console.log(modelObjects)
+
+}
+
 
 
 
@@ -359,11 +378,11 @@ export class ContainmentTree extends React.Component {
             setNewRenderKey(1);
             setNewModel(1);
             setSelectedFolderKey(1);
-            handleAddFolder("This is an initial container");
+            handleAddFolder("Folder");
             //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
-            handleAddModel("This is an initial model",1) 
+            handleAddModel("Model",1) 
             initialFolderAdded = true;
-            handleAddFolder("This is a test subfolder",getCurrentRenderKey())
+            handleAddFolder("Subfolder",getCurrentRenderKey())
         }
         
 
@@ -551,7 +570,7 @@ export class ContainmentTree extends React.Component {
             //console.log("Selected Type 2: " + data.node.data.type)
             //console.log("Selected Name 2: " + data.node.data.text)
             //console.log(folderData);
-            //console.log(data.node.data)
+            console.log(data.node.data)
 
             
 
