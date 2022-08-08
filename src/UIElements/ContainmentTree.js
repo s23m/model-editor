@@ -520,6 +520,7 @@ export class ContainmentTree extends React.Component {
     //Function called when an object in treeview is clicked
     handleElementSelect(e, data) {
 
+
         //console.log("Selected Length: " + data.selected.length)
 
         // Try catch used to catch error whe selecting a treeview item with no data type eg. root
