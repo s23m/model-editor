@@ -29,8 +29,7 @@ import iconNewModel from "../Resources/NewModel.svg"
 import iconDeleteModel from "../Resources/DeleteModel.svg"
 import iconEditModel from "../Resources/editModel.svg"
 
-// Simple incremental version
-// 1->2->3->4
+
 export const version = 1;
 
 let folderName = "Unnamed Folder";
@@ -80,6 +79,8 @@ export class MainProgramClass extends React.Component {
         
         
     }
+
+
 
     updateFolderName = () => {
         folderName = document.getElementById("FolderName").value
@@ -281,6 +282,8 @@ export class MainProgramClass extends React.Component {
             console.log("Semantic Domain enabled");
         }
     };
+
+
 
 
     render() {
