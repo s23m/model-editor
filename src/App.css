@@ -222,7 +222,19 @@ input,button{
 
 .ContextMenu{
     position: absolute;
-    background-color:#D3D3D3;
+    background:#1b1a1a;
+    border: solid #928b8b;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.CMitem{
+    padding: 8px 10px;
+    font-size: 15px;
+    color: #eee;
+    cursor: pointer;
+    border-radius: inherit;
 }
 
 .LeftMenus{
