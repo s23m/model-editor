@@ -65,6 +65,15 @@ export function getSelectedFolderKey(){
     return selectedFolderKey;
 }
 
+
+export function getFolderData(){
+    return folderData;
+}
+
+export function getModelData(){
+    return modelObjects;
+}
+
 //This function is used to load the first available model and canvas from the modelObjects array
 //Used to fix thye tree/canvas desync bug when deleting - Lachlan
 function loadFirstModel(){
@@ -96,7 +105,7 @@ export function handleAddFolder(folderName, parentKey = 0){
     incrementTotalRenderKeys();
 
     let tempFolderThing = {
-        text: folderName + " &#128193",
+        text: folderName + " 📁",
         children: treeData[getTotalRenderKeys()],
         data: NaN,
         state: {opened: true},
@@ -108,7 +117,7 @@ export function handleAddFolder(folderName, parentKey = 0){
     decoyFolderData.push(tempFolderThing)
 
     let folderThing2 = {
-        text: folderName + " &#128193",
+        text: folderName + " 📁",
         children: treeData[getTotalRenderKeys()],
         data: decoyFolderData[folderData.length],
         state: {opened: true},
@@ -183,7 +192,7 @@ function deleteModelChildren(selectedModel){ // function for deleting all the ch
 export function handleRenameFolder(newName,rKey){
     for (let i = 0; i < folderData.length; i++){
         if (folderData[i].renderKey === rKey){
-            folderData[i].text = newName + " &#128193";
+            folderData[i].text = newName + " 📁";
             break;
         }
     }
@@ -198,8 +207,8 @@ export function handleRenameFolder(newName,rKey){
 export function handleAddModel(modelName, rKey=getSelectedFolderKey()){
     incrementTotalModels();
     let decoyModelThing = {
-        text: modelName + " &#128200",
-        children: ["Vertices &#128193","Arrows &#128193"],
+        text: modelName + " 📈",
+        children: ["Vertices 📁","Arrows 📁"],
         data: NaN,
         state: {opened: true},
         type: "Model",
@@ -210,8 +219,8 @@ export function handleAddModel(modelName, rKey=getSelectedFolderKey()){
 
 
     let tempModelThing = {
-        text: modelName + " &#128200",
-        children: ["Vertices &#128193","Arrows &#128193"],
+        text: modelName + " 📈",
+        children: ["Vertices 📁","Arrows 📁"],
         data: decoyModelObjects[modelObjects.length],
         state: {opened: true},
         type: "Model",
@@ -246,7 +255,7 @@ export function handleDeleteModel(selectedModelKey){
 export function handleRenameModel(newName,mKey){
     for (let i = 0; i < modelObjects.length; i++){
         if (modelObjects[i].modelKey === mKey){
-            modelObjects[i].text = newName + " &#128200";
+            modelObjects[i].text = newName + " 📈";
             break;
         }
     }
@@ -328,8 +337,17 @@ function determineSubFolders(parsedRenderKey){
     return returnArray
 }
 
+
+
 let initialFolderAdded = false;
 export class ContainmentTree extends React.Component {
+
+    componentDidMount() {
+        
+    }
+    componentWillUnmount() {
+        
+    }
 
     constructor(props) {
         super(props);
@@ -533,7 +551,7 @@ export class ContainmentTree extends React.Component {
             //console.log("Selected Type 2: " + data.node.data.type)
             //console.log("Selected Name 2: " + data.node.data.text)
             //console.log(folderData);
-            console.log(data.node.data)
+            //console.log(data.node.data)
 
             
 
@@ -665,6 +683,10 @@ export class ContainmentTree extends React.Component {
 
     }
 
+    handleContextMenu(){
+        console.log("CM triggered for tree")
+    }
+
 
 
     render() {
@@ -681,7 +703,7 @@ export class ContainmentTree extends React.Component {
 
         return (
             <div>
-                <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} />
+                <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} className="treeview" />
 
             </div>
         )

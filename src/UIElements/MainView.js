@@ -51,7 +51,7 @@ export class MainProgramClass extends React.Component {
     }
 
     componentDidMount() {
-        this.setMode(Tool.Vertex);
+        this.setMode(Tool.Select);
         console.log("Mounted");
     }
 

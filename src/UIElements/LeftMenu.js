@@ -118,7 +118,9 @@ export class LeftMenu extends React.Component{
         this.props.setMode(this.selectedItem)
 
         document.addEventListener("keydown", this.onKeyPressed.bind(this));
+
     }
+
 
     //For quickKeys
 
