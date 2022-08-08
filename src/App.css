@@ -127,11 +127,14 @@ input,button{
     display: flex;
     /*border: 2px groove #666666;*/
     min-height: 4.65vh;
-    width: 10vw;
+    width: 9.75vw;
     align-items: center;
     justify-content: center;
     background-color: white;
     flex-direction: column;
+    border-left:0.125vw solid black;
+    border-right:0.125vw solid black;
+    border-radius: 3px;
  }
 
 
@@ -197,44 +200,70 @@ input,button{
 .TopBarSearch {
     display: flex;
     flex-direction: row;
-    /*border: 2px groove #666666;*/
+    border: 1px solid #666666;
     /*height: 4.7vh;*/
     width: 15vw;
-    /*border-radius: 10px;*/
+    border-radius: 4px;
     align-items: center;
     justify-content: center;
     color: Black;
+    text-align: center;
     font-size: calc(0.6vh + 0.6vw);
+    
 }
 
 .TopBarIcon {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
-    height: 5vh;
-    width: 5vh;
-    /*border: 2px groove #666666;*/
+    height: 4.7vh;
+    width: 10vh;
+    border: 1px solid  #666666;
+    border-radius: 4px;
     align-items: center;
     justify-content: center;
 	background-color:#D3D3D3;
 	font-size: calc(1vh + 1vw);
+
+}
+
+.TopBarSpace {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    height: 5vh;
+    width: 5vh;
+
+    align-items: center;
+    justify-content: center;
+	background-color:#D3D3D3;
+	font-size: calc(1vh + 1vw);
+
 }
 
 .ContextMenu{
     position: absolute;
-    background:#1b1a1a;
-    border: solid #928b8b;
+    background:#ffffff;
+    border: solid #444444;
     border-radius: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
+
+}
+
+.CMSelected{
+    padding: 8px 10px;
+    font-size: 15px;
+    color: rgb(0, 0, 0);
+    background-color: #b9cfe7;
+    cursor: pointer;
+    border-radius: 0px;
 }
 
 .CMitem{
     padding: 8px 10px;
     font-size: 15px;
-    color: #eee;
+    color: rgb(0, 0, 0);
     cursor: pointer;
-    border-radius: inherit;
+    border-radius: 0px;
 }
 
 .LeftMenus{

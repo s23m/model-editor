@@ -341,18 +341,15 @@ export class MainProgramClass extends React.Component {
 
                     {/*<div className="TopBarIdentifier">Rows:&nbsp;</div>*/}
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
-                    <div className="TopBarIcon">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div> 
                     <div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt ="Add Container"/></div>
-                    <div className="TopBarIcon">&nbsp;</div> 
                     <div className="TopBarIcon" onClick={() => this.deleteFolder()}><img src={iconDeleteFolder} alt ="Delete Container"/></div>
-                    <div className="TopBarIcon">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.editFolderName()}><img src={iconEditFolder} alt ="Edit Container"/></div>
-                    <div className="TopBarIcon">&nbsp;</div>
-                    <div className="TopBarIcon">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.addModel()}><img src={iconNewModel} alt ="Add Model"/></div>
-                    <div className="TopBarIcon">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.deleteModel()}><img src={iconDeleteModel} alt ="Delete Model"/></div>
-                    <div className="TopBarIcon">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.editModelName()}><img src={iconEditModel} alt ="Edit Model"/></div>
                     
 
