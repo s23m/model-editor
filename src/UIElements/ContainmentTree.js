@@ -16,6 +16,8 @@ import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey,
 import { drawAll } from "./CanvasDraw";
 import {VertexNode} from "../DataStructures/Graph.js"
 import { ContactsOutlined } from '@material-ui/icons';
+import { LeftMenu, LeftMenuType } from './LeftMenu';
+import { MainProgramClass } from './MainView';
 //import { remove,toTreeViewElement } from "../DataStructures/Graph";
 //import { ContactsOutlined, Remove } from '@material-ui/icons';
 
@@ -56,6 +58,11 @@ let decoyModelObjects = []; // doing the same data referencing as folder data be
 
 let folderAltered = false;
 let modelAltered = false;
+
+// created a boolean which whill tell the leftmenu that the containment tree needs to update
+export var treeNeedsUpdate = 0;
+
+
 
 export function setSelectedFolderKey(newKey){
     selectedFolderKey = newKey;
@@ -280,15 +287,26 @@ export function handleModelRebase(mKey,newRkey){
     console.log(modelObjects)
     for(let model of modelObjects){
         if(model.modelKey === mKey){
+           for(let objectFolders of model.children){  
+                let objects = objectFolders.children
+                for(let object of objects){
+                    object.renderkey = newRkey;
+                    if(object.data.typeName === "Vertex"){
+                    object.data.vertexRenderKey = newRkey;
+                    }
+                    else{
+                    object.data.arrowRenderKey = newRkey;
+                    }
+                }
+            } 
             console.log(model)
             model.renderKey = newRkey;
             console.log(model)
         }
     }
     console.log(modelObjects)
-
+    treeNeedsUpdate = 1;
 }
-
 
 
 
@@ -364,15 +382,22 @@ export class ContainmentTree extends React.Component {
     componentDidMount() {
         
     }
+    componentDidUpdate(){}
+    
     componentWillUnmount() {
         
     }
+    
 
     constructor(props) {
         super(props);
 
         treeData = []; 
         //let i = 0;
+        console.log("props")
+        console.log(props)
+        
+
         
         if (initialFolderAdded === false){
             setNewRenderKey(1);
