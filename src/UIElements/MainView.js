@@ -21,6 +21,7 @@ import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
 import { someVertexPath } from './ContainmentTree';
+import { ContextMenu } from './ContextMenu'
 
 import iconNewFolder from "../Resources/create_folder.svg"
 import iconDeleteFolder from "../Resources/delete_folder.svg"
@@ -47,6 +48,7 @@ export class MainProgramClass extends React.Component {
 
         this.setMode = this.setMode.bind(this);
         this.setLeftMenu = this.setLeftMenu.bind(this);
+        this.setLeftMenuToTree = this.setLeftMenuToTree.bind(this);
         this.semanticTableEnabled = false;
     }
 
@@ -288,14 +290,14 @@ export class MainProgramClass extends React.Component {
 
     render() {
         let GUI =
-            <div className="Program">
+        <><ContextMenu setLeftMenuToTree={this.setLeftMenuToTree} /><div className="Program">
                 <div className={this.semanticTableEnabled ? "SemanticDomain" : "hidden"}>
-                    <SemanticDomainEditor/>
+                    <SemanticDomainEditor />
                 </div>
 
-                <div className= "TopMenus">
+                <div className="TopMenus">
 
-                    <DropdownButton variant = "Primary" id = "File-Menu" title = "File" size = "lg">
+                    <DropdownButton variant="Primary" id="File-Menu" title="File" size="lg">
 
                         <Dropdown.Item>
                             <div className="TopBar">
@@ -328,46 +330,46 @@ export class MainProgramClass extends React.Component {
                         Semantic Editor
                     </div>
 
-                    <input className="TopBarSearch" id="ModelName" type = "text" name = "modelName" placeholder = "Graph Name" onChange={(e) => this.setModelName(e)}/>
-                    <input className="TopBarSearch" id="FolderName" type = "text" name = "folderName" placeholder = "New Container/Model" onChange={(e) => this.updateFolderName(e)}/>
+                    <input className="TopBarSearch" id="ModelName" type="text" name="modelName" placeholder="Graph Name" onChange={(e) => this.setModelName(e)} />
+                    <input className="TopBarSearch" id="FolderName" type="text" name="folderName" placeholder="New Container/Model" onChange={(e) => this.updateFolderName(e)} />
                     {/*<div className="TopBarIcon">&nbsp;</div>*/}
                     {/*The + and - are backwards on purpose here*/}
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>
 
                     {/*<div className="TopBarLabel"> {this.state.zoomLevel}% </div>*/}
-                    
+
                     <div className="TopBarIcon" onClick={() => this.zoom('+')}> + </div>
 
 
                     {/*<div className="TopBarIdentifier">Rows:&nbsp;</div>*/}
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
                     <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div> 
-                    <div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt ="Add Container"/></div>
-                    <div className="TopBarIcon" onClick={() => this.deleteFolder()}><img src={iconDeleteFolder} alt ="Delete Container"/></div>
-                    <div className="TopBarIcon" onClick={() => this.editFolderName()}><img src={iconEditFolder} alt ="Edit Container"/></div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>
+                    <div className="TopBarIcon" onClick={() => this.deleteFolder()}><img src={iconDeleteFolder} alt="Delete Container" /></div>
+                    <div className="TopBarIcon" onClick={() => this.editFolderName()}><img src={iconEditFolder} alt="Edit Container" /></div>
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarIcon" onClick={() => this.addModel()}><img src={iconNewModel} alt ="Add Model"/></div>
-                    <div className="TopBarIcon" onClick={() => this.deleteModel()}><img src={iconDeleteModel} alt ="Delete Model"/></div>
-                    <div className="TopBarIcon" onClick={() => this.editModelName()}><img src={iconEditModel} alt ="Edit Model"/></div>
-                    
+                    <div className="TopBarIcon" onClick={() => this.addModel()}><img src={iconNewModel} alt="Add Model" /></div>
+                    <div className="TopBarIcon" onClick={() => this.deleteModel()}><img src={iconDeleteModel} alt="Delete Model" /></div>
+                    <div className="TopBarIcon" onClick={() => this.editModelName()}><img src={iconEditModel} alt="Edit Model" /></div>
+
 
 
                 </div>
 
                 <div className="LowerPanel">
-                    <LeftMenu setMode = {this.setMode} setLeftMenu = {this.setLeftMenu} mainState = {this.state} className = "LeftMenus"/>
+                    <LeftMenu setMode={this.setMode} setLeftMenu={this.setLeftMenu} mainState={this.state} className="LeftMenus" />
                     {/*following 3 classes are temporary for displaying currently selected model and container(renderKey) and folder(selectedFolderKey) */}
-                    <input className="SelectedFolder" id="SelectedFolder" type = "text" name = "selectedFolder"  readonly='readonly'/>
-                    <input className="SelectedContainer" id="SelectedContainer" type = "text" name = "selectedContainer"  readonly='readonly'/>
-                    <input className="SelectedModel" id="SelectedModel" type = "text" name = "selectedModel"  readonly='readonly'/>
+                    <input className="SelectedFolder" id="SelectedFolder" type="text" name="selectedFolder" readonly='readonly' />
+                    <input className="SelectedContainer" id="SelectedContainer" type="text" name="selectedContainer" readonly='readonly' />
+                    <input className="SelectedModel" id="SelectedModel" type="text" name="selectedModel" readonly='readonly' />
 
                     <div className="Canvas">
-                        <Canvas setLeftMenu = {this.setLeftMenu} setMode = {this.setMode} mainState = {this.state}/>
+                        <Canvas setLeftMenu={this.setLeftMenu} setMode={this.setMode} mainState={this.state} />
                     </div>
                 </div>
-            </div>;
+            </div></>;
         return GUI
     }
 }

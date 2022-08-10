@@ -2,6 +2,7 @@ import { ClickAwayListener } from '@material-ui/core';
 import React from 'react';
 import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase} from "./ContainmentTree"
 import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, } from "./CanvasDraw";
+import {setLeftMenuToTree} from "./LeftMenu"
 
 let rightClickedItem = "Default"; //Name of the right clicked item where "Default" is a non-object such as empty canvas space
 let rightClickedItemKey = 0; // Identifying key of selected item needed to use relating methods eg. selectedFolderKey, ModelKey,VertexKey.
@@ -9,12 +10,16 @@ let menuType = "Default"; //Which menu type to return based on the selected item
 
 //Right click menu component used to access certain function of program
 export class ContextMenu extends React.Component {
-
+    constructor(props){ // added the constructer to drag props in from MainView class (setLeftMenuToTree function)
+        super(props);
+    }
+    
     state = {
         xPos: "0px",
         yPos: "0px",
         showMenu: false
     }
+
 
     componentDidMount() {
         document.addEventListener("click", this.handleClick);
@@ -43,6 +48,7 @@ export class ContextMenu extends React.Component {
                 handleModelRebase(rightClickedItemKey,parseInt(newFolderKey));
                 console.log("model ", rightClickedItemKey, " moved to folder id ",newFolderKey)
                 this.setState({showMenu: false})
+                this.props.setLeftMenuToTree();
             }
             
 
