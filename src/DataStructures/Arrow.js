@@ -133,8 +133,8 @@ export class Arrow {
                 this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
                 this.destEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
             }else{
-                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
-                this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
             }
         }else if(this.sourceIsNavigable){
             if(this.sourceIsAggregation){
