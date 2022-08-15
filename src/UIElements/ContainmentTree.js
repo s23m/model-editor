@@ -201,11 +201,16 @@ function deleteModelChildren(selectedModel){ // function for deleting all the ch
 
 
 export function handleRenameFolder(newName,rKey){
-    for (let i = 0; i < folderData.length; i++){
-        if (folderData[i].renderKey === rKey){
-            folderData[i].text = newName + " 📁";
-            break;
+    if(newName != ""){
+        for (let i = 0; i < folderData.length; i++){
+            if (folderData[i].renderKey === rKey){
+                folderData[i].text = newName + " 📁";
+                break;
+            }
         }
+    }
+    else{
+        console.log("Cannot have empty name")
     }
 }
 
@@ -394,8 +399,8 @@ export class ContainmentTree extends React.Component {
 
         treeData = []; 
         //let i = 0;
-        console.log("props")
-        console.log(props)
+        //console.log("props")
+        //console.log(props)
         
 
         
@@ -422,10 +427,10 @@ export class ContainmentTree extends React.Component {
                 let canvasItems = determineOwnership(folder.renderKey) 
                 let subFolderItems = determineSubFolders(folder.renderKey)
                 let combinedItems = canvasItems.concat(subFolderItems)
-                console.log("test")
-                console.log("treedata");
-                console.log(treeData);
-                console.log(combinedItems)
+                //console.log("test")
+                //console.log("treedata");
+                //console.log(treeData);
+                //console.log(combinedItems)
                 folder.children = combinedItems;
 
             }
@@ -595,7 +600,7 @@ export class ContainmentTree extends React.Component {
             //console.log("Selected Type 2: " + data.node.data.type)
             //console.log("Selected Name 2: " + data.node.data.text)
             //console.log(folderData);
-            console.log(data.node.data)
+            //console.log(data.node.data)
 
             
 
