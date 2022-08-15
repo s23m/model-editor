@@ -1,10 +1,12 @@
 import { ClickAwayListener } from '@material-ui/core';
 import React from 'react';
-import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase} from "./ContainmentTree"
+import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder} from "./ContainmentTree"
 import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, } from "./CanvasDraw";
 import {setLeftMenuToTree} from "./LeftMenu"
+import { LocalConvenienceStoreOutlined } from '@material-ui/icons';
 
 let rightClickedItem = "Default"; //Name of the right clicked item where "Default" is a non-object such as empty canvas space
+let rightClickedItemType = "None"
 let rightClickedItemKey = 0; // Identifying key of selected item needed to use relating methods eg. selectedFolderKey, ModelKey,VertexKey.
 let menuType = "Default"; //Which menu type to return based on the selected item and what operations are available to it
 
@@ -24,11 +26,13 @@ export class ContextMenu extends React.Component {
     componentDidMount() {
         document.addEventListener("click", this.handleClick);
         document.addEventListener("contextmenu", this.handleContextMenu);
+        document.addEventListener("keypress", this.handleKey);
     }
 
     componentWillUnmount() {
         document.removeEventListener("click", this.handleClick);
         document.removeEventListener("contextmenu", this.handleContextMenu);
+        document.removeEventListener("keypress", this.handleKey);
     }
 
     //The handle click method will check which option has been clicked and call the relevant method
@@ -50,10 +54,39 @@ export class ContextMenu extends React.Component {
                 this.setState({showMenu: false})
                 this.props.setLeftMenuToTree();
             }
-            
+            else if(e.target.id === "Rename"){
+                menuType = "Rename";
+                this.setState({showMenu: true})
+            }
+            else if(e.target.id === "RenameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
+            }
 
+            
             else{this.setState({ showMenu: false });}
+            
         }
+    }
+
+    handleKey = (e) => {
+        if(e.key === 'Enter'){
+            if(menuType === "Rename"){
+                let newName = document.getElementById("RenameBox").value
+                handleRenameFolder(newName,rightClickedItemKey)
+                console.log("menu change")
+                try{
+                this.props.setLeftMenuToTree();
+                }
+                catch(e){ //Not sure why theres an error here as it performs the method, then says the method doesnt exists, doesnt trigger on other uses of method either.-Lachlan
+                    console.log(e)
+                }
+                console.log("menu change fin")
+                this.setState({ showMenu: false })
+            }
+    }
+        /*if(e.key === 'Enter'){
+            console.log("enter pressed")
+        }
+        */
     }
 
     
@@ -116,7 +149,7 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected">Default</div>   
+                    <div className="CMSelected" id="CMSelected">Default</div>   
 
                     </div>
                 )
@@ -126,7 +159,8 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected">{rightClickedItem}</div>   
+                    <div className="CMSelected" id="CMSelected">{rightClickedItem}</div>   
+                    <div className="CMitem" id="Rename"> Rename</div>
                     </div>
                 )
             }
@@ -135,7 +169,7 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected"> {rightClickedItem} </div>   
+                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>   
                     <div className="CMitem" id="Navigate"> Navigate (not implemented) </div>
                     <div className="CMitem" id="MoveModel"> Move To </div>
                     </div>
@@ -149,8 +183,19 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected"> Move "{rightClickedItem}" To:</div>   
+                    <div className="CMSelected" id="CMSelected"> Move "{rightClickedItem}" To:</div>   
                     <div>{renderedOutput}</div>
+                    </div>
+                )
+            }
+            else if(menuType === "Rename"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>   
+                    <input className="CMText" id="RenameBox" type="text" name="renameItem" placeholder='new Name'/>
+                    
                     </div>
                 )
             }
