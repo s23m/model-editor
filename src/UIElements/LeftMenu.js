@@ -29,6 +29,7 @@ import {showVertexPath} from "./ContainmentTree.js";
 
 // The variable that contains the found path of a given vertex
 import { someVertexPath } from './ContainmentTree';
+import e from 'cors';
 
 //Property Enums
 export const LeftMenuType = {
@@ -76,10 +77,14 @@ export class LeftMenu extends React.Component{
         this.state = {
             menu: LeftMenuType.TreeView,
             selectedObject: null,
-            fileNames: []
+            fileNames: [],
+            title: "",
+            content: [],
+
         };
         this.setTitle = this.setTitle.bind(this);
         this.setContent = this.setContent.bind(this);
+        this.handleChange = this.handleChange.bind(this);
 
         this.formRef = null;
 
@@ -90,7 +95,12 @@ export class LeftMenu extends React.Component{
         this.setIcons();
 
     }
-
+    handleChange(event){
+        this.setState({title: event.target.value})
+        this.setState({title:""})
+        this.setTitle();
+        this.setContent();
+    }
     /*
     leftMenuContents = <form id = "VertexMenu">
                 <div className="LeftHeader">Vertex Properties</div>
@@ -118,7 +128,7 @@ export class LeftMenu extends React.Component{
         this.props.setMode(this.selectedItem)
 
         document.addEventListener("keydown", this.onKeyPressed.bind(this));
-
+        
     }
 
 
@@ -145,21 +155,16 @@ export class LeftMenu extends React.Component{
     
     componentWillReceiveProps(nextProps,nextContext) {
         this.setState({menu:nextProps.mainState.menu,selectedObject:nextProps.mainState.selectedObject});
-        //this.setState({selectedObject:nextProps.mainState.selectedObject});
-
+        
         //document.removeEventListener("keydown", this.onKeyPressed.bind(this));
+        console.log("below is mainstate.props and props in that order")
+        console.log(this.props.mainState.selectedObject)
+        console.log(this.state.selectedObject)
 
     }
     
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        let elem = document.getElementById("LeftTitle");
-        if(elem !== null){
-            if(document.getElementById("ModelName") !== document.activeElement) {
-                elem.select();
-                elem.click()
-            }
-        }
         let leftMenu = document.getElementById("VertexMenu");
         if(leftMenu === null){
             leftMenu = document.getElementById("ArrowMenu");
@@ -192,11 +197,13 @@ export class LeftMenu extends React.Component{
     }
 
     //VERTEX SETTERS
+    
     setTitle() {
         let newTitle = document.getElementById("LeftTitle").value;
         this.state.selectedObject.setTitle(newTitle);
         canvasDraw.drawAll()
     }
+
 
     setContent() {
         let newContent = document.getElementById("LeftContent").value;
@@ -360,6 +367,12 @@ export class LeftMenu extends React.Component{
         canvasDraw.drawAll()
     }
 
+   
+    deleteTitle = () => {
+        this.setState({title: ""})
+    };
+   
+
 // return the correct menu based on the selected item
     getMenu = () =>{
 
@@ -386,15 +399,15 @@ export class LeftMenu extends React.Component{
 
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();
-
+            
             leftMenuContents = <form id = "VertexMenu">
                 <div className="LeftHeader">Vertex Properties</div>
                 <label className="LeftLabel">Title</label>
-                <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()}/>
+                <input id="LeftTitle" className="LeftTitle" value={this.state.selectedObject.title} onInput={this.handleChange}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Content</label>
-                <textarea id="LeftContent" className ="LeftContent" defaultValue={this.state.selectedObject.getContentAsString()} onKeyUp={() => this.setContent()}/>
+                <textarea id="LeftContent" className ="LeftContent" value={this.state.selectedObject.getContentAsString()} onInput={this.handleChange}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 {this.getS23MIconsSelector()}
@@ -421,7 +434,7 @@ export class LeftMenu extends React.Component{
 
 
             </form>;
-
+            
         } else if (this.state.menu === LeftMenuType.Artifact) {
             canvasDraw.drawAll();
 
