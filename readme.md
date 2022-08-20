@@ -21,4 +21,12 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
+For simple deployment on a local machine you can install serve to setup a static server.
+
+#### `npm install -g serve`
+
+#### `serve -s build -l 3000`
+
+Where `-s` flag designates build folder and `-l` flag designates port <br/>
+
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.

@@ -63,7 +63,7 @@ export class Arrow {
 
         if (type === Tool.Edge) {
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
-            this.typeName = "Edge";
+            this.typeName = "Arrow";
         }else if (type === Tool.Specialisation){
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.TRIANGLE
             this.typeName = "Specialisation";

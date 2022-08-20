@@ -2,8 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { CollectionsBookmarkOutlined } from "@material-ui/icons";
+import { CollectionsBookmarkOutlined, ContactSupportOutlined } from "@material-ui/icons";
 import { currentObjects, getModelName } from "../UIElements/CanvasDraw";
+
 
 
 export class VertexNode {
@@ -477,9 +478,10 @@ export class Graph {
         }
 
         for (let object of objects) {
-            switch (object.constructor.name) {
+            switch (object.typeName) {
                 case "Vertex":
-                    this.addVertex(object);
+                    console.log("add vert trigs")
+                    this.addVertex(object);               
                     break;
                 case "Arrow":
                     this.addArrow(object);
@@ -491,7 +493,9 @@ export class Graph {
                     this.arrows.add(object);
                     break;
                 default:
-                    console.error("Attempted to add object to unknown type %s to Graph", object.constructor.name)
+                    console.error("Attempted to add object to unknown type %s to Graph", object.typeName)
+                    console.log(object)
+                    console.log(object.constructor)
                     break;
             }
         }
@@ -585,7 +589,7 @@ export class Graph {
         console.log("remove 2 is called")
         //By this point rootVertices doesnt actually contain the vertex we want to delete which makes the isRemoved Logic hard to follow as has returns true when the item is present- Lachlan
         console.log(this.rootVertices)
-        if (object.constructor.name === "Vertex") {
+        if (object.typeName === "Vertex") {
             let newobject = this.getVertexNode(object);
             let isRemoved = this.rootVertices.has(newobject);
             console.log(isRemoved)
@@ -625,7 +629,7 @@ export class Graph {
 
             return isRemoved;
 
-        } else if (object.constructor.name === "Arrow") {
+        } else if (object.typeName === "Arrow") {
             let newobject = this.getArrowEdge(object);
 
             if (newobject !== null) {
@@ -667,7 +671,7 @@ export class Graph {
 
         } else {
             if (object !== null) {
-                console.error("Attempted to remove object of invalid type %s to Graph", object.constructor.name);
+                console.error("Attempted to remove object of invalid type %s to Graph", object.typeName);
             } else {
                 console.error("Attempted to remove null from Graph");
             }
