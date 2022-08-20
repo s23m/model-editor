@@ -294,7 +294,7 @@ function getRowForObject(object) {
     // Constants
     row['id'] = object.semanticIdentity.UUID; // Just going to be based on UUID since it's easy and unique
     row['UUID'] = object.semanticIdentity.UUID;
-    row['type'] = object.constructor.name;
+    row['type'] = object.typeName;
     row['name'] = object.semanticIdentity.name;
     row['description'] = object.semanticIdentity.description;
     row['abbreviation'] = object.semanticIdentity.abbreviation;
@@ -318,7 +318,7 @@ export function resetRows() {
         newRows.push(getRowForObject(currentObjectsFlattened[i]));
 
         // Add Arrow Ends
-        if (currentObjectsFlattened[i].constructor.name === "Arrow") {
+        if (currentObjectsFlattened[i].typeName === "Arrow") {
             newRows.push(getRowForObject(currentObjectsFlattened[i].sourceEdgeEnd));
             newRows.push(getRowForObject(currentObjectsFlattened[i].destEdgeEnd));
         }
@@ -392,7 +392,7 @@ function updateChangedObjects(rows) {
             rows[i] = updateChangedObject(currentObjectsFlattened[o], rows[i]);
 
             // Update edge ends
-            if (currentObjectsFlattened[o].constructor.name === "Arrow") {
+            if (currentObjectsFlattened[o].typeName === "Arrow") {
                 rows[i] = updateChangedObject(currentObjectsFlattened[o].sourceEdgeEnd, rows[i]);
                 rows[i] = updateChangedObject(currentObjectsFlattened[o].destEdgeEnd, rows[i]);
             }

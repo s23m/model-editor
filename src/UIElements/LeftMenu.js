@@ -92,7 +92,7 @@ export class LeftMenu extends React.Component{
             this.formRef = element;
         };
 
-        this.setIcons();
+        //this.setIcons();
 
     }
     handleChange(event){
