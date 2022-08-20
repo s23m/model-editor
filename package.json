@@ -1,7 +1,8 @@
 {
   "name": "s23mgrapheditor",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage": "https://s23m.github.io/lclb/",
   "proxy": "http://localhost:8080",
   "dependencies": {
     "@devexpress/dx-react-core": "^2.7.1",
@@ -26,6 +27,8 @@
     "uuid": "^8.0.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "server": "node-env-run server --exec nodemon | pino-colada",
     "start": "run-p server client",
     "client": "react-scripts start",
@@ -65,4 +68,5 @@
       "public/*"
     ]
   }
+
 }

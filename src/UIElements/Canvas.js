@@ -50,7 +50,7 @@ export class Canvas extends React.Component {
             // check if there's an object
             if (intersection !== null) {
                 //if object is a box, move the object
-                if (canvas.tool === Tool.Select && intersection.constructor.name === "Vertex") {
+                if (canvas.tool === Tool.Select && intersection.typeName === "Vertex") {
                     e.preventDefault();
                     // brings up the menu
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));

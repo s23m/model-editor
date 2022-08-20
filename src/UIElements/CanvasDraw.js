@@ -246,7 +246,7 @@ function checkResizeBounds(x, y) {
     for (let i = 0; i < currentObjectsFlattened.length; i++) {
         let item = currentObjectsFlattened[i];
 
-        if (item.constructor.name === "Vertex") {
+        if (item.typeName === "Vertex") {
             // Get vertex bounds
             // x1 y1 are the lower coordinates
             // x2 y2 are the upper coordinates
@@ -308,7 +308,7 @@ function getConnectionDataForArrow(cursorX, cursorY) {
     // Find nearest connectable
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
-            if (item.constructor.name === "Vertex") {
+            if (item.typeName === "Vertex") {
                 let sideData = item.getNearestSideFrom(cursorX, cursorY, lastX, lastY);
                 // Only check if valid
                 if (sideData !== null && sideData[0] < distanceThreshold) {
@@ -435,7 +435,7 @@ function findNearestArrowPointIndex(x, y) {
     let nearestArrow = null;
 
     currentObjects.flatten().forEach((item) => {
-        if (item.constructor.name === "Arrow") {
+        if (item.typeName === "Arrow") {
             item.path.forEach((point) => {
                 cDist = Math.hypot(x - point[0], y - point[1]);
                 console.log(cDist);
@@ -555,7 +555,7 @@ export function checkArrowsConnectedToBox(Object) {
     objectID = Object.semanticIdentity.UUID;
     console.log(objectID);
     currentObjects.flatten().forEach((item) => {
-        if (item.constructor.name === "Arrow") {
+        if (item.typeName === "Arrow") {
             let conData = 0;
             //If the object is connected to destination
             if (objectID === item.destVertexUUID) {
@@ -605,7 +605,7 @@ export function checkHorizArrowsConnectedToBox(Object) {
     objectID = Object.semanticIdentity.UUID;
     console.log(objectID);
     currentObjects.flatten().forEach((item) => {
-        if (item.constructor.name === "Arrow") {
+        if (item.typeName === "Arrow") {
             let conData = 0;
             //If the object is connected to destination
             if (objectID === item.destVertexUUID) {
@@ -673,7 +673,7 @@ export function checkCollision(canvas, x, y) {
     // for loop to check all boxes in the list
     if (currentObjects.flatten() !== null && object !== null) {
         currentObjects.flatten().forEach((item) => {
-            if (item.constructor.name === "Vertex") {
+            if (item.typeName === "Vertex") {
                 //make sure coords are > coords of box u just placed + its width
                 if (object.x === item.x && object.y === item.y) {
                     //console.log("collides with itself");
@@ -731,7 +731,7 @@ export function onRightMouseRelease(canvas, x, y) {
 export function updateA() {
     let conData = 0;
     currentObjects.flatten().forEach((item) => {
-        if (item.constructor.name === "Arrow") {
+        if (item.typeName === "Arrow") {
 
             conData = getConnectionDataForArrow(item.path[1][0], item.path[1][1]);
             item.pathData[1] = conData['nearest'];
@@ -758,7 +758,7 @@ export function compareSizesToMoveAll(Object) {
     objectID = Object.semanticIdentity.UUID;
     console.log(objectID);
     currentObjects.flatten().forEach((item) => {
-        if (item.constructor.name === "Arrow") {
+        if (item.typeName === "Arrow") {
 
             //If the object is connected to destination
             if (objectID === item.destVertexUUID) {
@@ -1326,7 +1326,7 @@ export function shiftBoxes(secondObject) {
     //Index 0 means down index 1 means up
 
     currentObjects.flatten().forEach((item) => {
-        if (item.constructor.name === "Arrow") {
+        if (item.typeName === "Arrow") {
             //get the big box because it has all the arrows connected
             if (bigBox.y + bigBox.height + 10 < smallBox.y && smallBox.x > bigBox.x && smallBox.x + smallBox.width < bigBox.x + bigBox.width) {
                 [downBoxes, downArrows] = collectMehBox(downBoxes, downArrows, bigBox, item, 0);
@@ -1411,7 +1411,7 @@ export function onLeftMouseRelease(canvas, x, y) {
             //converting all arrows to savedArrows array
             let i = 0;
             currentObjects.flatten().forEach((item) => {
-                if (item.constructor.name === "Arrow") {
+                if (item.typeName === "Arrow") {
                     savedArrows[i] = item.path;
                     i++;
                 }
@@ -1582,7 +1582,7 @@ export function onMouseLeave() {
 // friends = the smaller boxes that are connected to the bigger box
 function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, saveDisY, arrowsVert, arrowsHoriz, shiftDown) {
     if (object != null) {
-        if (object.constructor.name === "Vertex") {
+        if (object.typeName === "Vertex") {
             let position = getGraphXYFromMouseEvent(e);
             let x = position[0] - saveDisX;
             let y = position[1] - saveDisY;
@@ -1659,7 +1659,7 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
             updateArrows();
 
 
-        } else if (object.constructor.name === "Arrow") {
+        } else if (object.typeName === "Arrow") {
             return;
 
         }
@@ -1669,7 +1669,7 @@ export function updateArrows() {
     let flattenedObjects = currentObjects.flatten();
     flattenedObjects.forEach((item) => {
         if (item !== null) {
-            if (item.constructor.name === "Arrow") {
+            if (item.typeName === "Arrow") {
                 item.rebuildPath();
             }
         }
@@ -1726,7 +1726,7 @@ export function findIntersected(x, y) {
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
             if (item.intersects(x, y)) {
-                //console.log("Intersection detected with ", item.constructor.name);
+                //console.log("Intersection detected with ", item.typeName);
                 selectedItem = item;
             }
         }

@@ -22,7 +22,6 @@ export class Vertex {
         }
 
         this.title = title;
-        this.icon = "&#8414";
         this.content = content;
         this.x = x;
         this.y = y;
@@ -413,7 +412,7 @@ export class Vertex {
 
         }
 
-        for (let i = 0; i < this.icons[0].length; i++) {
+       /* for (let i = 0; i < this.icons[0].length; i++) {
 
             if (this.icons[1][i] === true) {
                 if (this.icons[2][i] === true) {
@@ -422,6 +421,7 @@ export class Vertex {
 
                 let element = this.imageElements[this.icons[0][i]];
 
+                
                 if (element === undefined) {
 
                     let imageElement = new Image();
@@ -438,7 +438,8 @@ export class Vertex {
             } else {
                 yPos += iconHeight + (iconPadding * 2);
             }
-        }
+            
+        } */
 
         // Reset color for text
         canvasContext.fillStyle = "#000000";
