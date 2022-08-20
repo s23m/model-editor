@@ -203,13 +203,13 @@ export class MainProgramClass extends React.Component {
         }
 
         // if the selected object has a left menu,
-        else if (StringToLeftMenuType[nearestObject.constructor.name] !== null) {
+        else if (StringToLeftMenuType[nearestObject.typeName] !== null) {
             this.setState({
-                menu: nearestObject.constructor.name,
+                menu: nearestObject.typeName,
                 selectedObject: nearestObject
             });
-            console.log("below should be selectedObject");
-            console.log(this.state.selectedObject)
+            //console.log("below should be selectedObject");
+            //console.log(this.state.selectedObject)
             nearestObject.setSelected(true);
         } else {
             if (this.state.selectedObject !== null) {
