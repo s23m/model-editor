@@ -756,7 +756,7 @@ export function compareSizesToMoveAll(Object) {
     let boxArray = [];
 
     objectID = Object.semanticIdentity.UUID;
-    console.log(objectID);
+    console.log(Object);
     currentObjects.flatten().forEach((item) => {
         if (item.typeName === "Arrow") {
 

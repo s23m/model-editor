@@ -245,12 +245,12 @@ export class VertexNode {
                             if (someObject.typeName === "Vertex"){
                             
                                 if (ourSourceEnd === someObject.semanticIdentity.UUID){
-                                    console.log("Matched1")
+                                    
                                     textDest = someObject.title
                                 }
 
                                 else if (ourDestEnd === someObject.semanticIdentity.UUID){
-                                    console.log("Matched2")
+                                    
                                     textSource = someObject.title
                                 }
                             }
@@ -265,7 +265,7 @@ export class VertexNode {
                         treeAppearanceSwitches[1] = currentObjects.flatten()[i].getNavigable(1)
                         treeAppearanceSwitches[2] = currentObjects.flatten()[i].getAggregation(0)
                         treeAppearanceSwitches[3] = currentObjects.flatten()[i].getAggregation(1)
-                        console.log(treeAppearanceSwitches);
+                        
                         //unicode icon of the arrow properties/relations we want to display
                         let arrowIcon = "";
 

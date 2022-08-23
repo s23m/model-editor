@@ -1,7 +1,7 @@
 import { ClickAwayListener } from '@material-ui/core';
 import React from 'react';
 import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder} from "./ContainmentTree"
-import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, } from "./CanvasDraw";
+import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID} from "./CanvasDraw";
 import {setLeftMenuToTree} from "./LeftMenu"
 import { LocalConvenienceStoreOutlined } from '@material-ui/icons';
 
@@ -9,6 +9,7 @@ let rightClickedItem = "Default"; //Name of the right clicked item where "Defaul
 let rightClickedItemType = "None"
 let rightClickedItemKey = 0; // Identifying key of selected item needed to use relating methods eg. selectedFolderKey, ModelKey,VertexKey.
 let menuType = "Default"; //Which menu type to return based on the selected item and what operations are available to it
+let rightClickedObject; // the canvas object which was right clicked
 
 //Right click menu component used to access certain function of program
 export class ContextMenu extends React.Component {
@@ -101,6 +102,7 @@ export class ContextMenu extends React.Component {
         menuType = "Default"; //reset the menu type
         rightClickedItem = "Default" //reset the selected item
         rightClickedItemKey = 0 //reset the index
+        rightClickedObject = null; // reset the object
 
         //console.log(e.target.className)
 
@@ -128,6 +130,27 @@ export class ContextMenu extends React.Component {
                         rightClickedItem = e.target.text;
                         rightClickedItemKey = getCurrentModel();
                     }
+                }
+            }
+            
+        }
+        // if target exists within the canvas
+        else if(e.target.id ==="drawCanvas"){
+            let position = getGraphXYFromMouseEvent(e);
+            let x = position [0]; let y = position[1];
+            rightClickedObject = findIntersected(x, y);
+            if(rightClickedObject !== null){
+                if(rightClickedObject.typeName === "Vertex"){
+                    rightClickedItem = rightClickedObject.title
+                    menuType = "Vertex"
+                }
+                else if(rightClickedObject.typeName === "Arrow"){
+                    let source = getObjectFromUUID(rightClickedObject.sourceVertexUUID);
+                    let dest = getObjectFromUUID(rightClickedObject.destVertexUUID);
+                    let sourceName = source.title;
+                    let destName = dest.title;
+                    rightClickedItem = "Arrow from " + sourceName + " to " + destName
+                    menuType = "Arrow"
                 }
             }
             
@@ -196,6 +219,26 @@ export class ContextMenu extends React.Component {
                     <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>   
                     <input className="CMText" id="RenameBox" type="text" name="renameItem" placeholder='new Name'/>
                     
+                    </div>
+                )
+            }
+            else if(menuType === "Arrow"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>   
+                    <div className="CMitem" id="Auto-Layout"> Auto-Layout option (not implemented) </div>
+                    </div>
+                )
+            }
+            else if(menuType === "Vertex"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>   
+                    <div className="CMitem" id="Auto-Layout"> Auto-Layout option (not implemented) </div>
                     </div>
                 )
             }
