@@ -39,7 +39,7 @@ let showingVertPath = false;
 let treeData = [];
 
 // I need this to store the folders. Initially, it has one folder simply titled 'Unnamed Folder'.
-let folderData = [];
+export let folderData = [];
 
 //used as a container to seperate "root" folders and subfolders so that only the root folders are pushed to root.children in the constructor - Lachlan
 let folderDataRoot = [];
@@ -53,7 +53,7 @@ let selectedFolderKey = 0;
 let decoyFolderData = [];
 
 // An array for holding model names
-let modelObjects = [];
+export let modelObjects = [];
 
 let decoyModelObjects = []; // doing the same data referencing as folder data because currently the data being referenced in the models is the model beforehand which
                             // i dont tink is intended. - cooper

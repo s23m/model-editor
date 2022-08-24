@@ -1794,7 +1794,7 @@ export function linkContainer(baseUUID,mirrorUUID){
     }
     for(let i of currentObjects.rootVertices){
         if(i.vertex.semanticIdentity.UUID === baseUUID){
-            updateLinkedContainers(i.vertex);
+            updateLinkedContainers(baseSemantic.vertex);
         }
     }
 
