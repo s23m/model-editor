@@ -157,9 +157,6 @@ export class LeftMenu extends React.Component{
         this.setState({menu:nextProps.mainState.menu,selectedObject:nextProps.mainState.selectedObject});
         
         //document.removeEventListener("keydown", this.onKeyPressed.bind(this));
-        console.log("below is mainstate.props and props in that order")
-        console.log(this.props.mainState.selectedObject)
-        console.log(this.state.selectedObject)
 
     }
     
