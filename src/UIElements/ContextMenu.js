@@ -70,6 +70,7 @@ export class ContextMenu extends React.Component {
                 console.log(rightClickedObject)  
                 let newFolderKey = e.target.id.replace("Folder",'')
                 handleAddModel(rightClickedObject.title,parseInt(newFolderKey),rightClickedObject.semanticIdentity)
+                this.props.setLeftMenuToTree();
                 this.setState({showMenu: false})
             }
             else if(e.target.id === "LinkContainer"){
@@ -91,9 +92,9 @@ export class ContextMenu extends React.Component {
                 this.setState({showMenu: true})
 
             }
-            else if(menuType === 'Bi-Nav' && e.target.id.includes("Vertex")){
+            else if(menuType === 'Bi-Nav' && e.target.id.includes("Nav")){
                 console.log("navigating")  
-                let keys = e.target.id.replace("Vertex",'');
+                let keys = e.target.id.replace("Nav",'');
                 console.log(keys)
 
 
@@ -109,6 +110,7 @@ export class ContextMenu extends React.Component {
                     }
                 }
                 drawAll();
+                console.log(getCurrentModel(),getCurrentRenderKey())
                 this.props.setLeftMenuToTree();
 
 
@@ -356,15 +358,22 @@ export class ContextMenu extends React.Component {
 
                 console.log(getCurrentObjects().rootVertices);
                 let matchingContainers = [];
+                let matchingModels = [];
                 let matchingUUID = rightClickedObject.semanticIdentity.UUID;
                 for(let vert of getCurrentObjects().rootVertices){
                     if(vert.vertex.semanticIdentity.UUID === matchingUUID){
                         matchingContainers.push(vert)
                     }
                 }
+                for(let model of getModelData()){
+                    if(model.semanticIdentity.UUID === matchingUUID){
+                        matchingModels.push(model)
+                    }
+                }
+
                 console.log(matchingContainers)
-                let renderedContainers = matchingContainers.map(item => <div className="CMitem" id={'Vertex'+ item.vertex.vertexModelKey + " " + item.vertex.vertexRenderKey} key={'Vertex'+ item.vertex.semanticIdentity.UUID + " " + item.vertex.awayx}> {getModelNameFromKey(item.vertex.vertexModelKey)} / {item.vertex.title} </div>)
-                //let renderedModels = null;
+                let renderedContainers = matchingContainers.map(item => <div className="CMitem" id={'Nav'+ item.vertex.vertexModelKey + " " + item.vertex.vertexRenderKey} key={'Nav'+ item.vertex.semanticIdentity.UUID + " " + item.vertex.awayx}> {getModelNameFromKey(item.vertex.vertexModelKey)} / {item.vertex.title} </div>)
+                let renderedModels = matchingModels.map(item => <div className="CMitem" id={'Nav'+ item.modelKey + " " + item.renderKey} key={'Nav'+ item.semanticIdentity.UUID}> {item.text}</div>)
                 
 
                 return (
@@ -373,6 +382,7 @@ export class ContextMenu extends React.Component {
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> also appears at:</div>   
                     <div>{renderedContainers}</div>
+                    <div>{renderedModels}</div>
                     </div>
                 )
             }
