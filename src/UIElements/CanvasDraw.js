@@ -1774,6 +1774,49 @@ function createContainer(canvas, x1, y1) {
     return null;
 }
 
+//Links the container with the mirrorSemantic to the container with the Base (Mirror becomes base)
+
+export function linkContainer(baseUUID,mirrorUUID){
+    let baseSemantic = null;
+    console.log(currentObjects.rootVertices) 
+    //Since rootvertices was made as a set, cant just find indexes to reference, have to keep for looping to what we want
+    for(let i of currentObjects.rootVertices){
+        if(i.vertex.semanticIdentity.UUID === baseUUID){
+            baseSemantic = i;
+            break
+        }
+    }
+    for(let i of currentObjects.rootVertices){
+        if(i.vertex.semanticIdentity.UUID === mirrorUUID){
+            i.vertex.semanticIdentity = baseSemantic.vertex.semanticIdentity;
+            break
+        }
+    }
+    for(let i of currentObjects.rootVertices){
+        if(i.vertex.semanticIdentity.UUID === baseUUID){
+            updateLinkedContainers(baseSemantic.vertex);
+        }
+    }
+
+    console.log(currentObjects.rootVertices)
+
+}
+//Updates the appearances of linked containers to match the input container
+//Without a source container or doing a general scan, containers would be matched to copy the first vertex in the set, not the one that most recently changed
+export function updateLinkedContainers(inputContainer){
+    for(let i of currentObjects.rootVertices){
+        if(inputContainer.semanticIdentity.UUID === i.vertex.semanticIdentity.UUID){
+            i.vertex.title = inputContainer.title
+            i.vertex.content = inputContainer.content
+            i.vertex.icons = inputContainer.icons
+            i.vertex.colour = inputContainer.colour
+            i.vertex.imageElements = inputContainer.imageElements
+            i.vertex.fontSize = inputContainer.fontSize
+        }
+    }
+    drawAll()
+}
+
 function createObject(canvas, x1, y1, x2, y2) {
     let newPath;
     let currentObjectsFlattened = currentObjects.flatten();

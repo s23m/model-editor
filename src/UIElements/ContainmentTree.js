@@ -39,7 +39,7 @@ let showingVertPath = false;
 let treeData = [];
 
 // I need this to store the folders. Initially, it has one folder simply titled 'Unnamed Folder'.
-let folderData = [];
+export let folderData = [];
 
 //used as a container to seperate "root" folders and subfolders so that only the root folders are pushed to root.children in the constructor - Lachlan
 let folderDataRoot = [];
@@ -53,7 +53,7 @@ let selectedFolderKey = 0;
 let decoyFolderData = [];
 
 // An array for holding model names
-let modelObjects = [];
+export let modelObjects = [];
 
 let decoyModelObjects = []; // doing the same data referencing as folder data because currently the data being referenced in the models is the model beforehand which
                             // i dont tink is intended. - cooper
@@ -118,7 +118,7 @@ export function handleAddFolder(folderName, parentKey = 0){
     incrementTotalRenderKeys();
 
     let tempFolderThing = {
-        text: folderName + " 📁",
+        text: folderName + " 📁", //If icon is changed, youll have to change toe folder icon in context menu too
         children: treeData[getTotalRenderKeys()],
         data: NaN,
         state: {opened: true},
@@ -130,7 +130,7 @@ export function handleAddFolder(folderName, parentKey = 0){
     decoyFolderData.push(tempFolderThing)
 
     let folderThing2 = {
-        text: folderName + " 📁",
+        text: folderName + " 📁", //If icon is changed, youll have to change toe folder icon in context menu too
         children: treeData[getTotalRenderKeys()],
         data: decoyFolderData[folderData.length],
         state: {opened: true},
@@ -225,11 +225,11 @@ export function handleRenameFolder(newName,rKey){
 export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticID=undefined){
     incrementTotalModels();
     let sID = undefined;
-    let icon = " 📈";
+    let icon = " 📈"; //If icon is changed, youll have to change toe folder icon in context menu too
     
     if (semanticID !== undefined){
         sID = semanticID;
-        icon = " ⛶";
+        icon = " ⛶"; //If icon is changed, youll have to change toe folder icon in context menu too
     } else {
         sID = new SemanticIdentity(modelName,"","","", undefined ,[]);
     }
@@ -391,6 +391,11 @@ function determineSubFolders(parsedRenderKey){
     //console.log("subfolder return")
     //console.log(returnArray)
     return returnArray
+}
+
+export function getModelNameFromKey(key){
+    let model = modelObjects.find(model => model.modelKey === key)
+    return model.text
 }
 
 

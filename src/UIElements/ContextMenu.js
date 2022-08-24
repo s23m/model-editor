@@ -1,7 +1,8 @@
 import { ClickAwayListener } from '@material-ui/core';
 import React from 'react';
-import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel} from "./ContainmentTree"
-import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects} from "./CanvasDraw";
+import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel, getModelNameFromKey, folderData, modelObjects} from "./ContainmentTree"
+import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects,setCurrentObjects,
+    linkContainer,updateLinkedContainers, currentObjects, drawAll} from "./CanvasDraw";
 import {setLeftMenuToTree} from "./LeftMenu"
 import { ContactsOutlined, LocalConvenienceStoreOutlined } from '@material-ui/icons';
 import {getSemanticIdentity} from "../DataStructures/Vertex"
@@ -69,6 +70,51 @@ export class ContextMenu extends React.Component {
                 console.log(rightClickedObject)  
                 let newFolderKey = e.target.id.replace("Folder",'')
                 handleAddModel(rightClickedObject.title,parseInt(newFolderKey),rightClickedObject.semanticIdentity)
+                this.props.setLeftMenuToTree();
+                this.setState({showMenu: false})
+            }
+            else if(e.target.id === "LinkContainer"){
+                menuType = "LinkContainer";
+                this.setState({showMenu: true})
+                console.log(getCurrentObjects().rootVertices)
+            }
+            else if(menuType === 'LinkContainer' && e.target.id.includes("Vertex")){
+                console.log("linking semantic")  
+                let baseUUID = e.target.id.replace("Vertex",'');
+                let mirrorUUID = rightClickedObject.semanticIdentity.UUID;
+                linkContainer(baseUUID,mirrorUUID)
+                this.props.setLeftMenuToTree();
+
+                this.setState({showMenu: false})
+            }
+            else if(e.target.id === "Bi-Nav"){
+                menuType = "Bi-Nav";
+                this.setState({showMenu: true})
+
+            }
+            else if(menuType === 'Bi-Nav' && e.target.id.includes("Nav")){
+                console.log("navigating")  
+                let keys = e.target.id.replace("Nav",'');
+                console.log(keys)
+
+
+                setNewModel(parseInt(keys[0]));
+                setNewRenderKey(keys[1]); // automatically sets the renderkey to be the same as the models as this was causing issues - cooper
+                setSelectedFolderKey(keys[1]);
+                for (let item of currentObjects.flatten()){
+                    if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
+                        item.setPresent();
+                    }
+                    else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
+                        item.setAway();
+                    }
+                }
+                drawAll();
+                console.log(getCurrentModel(),getCurrentRenderKey())
+                this.props.setLeftMenuToTree();
+
+
+                this.setState({showMenu: false})
             }
 
             
@@ -131,7 +177,7 @@ export class ContextMenu extends React.Component {
             }
 
             //if target is existing model, load model menu
-            if(e.target.text.includes("📈")){
+            if(e.target.text.includes("📈" || "⛶")){
                 for(let model of getModelData()){
                     if(e.target.text === model.text){
                         //console.log("matching model found")
@@ -197,7 +243,7 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected" id="CMSelected">{rightClickedItem}</div>   
+                    <div className="CMSelected" id="CMSelected"><b>{rightClickedItem}</b></div>   
                     <div className="CMitem" id="Rename"> Rename</div>
                     </div>
                 )
@@ -207,7 +253,7 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>   
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
                     <div className="CMitem" id="Navigate"> Navigate (not implemented) </div>
                     <div className="CMitem" id="MoveModel"> Move To </div>
                     </div>
@@ -221,7 +267,7 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected" id="CMSelected"> Move "{rightClickedItem}" To:</div>   
+                    <div className="CMSelected" id="CMSelected"> Move "<b>{rightClickedItem}</b>" To:</div>   
                     <div>{renderedOutput}</div>
                     </div>
                 )
@@ -231,7 +277,7 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>   
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
                     <input className="CMText" id="RenameBox" type="text" name="renameItem" placeholder='new Name'/>
                     
                     </div>
@@ -242,7 +288,7 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>   
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
                     <div className="CMitem" id="Auto-Layout"> Auto-Layout option (not implemented) </div>
                     </div>
                 )
@@ -252,7 +298,7 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>   
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
                     <div className="CMitem" id="Auto-Layout"> Auto-Layout option (not implemented) </div>
                     </div>
                 )
@@ -262,21 +308,81 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>
                     <div className="CMitem" id="Create-Graph"> Create Graph </div>   
+                    <div className="CMitem" id="LinkContainer"> Link Container From </div> 
+                    <div className="CMitem" id="Bi-Nav"> Goto other occurences </div> 
                     <div className="CMitem" id="Auto-Layout"> Auto-Layout option (not implemented) </div>
                     </div>
                 )
             }
+            else if(menuType === "LinkContainer"){
+                console.log(getCurrentObjects().rootVertices)
+                let vertices = Array.from(getCurrentObjects().rootVertices)
+                console.log(vertices)
+                for(let i in vertices){
+                    if (vertices[i].vertex.isContainer === false){
+                        vertices.splice(i,1)
+                    }
+                }
+                console.log(vertices)
+                
+                let renderedOutput = vertices.map(item => <div className="CMitem" id={'Vertex'+ item.vertex.semanticIdentity.UUID} key={'Vertex'+ item.vertex.semanticIdentity.UUID + " " + item.vertex.awayx}> {getModelNameFromKey(item.vertex.vertexModelKey)} / {item.vertex.title} </div>);
+                
+                console.log(renderedOutput)
+
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> Link <b>{rightClickedItem}</b> from: </div>
+                    <div>{renderedOutput}</div>
+                    </div>
+                    
+                )
+            }
             else if(menuType === "AddContainerModel"){
+                
                 let renderedOutput = getFolderData().map(item => <div className="CMitem" id={'Folder'+ item.renderKey} key={item.text}> {item.text} </div>);
 
                 return (
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected" id="CMSelected"> Create Model in:</div>   
+                    <div className="CMSelected" id="CMSelected"> Create Model of <b>{rightClickedItem}</b> in:</div>   
                     <div>{renderedOutput}</div>
+                    </div>
+                )
+            }
+            else if(menuType === "Bi-Nav"){
+
+                console.log(getCurrentObjects().rootVertices);
+                let matchingContainers = [];
+                let matchingModels = [];
+                let matchingUUID = rightClickedObject.semanticIdentity.UUID;
+                for(let vert of getCurrentObjects().rootVertices){
+                    if(vert.vertex.semanticIdentity.UUID === matchingUUID){
+                        matchingContainers.push(vert)
+                    }
+                }
+                for(let model of getModelData()){
+                    if(model.semanticIdentity.UUID === matchingUUID){
+                        matchingModels.push(model)
+                    }
+                }
+
+                console.log(matchingContainers)
+                let renderedContainers = matchingContainers.map(item => <div className="CMitem" id={'Nav'+ item.vertex.vertexModelKey + " " + item.vertex.vertexRenderKey} key={'Nav'+ item.vertex.semanticIdentity.UUID + " " + item.vertex.awayx}> {getModelNameFromKey(item.vertex.vertexModelKey)} / {item.vertex.title} </div>)
+                let renderedModels = matchingModels.map(item => <div className="CMitem" id={'Nav'+ item.modelKey + " " + item.renderKey} key={'Nav'+ item.semanticIdentity.UUID}> {item.text}</div>)
+                
+
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> also appears at:</div>   
+                    <div>{renderedContainers}</div>
+                    <div>{renderedModels}</div>
                     </div>
                 )
             }
