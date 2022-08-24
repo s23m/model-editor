@@ -1774,6 +1774,15 @@ function createContainer(canvas, x1, y1) {
     return null;
 }
 
+//Links the mirror Containers semantic with the base
+export function linkContainer(baseContainer,mirrorContainer){
+    mirrorContainer.semanticIdentity = baseContainer.semanticIdentity;
+}
+//Updates the appearances of linked containers to match the input
+export function updateLinkedContainers(inputContainer){
+
+}
+
 function createObject(canvas, x1, y1, x2, y2) {
     let newPath;
     let currentObjectsFlattened = currentObjects.flatten();

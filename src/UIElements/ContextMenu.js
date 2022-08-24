@@ -1,7 +1,8 @@
 import { ClickAwayListener } from '@material-ui/core';
 import React from 'react';
 import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel} from "./ContainmentTree"
-import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects} from "./CanvasDraw";
+import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects,setCurrentObjects,
+    linkContainer,updateLinkedContainers, currentObjects} from "./CanvasDraw";
 import {setLeftMenuToTree} from "./LeftMenu"
 import { ContactsOutlined, LocalConvenienceStoreOutlined } from '@material-ui/icons';
 import {getSemanticIdentity} from "../DataStructures/Vertex"
@@ -69,6 +70,11 @@ export class ContextMenu extends React.Component {
                 console.log(rightClickedObject)  
                 let newFolderKey = e.target.id.replace("Folder",'')
                 handleAddModel(rightClickedObject.title,parseInt(newFolderKey),rightClickedObject.semanticIdentity)
+            }
+            else if(e.target.id === "LinkContainer"){
+                menuType = "LinkContainer";
+                this.setState({showMenu: true})
+                console.log(getCurrentObjects().rootVertices)
             }
 
             
@@ -264,11 +270,32 @@ export class ContextMenu extends React.Component {
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>
                     <div className="CMitem" id="Create-Graph"> Create Graph </div>   
+                    <div className="CMitem" id="LinkContainer"> Link Container </div> 
                     <div className="CMitem" id="Auto-Layout"> Auto-Layout option (not implemented) </div>
                     </div>
                 )
             }
+            else if(menuType === "LinkContainer"){
+                console.log(getCurrentObjects().rootVertices)
+                let vertices = Array.from(getCurrentObjects().rootVertices)
+                console.log(vertices)
+                
+                let renderedOutput = vertices.map(item => <div className="CMitem" id={'Vertex'+ item.vertex.semanticIdentity.UUID} key={'Vertex'+ item.vertex.semanticIdentity.UUID}> {item.vertex.title} </div>);
+                
+                console.log(renderedOutput)
+
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>
+                    <div>{renderedOutput}</div>
+                    </div>
+                    
+                )
+            }
             else if(menuType === "AddContainerModel"){
+                
                 let renderedOutput = getFolderData().map(item => <div className="CMitem" id={'Folder'+ item.renderKey} key={item.text}> {item.text} </div>);
 
                 return (
