@@ -30,6 +30,7 @@ export class Vertex {
         this.selected = false;
         this.imageElements = {};
         this.fontSize = 12;
+        this.isContainer = false; //Will be flagged true on creation of container, but shouldn't be changed otherwise
 
         // Note these values often change in runtime
         this.width = width;
@@ -96,6 +97,22 @@ export class Vertex {
 
     getModelKey(){
         return this.vertexModelKey;
+    }
+
+    setIsContainer(bool){
+        this.isContainer = bool;
+    }
+
+    getIsContainer(){
+        return this.isContainer
+    }
+
+    getSemantic(){
+        return this.SemanticIdentity
+    }
+
+    setSemantic(newSem){
+        this.SemanticIdentity = newSem;
     }
 
     // Set the render key. Done in ContainmentTree.js

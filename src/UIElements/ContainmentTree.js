@@ -54,6 +54,7 @@ let decoyFolderData = [];
 
 // An array for holding model names
 let modelObjects = [];
+
 let decoyModelObjects = []; // doing the same data referencing as folder data because currently the data being referenced in the models is the model beforehand which
                             // i dont tink is intended. - cooper
 
@@ -224,15 +225,17 @@ export function handleRenameFolder(newName,rKey){
 export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticID=undefined){
     incrementTotalModels();
     let sID = undefined;
+    let icon = " 📈";
     
     if (semanticID !== undefined){
         sID = semanticID;
+        icon = " ⛶";
     } else {
         sID = new SemanticIdentity(modelName,"","","", undefined ,[]);
     }
-
+    
     let decoyModelThing = {
-        text: modelName + " 📈",
+        text: modelName + icon,
         children: ["Vertices 📁","Arrows 📁"],
         data: NaN,
         state: {opened: true},
@@ -245,7 +248,7 @@ export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticI
 
 
     let tempModelThing = {
-        text: modelName + " 📈",
+        text: modelName + icon,
         children: ["Vertices 📁","Arrows 📁"],
         data: decoyModelObjects[modelObjects.length],
         state: {opened: true},

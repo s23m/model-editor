@@ -6,6 +6,7 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
+import {getModelData,handleAddModel} from "./ContainmentTree";
 
 
 // Core variables
@@ -62,6 +63,9 @@ export function incrementTotalRenderKeys() {
     totalRenderKeys = totalRenderKeys += 1;
 }
 
+export function getCurrentObjects() {
+    return currentObjects;
+}
 
 // --- Model Key Stuff --- //
 
@@ -1761,8 +1765,10 @@ function createContainer(canvas, x1, y1) {
         let vy1 = findNearestGridY(pos[1], 0);
         let vy2 = findNearestGridY(pos[3], 0);
 
-        // Add vertex
-        return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+        // Add Container
+        let newVert =  new Vertex("new Container", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+        newVert.setIsContainer(true);
+        return newVert;
 
     }
     return null;
