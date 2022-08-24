@@ -18,6 +18,7 @@ import {VertexNode} from "../DataStructures/Graph.js"
 import { ContactsOutlined } from '@material-ui/icons';
 import { LeftMenu, LeftMenuType } from './LeftMenu';
 import { MainProgramClass } from './MainView';
+import { SemanticIdentity } from "../DataStructures/SemanticIdentity.js";
 //import { remove,toTreeViewElement } from "../DataStructures/Graph";
 //import { ContactsOutlined, Remove } from '@material-ui/icons';
 
@@ -53,6 +54,7 @@ let decoyFolderData = [];
 
 // An array for holding model names
 let modelObjects = [];
+
 let decoyModelObjects = []; // doing the same data referencing as folder data because currently the data being referenced in the models is the model beforehand which
                             // i dont tink is intended. - cooper
 
@@ -220,28 +222,40 @@ export function handleRenameFolder(newName,rKey){
 
 // Added optional parameter render key, atm used to handle create a model with no folder selected - Lachlan
 //initial "children" are to prevent erros caused by children initialy not being iterable - Lachlan
-export function handleAddModel(modelName, rKey=getSelectedFolderKey()){
+export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticID=undefined){
     incrementTotalModels();
+    let sID = undefined;
+    let icon = " 📈";
+    
+    if (semanticID !== undefined){
+        sID = semanticID;
+        icon = " ⛶";
+    } else {
+        sID = new SemanticIdentity(modelName,"","","", undefined ,[]);
+    }
+    
     let decoyModelThing = {
-        text: modelName + " 📈",
+        text: modelName + icon,
         children: ["Vertices 📁","Arrows 📁"],
         data: NaN,
         state: {opened: true},
         type: "Model",
         renderKey: rKey,
-        modelKey: getTotalModels()
+        modelKey: getTotalModels(),
+        semanticIdentity: sID
     }
     decoyModelObjects.push(decoyModelThing);
 
 
     let tempModelThing = {
-        text: modelName + " 📈",
+        text: modelName + icon,
         children: ["Vertices 📁","Arrows 📁"],
         data: decoyModelObjects[modelObjects.length],
         state: {opened: true},
         type: "Model",
         renderKey: rKey,
-        modelKey: getTotalModels()
+        modelKey: getTotalModels(),
+        semanticIdentity: sID
     };
  
     modelObjects.push(tempModelThing);
@@ -600,7 +614,7 @@ export class ContainmentTree extends React.Component {
             //console.log("Selected Type 2: " + data.node.data.type)
             //console.log("Selected Name 2: " + data.node.data.text)
             //console.log(folderData);
-            //console.log(data.node.data)
+            console.log(data.node.data)
 
             
 

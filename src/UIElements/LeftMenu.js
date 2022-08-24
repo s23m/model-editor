@@ -99,6 +99,7 @@ export class LeftMenu extends React.Component{
         this.setState({title: event.target.value})
         this.setState({title:""})
         this.setTitle();
+        console.log("LeftMenuHandleChangeEnacted")
         this.setContent();
     }
     /*

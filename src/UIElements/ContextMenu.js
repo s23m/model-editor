@@ -1,10 +1,10 @@
 import { ClickAwayListener } from '@material-ui/core';
 import React from 'react';
-import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder} from "./ContainmentTree"
-import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID} from "./CanvasDraw";
+import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel} from "./ContainmentTree"
+import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects} from "./CanvasDraw";
 import {setLeftMenuToTree} from "./LeftMenu"
-import { LocalConvenienceStoreOutlined } from '@material-ui/icons';
-
+import { ContactsOutlined, LocalConvenienceStoreOutlined } from '@material-ui/icons';
+import {getSemanticIdentity} from "../DataStructures/Vertex"
 let rightClickedItem = "Default"; //Name of the right clicked item where "Default" is a non-object such as empty canvas space
 let rightClickedItemType = "None"
 let rightClickedItemKey = 0; // Identifying key of selected item needed to use relating methods eg. selectedFolderKey, ModelKey,VertexKey.
@@ -47,7 +47,7 @@ export class ContextMenu extends React.Component {
                 menuType = "MoveModel";
                 this.setState({showMenu: true})
             }
-            else if(e.target.id.includes("Folder")){
+            else if(menuType === 'MoveModel' && e.target.id.includes("Folder")){
                 let newFolderKey = e.target.id.replace("Folder",'')
                 //console.log(newFolderKey) 
                 handleModelRebase(rightClickedItemKey,parseInt(newFolderKey));
@@ -60,6 +60,15 @@ export class ContextMenu extends React.Component {
                 this.setState({showMenu: true})
             }
             else if(e.target.id === "RenameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
+            }
+            else if(e.target.id === "Create-Graph"){
+                menuType = "AddContainerModel";
+                this.setState({showMenu: true})
+            }
+            else if(menuType === 'AddContainerModel' && e.target.id.includes("Folder")){
+                console.log(rightClickedObject)  
+                let newFolderKey = e.target.id.replace("Folder",'')
+                handleAddModel(rightClickedObject.title,parseInt(newFolderKey),rightClickedObject.semanticIdentity)
             }
 
             
@@ -137,12 +146,18 @@ export class ContextMenu extends React.Component {
         // if target exists within the canvas
         else if(e.target.id ==="drawCanvas"){
             let position = getGraphXYFromMouseEvent(e);
-            let x = position [0]; let y = position[1];
+            let x = position[0]; let y = position[1];
             rightClickedObject = findIntersected(x, y);
             if(rightClickedObject !== null){
                 if(rightClickedObject.typeName === "Vertex"){
                     rightClickedItem = rightClickedObject.title
-                    menuType = "Vertex"
+                    if(rightClickedObject.isContainer === true){
+                        menuType = "Container"
+                    }
+                    else{
+                        menuType = "Vertex"
+                    }
+                    
                 }
                 else if(rightClickedObject.typeName === "Arrow"){
                     let source = getObjectFromUUID(rightClickedObject.sourceVertexUUID);
@@ -239,6 +254,29 @@ export class ContextMenu extends React.Component {
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>   
                     <div className="CMitem" id="Auto-Layout"> Auto-Layout option (not implemented) </div>
+                    </div>
+                )
+            }
+            else if(menuType === "Container"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>
+                    <div className="CMitem" id="Create-Graph"> Create Graph </div>   
+                    <div className="CMitem" id="Auto-Layout"> Auto-Layout option (not implemented) </div>
+                    </div>
+                )
+            }
+            else if(menuType === "AddContainerModel"){
+                let renderedOutput = getFolderData().map(item => <div className="CMitem" id={'Folder'+ item.renderKey} key={item.text}> {item.text} </div>);
+
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> Create Model in:</div>   
+                    <div>{renderedOutput}</div>
                     </div>
                 )
             }
