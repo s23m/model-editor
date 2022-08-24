@@ -1801,7 +1801,8 @@ export function linkContainer(baseUUID,mirrorUUID){
     console.log(currentObjects.rootVertices)
 
 }
-//Updates the appearances of linked containers to match the input
+//Updates the appearances of linked containers to match the input container
+//Without a source container or doing a general scan, containers would be matched to copy the first vertex in the set, not the one that most recently changed
 export function updateLinkedContainers(inputContainer){
     for(let i of currentObjects.rootVertices){
         if(inputContainer.semanticIdentity.UUID === i.vertex.semanticIdentity.UUID){
@@ -1813,6 +1814,7 @@ export function updateLinkedContainers(inputContainer){
             i.vertex.fontSize = inputContainer.fontSize
         }
     }
+    drawAll()
 }
 
 function createObject(canvas, x1, y1, x2, y2) {

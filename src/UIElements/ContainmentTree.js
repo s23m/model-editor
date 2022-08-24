@@ -393,6 +393,11 @@ function determineSubFolders(parsedRenderKey){
     return returnArray
 }
 
+export function getModelNameFromKey(key){
+    let model = modelObjects.find(model => model.modelKey === key)
+    return model.text
+}
+
 
 
 let initialFolderAdded = false;

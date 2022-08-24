@@ -1,6 +1,6 @@
 import { ClickAwayListener } from '@material-ui/core';
 import React from 'react';
-import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel} from "./ContainmentTree"
+import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel, getModelNameFromKey} from "./ContainmentTree"
 import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects,setCurrentObjects,
     linkContainer,updateLinkedContainers, currentObjects} from "./CanvasDraw";
 import {setLeftMenuToTree} from "./LeftMenu"
@@ -295,7 +295,7 @@ export class ContextMenu extends React.Component {
                 }
                 console.log(vertices)
                 
-                let renderedOutput = vertices.map(item => <div className="CMitem" id={'Vertex'+ item.vertex.semanticIdentity.UUID} key={'Vertex'+ item.vertex.semanticIdentity.UUID}> {item.vertex.title} </div>);
+                let renderedOutput = vertices.map(item => <div className="CMitem" id={'Vertex'+ item.vertex.semanticIdentity.UUID} key={'Vertex'+ item.vertex.semanticIdentity.UUID}> {getModelNameFromKey(item.vertex.vertexModelKey)} / {item.vertex.title} </div>);
                 
                 console.log(renderedOutput)
 
