@@ -70,11 +70,20 @@ export class ContextMenu extends React.Component {
                 console.log(rightClickedObject)  
                 let newFolderKey = e.target.id.replace("Folder",'')
                 handleAddModel(rightClickedObject.title,parseInt(newFolderKey),rightClickedObject.semanticIdentity)
+                this.setState({showMenu: false})
             }
             else if(e.target.id === "LinkContainer"){
                 menuType = "LinkContainer";
                 this.setState({showMenu: true})
                 console.log(getCurrentObjects().rootVertices)
+            }
+            else if(menuType === 'LinkContainer' && e.target.id.includes("Vertex")){
+                console.log("linking semantic")  
+                let baseUUID = e.target.id.replace("Vertex",'');
+                let mirrorUUID = rightClickedObject.semanticIdentity.UUID;
+                linkContainer(baseUUID,mirrorUUID)
+
+                this.setState({showMenu: false})
             }
 
             
@@ -137,7 +146,7 @@ export class ContextMenu extends React.Component {
             }
 
             //if target is existing model, load model menu
-            if(e.target.text.includes("📈")){
+            if(e.target.text.includes("📈" || "⛶")){
                 for(let model of getModelData()){
                     if(e.target.text === model.text){
                         //console.log("matching model found")
@@ -270,7 +279,7 @@ export class ContextMenu extends React.Component {
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>
                     <div className="CMitem" id="Create-Graph"> Create Graph </div>   
-                    <div className="CMitem" id="LinkContainer"> Link Container </div> 
+                    <div className="CMitem" id="LinkContainer"> Link Container From </div> 
                     <div className="CMitem" id="Auto-Layout"> Auto-Layout option (not implemented) </div>
                     </div>
                 )
@@ -278,6 +287,12 @@ export class ContextMenu extends React.Component {
             else if(menuType === "LinkContainer"){
                 console.log(getCurrentObjects().rootVertices)
                 let vertices = Array.from(getCurrentObjects().rootVertices)
+                console.log(vertices)
+                for(let i in vertices){
+                    if (vertices[i].vertex.isContainer === false){
+                        vertices.splice(i,1)
+                    }
+                }
                 console.log(vertices)
                 
                 let renderedOutput = vertices.map(item => <div className="CMitem" id={'Vertex'+ item.vertex.semanticIdentity.UUID} key={'Vertex'+ item.vertex.semanticIdentity.UUID}> {item.vertex.title} </div>);
@@ -288,7 +303,7 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected" id="CMSelected"> {rightClickedItem} </div>
+                    <div className="CMSelected" id="CMSelected"> Link {rightClickedItem} from: </div>
                     <div>{renderedOutput}</div>
                     </div>
                     

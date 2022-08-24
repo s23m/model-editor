@@ -118,7 +118,7 @@ export function handleAddFolder(folderName, parentKey = 0){
     incrementTotalRenderKeys();
 
     let tempFolderThing = {
-        text: folderName + " 📁",
+        text: folderName + " 📁", //If icon is changed, youll have to change toe folder icon in context menu too
         children: treeData[getTotalRenderKeys()],
         data: NaN,
         state: {opened: true},
@@ -130,7 +130,7 @@ export function handleAddFolder(folderName, parentKey = 0){
     decoyFolderData.push(tempFolderThing)
 
     let folderThing2 = {
-        text: folderName + " 📁",
+        text: folderName + " 📁", //If icon is changed, youll have to change toe folder icon in context menu too
         children: treeData[getTotalRenderKeys()],
         data: decoyFolderData[folderData.length],
         state: {opened: true},
@@ -225,11 +225,11 @@ export function handleRenameFolder(newName,rKey){
 export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticID=undefined){
     incrementTotalModels();
     let sID = undefined;
-    let icon = " 📈";
+    let icon = " 📈"; //If icon is changed, youll have to change toe folder icon in context menu too
     
     if (semanticID !== undefined){
         sID = semanticID;
-        icon = " ⛶";
+        icon = " ⛶"; //If icon is changed, youll have to change toe folder icon in context menu too
     } else {
         sID = new SemanticIdentity(modelName,"","","", undefined ,[]);
     }
