@@ -147,7 +147,13 @@ export class LeftMenu extends React.Component{
 
         if (e.keyCode === 46){
             console.log(this.state.selectedObject);
-            deleteElement(this.state.selectedObject);this.setState({menu:"TreeView"});
+            if(this.state.selectedObject.typeName === "Vertex"){
+                vertexDeleteElement(this.state.selectedObject);
+            }
+            else{
+                deleteElement(this.state.selectedObject);
+            }
+            this.setState({menu:"TreeView"});
         }
 
         
