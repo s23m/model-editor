@@ -11,7 +11,7 @@ export class VertexNode {
     constructor(vertex) {
         this.vertex = vertex;
         this.children = new Set();
-        this.typeName = "Vertex";
+        this.typeName = "VertexNode";
 
         //The path of this particular vertex node for displaying on the tree view element
         this.cleanObjectPath = (getModelName(),"/","Vertices")
