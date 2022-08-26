@@ -127,7 +127,7 @@ export class VertexNode {
         return false;
     }
 
-    toTreeViewElement(returnOption, parsedRenderKey, parsedModelKey) { //added the model key parameter to we can specifiy what models vertexes belong to
+    toTreeViewElement(returnOption, parsedRenderKey) { //added the model key parameter to we can specifiy what models vertexes belong to
         //console.log("toTreeViewElement called successfully")
         //Pretty much everything that's currently on the canvas is searched and then converted into the tree appropriate struct in the below if else statements.
         //Then, the vertices and arrows folder nodes can display their appropriate children.
@@ -147,10 +147,10 @@ export class VertexNode {
         if (returnOption === "Vertex Folder"){                  // they had a different spelling for vertex folder :DDDDD - cooper
             //All objects currently on the canvas (excluding things like folders which only exist as tree view elements)
             for(let i = 0; i < currentObjects.flatten().length; i++){
+                
 
                 //We onlt want the vertices in this folder
                 if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
-                    if(currentObjects.flatten()[i].getModelKey() === parsedModelKey){
                     //Set the append the name of the path to include the vertex name
                     if(currentObjects.flatten()[i].title === ""){
                         this.setVertexTreePath("Unnamed Vertex");
@@ -186,7 +186,7 @@ export class VertexNode {
                     
                     VertexChildren.push(tempTreeObj);
 
-                }
+                
             }
         }
 
@@ -223,11 +223,6 @@ export class VertexNode {
                 if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
                     //console.log("arrow key")
                     //console.log(currentObjects.flatten()[i].getModelKey())
-                    //console.log(parsedModelKey)
-
-
-                    if(currentObjects.flatten()[i].getModelKey() === parsedModelKey){
-                        
 
                         // Find the source and destination vertex as Keith defined in spec
                         let ourSourceEnd = currentObjects.flatten()[i].pathData[1][1]
@@ -298,7 +293,7 @@ export class VertexNode {
 
                         ArrowChildren.push(tempTreeObj);
                     
-                    }
+                    
                 }
 
             }

@@ -236,7 +236,7 @@ export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticI
     
     let decoyModelThing = {
         text: modelName + icon,
-        children: ["Vertices 📁","Arrows 📁"],
+        children: [],
         data: NaN,
         state: {opened: true},
         type: "Model",
@@ -249,7 +249,7 @@ export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticI
 
     let tempModelThing = {
         text: modelName + icon,
-        children: ["Vertices 📁","Arrows 📁"],
+        children: [],
         data: decoyModelObjects[modelObjects.length],
         state: {opened: true},
         type: "Model",
@@ -451,28 +451,29 @@ export class ContainmentTree extends React.Component {
                // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
             
         for (let folder of folderData){ // this for loop is to define the ownership of the vertices & arrows - cooper
-            for (let model of treeData){
+            let vertex = new VertexNode() 
+            if (vertex.toTreeViewElement("Vertex Folder", folder.renderKey) !== undefined){ // modelkey is redundant now for storing things in treeview 
+                //console.log("a vertexorarrow: ",vertex)                                                                           // as things need to be stored under the folder - cooper
+                    folder.children.push(vertex.toTreeViewElement("Vertex Folder", folder.renderKey))
+                }
+
+                if (vertex.toTreeViewElement("Arrow Folder", folder.renderKey) !== undefined){
+                     //console.log("a vertexorarrow: ",vertex)
+                    folder.children.push(vertex.toTreeViewElement("Arrow Folder", folder.renderKey))
+                }  
                 //for (let vertex of currentObjects.flattenVertexNodes()){ - Loop removes as onyl calls toTreeview when currentObjects is not empty - Lachlan
-                    let vertex = new VertexNode() //we need a vertex object to call the toTreeViewElement function, however the function ignores the calling vertex so we just make an 
+                    //we need a vertex object to call the toTreeViewElement function, however the function ignores the calling vertex so we just make an 
                     //empty one so that toTreeview will always be called regardless of what in "currentObjects" - Lachlan
                         //Reverted the graph fix for the iteration problem caused by directly assigning model children as manually assigning the vertex folder 
                     //to index 0 and the arrow folder to index 1 (creating an interable by default) fixes this issue and prevents the folders overwriting eachother - Lachlan
                     //removed alot of the weird renames and unnesecary logic and changed it so that multiples vert/arrow folders can exist in a parent folder ie. one set per model 
                     //and that verts/arrows are added only where they share a matching modelkey - Lachlan
 
-                    if (vertex.toTreeViewElement("Vertex Folder", folder.renderKey, model.modelKey) !== undefined && model.renderKey === folder.renderKey){
-                    //console.log("a vertexorarrow: ",vertex)
-                        model.children[0] = vertex.toTreeViewElement("Vertex Folder", folder.renderKey, model.modelKey)
-                    }
-
-                    if (vertex.toTreeViewElement("Arrow Folder", folder.renderKey, model.modelKey) !== undefined && model.renderKey === folder.renderKey){
-                         //console.log("a vertexorarrow: ",vertex)
-                        model.children[1] = vertex.toTreeViewElement("Arrow Folder", folder.renderKey, model.modelKey)
-                    }       
+                       
                     //console.log(model.text," children: ",model.children)
                     //break; //break exists as for loop is leftover and useless but we need the "vertex" object to be able to call toTreeviewElement and currentObjects isnt always indexable
                 //}
-            }
+            
         }
 
         folderDataRoot = [];
@@ -552,10 +553,14 @@ export class ContainmentTree extends React.Component {
             //First, we need to actually determine where the vertex is
             //Take a look at our container
             for (let cont of folderData){
+                console.log("below is folderData")
+                console.log(folderData)
                 //console.log("This is active test ". cont)
                 //console.log("folder text: " + cont.text)
                 //Take a look at the children of the containers (arrows and such)
                 for (let treeDat of cont.children){
+                    console.log("below is treeDat")
+                    console.log(treeDat)
                     //console.log("treeDat text: " + treeDat.text) 
                     //console.log("num of rkeys is:", getTotalRenderKeys())
                     //console.log(folderData)
