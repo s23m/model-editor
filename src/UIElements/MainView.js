@@ -357,7 +357,7 @@ export class MainProgramClass extends React.Component {
 
                 </div>
 
-                <div className="LowerPanel">
+                <div className="LowerPanel" id= "LowerPanel">
                     <LeftMenu setMode={this.setMode} setLeftMenu={this.setLeftMenu} mainState={this.state} className="LeftMenus" />
                     {/*following 3 classes are temporary for displaying currently selected model and container(renderKey) and folder(selectedFolderKey) */}
                     <input className="SelectedFolder" id="SelectedFolder" type="text" name="selectedFolder" readonly='readonly' />

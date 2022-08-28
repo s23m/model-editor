@@ -234,6 +234,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
     //Create a new folder using the known node type
 
     incrementTotalRenderKeys();
+    let sID = new SemanticIdentity(vertexName,"","","", undefined ,[])
 
     let tempVertexThing = {
         text: vertexName + " 🟧", //If icon is changed, youll have to change the folder icon in context menu too
@@ -247,7 +248,8 @@ export function handleAddVertex(vertexName, parentKey = 0){
         colour: "#FFD5A9",
         icons: [[],[],[]],
         imageElements: {},
-        fontSize: 12
+        fontSize: 12,
+        semanticIdentity: sID
     }
 
     decoyVertexData.push(tempVertexThing)
@@ -264,7 +266,8 @@ export function handleAddVertex(vertexName, parentKey = 0){
         colour: "#FFD5A9",
         icons: [[],[],[]],
         imageElements: {},
-        fontSize: 12
+        fontSize: 12,
+        semanticIdentity: sID
     }
     
 
@@ -461,13 +464,36 @@ let initialFolderAdded = false;
 export class ContainmentTree extends React.Component {
 
     componentDidMount() {
-        
+        document.getElementById("LowerPanel").addEventListener('dragstart', this.dragStart);
     }
-    componentDidUpdate(){}
+    componentDidUpdate(){
+    }
     
     componentWillUnmount() {
-        
+        document.getElementById("LowerPanel").removeEventListener('dragstart', this.dragStart);
     }
+
+    dragStart(e) {
+        //console.log(e)
+        //When we have a better method of getting data without the click, Use the new method to assign the data value - Lachlan
+        e.target.click();
+        let vertData = 0;
+        for(let folder of getContainerData()){
+            if(getSelectedFolderKey() === folder.renderKey)
+            vertData = folder;
+        }
+
+        let data = vertData;
+        console.log('drag starts...');
+        //Prevents errors when a folder or model is dragged etc. 
+        if(vertData.type === "treeVertex"){
+        e.dataTransfer.setData('text/plain',data.semanticIdentity.UUID)
+        //console.log(data.semanticIdentity.UUID)
+        }
+        else{
+            console.log("This object has no drag/drop feature")
+        }
+     }
     
 
     constructor(props) {
@@ -663,6 +689,7 @@ export class ContainmentTree extends React.Component {
     handleElementSelect(e, data) {
 
 
+
         //console.log("Selected Length: " + data.selected.length)
 
         // Try catch used to catch error whe selecting a treeview item with no data type eg. root
@@ -675,7 +702,7 @@ export class ContainmentTree extends React.Component {
             //console.log("Selected Type 2: " + data.node.data.type)
             //console.log("Selected Name 2: " + data.node.data.text)
             //console.log(folderData);
-            console.log(data.node.data)
+            //console.log(data.node.data)
 
             
 
@@ -828,7 +855,7 @@ export class ContainmentTree extends React.Component {
 
         return (
             <div>
-                <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} className="treeview" draggable="true" />
+                <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} className="treeview" id="treeview" draggable="true" />
 
             </div>
         )
