@@ -287,7 +287,6 @@ export class MainProgramClass extends React.Component {
 
 
 
-
     render() {
         let GUI =
         <><ContextMenu setLeftMenuToTree={this.setLeftMenuToTree} /><div className="Program">
@@ -358,14 +357,14 @@ export class MainProgramClass extends React.Component {
 
                 </div>
 
-                <div className="LowerPanel">
+                <div className="LowerPanel" id= "LowerPanel">
                     <LeftMenu setMode={this.setMode} setLeftMenu={this.setLeftMenu} mainState={this.state} className="LeftMenus" />
                     {/*following 3 classes are temporary for displaying currently selected model and container(renderKey) and folder(selectedFolderKey) */}
                     <input className="SelectedFolder" id="SelectedFolder" type="text" name="selectedFolder" readonly='readonly' />
                     <input className="SelectedContainer" id="SelectedContainer" type="text" name="selectedContainer" readonly='readonly' />
                     <input className="SelectedModel" id="SelectedModel" type="text" name="selectedModel" readonly='readonly' />
 
-                    <div className="Canvas">
+                    <div className="Canvas" id = "Canvas">
                         <Canvas setLeftMenu={this.setLeftMenu} setMode={this.setMode} mainState={this.state} />
                     </div>
                 </div>

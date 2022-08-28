@@ -1,5 +1,6 @@
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
+import { getVertexData } from './ContainmentTree';
 import { Tool } from './LeftMenu';
 
 let movingAllowed = false;
@@ -25,7 +26,62 @@ export class Canvas extends React.Component {
         this.zoom = this.props.mainState.zoomLevel;
         this.tool = this.props.mainState.drawMode;
 
+        document.getElementById("Canvas").addEventListener('dragenter', this.dragEnter);
+        document.getElementById("Canvas").addEventListener('dragover', this.dragOver);
+        document.getElementById("Canvas").addEventListener('dragleave', this.dragLeave);
+        document.getElementById("Canvas").addEventListener('drop', this.drop);
+
     }
+
+    componentWillUnmount() {
+        document.getElementById("Canvas").removeEventListener('dragenter', this.dragEnter);
+        document.getElementById("Canvas").removeEventListener('dragover', this.dragOver);
+        document.getElementById("Canvas").removeEventListener('dragleave', this.dragLeave);
+        document.getElementById("Canvas").removeEventListener('drop', this.drop);
+    }
+
+    dragEnter(e) {
+        e.preventDefault();
+    }
+    
+    dragOver(e) {
+        e.preventDefault();
+    }
+    
+    dragLeave(e) {
+        return 0
+    }
+    
+    drop(e) {
+        console.log('dropped')
+        //Find the vertex object that was dragged
+        let droppedSemanticID = e.dataTransfer.getData('text/plain');
+        let droppedVertex = 0;
+        for(let vert of getVertexData()){
+            if (vert.semanticIdentity.UUID === droppedSemanticID)
+            droppedVertex = vert;
+        }
+        console.log(droppedVertex)
+        //get canvas relative coordinates for where the object was dropped
+        let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
+        //create the vertex object(size 30x15) and place it
+
+        let canvasVert = canvasDraw.createVertex(mouseCoords[0],mouseCoords[1],50,30,droppedVertex.text.replace(" 🟧",""),
+            droppedVertex.content,droppedVertex.colour,droppedVertex.icons,droppedVertex.imageElements,droppedVertex.fontSize,droppedVertex.semanticIdentity)
+        canvasDraw.addObject(canvasVert)
+        canvasDraw.drawAll()
+
+
+
+        //canvas
+        //mouseStartX
+        //mouseStartY
+        //x mose+10
+        //x mouse +10
+
+    }
+
+
 
     // prevent context (right-click) menu from appearing
     ocm = (e) => {

@@ -391,7 +391,7 @@ function resizeObjectOnMouseMove(e, resizeVars) {
 }
 
 // Sets the objects uuid and adds it to the root of currentObjects
-function addObject(object) {
+export function addObject(object) {
     if (object === null || object === undefined) return;
     currentObjects.add(object);
 }
@@ -1815,6 +1815,13 @@ export function updateLinkedContainers(inputContainer){
         }
     }
     drawAll()
+}
+
+//Function for creating a vertex object without the left menu tools - Lachlan
+export function createVertex(x1, y1, width, height,name,content,colour,icons,imageElements,fontSize,semanticIdentity){
+
+    return new Vertex(name, content, x1, findNearestGridY(y1, 1), width, height,semanticIdentity);
+
 }
 
 function createObject(canvas, x1, y1, x2, y2) {
