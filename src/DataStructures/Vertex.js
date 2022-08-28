@@ -30,7 +30,7 @@ export class Vertex {
         this.selected = false;
         this.imageElements = {};
         this.fontSize = 12;
-        this.isContainer = false; //Will be flagged true on creation of container, but shouldn't be changed otherwise
+        this.isContainer = false; //Ignore this now, Kieth explained how containers work after finishing old implementation, direction other team was going was wrong - Lachlan
 
         // Note these values often change in runtime
         this.width = width;

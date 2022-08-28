@@ -41,6 +41,10 @@ let treeData = [];
 // I need this to store the folders. Initially, it has one folder simply titled 'Unnamed Folder'.
 export let folderData = [];
 
+// used to store Vertex objects in tree data (Used to create the vertex objects in CanvasDraw/currentObjects)
+let vertexData = [];
+let decoyVertexData = [] //here because of how old team did folder indexing
+
 //used as a container to seperate "root" folders and subfolders so that only the root folders are pushed to root.children in the constructor - Lachlan
 let folderDataRoot = [];
 
@@ -60,6 +64,7 @@ let decoyModelObjects = []; // doing the same data referencing as folder data be
 
 let folderAltered = false;
 let modelAltered = false;
+let vertexAltered = false //not sure if I need this? but leaving here for now incase I do need it referenced somewhere since folder andm odels have it -Lachlan
 
 // created a boolean which whill tell the leftmenu that the containment tree needs to update
 export var treeNeedsUpdate = 0;
@@ -77,6 +82,15 @@ export function getSelectedFolderKey(){
 
 export function getFolderData(){
     return folderData;
+}
+
+export function getVertexData(){
+    return vertexData;
+}
+
+//returns a concated array of the folders and vertex(containers)
+export function getContainerData(){
+    return folderData.concat(vertexData);
 }
 
 export function setFolderData(newFolderData){
@@ -105,8 +119,8 @@ function loadFirstModel(){
         }
     }
     drawAll()
-    document.getElementById("SelectedFolder").value = folderData.find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
-    document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
+    document.getElementById("SelectedFolder").value = getContainerData().find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
+    document.getElementById("SelectedContainer").value = getContainerData().find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
     document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
 }
 
@@ -118,7 +132,7 @@ export function handleAddFolder(folderName, parentKey = 0){
     incrementTotalRenderKeys();
 
     let tempFolderThing = {
-        text: folderName + " 📁", //If icon is changed, youll have to change toe folder icon in context menu too
+        text: folderName + " 📁", //If icon is changed, youll have to change the folder icon in context menu too
         children: treeData[getTotalRenderKeys()],
         data: NaN,
         state: {opened: true},
@@ -130,7 +144,7 @@ export function handleAddFolder(folderName, parentKey = 0){
     decoyFolderData.push(tempFolderThing)
 
     let folderThing2 = {
-        text: folderName + " 📁", //If icon is changed, youll have to change toe folder icon in context menu too
+        text: folderName + " 📁", //If icon is changed, youll have to change the folder icon in context menu too
         children: treeData[getTotalRenderKeys()],
         data: decoyFolderData[folderData.length],
         state: {opened: true},
@@ -203,7 +217,7 @@ function deleteModelChildren(selectedModel){ // function for deleting all the ch
 
 
 export function handleRenameFolder(newName,rKey){
-    if(newName != ""){
+    if(newName !== ""){
         for (let i = 0; i < folderData.length; i++){
             if (folderData[i].renderKey === rKey){
                 folderData[i].text = newName + " 📁";
@@ -216,7 +230,50 @@ export function handleRenameFolder(newName,rKey){
     }
 }
 
+export function handleAddVertex(vertexName, parentKey = 0){
+    //Create a new folder using the known node type
 
+    incrementTotalRenderKeys();
+
+    let tempVertexThing = {
+        text: vertexName + " 🟧", //If icon is changed, youll have to change the folder icon in context menu too
+        children: treeData[getTotalRenderKeys()],
+        data: NaN,
+        state: {opened: true},
+        type: "treeVertex",
+        renderKey: getTotalRenderKeys(),
+        parentRenderKey: parentKey,
+        content: "",
+        colour: "#FFD5A9",
+        icons: [[],[],[]],
+        imageElements: {},
+        fontSize: 12
+    }
+
+    decoyVertexData.push(tempVertexThing)
+
+    let vertexThing2 = {
+        text: vertexName + " 🟧", //If icon is changed, youll have to change the folder icon in context menu too
+        children: treeData[getTotalRenderKeys()],
+        data: decoyVertexData[vertexData.length],
+        state: {opened: true},
+        type: "treeVertex",
+        renderKey: getTotalRenderKeys(),
+        parentRenderKey: parentKey,
+        content: "",
+        colour: "#FFD5A9",
+        icons: [[],[],[]],
+        imageElements: {},
+        fontSize: 12
+    }
+    
+
+    vertexData.push(vertexThing2);
+    console.log(vertexData)
+
+    vertexAltered = true;
+    
+}
 
 
 
@@ -384,7 +441,7 @@ function determineOwnership(parsedRenderKey){
 //function used for determineing which folders are owned by a higher folder - Lachlan
 function determineSubFolders(parsedRenderKey){
     let returnArray = []
-    for (let folder of folderData){
+    for (let folder of getContainerData()){
         if(folder.parentRenderKey === parsedRenderKey)
         returnArray.push(folder)
     }
@@ -432,6 +489,7 @@ export class ContainmentTree extends React.Component {
             handleAddModel("Model",1) 
             initialFolderAdded = true;
             handleAddFolder("Subfolder",getCurrentRenderKey())
+            handleAddVertex("new Vertex",getCurrentRenderKey())
         }
         
 
@@ -440,7 +498,7 @@ export class ContainmentTree extends React.Component {
             treeData.push(model);           
             
         }
-        for (let folder of folderData){ // this for loop is to define the ownership of the models - cooper
+        for (let folder of getContainerData()){ // this for loop is to define the ownership of the models - cooper
                 //folder.children = determineOwnership(folder.renderKey)  
                 //folder.children = determineSubFolders(folder.renderKey)
                 let canvasItems = determineOwnership(folder.renderKey) 
@@ -453,9 +511,10 @@ export class ContainmentTree extends React.Component {
                 folder.children = combinedItems;
 
             }
+            console.log(getContainerData())
                // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
             
-        for (let folder of folderData){ // this for loop is to define the ownership of the vertices & arrows - cooper
+        for (let folder of getContainerData()){ // this for loop is to define the ownership of the vertices & arrows - cooper
             let vertex = new VertexNode() 
             if (vertex.toTreeViewElement("Vertex Folder", folder.renderKey) !== undefined){ // modelkey is redundant now for storing things in treeview 
                 //console.log("a vertexorarrow: ",vertex)                                                                           // as things need to be stored under the folder - cooper
@@ -482,7 +541,7 @@ export class ContainmentTree extends React.Component {
         }
 
         folderDataRoot = [];
-        for (let folder of folderData){
+        for (let folder of getContainerData()){
             if(folder.parentRenderKey ===0){
                 folderDataRoot.push(folder)
             }
@@ -557,9 +616,9 @@ export class ContainmentTree extends React.Component {
             let b = 0;
             //First, we need to actually determine where the vertex is
             //Take a look at our container
-            for (let cont of folderData){
+            for (let cont of getContainerData()){
                 console.log("below is folderData")
-                console.log(folderData)
+                console.log(getContainerData())
                 //console.log("This is active test ". cont)
                 //console.log("folder text: " + cont.text)
                 //Take a look at the children of the containers (arrows and such)
@@ -632,7 +691,7 @@ export class ContainmentTree extends React.Component {
                 //console.log("You clicked a vertex folder")
             }
 
-            else if(data.node.data.type === "Folder"){
+            else if(data.node.data.type === "Folder" || data.node.data.type === "treeVertex" ){
                 //console.log("Clicked Folder: " + data.node.data.text)
                 //setNewRenderKey(data.node.data.renderKey)
                 setSelectedFolderKey(data.node.data.renderKey)
@@ -748,9 +807,9 @@ export class ContainmentTree extends React.Component {
             document.getElementById("SelectedFolder").value = "Root"
         }
         else{
-        document.getElementById("SelectedFolder").value = folderData.find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
+        document.getElementById("SelectedFolder").value = getContainerData().find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
         }
-        document.getElementById("SelectedContainer").value = folderData.find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
+        document.getElementById("SelectedContainer").value = getContainerData().find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
         document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
         //console.log(modelObjects)
 
@@ -764,6 +823,7 @@ export class ContainmentTree extends React.Component {
 
     render() {
         const data = this.state.data;
+        console.log(treeData)
         //console.log(data)
         /*
         if (this.state.selectedObject !== null){
