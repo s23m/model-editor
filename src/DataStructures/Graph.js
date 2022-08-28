@@ -298,6 +298,12 @@ export class VertexNode {
 
             }
 
+            console.log(ArrowChildren.length)
+
+            if(ArrowChildren.length === 0){
+                return;
+            }
+            else{
             return {
                 text: "Relations ⭲",
                 children: ArrowChildren,
@@ -305,6 +311,8 @@ export class VertexNode {
                 state: { opened: true },
                 type: "Arrow Folder"
             }
+        }
+            
         }
     
 

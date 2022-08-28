@@ -65,6 +65,7 @@ export class Canvas extends React.Component {
         //get canvas relative coordinates for where the object was dropped
         let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
         //create the vertex object(size 30x15) and place it
+
         let canvasVert = canvasDraw.createVertex(mouseCoords[0],mouseCoords[1],50,30,droppedVertex.text.replace(" 🟧",""),
             droppedVertex.content,droppedVertex.colour,droppedVertex.icons,droppedVertex.imageElements,droppedVertex.fontSize,droppedVertex.semanticIdentity)
         canvasDraw.addObject(canvasVert)
