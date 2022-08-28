@@ -16,7 +16,7 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel} from './ContainmentTree';
+import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
@@ -29,6 +29,7 @@ import iconEditFolder from  "../Resources/changeFolderName.svg"
 import iconNewModel from "../Resources/NewModel.svg"
 import iconDeleteModel from "../Resources/DeleteModel.svg"
 import iconEditModel from "../Resources/editModel.svg"
+import iconaddVertex from "../Resources/createVertex.svg"
 
 
 export const version = 1;
@@ -111,6 +112,13 @@ export class MainProgramClass extends React.Component {
     editFolderName = () => {
         (async() => {
             await handleRenameFolder(folderName,getSelectedFolderKey());
+            this.setLeftMenuToTree();
+        })();
+    }
+
+    addVertex = () =>{
+        (async() => {
+            await handleAddVertex(folderName,getSelectedFolderKey());
             this.setLeftMenuToTree();
         })();
     }
@@ -348,6 +356,7 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarIcon" onClick={() => this.deleteFolder()}><img src={iconDeleteFolder} alt="Delete Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.editFolderName()}><img src={iconEditFolder} alt="Edit Container" /></div>
                     <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarIcon" onClick={() => this.addVertex()}><img src={iconaddVertex} alt="Add Vertex" /></div>
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.addModel()}><img src={iconNewModel} alt="Add Model" /></div>
                     <div className="TopBarIcon" onClick={() => this.deleteModel()}><img src={iconDeleteModel} alt="Delete Model" /></div>
