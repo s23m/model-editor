@@ -1,6 +1,8 @@
 ## Capstone S23M Graph Editor
 A repository to house all code and configuration artefacts produced by the LCLB team in collaboration with S23M (continuing on work from the Overdrive and Ponos teams).
 
+Live builds hosted @ https://s23m.github.io/lclb/
+
 This project is licensed under the MPL 2.0 license, and this project includes a copy of said license in the LICENSE file. For more information visit: https://www.mozilla.org/en-US/MPL/2.0/FAQ/
 
 
