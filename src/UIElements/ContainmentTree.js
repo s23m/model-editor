@@ -516,27 +516,19 @@ export class ContainmentTree extends React.Component {
             
         for (let folder of getContainerData()){ // this for loop is to define the ownership of the vertices & arrows - cooper
             let vertex = new VertexNode() 
+            
+            //Disableing canvas vertex's appearing in treeview - Lachlan
+            /*
             if (vertex.toTreeViewElement("Vertex Folder", folder.renderKey) !== undefined){ // modelkey is redundant now for storing things in treeview 
                 //console.log("a vertexorarrow: ",vertex)                                                                           // as things need to be stored under the folder - cooper
-                    folder.children.push(vertex.toTreeViewElement("Vertex Folder", folder.renderKey))
-                }
+                folder.children.push(vertex.toTreeViewElement("Vertex Folder", folder.renderKey))
+            }
+            */
 
-                if (vertex.toTreeViewElement("Arrow Folder", folder.renderKey) !== undefined){
-                     //console.log("a vertexorarrow: ",vertex)
-                    folder.children.push(vertex.toTreeViewElement("Arrow Folder", folder.renderKey))
-                }  
-                //for (let vertex of currentObjects.flattenVertexNodes()){ - Loop removes as onyl calls toTreeview when currentObjects is not empty - Lachlan
-                    //we need a vertex object to call the toTreeViewElement function, however the function ignores the calling vertex so we just make an 
-                    //empty one so that toTreeview will always be called regardless of what in "currentObjects" - Lachlan
-                        //Reverted the graph fix for the iteration problem caused by directly assigning model children as manually assigning the vertex folder 
-                    //to index 0 and the arrow folder to index 1 (creating an interable by default) fixes this issue and prevents the folders overwriting eachother - Lachlan
-                    //removed alot of the weird renames and unnesecary logic and changed it so that multiples vert/arrow folders can exist in a parent folder ie. one set per model 
-                    //and that verts/arrows are added only where they share a matching modelkey - Lachlan
-
-                       
-                    //console.log(model.text," children: ",model.children)
-                    //break; //break exists as for loop is leftover and useless but we need the "vertex" object to be able to call toTreeviewElement and currentObjects isnt always indexable
-                //}
+            if (vertex.toTreeViewElement("Arrow Folder", folder.renderKey) !== undefined){
+                 //console.log("a vertexorarrow: ",vertex)
+                folder.children.push(vertex.toTreeViewElement("Arrow Folder", folder.renderKey))
+            }  
             
         }
 

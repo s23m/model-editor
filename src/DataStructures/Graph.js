@@ -299,7 +299,7 @@ export class VertexNode {
             }
 
             return {
-                text: "Arrows &#128193",
+                text: "Relations ⭲",
                 children: ArrowChildren,
                 data: null,
                 state: { opened: true },
