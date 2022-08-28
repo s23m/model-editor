@@ -828,7 +828,7 @@ export class ContainmentTree extends React.Component {
 
         return (
             <div>
-                <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} className="treeview" />
+                <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} className="treeview" draggable="true" />
 
             </div>
         )

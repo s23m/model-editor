@@ -19,6 +19,11 @@ export class Canvas extends React.Component {
         this.zoom = nextProps.mainState.zoomLevel;
         this.tool = nextProps.mainState.drawMode;
 
+        document.getElementById("Canvas").addEventListener('dragenter', this.dragEnter);
+        document.getElementById("Canvas").addEventListener('dragover', this.dragOver);
+        document.getElementById("Canvas").addEventListener('dragleave', this.dragLeave);
+        document.getElementById("Canvas").addEventListener('drop', this.drop);
+
     }
 
     componentDidMount() {
@@ -26,6 +31,24 @@ export class Canvas extends React.Component {
         this.tool = this.props.mainState.drawMode;
 
     }
+
+    dragEnter(e) {
+        e.preventDefault();
+    }
+    
+    dragOver(e) {
+        e.preventDefault();
+    }
+    
+    dragLeave(e) {
+        return 0
+    }
+    
+    drop(e) {
+        console.log('dropped')
+    }
+
+
 
     // prevent context (right-click) menu from appearing
     ocm = (e) => {
