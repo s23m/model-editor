@@ -12,7 +12,7 @@ export var defaultMinimumSize = 30;
 
 export class Vertex {
 
-    constructor(title = "unnamed", content, x, y, width, height, semanticIdentity) {
+    constructor(title = "unnamed", content, colour, x, y, width, height, semanticIdentity) {
         this.typeName = "Vertex";
 
         if (semanticIdentity !== undefined){
@@ -23,10 +23,10 @@ export class Vertex {
 
         this.title = title;
         this.content = content;
+        this.colour = colour
         this.x = x;
         this.y = y;
         this.icons = [[],[],[]];
-        this.colour = defaultColour;
         this.selected = false;
         this.imageElements = {};
         this.fontSize = 12;

@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { CollectionsBookmarkOutlined, ContactSupportOutlined } from "@material-ui/icons";
-import { currentObjects, getModelName } from "../UIElements/CanvasDraw";
+import { currentObjects, getModelName, createVertex } from "../UIElements/CanvasDraw";
 
 
 
@@ -505,11 +505,16 @@ export class Graph {
     }
 
     addVertex(vertex) {
-        if (this.getVertexNode(vertex) === null) {
+        if (this.getVertexNode(vertex) === null) { // if its the original vertex
             vertex = new VertexNode(vertex);
             this.rootVertices.add(vertex);
-        } else {
-            console.error("Attempted to add duplicate vertex");
+        } else { // else its a copy of the original
+            console.log("a copy vertex was attempted")
+            let newTitle = ":: " + vertex.title
+            vertex.title = newTitle
+            vertex = new VertexNode(vertex);
+            this.rootVertices.add(vertex);
+            console.log(vertex)
         }
     }
 

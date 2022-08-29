@@ -66,7 +66,7 @@ export class Canvas extends React.Component {
         let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
         //create the vertex object(size 30x15) and place it
 
-        let canvasVert = canvasDraw.createVertex(mouseCoords[0],mouseCoords[1],50,30,droppedVertex.text.replace(" 🟧",""),
+        let canvasVert = canvasDraw.createVertex(mouseCoords[0],mouseCoords[1],droppedVertex.width,droppedVertex.height,droppedVertex.text.replace(" 🟧",""),
             droppedVertex.content,droppedVertex.colour,droppedVertex.icons,droppedVertex.imageElements,droppedVertex.fontSize,droppedVertex.semanticIdentity)
         canvasDraw.addObject(canvasVert)
         canvasDraw.drawAll()

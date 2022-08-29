@@ -6,7 +6,7 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import {getModelData,handleAddModel} from "./ContainmentTree";
+import {getModelData,handleAddModel, vertexData} from "./ContainmentTree";
 
 
 // Core variables
@@ -388,6 +388,8 @@ function resizeObjectOnMouseMove(e, resizeVars) {
     //grab object and arrows connected to it
     // update arrows
     updateA();
+    
+    
 }
 
 // Sets the objects uuid and adds it to the root of currentObjects
@@ -495,6 +497,7 @@ export function onLeftMousePress(canvas, x, y) {
                     resizeObjectOnMouseMove(e, resizeVars);
 
                 };
+                
                 return;
             }
         } else {
@@ -1820,8 +1823,32 @@ export function updateLinkedContainers(inputContainer){
 //Function for creating a vertex object without the left menu tools - Lachlan
 export function createVertex(x1, y1, width, height,name,content,colour,icons,imageElements,fontSize,semanticIdentity){
 
-    return new Vertex(name, content, x1, findNearestGridY(y1, 1), width, height,semanticIdentity);
+    return new Vertex(name, content, colour, x1, findNearestGridY(y1, 1), width, height,semanticIdentity);
 
+}
+
+export function updateVertex(selectedObject){ // function to update the data of the contaimnment tree object and all other objects sharing the semantic- cooper
+    let vertex = getLinkedVertex(selectedObject);
+    vertex.text = selectedObject.title + " 🟧";
+    vertex.colour = selectedObject.colour;
+    vertex.content = selectedObject.content;
+    vertex.width = selectedObject.width;
+    vertex.height = selectedObject.height;
+    for(let verticies of currentObjects.flatten()){
+        if(vertex.semanticIdentity.UUID === verticies.semanticIdentity.UUID && verticies !== selectedObject){ 
+            verticies.title = vertex.text.replace(" 🟧", "")
+            verticies.title = ":: " + verticies.title 
+            verticies.colour = vertex.colour;
+            verticies.content = vertex.content;
+        }
+    }
+}
+
+export function getLinkedVertex(selectedObject){ // grabs the contaiment tree object - cooper
+    for(let vertex of vertexData){
+        if(vertex.semanticIdentity.UUID === selectedObject.semanticIdentity.UUID)
+        return vertex;
+    }
 }
 
 function createObject(canvas, x1, y1, x2, y2) {
