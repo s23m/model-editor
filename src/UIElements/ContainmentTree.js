@@ -42,7 +42,7 @@ let treeData = [];
 export let folderData = [];
 
 // used to store Vertex objects in tree data (Used to create the vertex objects in CanvasDraw/currentObjects)
-let vertexData = [];
+export let vertexData = [];
 let decoyVertexData = [] //here because of how old team did folder indexing
 
 //used as a container to seperate "root" folders and subfolders so that only the root folders are pushed to root.children in the constructor - Lachlan
@@ -246,6 +246,8 @@ export function handleAddVertex(vertexName, parentKey = 0){
         parentRenderKey: parentKey,
         content: "",
         colour: "#FFD5A9",
+        height: 50,
+        width: 70,
         icons: [[],[],[]],
         imageElements: {},
         fontSize: 12,
@@ -264,6 +266,8 @@ export function handleAddVertex(vertexName, parentKey = 0){
         parentRenderKey: parentKey,
         content: "",
         colour: "#FFD5A9",
+        height: 50,
+        width: 70,
         icons: [[],[],[]],
         imageElements: {},
         fontSize: 12,

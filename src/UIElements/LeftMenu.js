@@ -5,7 +5,7 @@
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
 import {LineColourToStringName, LineTypeToString} from "../DataStructures/ArrowProperties"
-import { ContainmentTree } from "./ContainmentTree";
+import { ContainmentTree, handleAddVertex } from "./ContainmentTree";
 
 import { SketchPicker } from 'react-color';
 
@@ -19,10 +19,10 @@ import iconArtifact from "../Resources/artifact.svg"
 import iconContainer from "../Resources/container.svg"
 
 
-import {deleteElement} from "./CanvasDraw";
+import {deleteElement, currentObjects} from "./CanvasDraw";
 import { vertexDeleteElement } from './CanvasDraw';
 import DropdownButton from "react-bootstrap/DropdownButton";
-import {displayFocussedTreeView} from "./ContainmentTree.js"
+import {vertexData} from "./ContainmentTree.js"
 
 // Show the vertex path
 import {showVertexPath} from "./ContainmentTree.js";
@@ -168,6 +168,7 @@ export class LeftMenu extends React.Component{
     
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+
         let leftMenu = document.getElementById("VertexMenu");
         if(leftMenu === null){
             leftMenu = document.getElementById("ArrowMenu");
@@ -200,10 +201,12 @@ export class LeftMenu extends React.Component{
     }
 
     //VERTEX SETTERS
+
     
     setTitle() {
         let newTitle = document.getElementById("LeftTitle").value;
         this.state.selectedObject.setTitle(newTitle);
+        canvasDraw.updateVertex(this.state.selectedObject);
         canvasDraw.drawAll()
     }
 
@@ -212,6 +215,7 @@ export class LeftMenu extends React.Component{
         let newContent = document.getElementById("LeftContent").value;
         newContent = newContent.split("\n");
         this.state.selectedObject.setContent(newContent);
+        canvasDraw.updateVertex(this.state.selectedObject);
         canvasDraw.drawAll()
     }
 
@@ -294,6 +298,7 @@ export class LeftMenu extends React.Component{
 
     setVertexColour = (colour) =>{
         this.state.selectedObject.setColour(colour.hex);
+        canvasDraw.updateVertex(this.state.selectedObject);
         canvasDraw.drawAll()
     };
 
