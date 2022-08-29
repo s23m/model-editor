@@ -5,7 +5,7 @@
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
 import {LineColourToStringName, LineTypeToString} from "../DataStructures/ArrowProperties"
-import { ContainmentTree, handleAddVertex } from "./ContainmentTree";
+import { ContainmentTree, handleAddVertex, handleDeleteVertex } from "./ContainmentTree";
 
 import { SketchPicker } from 'react-color';
 
@@ -149,11 +149,13 @@ export class LeftMenu extends React.Component{
             console.log(this.state.selectedObject);
             if(this.state.selectedObject.typeName === "Vertex"){
                 vertexDeleteElement(this.state.selectedObject);
+                handleDeleteVertex(this.state.selectedObject.semanticIdentity.UUID)
             }
             else{
                 deleteElement(this.state.selectedObject);
             }
             this.setState({menu:"TreeView"});
+            canvasDraw.drawAll();
         }
 
         
