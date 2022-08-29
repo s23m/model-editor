@@ -6,17 +6,22 @@ import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, find
 import {setLeftMenuToTree} from "./LeftMenu"
 import { ContactsOutlined, LocalConvenienceStoreOutlined } from '@material-ui/icons';
 import {getSemanticIdentity} from "../DataStructures/Vertex"
+import {handleAddVertex} from "./ContainmentTree";
 let rightClickedItem = "Default"; //Name of the right clicked item where "Default" is a non-object such as empty canvas space
 let rightClickedItemType = "None"
 let rightClickedItemKey = 0; // Identifying key of selected item needed to use relating methods eg. selectedFolderKey, ModelKey,VertexKey.
 let menuType = "Default"; //Which menu type to return based on the selected item and what operations are available to it
 let rightClickedObject; // the canvas object which was right clicked
 
+
+
 //Right click menu component used to access certain function of program
 export class ContextMenu extends React.Component {
     constructor(props){ // added the constructer to drag props in from MainView class (setLeftMenuToTree function)
         super(props);
+        
     }
+    
     
     state = {
         xPos: "0px",
@@ -29,6 +34,7 @@ export class ContextMenu extends React.Component {
         document.addEventListener("click", this.handleClick);
         document.addEventListener("contextmenu", this.handleContextMenu);
         document.addEventListener("keypress", this.handleKey);
+
     }
 
     componentWillUnmount() {
@@ -60,7 +66,13 @@ export class ContextMenu extends React.Component {
                 menuType = "Rename";
                 this.setState({showMenu: true})
             }
+            else if(e.target.id === "AddVertex"){
+                menuType = "AddVertex";
+                this.setState({showMenu: true})
+            }
             else if(e.target.id === "RenameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
+            }
+            else if(e.target.id === "VertexNameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
             }
             else if(e.target.id === "Create-Graph"){
                 menuType = "AddContainerModel";
@@ -138,7 +150,19 @@ export class ContextMenu extends React.Component {
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
             }
-    }
+            else if(menuType === "AddVertex"){
+                
+                let vertexName = document.getElementById("VertexNameBox").value;
+                handleAddVertex(vertexName, getSelectedFolderKey());
+                try{
+                this.props.setLeftMenuToTree();
+                }
+                catch(e){
+                    console.log(e);
+                }
+                this.setState({showMenu: false});
+            }
+        }
         /*if(e.key === 'Enter'){
             console.log("enter pressed")
         }
@@ -245,6 +269,7 @@ export class ContextMenu extends React.Component {
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"><b>{rightClickedItem}</b></div>   
                     <div className="CMitem" id="Rename"> Rename</div>
+                    <div className="CMitem" id="AddVertex"> Add Vertex</div>
                     </div>
                 )
             }
@@ -278,11 +303,21 @@ export class ContextMenu extends React.Component {
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
-                    <input className="CMText" id="RenameBox" type="text" name="renameItem" placeholder='new Name'/>
-                    
+                    <input className="CMText" id="RenameBox" type="text" name="renameItem" placeholder='New Name'/>
                     </div>
                 )
             }
+            else if(menuType === "AddVertex"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
+                    <input className="CMText" id="VertexNameBox" type="text" name="nameVertex" placeholder='Vertex Name'/>
+                    </div>
+                )
+            }
+
             else if(menuType === "Arrow"){
                 return (
 

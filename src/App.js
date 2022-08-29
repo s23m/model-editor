@@ -14,7 +14,6 @@ function App() {
         <div className="App">
             <div id='program'>
             </div>
-            <ContextMenu/>
         </div>
 
   );
