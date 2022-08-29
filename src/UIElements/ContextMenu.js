@@ -6,7 +6,7 @@ import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, find
 import {setLeftMenuToTree} from "./LeftMenu"
 import { ContactsOutlined, LocalConvenienceStoreOutlined } from '@material-ui/icons';
 import {getSemanticIdentity} from "../DataStructures/Vertex"
-import {handleAddVertex} from "./ContainmentTree";
+import {handleAddVertex, handleDeleteVertex, getVertexData} from "./ContainmentTree";
 let rightClickedItem = "Default"; //Name of the right clicked item where "Default" is a non-object such as empty canvas space
 let rightClickedItemType = "None"
 let rightClickedItemKey = 0; // Identifying key of selected item needed to use relating methods eg. selectedFolderKey, ModelKey,VertexKey.
@@ -69,6 +69,15 @@ export class ContextMenu extends React.Component {
             else if(e.target.id === "AddVertex"){
                 menuType = "AddVertex";
                 this.setState({showMenu: true})
+            }
+            else if(e.target.id === "DeleteVertex"){
+                for(let vertex of getVertexData()){
+                    if(vertex.renderKey === rightClickedItemKey){
+                        handleDeleteVertex(vertex.semanticIdentity.UUID)
+                    }
+                }
+                this.setState({showMenu: false})
+                this.props.setLeftMenuToTree();
             }
             else if(e.target.id === "RenameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
             }
@@ -182,6 +191,7 @@ export class ContextMenu extends React.Component {
         rightClickedItem = "Default" //reset the selected item
         rightClickedItemKey = 0 //reset the index
         rightClickedObject = null; // reset the object
+        
 
         //console.log(e.target.className)
 
@@ -213,6 +223,18 @@ export class ContextMenu extends React.Component {
             }
             
         }
+
+        //if target is existing vertex load vertex menu
+        if(e.target.text.includes("🟧")){
+            for(let vertex of getVertexData()){
+                if(e.target.text === vertex.text){
+                    menuType = "Vertex"
+                    rightClickedItem = e.target.text;
+                    rightClickedItemKey = getSelectedFolderKey();
+
+                }
+            }
+        }
         // if target exists within the canvas
         else if(e.target.id ==="drawCanvas"){
             let position = getGraphXYFromMouseEvent(e);
@@ -225,7 +247,7 @@ export class ContextMenu extends React.Component {
                         menuType = "Container"
                     }
                     else{
-                        menuType = "Vertex"
+                        menuType = "CanvasVertex"
                     }
                     
                 }
@@ -317,6 +339,16 @@ export class ContextMenu extends React.Component {
                     </div>
                 )
             }
+            else if(menuType === "Vertex"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
+                    <div className="CMitem" id="DeleteVertex"> Delete Vertex </div>
+                    </div>
+                )
+            }
 
             else if(menuType === "Arrow"){
                 return (
@@ -328,7 +360,7 @@ export class ContextMenu extends React.Component {
                     </div>
                 )
             }
-            else if(menuType === "Vertex"){
+            else if(menuType === "CanvasVertex"){
                 return (
 
                 //options are given classnames to identify what has been selected
@@ -338,6 +370,7 @@ export class ContextMenu extends React.Component {
                     </div>
                 )
             }
+           
             else if(menuType === "Container"){
                 return (
 

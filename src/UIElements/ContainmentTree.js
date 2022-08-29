@@ -330,6 +330,21 @@ export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticI
 
 }
 
+export function handleDeleteVertex(selectedUUID){
+    for(let vertex of currentObjects.flatten()){
+        if(vertex.semanticIdentity.UUID === selectedUUID){
+            currentObjects.remove(vertex)
+        }
+    }
+    for(let i = 0; i < vertexData.length; i++){
+        if(vertexData[i].semanticIdentity.UUID === selectedUUID){
+            vertexData.splice(i, 1)
+            decoyVertexData.splice(i, 1)
+        }
+    }
+    drawAll();
+}
+
 export function handleDeleteModel(selectedModelKey){
 
 
