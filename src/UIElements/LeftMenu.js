@@ -149,7 +149,6 @@ export class LeftMenu extends React.Component{
             console.log(this.state.selectedObject);
             if(this.state.selectedObject.typeName === "Vertex"){
                 vertexDeleteElement(this.state.selectedObject);
-                handleDeleteVertex(this.state.selectedObject.semanticIdentity.UUID)
             }
             else{
                 deleteElement(this.state.selectedObject);

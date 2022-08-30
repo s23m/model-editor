@@ -1828,14 +1828,14 @@ export function createVertex(x1, y1, width, height,name,content,colour,icons,ima
 }
 
 export function updateVertex(selectedObject){ // function to update the data of the contaimnment tree object and all other objects sharing the semantic- cooper
-    let vertex = getLinkedVertex(selectedObject);
+    let vertex = getLinkedVertex(selectedObject); // 'vertex' refers to the treeview object.
     vertex.text = selectedObject.title + " 🟧";
     vertex.colour = selectedObject.colour;
     vertex.content = selectedObject.content;
     vertex.width = selectedObject.width;
     vertex.height = selectedObject.height;
     for(let verticies of currentObjects.flatten()){
-        if(vertex.semanticIdentity.UUID === verticies.semanticIdentity.UUID && verticies !== selectedObject){ 
+        if(vertex.semanticIdentity.UUID === verticies.originalUUID && verticies !== selectedObject){ // updates all of the canvas objects that come from the treeview object.
             verticies.title = vertex.text.replace(" 🟧", "")
             verticies.title = ":: " + verticies.title 
             verticies.colour = vertex.colour;
@@ -1846,7 +1846,7 @@ export function updateVertex(selectedObject){ // function to update the data of 
 
 export function getLinkedVertex(selectedObject){ // grabs the contaiment tree object - cooper
     for(let vertex of vertexData){
-        if(vertex.semanticIdentity.UUID === selectedObject.semanticIdentity.UUID)
+        if(vertex.semanticIdentity.UUID === selectedObject.originalUUID)
         return vertex;
     }
 }

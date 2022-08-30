@@ -242,6 +242,8 @@ export function handleAddVertex(vertexName, parentKey = 0){
         data: NaN,
         state: {opened: true},
         type: "treeVertex",
+        typeName: "Vertex",
+        originalVertex: true,
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey,
         content: "",
@@ -262,6 +264,8 @@ export function handleAddVertex(vertexName, parentKey = 0){
         data: decoyVertexData[vertexData.length],
         state: {opened: true},
         type: "treeVertex",
+        typeName: "Vertex",
+        originalVertex: true,
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey,
         content: "",
@@ -332,7 +336,7 @@ export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticI
 
 export function handleDeleteVertex(selectedUUID){
     for(let vertex of currentObjects.flatten()){
-        if(vertex.semanticIdentity.UUID === selectedUUID){
+        if(vertex.originalUUID === selectedUUID){
             currentObjects.remove(vertex)
         }
     }
