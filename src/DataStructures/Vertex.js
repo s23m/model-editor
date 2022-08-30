@@ -4,7 +4,7 @@
 
 import { drawMarker, distanceThreshold, getCurrentRenderKey, getCurrentModel } from "../UIElements/CanvasDraw";
 import { getModelRenderKey } from "../UIElements/ContainmentTree";
-import { SemanticIdentity } from "./SemanticIdentity";
+import { SemanticIdentity, createUUID } from "./SemanticIdentity";
 
 export var padding = 5;
 export var defaultColour = "#FFD5A9";
@@ -30,6 +30,8 @@ export class Vertex {
         this.selected = false;
         this.imageElements = {};
         this.fontSize = 12;
+        this.orignalVertex = true; // bool to see if the selected vertex is the original
+        this.originalUUID = this.originalUUID // going to store the UUID of the original vertex here as canvas objects need to be given a unique semanticUUID 
         this.isContainer = false; //Ignore this now, Kieth explained how containers work after finishing old implementation, direction other team was going was wrong - Lachlan
 
         // Note these values often change in runtime

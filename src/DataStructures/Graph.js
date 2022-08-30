@@ -4,6 +4,7 @@
 
 import { CollectionsBookmarkOutlined, ContactSupportOutlined } from "@material-ui/icons";
 import { currentObjects, getModelName, createVertex } from "../UIElements/CanvasDraw";
+import {SemanticIdentity} from "./SemanticIdentity";
 
 
 
@@ -506,13 +507,24 @@ export class Graph {
 
     addVertex(vertex) {
         if (this.getVertexNode(vertex) === null) { // if its the original vertex
+            vertex.originalUUID = vertex.semanticIdentity.UUID; 
             vertex = new VertexNode(vertex);
             this.rootVertices.add(vertex);
         } else { // else its a copy of the original
             console.log("a copy vertex was attempted")
+            
             let newTitle = ":: " + vertex.title
             vertex.title = newTitle
+            vertex.originalVertex = false;
+            /* For now im going to give the copies their own unique semantic UUID, as a lot of stuff in the program hinges off of vertex items
+            having their own unique sID. as a work around i've created a value in the vertex object to store the sID of the original vertex so that
+            any functions that require the original UUID of the original vertex can still be used. - cooper*/
+            vertex.originalUUID = vertex.semanticIdentity.UUID; 
+            let sID = new SemanticIdentity(vertex.title,"","","", undefined ,[]) 
+            vertex.semanticIdentity = sID;
             vertex = new VertexNode(vertex);
+
+           
             this.rootVertices.add(vertex);
             console.log(vertex)
         }
