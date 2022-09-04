@@ -563,6 +563,7 @@ export class ContainmentTree extends React.Component {
                 //console.log(treeData);
                 //console.log(combinedItems)
                 folder.children = combinedItems;
+                
 
             }
             //console.log(getContainerData())
@@ -584,6 +585,20 @@ export class ContainmentTree extends React.Component {
                 folder.children.push(vertex.toTreeViewElement("Arrow Folder", folder.renderKey))
             }  
             
+        }
+
+        for(let vert of getVertexData()){
+            console.log(vert.children)
+            if(vert.children.length === 0){
+                vert.text = vert.text.replace(" 🟧","");
+                vert.text = vert.text.replace(" 📂","");
+                vert.text = vert.text + " 🟧"
+            }
+            else{
+                vert.text = vert.text.replace(" 🟧","");
+                vert.text = vert.text.replace(" 📂","");
+                vert.text = vert.text + " 📂"
+            }
         }
 
         folderDataRoot = [];
