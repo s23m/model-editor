@@ -1831,9 +1831,6 @@ export function createVertex(x1, y1, width, height,name,content,colour,icons,ima
 export function updateVertex(selectedObject){ // function to update the data of the contaimnment tree object and all other objects sharing the semantic- cooper
     let vertex = getLinkedVertex(selectedObject); // 'vertex' refers to the treeview object.
 
-    console.log(vertex)
-    console.log(selectedObject)
-
     vertex.text = selectedObject.title + " 🟧";
     vertex.content = selectedObject.content;
     vertex.width = selectedObject.width;
@@ -1863,13 +1860,7 @@ export function updateVertex(selectedObject){ // function to update the data of 
             verticies.content = vertex.content;
             }
             else{
-            console.log("other vert")
-            console.log(vertex)
             verticies.title = vertex.text.replace(" 🟧", "")
-            let sourcePackage = getFolderNameFromKey(vertex.parentRenderKey)
-            sourcePackage.replace(" 🟧", "");
-            sourcePackage.replace(" 📁", "")
-            verticies.title =  sourcePackage + " :: " + verticies.title //change this to an displayable "package" attribute later, instead of in the editable text
             verticies.colour = "#FFFFFF";
             verticies.content = vertex.content;
             }

@@ -65,16 +65,17 @@ export class Canvas extends React.Component {
         //get canvas relative coordinates for where the object was dropped
         let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
 
-        let newName;
+        let newName = droppedVertex.text.replace(" 🟧","");
         let newColour;
+        let visibilityCheck = false;
 
         //check if selected model is located in the same package or not
         if(droppedVertex.parentRenderKey !== canvasDraw.getCurrentRenderKey()){
-            newName = getFolderNameFromKey(droppedVertex.parentRenderKey) + " :: " + droppedVertex.text.replace(" 🟧","");
             newColour = "#FFFFFF";
+            visibilityCheck = true; //used to determine if the vertex has an origin package added
         }
         else{
-            newName = droppedVertex.text.replace(" 🟧","");
+            
             newColour = droppedVertex.colour;
         }
 
@@ -82,6 +83,13 @@ export class Canvas extends React.Component {
         //create the vertex object(size 30x15) and place it
         let canvasVert = canvasDraw.createVertex(mouseCoords[0],mouseCoords[1],droppedVertex.width,droppedVertex.height,newName,
             droppedVertex.content,newColour,droppedVertex.icons,droppedVertex.imageElements,droppedVertex.fontSize,droppedVertex.semanticIdentity)
+        if(visibilityCheck === true){
+            //add origin package
+            let originText = getFolderNameFromKey(droppedVertex.parentRenderKey)
+            originText = originText.replace(" 🟧","")
+            originText = originText.replace(" 📁","")
+            canvasVert.setOrigin(originText + " :: ")
+        }
         canvasDraw.addObject(canvasVert)
         canvasDraw.drawAll()
 
