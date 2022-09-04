@@ -61,7 +61,7 @@ export class Canvas extends React.Component {
             if (vert.semanticIdentity.UUID === droppedSemanticID)
             droppedVertex = vert;
         }
-        console.log(droppedVertex)
+        //console.log(droppedVertex)
         //get canvas relative coordinates for where the object was dropped
         let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
 

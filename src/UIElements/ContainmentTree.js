@@ -565,7 +565,7 @@ export class ContainmentTree extends React.Component {
                 folder.children = combinedItems;
 
             }
-            console.log(getContainerData())
+            //console.log(getContainerData())
                // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
             
         for (let folder of getContainerData()){ // this for loop is to define the ownership of the vertices & arrows - cooper
@@ -663,14 +663,14 @@ export class ContainmentTree extends React.Component {
             //First, we need to actually determine where the vertex is
             //Take a look at our container
             for (let cont of getContainerData()){
-                console.log("below is folderData")
-                console.log(getContainerData())
+                //console.log("below is folderData")
+                //console.log(getContainerData())
                 //console.log("This is active test ". cont)
                 //console.log("folder text: " + cont.text)
                 //Take a look at the children of the containers (arrows and such)
                 for (let treeDat of cont.children){
-                    console.log("below is treeDat")
-                    console.log(treeDat)
+                    //console.log("below is treeDat")
+                    //console.log(treeDat)
                     //console.log("treeDat text: " + treeDat.text) 
                     //console.log("num of rkeys is:", getTotalRenderKeys())
                     //console.log(folderData)
@@ -870,7 +870,7 @@ export class ContainmentTree extends React.Component {
 
     render() {
         const data = this.state.data;
-        console.log(treeData)
+        //console.log(treeData)
         //console.log(data)
         /*
         if (this.state.selectedObject !== null){
