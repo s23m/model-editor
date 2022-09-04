@@ -242,7 +242,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
         data: NaN,
         state: {opened: true},
         type: "treeVertex",
-        typeName: "Vertex",
+        typeName: "VertexNode",
         originalVertex: true,
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey,
@@ -264,7 +264,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
         data: decoyVertexData[vertexData.length],
         state: {opened: true},
         type: "treeVertex",
-        typeName: "Vertex",
+        typeName: "VertexNode",
         originalVertex: true,
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey,
@@ -481,6 +481,11 @@ export function getModelNameFromKey(key){
     return model.text
 }
 
+export function getFolderNameFromKey(key){
+    let folder = getContainerData().find(folder => folder.renderKey === key)
+    return folder.text
+}
+
 
 
 let initialFolderAdded = false;
@@ -558,9 +563,10 @@ export class ContainmentTree extends React.Component {
                 //console.log(treeData);
                 //console.log(combinedItems)
                 folder.children = combinedItems;
+                
 
             }
-            console.log(getContainerData())
+            //console.log(getContainerData())
                // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
             
         for (let folder of getContainerData()){ // this for loop is to define the ownership of the vertices & arrows - cooper
@@ -579,6 +585,20 @@ export class ContainmentTree extends React.Component {
                 folder.children.push(vertex.toTreeViewElement("Arrow Folder", folder.renderKey))
             }  
             
+        }
+
+        for(let vert of getVertexData()){
+            console.log(vert.children)
+            if(vert.children.length === 0){
+                vert.text = vert.text.replace(" 🟧","");
+                vert.text = vert.text.replace(" 📂","");
+                vert.text = vert.text + " 🟧"
+            }
+            else{
+                vert.text = vert.text.replace(" 🟧","");
+                vert.text = vert.text.replace(" 📂","");
+                vert.text = vert.text + " 📂"
+            }
         }
 
         folderDataRoot = [];
@@ -658,14 +678,14 @@ export class ContainmentTree extends React.Component {
             //First, we need to actually determine where the vertex is
             //Take a look at our container
             for (let cont of getContainerData()){
-                console.log("below is folderData")
-                console.log(getContainerData())
+                //console.log("below is folderData")
+                //console.log(getContainerData())
                 //console.log("This is active test ". cont)
                 //console.log("folder text: " + cont.text)
                 //Take a look at the children of the containers (arrows and such)
                 for (let treeDat of cont.children){
-                    console.log("below is treeDat")
-                    console.log(treeDat)
+                    //console.log("below is treeDat")
+                    //console.log(treeDat)
                     //console.log("treeDat text: " + treeDat.text) 
                     //console.log("num of rkeys is:", getTotalRenderKeys())
                     //console.log(folderData)
@@ -849,11 +869,18 @@ export class ContainmentTree extends React.Component {
             document.getElementById("SelectedFolder").value = "Root"
         }
         else{
+            
         document.getElementById("SelectedFolder").value = getContainerData().find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
         }
+        try{
         document.getElementById("SelectedContainer").value = getContainerData().find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
         document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
         //console.log(modelObjects)
+        }
+        catch(e){
+            console.log(e)
+        }
+    
 
     }
 
@@ -865,7 +892,7 @@ export class ContainmentTree extends React.Component {
 
     render() {
         const data = this.state.data;
-        console.log(treeData)
+        //console.log(treeData)
         //console.log(data)
         /*
         if (this.state.selectedObject !== null){

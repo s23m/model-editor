@@ -24,7 +24,7 @@ export class VertexNode {
     }
 
     remove(traversedVertices, node) {
-        console.log("remove is called")
+        //onsole.log("remove is called")
         let isRemoved = false;
         traversedVertices.add(this);
 
@@ -299,7 +299,7 @@ export class VertexNode {
 
             }
 
-            console.log(ArrowChildren.length)
+            //console.log(ArrowChildren.length)
 
             if(ArrowChildren.length === 0){
                 return;
@@ -484,7 +484,7 @@ export class Graph {
         for (let object of objects) {
             switch (object.typeName) {
                 case "Vertex":
-                    console.log("add vert trigs")
+                    //console.log("add vert trigs")
                     this.addVertex(object);               
                     break;
                 case "Arrow":
@@ -497,9 +497,9 @@ export class Graph {
                     this.arrows.add(object);
                     break;
                 default:
-                    console.error("Attempted to add object to unknown type %s to Graph", object.typeName)
-                    console.log(object)
-                    console.log(object.constructor)
+                    //console.error("Attempted to add object to unknown type %s to Graph", object.typeName)
+                    //console.log(object)
+                    //console.log(object.constructor)
                     break;
             }
         }
@@ -511,7 +511,7 @@ export class Graph {
             vertex = new VertexNode(vertex);
             this.rootVertices.add(vertex);
         } else { // else its a copy of the original
-            console.log("a copy vertex was attempted")
+            //console.log("a copy vertex was attempted")
             
             let newTitle = ":: " + vertex.title
             vertex.title = newTitle

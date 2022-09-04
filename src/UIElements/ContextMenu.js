@@ -211,7 +211,7 @@ export class ContextMenu extends React.Component {
             }
 
             //if target is existing model, load model menu
-            if(e.target.text.includes("📈" || "⛶")){
+            if(e.target.text.includes("📈")){
                 for(let model of getModelData()){
                     if(e.target.text === model.text){
                         //console.log("matching model found")
@@ -221,22 +221,24 @@ export class ContextMenu extends React.Component {
                     }
                 }
             }
+            //if target is existing vertex load vertex menu
+            if(e.target.text.includes("🟧" || "📂")){
+                for(let vertex of getVertexData()){
+                    if(e.target.text === vertex.text){
+                        menuType = "Vertex"
+                        rightClickedObject = vertex;
+                        rightClickedItem = e.target.text;
+                        rightClickedItemKey = getSelectedFolderKey();
+
+                    }
+                }
+            }
             
         }
 
-        //if target is existing vertex load vertex menu
-        if(e.target.text.includes("🟧")){
-            for(let vertex of getVertexData()){
-                if(e.target.text === vertex.text){
-                    menuType = "Vertex"
-                    rightClickedItem = e.target.text;
-                    rightClickedItemKey = getSelectedFolderKey();
-
-                }
-            }
-        }
+        
         // if target exists within the canvas
-        else if(e.target.id ==="drawCanvas"){
+        if(e.target.id ==="drawCanvas"){
             let position = getGraphXYFromMouseEvent(e);
             let x = position[0]; let y = position[1];
             rightClickedObject = findIntersected(x, y);
@@ -344,7 +346,8 @@ export class ContextMenu extends React.Component {
 
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
-                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>
+                    <div className="CMitem" id="Bi-Nav"> Naviagte </div>   
                     <div className="CMitem" id="DeleteVertex"> Delete Vertex </div>
                     </div>
                 )
@@ -367,6 +370,7 @@ export class ContextMenu extends React.Component {
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
                     <div className="CMitem" id="Auto-Layout"> Auto-Layout option (not implemented) </div>
+                    <div className="CMitem" id="Bi-Nav"> Naviagte </div>
                     </div>
                 )
             }
@@ -427,9 +431,20 @@ export class ContextMenu extends React.Component {
                 console.log(getCurrentObjects().rootVertices);
                 let matchingContainers = [];
                 let matchingModels = [];
-                let matchingUUID = rightClickedObject.semanticIdentity.UUID;
+                let matchingUUID = 0;
+
+                matchingUUID = rightClickedObject.originalUUID;
+                //If undefined, then a treeview vertex is selected
+                if(matchingUUID === undefined){
+                    matchingUUID = rightClickedObject.semanticIdentity.UUID
+                }
+                console.log("UUID stuff")
+                console.log(matchingUUID)
+                console.log(rightClickedObject.semanticIdentity.UUID)
+
+
                 for(let vert of getCurrentObjects().rootVertices){
-                    if(vert.vertex.semanticIdentity.UUID === matchingUUID){
+                    if(vert.vertex.originalUUID === matchingUUID){
                         matchingContainers.push(vert)
                     }
                 }

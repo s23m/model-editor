@@ -33,6 +33,8 @@ export class Vertex {
         this.orignalVertex = true; // bool to see if the selected vertex is the original
         this.originalUUID = this.originalUUID // going to store the UUID of the original vertex here as canvas objects need to be given a unique semanticUUID 
         this.isContainer = false; //Ignore this now, Kieth explained how containers work after finishing old implementation, direction other team was going was wrong - Lachlan
+        this.Origin = "" //package the vertex originates from if needed
+   
 
         // Note these values often change in runtime
         this.width = width;
@@ -163,6 +165,13 @@ export class Vertex {
 
     toggleAbstract(){
         this.isAbstract = !this.isAbstract
+    }
+
+    setOrigin(newOrigin){
+        this.Origin = newOrigin;
+    }
+    getOrigin(){
+        return this.Origin;
     }
 
     getContentAsString() {
@@ -351,7 +360,7 @@ export class Vertex {
                 }
             }
         }
-        this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.title).width);
+        this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.title + this.Origin).width);
 
         for (let i = 0; i < this.content.length; i++) {
             this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.content[i]).width + padding*2);
@@ -366,7 +375,7 @@ export class Vertex {
 
 
         // Find the maximum width of text and size the class accordingly
-        let measuredNameText = canvasContext.measureText(this.title).width;
+        let measuredNameText = canvasContext.measureText(this.title + this.Origin).width;
         let maxWidth = Math.max(measuredNameText + padding*2, this.width);
         this.contentHeight = 0;
 
@@ -388,8 +397,6 @@ export class Vertex {
         // Configure drawing for shadows
         // And generally make it look nice
         canvasContext.shadowOffsetX = 2.0; canvasContext.shadowOffsetY = 2.0;
-
-
         this.iconAreaHeight = (iconHeight + (iconPadding * 2)) * iconListLen;
 
         // Update rect height
@@ -401,9 +408,11 @@ export class Vertex {
         }
 
         // Draw rect
+        
         canvasContext.fillStyle = this.colour;
         canvasContext.fillRect(this.x, this.y, this.width, this.realHeight);
         canvasContext.strokeRect(this.x, this.y, this.width, this.realHeight);
+
 
         if (this.content[0] !== "") {
             canvasContext.strokeRect(this.x, this.y, this.width, this.height+this.iconAreaHeight+padding*2);
@@ -489,7 +498,7 @@ export class Vertex {
         }
 
         // Draw name
-        this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.title).width);
+        this.increaseWidthIfNecessary(canvasContext, canvasContext.measureText(this.Origin + this.title).width);
 
         if(this.isAbstract) {
             canvasContext.font = "italic " + this.fontSize + "px Segoe UI";
@@ -497,7 +506,7 @@ export class Vertex {
             canvasContext.font = this.fontSize + "px Segoe UI";
         }
 
-        canvasContext.fillText(this.title, this.x+padding, this.y+dy+this.iconAreaHeight);
+        canvasContext.fillText(this.Origin + this.title , this.x+padding, this.y+dy+this.iconAreaHeight);
         dy = padding*2 +this.height + this.contentHeight;
 
         canvasContext.font = this.fontSize+"px Segoe UI";
