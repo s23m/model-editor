@@ -66,7 +66,7 @@ export class Canvas extends React.Component {
         let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
 
         let newName = droppedVertex.text.replace(" 🟧","");
-        newName = droppedVertex.text.replace(" 📂","")
+        newName = newName.replace(" 📂","")
         let newColour;
         let visibilityCheck = false;
 
