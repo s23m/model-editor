@@ -1,24 +1,25 @@
 {
   "files": {
     "main.css": "/lclb/static/css/main.7026dc36.chunk.css",
-    "main.js": "/lclb/static/js/main.c9756a2e.chunk.js",
-    "main.js.map": "/lclb/static/js/main.c9756a2e.chunk.js.map",
+    "main.js": "/lclb/static/js/main.83b9742d.chunk.js",
+    "main.js.map": "/lclb/static/js/main.83b9742d.chunk.js.map",
     "runtime-main.js": "/lclb/static/js/runtime-main.793eeaba.js",
     "runtime-main.js.map": "/lclb/static/js/runtime-main.793eeaba.js.map",
     "static/css/2.ee344228.chunk.css": "/lclb/static/css/2.ee344228.chunk.css",
-    "static/js/2.c9eef97a.chunk.js": "/lclb/static/js/2.c9eef97a.chunk.js",
-    "static/js/2.c9eef97a.chunk.js.map": "/lclb/static/js/2.c9eef97a.chunk.js.map",
+    "static/js/2.2cbf0f8d.chunk.js": "/lclb/static/js/2.2cbf0f8d.chunk.js",
+    "static/js/2.2cbf0f8d.chunk.js.map": "/lclb/static/js/2.2cbf0f8d.chunk.js.map",
     "index.html": "/lclb/index.html",
-    "precache-manifest.0c6cfba84153b3f993d47e12fb4c07d0.js": "/lclb/precache-manifest.0c6cfba84153b3f993d47e12fb4c07d0.js",
+    "precache-manifest.227f14908fb83654715c7dfa5ec68822.js": "/lclb/precache-manifest.227f14908fb83654715c7dfa5ec68822.js",
     "service-worker.js": "/lclb/service-worker.js",
     "static/css/2.ee344228.chunk.css.map": "/lclb/static/css/2.ee344228.chunk.css.map",
     "static/css/main.7026dc36.chunk.css.map": "/lclb/static/css/main.7026dc36.chunk.css.map",
-    "static/js/2.c9eef97a.chunk.js.LICENSE.txt": "/lclb/static/js/2.c9eef97a.chunk.js.LICENSE.txt",
+    "static/js/2.2cbf0f8d.chunk.js.LICENSE.txt": "/lclb/static/js/2.2cbf0f8d.chunk.js.LICENSE.txt",
     "static/media/DeleteModel.svg": "/lclb/static/media/DeleteModel.8ff04828.svg",
     "static/media/NewModel.svg": "/lclb/static/media/NewModel.5f359781.svg",
     "static/media/artifact.svg": "/lclb/static/media/artifact.91473c28.svg",
     "static/media/changeFolderName.svg": "/lclb/static/media/changeFolderName.d6c49e9c.svg",
     "static/media/container.svg": "/lclb/static/media/container.ddecd459.svg",
+    "static/media/createVertex.svg": "/lclb/static/media/createVertex.97bc72a7.svg",
     "static/media/create_folder.svg": "/lclb/static/media/create_folder.5ddfbbc9.svg",
     "static/media/delete_folder.svg": "/lclb/static/media/delete_folder.ccd4d6e6.svg",
     "static/media/edge.svg": "/lclb/static/media/edge.09e9d9dc.svg",
@@ -31,8 +32,8 @@
   "entrypoints": [
     "static/js/runtime-main.793eeaba.js",
     "static/css/2.ee344228.chunk.css",
-    "static/js/2.c9eef97a.chunk.js",
+    "static/js/2.2cbf0f8d.chunk.js",
     "static/css/main.7026dc36.chunk.css",
-    "static/js/main.c9756a2e.chunk.js"
+    "static/js/main.83b9742d.chunk.js"
   ]
 }
