@@ -6,7 +6,8 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import {getModelData,handleAddModel, vertexData} from "./ContainmentTree";
+import {getFolderNameFromKey, getModelData,handleAddModel, vertexData} from "./ContainmentTree";
+import { rgbToHex } from "@material-ui/core";
 
 
 // Core variables
@@ -1836,10 +1837,26 @@ export function updateVertex(selectedObject){ // function to update the data of 
     vertex.height = selectedObject.height;
     for(let verticies of currentObjects.flatten()){
         if(vertex.semanticIdentity.UUID === verticies.originalUUID && verticies !== selectedObject){ // updates all of the canvas objects that come from the treeview object.
+
+            //check if This graph vertex is in a different folder to the base vertex, if so make it white and add location
+            console.log(vertex.parentRenderKey)
+            console.log(verticies.vertexRenderKey)
+
+            if(vertex.parentRenderKey === verticies.RenderKey){
+            //If the vertex's model is in same folder
             verticies.title = vertex.text.replace(" 🟧", "")
-            verticies.title = ":: " + verticies.title 
             verticies.colour = vertex.colour;
             verticies.content = vertex.content;
+            }
+            else{
+            verticies.title = vertex.text.replace(" 🟧", "")
+            let sourcePackage = getFolderNameFromKey(vertex.parentRenderKey)
+            sourcePackage.text.replace(" 🟧", "");
+            sourcePackage.text.replace(" 📁", "")
+            verticies.title =  + " :: " + verticies.title //change this to an displayable "package" attribute later, so its not in the editable title
+            verticies.colour = "#FFFFFF";
+            verticies.content = vertex.content;
+            }
         }
     }
 }

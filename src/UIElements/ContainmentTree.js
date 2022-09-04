@@ -481,6 +481,11 @@ export function getModelNameFromKey(key){
     return model.text
 }
 
+export function getFolderNameFromKey(key){
+    let folder = getContainerData().find(folder => folder.renderKey === key)
+    return folder.text
+}
+
 
 
 let initialFolderAdded = false;

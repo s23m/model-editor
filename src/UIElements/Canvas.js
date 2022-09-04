@@ -1,6 +1,6 @@
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
-import { getVertexData } from './ContainmentTree';
+import { getFolderNameFromKey, getVertexData } from './ContainmentTree';
 import { Tool } from './LeftMenu';
 
 let movingAllowed = false;
@@ -64,10 +64,24 @@ export class Canvas extends React.Component {
         console.log(droppedVertex)
         //get canvas relative coordinates for where the object was dropped
         let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
-        //create the vertex object(size 30x15) and place it
 
-        let canvasVert = canvasDraw.createVertex(mouseCoords[0],mouseCoords[1],droppedVertex.width,droppedVertex.height,droppedVertex.text.replace(" 🟧",""),
-            droppedVertex.content,droppedVertex.colour,droppedVertex.icons,droppedVertex.imageElements,droppedVertex.fontSize,droppedVertex.semanticIdentity)
+        let newName;
+        let newColour;
+
+        //check if selected model is located in the same package or not
+        if(droppedVertex.parentRenderKey !== canvasDraw.getCurrentRenderKey()){
+            newName = getFolderNameFromKey(droppedVertex.parentRenderKey) + " :: " + droppedVertex.text.replace(" 🟧","");
+            newColour = "#FFFFFF";
+        }
+        else{
+            newName = droppedVertex.text.replace(" 🟧","");
+            newColour = droppedVertex.colour;
+        }
+
+
+        //create the vertex object(size 30x15) and place it
+        let canvasVert = canvasDraw.createVertex(mouseCoords[0],mouseCoords[1],droppedVertex.width,droppedVertex.height,newName,
+            droppedVertex.content,newColour,droppedVertex.icons,droppedVertex.imageElements,droppedVertex.fontSize,droppedVertex.semanticIdentity)
         canvasDraw.addObject(canvasVert)
         canvasDraw.drawAll()
 
