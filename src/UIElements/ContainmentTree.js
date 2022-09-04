@@ -242,7 +242,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
         data: NaN,
         state: {opened: true},
         type: "treeVertex",
-        typeName: "Vertex",
+        typeName: "VertexNode",
         originalVertex: true,
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey,
@@ -264,7 +264,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
         data: decoyVertexData[vertexData.length],
         state: {opened: true},
         type: "treeVertex",
-        typeName: "Vertex",
+        typeName: "VertexNode",
         originalVertex: true,
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey,
@@ -869,11 +869,18 @@ export class ContainmentTree extends React.Component {
             document.getElementById("SelectedFolder").value = "Root"
         }
         else{
+            
         document.getElementById("SelectedFolder").value = getContainerData().find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
         }
+        try{
         document.getElementById("SelectedContainer").value = getContainerData().find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
         document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
         //console.log(modelObjects)
+        }
+        catch(e){
+            console.log(e)
+        }
+    
 
     }
 
