@@ -86,7 +86,7 @@ export function load(jsonString){
 
     for(let vert of saveData.vertices){
         console.log(vert)
-        //atm its a bit messy as vert constructor doesnt use destructuring options, when it does this can be changed
+        //atm its a bit messy as vert constructor doesnt use destructuring so we can specifiy options, when it does this can be changed
         vert = new Vertex (0,0,0,0,0,0,0,0,1,vert)
         newVertices.push(vert)
     }
