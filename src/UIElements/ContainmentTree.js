@@ -11,7 +11,7 @@ import TreeView from 'react-simple-jstree';
 
 import { currentObjects, getModelName, getCurrentRenderKey, setNewRenderKey, 
     getTotalRenderKeys, incrementTotalRenderKeys, 
-    getCurrentModel, setNewModel, getTotalModels, incrementTotalModels, decreaseTotalModels, decreaseTotalRenderKeys, deleteElement} from "./CanvasDraw";
+    getCurrentModel, setNewModel, getTotalModels, incrementTotalModels, decreaseTotalModels, decreaseTotalRenderKeys, deleteElement, getCurrentObjects} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
 import {VertexNode} from "../DataStructures/Graph.js"
@@ -79,13 +79,44 @@ export function getSelectedFolderKey(){
     return selectedFolderKey;
 }
 
+export function getTreeData(){
+    return treeData;
+}
+
+export function setTreeData(newTreeData){
+    treeData = newTreeData;
+}
 
 export function getFolderData(){
     return folderData;
 }
 
+export function setFolderData(newFolderData){
+    folderData = newFolderData;
+}
+
+export function getDecoyFolderData(){
+    return decoyFolderData
+}
+
+export function setDecoyFolderData(newData){
+    decoyFolderData = newData;
+}
+
 export function getVertexData(){
     return vertexData;
+}
+
+export function setVertexData(newData){
+    vertexData = newData;
+}
+
+export function getDecoyVertexData(){
+    return decoyVertexData
+}
+
+export function setDecoyVertexData(newData){
+    decoyVertexData = newData;
 }
 
 //returns a concated array of the folders and vertex(containers)
@@ -93,12 +124,18 @@ export function getContainerData(){
     return folderData.concat(vertexData);
 }
 
-export function setFolderData(newFolderData){
-    folderData = newFolderData;
-}
-
 export function getModelData(){
     return modelObjects;
+}
+
+export function setModelData(newData){
+    modelObjects = newData;
+}
+export function getDecoyModelData(){
+    return decoyModelObjects;
+}
+export function setDecoyModelData(newData){
+    decoyModelObjects = newData;
 }
 
 //This function is used to load the first available model and canvas from the modelObjects array
@@ -246,7 +283,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
         originalVertex: true,
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey,
-        content: "",
+        content: "content",
         colour: "#FFD5A9",
         height: 50,
         width: 70,
@@ -738,6 +775,8 @@ export class ContainmentTree extends React.Component {
         // Try catch used to catch error whe selecting a treeview item with no data type eg. root
         
         try{
+
+            console.log(getCurrentObjects())
             //console.log("Selected Data 1: " + data.node.data)
             //console.log("Selected type 1: " + data.node.original.type)
             //console.log("Selected text 1: " + data.node.text)

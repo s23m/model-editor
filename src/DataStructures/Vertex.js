@@ -12,60 +12,108 @@ export var defaultMinimumSize = 30;
 
 export class Vertex {
 
-    constructor(title = "unnamed", content, colour, x, y, width, height, semanticIdentity) {
-        this.typeName = "Vertex";
+    //As javascript doesnt have method overloading, newConstructor is used to access the secondary constructor when flagged 1 
 
-        if (semanticIdentity !== undefined){
-            this.semanticIdentity = semanticIdentity;
-        } else {
-            this.semanticIdentity = new SemanticIdentity(title,"","","", undefined ,[]);
+    //at some point change to use destructuring, which will require changing every use of this method to use destructing too
+    constructor(title = "unnamed", content, colour, x, y, width, height, semanticIdentity,newConstructor=0,loadedVertex=0) {
+        console.log(newConstructor)
+
+        //This constructor is used to turn a vertex loaded from JSON.parse back into a vertex object
+        if(newConstructor === 1){
+            console.log(loadedVertex)
+
+            this.typeName = loadedVertex.typeName;
+            this.semanticIdentity = loadedVertex.semanticIdentity;
+            this.title = loadedVertex.title;
+            this.content = loadedVertex.content;
+            this.colour = loadedVertex.colour;
+            this.x = loadedVertex.x;
+            this.y = loadedVertex.y;
+            this.icons = loadedVertex.icons;
+            this.selected = false;
+            this.imageElements = loadedVertex.imageElement;
+            this.fontSize = 12;
+            this.orignalVertex = loadedVertex.orignalVertex;
+            this.originalUUID = loadedVertex.originalUUID; 
+            this.Origin = loadedVertex.Origin; 
+            this.width = loadedVertex.width;
+            this.height = loadedVertex.height;
+            this.realHeight = loadedVertex.realHeight;
+            this.isAbstract = loadedVertex.isAbstract;
+            this.vertexPath = loadedVertex.vertexPath;
+            this.vertexModelKey = loadedVertex.vertexModelKey;
+            this.vertexRenderKey = loadedVertex.vertexRenderKey;
+            this.renderedx = loadedVertex.renderedx;
+            this.renderedy = loadedVertex.renderedy;
+            this.awayx = loadedVertex.awayx;
+            this.awayy = loadedVertex.awayy;
+            this.status = loadedVertex.status;
+
         }
 
-        this.title = title;
-        this.content = content;
-        this.colour = colour
-        this.x = x;
-        this.y = y;
-        this.icons = [[],[],[]];
-        this.selected = false;
-        this.imageElements = {};
-        this.fontSize = 12;
-        this.orignalVertex = true; // bool to see if the selected vertex is the original
-        this.originalUUID = this.originalUUID // going to store the UUID of the original vertex here as canvas objects need to be given a unique semanticUUID 
-        this.isContainer = false; //Ignore this now, Kieth explained how containers work after finishing old implementation, direction other team was going was wrong - Lachlan
-        this.Origin = "" //package the vertex originates from if needed
-   
+        else{
+            this.typeName = "Vertex";
 
-        // Note these values often change in runtime
-        this.width = width;
-        this.height = height;
+            if (semanticIdentity !== undefined){
+                this.semanticIdentity = semanticIdentity;
+            } else {
+                this.semanticIdentity = new SemanticIdentity(title,"","","", undefined ,[]);
+            }
 
-        this.realHeight = height;
-
-        // Make sure width and height meet a reasonable minimum
-        this.width = Math.max(width, defaultMinimumSize);
-        this.height = Math.max(height, defaultMinimumSize);
-
-        this.isAbstract = false;
-
-        //Store the path to your given vertex here
-        this.vertexPath = "";
-
-        // USed to decide where to render the object
-        this.vertexModelKey = getCurrentModel();
-
-        // Used to decide where the object goes in the tree
-        this.vertexRenderKey = getModelRenderKey(this.vertexModelKey);
+            this.title = title;
 
 
-        // Used for moving vertices out of the way when they're not being rendered to prevent invisible overlap
-        this.renderedx = x;
-        this.renderedy = y;
+            if(content === undefined){
+                this.content = ""
+            }
+            else{
+            this.content = content;
+            }
 
-        this.awayx = Math.floor(Math.random() * 2000000)+100000;
-        this.awayy = Math.floor(Math.random() * 2000000)+100000;
+            this.colour = colour
+            this.x = x;
+            this.y = y;
+            this.icons = [[],[],[]];
+            this.selected = false;
+            this.imageElements = {};
+            this.fontSize = 12;
+            this.orignalVertex = true; // bool to see if the selected vertex is the original
+            this.originalUUID = this.originalUUID // going to store the UUID of the original vertex here as canvas objects need to be given a unique semanticUUID 
+            this.isContainer = false; //Ignore this now, Kieth explained how containers work after finishing old implementation, direction other team was going was wrong - Lachlan
+            this.Origin = "" //package the vertex originates from if needed
+    
 
-        this.status = "present"
+            // Note these values often change in runtime
+            this.width = width;
+            this.height = height;
+
+            this.realHeight = height;
+
+            // Make sure width and height meet a reasonable minimum
+            this.width = Math.max(width, defaultMinimumSize);
+            this.height = Math.max(height, defaultMinimumSize);
+
+            this.isAbstract = false;
+
+            //Store the path to your given vertex here
+            this.vertexPath = "";
+
+            // USed to decide where to render the object
+            this.vertexModelKey = getCurrentModel();
+
+            // Used to decide where the object goes in the tree
+            this.vertexRenderKey = getModelRenderKey(this.vertexModelKey);
+
+
+            // Used for moving vertices out of the way when they're not being rendered to prevent invisible overlap
+            this.renderedx = x;
+            this.renderedy = y;
+
+            this.awayx = Math.floor(Math.random() * 2000000)+100000;
+            this.awayy = Math.floor(Math.random() * 2000000)+100000;
+
+            this.status = "present"
+        }
         
     }
 
@@ -103,13 +151,6 @@ export class Vertex {
         return this.vertexModelKey;
     }
 
-    setIsContainer(bool){
-        this.isContainer = bool;
-    }
-
-    getIsContainer(){
-        return this.isContainer
-    }
 
     getSemantic(){
         return this.SemanticIdentity
