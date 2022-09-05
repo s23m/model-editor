@@ -48,6 +48,13 @@ export let totalRenderKeys = 0
 export let currentModel = 0;
 export let totalModels = 0;
 
+export function setTotalRenderKey(newData){
+    totalRenderKeys = newData;
+}
+export function setTotalModelKeys(newData){
+    totalModels = newData;
+}
+
 export function getCurrentRenderKey() {
     return currentRenderKey;
 }

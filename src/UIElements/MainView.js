@@ -22,6 +22,7 @@ import { handleDeleteFolder } from './ContainmentTree';
 import { showVertexPath } from './ContainmentTree';
 import { someVertexPath } from './ContainmentTree';
 import { ContextMenu } from './ContextMenu'
+import {save, load} from '../Serialisation/NewFileManager'
 
 import iconNewFolder from "../Resources/create_folder.svg"
 import iconDeleteFolder from "../Resources/delete_folder.svg"
@@ -261,22 +262,28 @@ export class MainProgramClass extends React.Component {
     // If you know how to move it elsewhere to clean up this file
     // Please move it to src/DataStructures/FileManager.js or similar
     showFile = () => {
+        let refreshTree = this.setLeftMenuToTree //This is used so we can point to setLeftMenuToTree within the reader object
         if (window.File && window.FileReader && window.FileList && window.Blob) {
             try {
                 let file = document.querySelector('input[type=file]').files[0];
-
                 let reader = new FileReader();
                 reader.readAsText(file);
+                console.log(reader.result)
                 reader.onload = function () {
-                    fileManager.open(reader.result)
+                    let text = reader.result
+                    load(text)
+                    refreshTree();
                 }
             }catch(e){
-                alert(e.text()+" did you select a file?")
+                alert(e +" did you select a file?")
             }
         } else {
             alert("Your browser is too old to support HTML5 File API");
         }
+        return 0;
     };
+
+
 
     // Used to enable/disable the semantic domain editor
     toggleSemanticDomainState = () => {
@@ -327,7 +334,7 @@ export class MainProgramClass extends React.Component {
 
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <button id="json-downloader" onClick={() => fileManager.save()}>Save (as Json)</button>
+                                <button id="json-downloader" onClick={() => save()}>Save (as Json)</button>
                             </div>
                         </Dropdown.Item>
 
