@@ -79,6 +79,15 @@ export function load(jsonString){
     
 
 
+    
+
+    
+    //TreeVertices need to convert semanticIdentity back to a sI object
+    for(let vert of saveData.treeVertex){
+        vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
+            vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
+    }
+
     //Models and arrows need to be converted back to their explicit types
 
     var newVertices = [];
@@ -86,6 +95,8 @@ export function load(jsonString){
 
     for(let vert of saveData.vertices){
         console.log(vert)
+        vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
+            vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
         //atm its a bit messy as vert constructor doesnt use destructuring so we can specifiy options, when it does this can be changed
         vert = new Vertex (0,0,0,0,0,0,0,0,1,vert)
         newVertices.push(vert)
