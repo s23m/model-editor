@@ -776,7 +776,7 @@ export class ContainmentTree extends React.Component {
         
         try{
 
-            console.log(getCurrentObjects())
+            console.log(data.node.data)
             //console.log("Selected Data 1: " + data.node.data)
             //console.log("Selected type 1: " + data.node.original.type)
             //console.log("Selected text 1: " + data.node.text)

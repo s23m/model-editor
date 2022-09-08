@@ -40,7 +40,7 @@ import {
 
 // In program imports
 import {currentObjects} from "./CanvasDraw";
-import {vertexData} from "./ContainmentTree"
+import {getVertexData, vertexData} from "./ContainmentTree"
 
 // Globals
 let rows;
@@ -385,9 +385,17 @@ function updateChangedObject(object, row) {
 
 function updateChangedObjects(rows) {
     let currentObjectsFlattened = currentObjects.flatten();
+    let treeVert = getVertexData()
 
     // Iterate through all rows
     for (let i = 0; i < rows.length; i++) {
+
+        //itterate through tree verts
+        for (let j = 0; j < treeVert.length; j++) {
+            rows[i] = updateChangedObject(treeVert[j],rows[i])
+            console.log(treeVert[j])
+        }
+
         // Iterate through all objects
         for (let o = 0; o < currentObjectsFlattened.length; o++) {
             // Update main objects
