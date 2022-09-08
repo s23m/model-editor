@@ -303,7 +303,6 @@ export class ContextMenu extends React.Component {
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
-                    <div className="CMitem" id="Navigate"> Navigate (not implemented) </div>
                     <div className="CMitem" id="MoveModel"> Move To </div>
                     </div>
                 )
