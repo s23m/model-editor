@@ -1,8 +1,8 @@
 import { ClickAwayListener } from '@material-ui/core';
 import React from 'react';
-import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel, getModelNameFromKey, folderData, modelObjects} from "./ContainmentTree"
+import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel, getModelNameFromKey, folderData, modelObjects, handleAddFolder, handleDeleteFolder, handleDeleteModel, handleRenameModel} from "./ContainmentTree"
 import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects,setCurrentObjects,
-    linkContainer,updateLinkedContainers, currentObjects, drawAll} from "./CanvasDraw";
+    linkContainer,updateLinkedContainers, currentObjects, drawAll, updateVertex} from "./CanvasDraw";
 import {setLeftMenuToTree} from "./LeftMenu"
 import { ContactsOutlined, LocalConvenienceStoreOutlined } from '@material-ui/icons';
 import {getSemanticIdentity} from "../DataStructures/Vertex"
@@ -66,11 +66,39 @@ export class ContextMenu extends React.Component {
                 menuType = "Rename";
                 this.setState({showMenu: true})
             }
+            else if(e.target.id === "RenameVertex"){
+                menuType = "RenameVertex";
+                this.setState({showMenu: true})
+            }
+            else if(e.target.id === "RenameModel"){
+                menuType = "RenameModel";
+                this.setState({showMenu: true})
+            }
             else if(e.target.id === "AddVertex"){
                 menuType = "AddVertex";
                 this.setState({showMenu: true})
             }
+            else if(e.target.id === "AddGraph"){
+                menuType = "AddGraph";
+                this.setState({showMenu: true})
+            }
+            else if(e.target.id === "AddPackage"){
+                menuType = "AddPackage";
+                this.setState({showMenu: true})
+            }
+            else if(e.target.id === "DeletePackage"){
+                menuType = "DeletePackage";
+                this.setState({showMenu: true})
+            }
             else if(e.target.id === "DeleteVertex"){
+                menuType = "DeleteVertex";
+                this.setState({showMenu: true})
+            }
+            else if(e.target.id === "DeleteModel"){
+                menuType = "DeleteModel";
+                this.setState({showMenu: true})
+            }
+            else if(e.target.id === "DeleteVertexConfirmed"){
                 for(let vertex of getVertexData()){
                     if(vertex.renderKey === rightClickedItemKey){
                         handleDeleteVertex(vertex.semanticIdentity.UUID)
@@ -79,9 +107,35 @@ export class ContextMenu extends React.Component {
                 this.setState({showMenu: false})
                 this.props.setLeftMenuToTree();
             }
+            else if(e.target.id === "DeletePackageConfirmed"){
+                for(let folder of getFolderData()){
+                    if(folder.renderKey === rightClickedItemKey){
+                        handleDeleteFolder(rightClickedItemKey)
+                    }
+                }
+                this.setState({showMenu: false})
+                this.props.setLeftMenuToTree();
+            }
+            else if(e.target.id === "DeleteModelConfirmed"){
+                for(let model of modelObjects){
+                    if(model.modelKey === rightClickedItemKey){
+                        handleDeleteModel(rightClickedItemKey)
+                    }
+                }
+                this.setState({showMenu: false})
+                this.props.setLeftMenuToTree();
+            }
             else if(e.target.id === "RenameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
             }
+            else if(e.target.id === "RenameVertexBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
+            }
+            else if(e.target.id === "RenameModelBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
+            }
             else if(e.target.id === "VertexNameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
+            }
+            else if(e.target.id === "GraphNameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
+            }
+            else if(e.target.id === "PackageNameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
             }
             else if(e.target.id === "Create-Graph"){
                 menuType = "AddContainerModel";
@@ -159,10 +213,64 @@ export class ContextMenu extends React.Component {
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
             }
+            else if(menuType === "RenameModel"){
+                let newName = document.getElementById("RenameModelBox").value
+                handleRenameModel(newName,rightClickedItemKey)
+                console.log("menu change")
+                try{
+                this.props.setLeftMenuToTree();
+                }
+                catch(e){ //Not sure why theres an error here as it performs the method, then says the method doesnt exists, doesnt trigger on other uses of method either.-Lachlan
+                    console.log(e)
+                }
+                console.log("menu change fin")
+                this.setState({ showMenu: false })
+            }
+            else if(menuType === "RenameVertex"){
+                let newName = document.getElementById("RenameVertexBox").value
+                rightClickedObject.text = newName;
+                console.log("menu change")
+                try{
+                this.props.setLeftMenuToTree();
+                }
+                catch(e){ //Not sure why theres an error here as it performs the method, then says the method doesnt exists, doesnt trigger on other uses of method either.-Lachlan
+                    console.log(e)
+                }
+                console.log("rightClickedObject")
+                console.log(rightClickedObject)
+                updateVertex(rightClickedObject);
+                console.log("menu change fin")
+                this.setState({ showMenu: false })
+                drawAll()
+            }
             else if(menuType === "AddVertex"){
                 
                 let vertexName = document.getElementById("VertexNameBox").value;
                 handleAddVertex(vertexName, getSelectedFolderKey());
+                try{
+                this.props.setLeftMenuToTree();
+                }
+                catch(e){
+                    console.log(e);
+                }
+                this.setState({showMenu: false});
+            }
+            else if(menuType === "AddGraph"){
+                
+                let graphName = document.getElementById("GraphNameBox").value;
+                handleAddModel(graphName, getSelectedFolderKey());
+                try{
+                this.props.setLeftMenuToTree();
+                }
+                catch(e){
+                    console.log(e);
+                }
+                this.setState({showMenu: false});
+            }
+            else if(menuType === "AddPackage"){
+                
+                let packageName = document.getElementById("PackageNameBox").value;
+                handleAddFolder(packageName, getSelectedFolderKey());
                 try{
                 this.props.setLeftMenuToTree();
                 }
@@ -221,8 +329,12 @@ export class ContextMenu extends React.Component {
                     }
                 }
             }
+            console.log("e.target")
+            console.log(e.target)
             //if target is existing vertex load vertex menu
-            if(e.target.text.includes("🟧" || "📂")){
+            if(e.target.text.includes("🟧") || e.target.text.includes("📂")){
+                console.log("e.target")
+                console.log(e.target)
                 for(let vertex of getVertexData()){
                     if(e.target.text === vertex.text){
                         menuType = "Vertex"
@@ -294,6 +406,42 @@ export class ContextMenu extends React.Component {
                     <div className="CMSelected" id="CMSelected"><b>{rightClickedItem}</b></div>   
                     <div className="CMitem" id="Rename"> Rename</div>
                     <div className="CMitem" id="AddVertex"> Add Vertex</div>
+                    <div className="CMitem" id="AddGraph"> Add Graph</div>
+                    <div className="CMitem" id="AddPackage"> Add Package</div>
+                    <div className="CMitem" id="DeletePackage"> Delete Package</div>
+                    </div>
+                )
+            }
+            else if(menuType === "DeletePackage"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"><b>Are you sure you wish to delete: {rightClickedItem}</b></div>   
+                    <div className="CMitem" id="DeletePackageConfirmed"> Yes, Delete this package</div>
+                    <div className="CMitem" id="DeletePackageCancel"> No</div>
+                    </div>
+                )
+            }
+            else if(menuType === "DeleteModel"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"><b>Are you sure you wish to delete: {rightClickedItem}</b></div>   
+                    <div className="CMitem" id="DeleteModelConfirmed"> Yes, Delete this graph</div>
+                    <div className="CMitem" id="DeleteModelCancel"> No</div>
+                    </div>
+                )
+            }
+            else if(menuType === "DeleteVertex"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"><b>Are you sure you wish to delete: {rightClickedItem}</b></div>   
+                    <div className="CMitem" id="DeleteVertexConfirmed"> Yes, Delete this vertex</div>
+                    <div className="CMitem" id="DeleteVertexCancel"> No</div>
                     </div>
                 )
             }
@@ -303,7 +451,9 @@ export class ContextMenu extends React.Component {
                 //options are given classnames to identify what has been selected
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
+                    <div className="CMitem" id="RenameModel"> Rename </div>
                     <div className="CMitem" id="MoveModel"> Move To </div>
+                    <div className="CMitem" id="DeleteModel"> Delete Graph </div>
                     </div>
                 )
             }
@@ -330,6 +480,26 @@ export class ContextMenu extends React.Component {
                     </div>
                 )
             }
+            else if(menuType === "RenameModel"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
+                    <input className="CMText" id="RenameModelBox" type="text" name="renameItem" placeholder='New Name'/>
+                    </div>
+                )
+            }
+            else if(menuType === "RenameVertex"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
+                    <input className="CMText" id="RenameVertexBox" type="text" name="renameItem" placeholder='New Name'/>
+                    </div>
+                )
+            }
             else if(menuType === "AddVertex"){
                 return (
 
@@ -340,6 +510,26 @@ export class ContextMenu extends React.Component {
                     </div>
                 )
             }
+            else if(menuType === "AddPackage"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
+                    <input className="CMText" id="PackageNameBox" type="text" name="namePackage" placeholder='Package Name'/>
+                    </div>
+                )
+            }
+            else if(menuType === "AddGraph"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
+                    <input className="CMText" id="GraphNameBox" type="text" name="nameGraph" placeholder='Graph Name'/>
+                    </div>
+                )
+            }
             else if(menuType === "Vertex"){
                 return (
 
@@ -347,6 +537,10 @@ export class ContextMenu extends React.Component {
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>
                     <div className="CMitem" id="Bi-Nav"> Naviagte </div>   
+                    <div className="CMitem" id="RenameVertex"> Rename</div>
+                    <div className="CMitem" id="AddVertex"> Add Vertex</div>
+                    <div className="CMitem" id="AddGraph"> Add Graph</div>
+                    <div className="CMitem" id="AddPackage"> Add Package</div>
                     <div className="CMitem" id="DeleteVertex"> Delete Vertex </div>
                     </div>
                 )

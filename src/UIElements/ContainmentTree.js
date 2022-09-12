@@ -142,9 +142,25 @@ export function setDecoyModelData(newData){
 //Used to fix thye tree/canvas desync bug when deleting - Lachlan
 function loadFirstModel(){
     //set selected model/render key to the 1st available as so a canvas isnt loaded for a nonexistant model
-    setNewRenderKey(modelObjects[0].data.renderKey)
-    setNewModel(modelObjects[0].data.modelKey)
-    setSelectedFolderKey(modelObjects[0].data.renderKey)
+    // if there is atleast one or more items inside of modelObjects set the renderkey to the first object, else set the renderkey and model keys to 1.
+    console.log("below is modelObjects")
+    console.log(modelObjects)
+    if(modelObjects.length > 0){
+        setNewRenderKey(modelObjects[0].data.renderKey)
+        setNewModel(modelObjects[0].data.modelKey)
+        setSelectedFolderKey(modelObjects[0].data.renderKey)
+        document.getElementById("SelectedFolder").value = getContainerData().find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
+        document.getElementById("SelectedContainer").value = getContainerData().find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
+        document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
+    }
+    else{
+        setNewRenderKey(1)
+        setNewModel(-1)
+        setSelectedFolderKey(1)
+        document.getElementById("SelectedFolder").value = getContainerData().find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
+        document.getElementById("SelectedContainer").value = "No container selected"
+        document.getElementById("SelectedModel").value = "no models available to be selected"
+    }
 
     //taken from handleElementSelect for loading the new models canvas
     for (let item of currentObjects.flatten()){
@@ -156,9 +172,7 @@ function loadFirstModel(){
         }
     }
     drawAll()
-    document.getElementById("SelectedFolder").value = getContainerData().find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
-    document.getElementById("SelectedContainer").value = getContainerData().find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
-    document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
+    
 }
 
 
@@ -174,6 +188,7 @@ export function handleAddFolder(folderName, parentKey = 0){
         data: NaN,
         state: {opened: true},
         type: "Folder",
+        typeName: "Folder",
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey
     }
@@ -186,6 +201,7 @@ export function handleAddFolder(folderName, parentKey = 0){
         data: decoyFolderData[folderData.length],
         state: {opened: true},
         type: "Folder",
+        typeName: "Folder",
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey
     }
@@ -345,6 +361,7 @@ export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticI
         data: NaN,
         state: {opened: true},
         type: "Model",
+        typeName: "Model",
         renderKey: rKey,
         modelKey: getTotalModels(),
         semanticIdentity: sID
@@ -358,6 +375,7 @@ export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticI
         data: decoyModelObjects[modelObjects.length],
         state: {opened: true},
         type: "Model",
+        typeName: "Model",
         renderKey: rKey,
         modelKey: getTotalModels(),
         semanticIdentity: sID
