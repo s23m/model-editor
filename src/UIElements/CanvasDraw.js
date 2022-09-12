@@ -6,8 +6,9 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import {getFolderNameFromKey, getModelData,handleAddModel, vertexData} from "./ContainmentTree";
+import {getFolderNameFromKey, getModelData,handleAddModel, modelObjects, vertexData} from "./ContainmentTree";
 import { rgbToHex } from "@material-ui/core";
+import { Canvas } from "./Canvas";
 
 
 // Core variables
@@ -152,7 +153,6 @@ export function resetMouseOrigin() {
     }
     drawAll()
 }
-
 
 // Core functions
 export function drawAll() {
@@ -1836,19 +1836,25 @@ export function createVertex(x1, y1, width, height,name,content,colour,icons,ima
 }
 
 export function updateVertex(selectedObject){ // function to update the data of the contaimnment tree object and all other objects sharing the semantic- cooper
-    let vertex = getLinkedVertex(selectedObject); // 'vertex' refers to the treeview object.
+    let vertex;
+    if(selectedObject.type !== "treeVertex"){
+        vertex = getLinkedVertex(selectedObject); // 'vertex' refers to the treeview object.
 
-    vertex.text = selectedObject.title + " 🟧";
-    vertex.content = selectedObject.content;
-    vertex.width = selectedObject.width;
-    vertex.height = selectedObject.height;
+        vertex.text = selectedObject.title + " 🟧";
+        vertex.content = selectedObject.content;
+        vertex.width = selectedObject.width;
+        vertex.height = selectedObject.height;
 
-    if(vertex.parentRenderKey === selectedObject.vertexRenderKey){
-        console.log(vertex)
-        console.log(selectedObject)
+        if(vertex.parentRenderKey === selectedObject.vertexRenderKey){
+            console.log(vertex)
+            console.log(selectedObject)
+        }
+        else{
+        
+        }
     }
     else{
-        
+        vertex = selectedObject;
     }
 
 

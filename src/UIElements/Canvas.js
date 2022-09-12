@@ -1,6 +1,6 @@
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
-import { getFolderNameFromKey, getVertexData } from './ContainmentTree';
+import { getFolderNameFromKey, getVertexData, modelObjects } from './ContainmentTree';
 import { Tool } from './LeftMenu';
 
 let movingAllowed = false;
@@ -53,48 +53,54 @@ export class Canvas extends React.Component {
     }
     
     drop(e) {
-        console.log('dropped')
-        //Find the vertex object that was dragged
-        let droppedSemanticID = e.dataTransfer.getData('text/plain');
-        let droppedVertex = 0;
-        for(let vert of getVertexData()){
-            if (vert.semanticIdentity.UUID === droppedSemanticID)
-            droppedVertex = vert;
-        }
-        //console.log(droppedVertex)
-        //get canvas relative coordinates for where the object was dropped
-        let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
-
-        let newName = droppedVertex.text.replace(" 🟧","");
-        newName = newName.replace(" 📂","")
-        let newColour;
-        let visibilityCheck = false;
-
-        //check if selected model is located in the same package or not
-        if(droppedVertex.parentRenderKey !== canvasDraw.getCurrentRenderKey()){
-            newColour = "#FFFFFF";
-            visibilityCheck = true; //used to determine if the vertex has an origin package added
+        if(canvasDraw.getCurrentModel() <= 0){ // stops the user dragging and dropping without a model being selected
+            console.log("attempted to drag and drop vertex while there are no available models to draw on");
+            window.alert("You need to create a model first before you can start drawing!");
         }
         else{
+            console.log('dropped')
+            console.log(canvasDraw.getCurrentModel())
+            //Find the vertex object that was dragged
+            let droppedSemanticID = e.dataTransfer.getData('text/plain');
+            let droppedVertex = 0;
+            for(let vert of getVertexData()){
+                if (vert.semanticIdentity.UUID === droppedSemanticID)
+                droppedVertex = vert;
+            }
+            //console.log(droppedVertex)
+            //get canvas relative coordinates for where the object was dropped
+            let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
+
+            let newName = droppedVertex.text.replace(" 🟧","");
+            newName = newName.replace(" 📂","")
+            let newColour;
+            let visibilityCheck = false;
+
+            //check if selected model is located in the same package or not
+            if(droppedVertex.parentRenderKey !== canvasDraw.getCurrentRenderKey()){
+                newColour = "#FFFFFF";
+                visibilityCheck = true; //used to determine if the vertex has an origin package added
+            }
+            else{
             
-            newColour = droppedVertex.colour;
-        }
+                newColour = droppedVertex.colour;
+            }
 
 
         //create the vertex object(size 30x15) and place it
-        let canvasVert = canvasDraw.createVertex(mouseCoords[0],mouseCoords[1],droppedVertex.width,droppedVertex.height,newName,
+            let canvasVert = canvasDraw.createVertex(mouseCoords[0],mouseCoords[1],droppedVertex.width,droppedVertex.height,newName,
             droppedVertex.content,newColour,droppedVertex.icons,droppedVertex.imageElements,droppedVertex.fontSize,droppedVertex.semanticIdentity)
-        if(visibilityCheck === true){
-            //add origin package
-            let originText = getFolderNameFromKey(droppedVertex.parentRenderKey)
-            originText = originText.replace(" 🟧","")
-            originText = originText.replace(" 📁","")
-            canvasVert.setOrigin(originText + " :: ")
+            if(visibilityCheck === true){
+                //add origin package
+                let originText = getFolderNameFromKey(droppedVertex.parentRenderKey)
+                originText = originText.replace(" 🟧","")
+                originText = originText.replace(" 📁","")
+                canvasVert.setOrigin(originText + " :: ")
+            }
+            canvasDraw.addObject(canvasVert)
+            canvasDraw.drawAll()
+
         }
-        canvasDraw.addObject(canvasVert)
-        canvasDraw.drawAll()
-
-
 
         //canvas
         //mouseStartX
