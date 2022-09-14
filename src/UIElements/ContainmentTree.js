@@ -354,6 +354,8 @@ export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticI
     } else {
         sID = new SemanticIdentity(modelName,"","","", undefined ,[]);
     }
+
+    if(rKey <= 0) return //stops the creation of models in the root or otherwise non-existent folders
     
     let decoyModelThing = {
         text: modelName + icon,

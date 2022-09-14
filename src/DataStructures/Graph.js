@@ -284,7 +284,7 @@ export class VertexNode {
                         finalString = textSource + " " + arrowIcon + " " + textDest
 
                         let tempTreeObj = {
-                            text: currentObjects.flatten()[i].typeName + " - " + finalString,
+                            text: finalString,
                             children: [],
                             data: currentObjects.flatten()[i],
                             renderkey: currentObjects.flatten()[i].getRenderKey(),
