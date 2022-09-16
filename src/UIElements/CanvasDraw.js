@@ -6,9 +6,10 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import {getFolderNameFromKey, getModelData,handleAddModel, handleAddVertex, modelObjects, vertexData} from "./ContainmentTree";
+import {getFolderNameFromKey, getModelData,getModelNameFromKey,handleAddModel, handleAddVertex, modelObjects, vertexData} from "./ContainmentTree";
 import { rgbToHex } from "@material-ui/core";
 import { Canvas } from "./Canvas";
+import { setCurrentGraph } from "./MainView";
 
 //false unless the onMouseMove function is executing, Is used to stop vertex created with leftmenu tool creating multiple vertex's when dragging for an inital size
 let dragging = false;
@@ -86,6 +87,13 @@ export function getCurrentModel() {
 
 export function setNewModel(newModel) {
     currentModel = newModel;
+    try {
+        document.getElementById("SelectedModel").value = getModelNameFromKey(newModel)
+    } catch (error) {
+        
+    }
+    
+
 }
 
 export function getTotalModels() {

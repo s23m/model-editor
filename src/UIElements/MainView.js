@@ -16,7 +16,7 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex} from './ContainmentTree';
+import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex, getModelNameFromKey} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
@@ -38,6 +38,7 @@ export const version = 1;
 export const serverURL = 'http://localhost:8080'
 
 let folderName = "Unnamed Folder";
+
 
 export class MainProgramClass extends React.Component {
 
@@ -347,6 +348,7 @@ export class MainProgramClass extends React.Component {
                     </div>
 
                     {/*<input className="TopBarSearch" id="ModelName" type="text" name="modelName" placeholder="Graph Name" onChange={(e) => this.setModelName(e)} />*/}
+                    <input className="SelectedModel" id="SelectedModel" type="text" name="selectedModel" readonly='readonly' />
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
                     {/*<input className="TopBarSearch" id="FolderName" type="text" name="folderName" placeholder="New Container/Model" onChange={(e) => this.updateFolderName(e)} />*/}
@@ -363,6 +365,7 @@ export class MainProgramClass extends React.Component {
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
+
                     {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.deleteFolder()}><img src={iconDeleteFolder} alt="Delete Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.editFolderName()}><img src={iconEditFolder} alt="Edit Container" /></div>
@@ -379,11 +382,6 @@ export class MainProgramClass extends React.Component {
 
                 <div className="LowerPanel" id= "LowerPanel">
                     <LeftMenu setMode={this.setMode} setLeftMenu={this.setLeftMenu} mainState={this.state} className="LeftMenus" />
-                    {/*following 3 classes are temporary for displaying currently selected model and container(renderKey) and folder(selectedFolderKey) */}
-                    <input className="SelectedFolder" id="SelectedFolder" type="text" name="selectedFolder" readonly='readonly' />
-                    <input className="SelectedContainer" id="SelectedContainer" type="text" name="selectedContainer" readonly='readonly' />
-                    <input className="SelectedModel" id="SelectedModel" type="text" name="selectedModel" readonly='readonly' />
-
                     <div className="Canvas" id = "Canvas">
                         <Canvas setLeftMenu={this.setLeftMenu} setMode={this.setMode} mainState={this.state} />
                     </div>

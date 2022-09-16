@@ -138,14 +138,11 @@ export function load(jsonString){
     setTreeData(saveData.tree)
     setTotalRenderKey(saveData.renderKeys)
     setTotalModelKeys(saveData.modelKeys)
+    setCurrentObjects(new Graph(newVertices, newArrows));
+    updateArrows()
     setSelectedFolderKey(1)
     setNewRenderKey(1)
     setNewModel(1)
-
-
-    
-    setCurrentObjects(new Graph(newVertices, newArrows));
-    updateArrows()
     drawAll()
 
 

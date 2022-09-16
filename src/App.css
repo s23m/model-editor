@@ -281,7 +281,7 @@ input,button{
 
 .LeftMenus{
     display: flex;
-    height: 85vh;
+    height: 90vh;
     width: 15vw;
     /***border: 2px groove #666666;***/
     flex-direction: column;
@@ -293,28 +293,19 @@ input,button{
 	background-color:#D3D3D3;
 }
 
-.SelectedFolder{
-    width: 14.5vw;
-    height:1.5vh;
-    position: absolute;
-    top: 92.5vh;
-    font-size: 12px;
-}
-
-.SelectedContainer{
-    width: 14.5vw;
-    height:1.5vh;
-    position: absolute;
-    top: 95vh;
-    font-size: 12px;
-}
 
 .SelectedModel{
-    width: 14.5vw;
-    height:1.5vh;
-    position: absolute;
-    top: 97.5vh;
-    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    background-color: #ffffff;
+    border: 2px solid #666666;
+    width: 7.5vw;
+    border-radius: 6px;
+    align-items: center;
+    justify-content: center;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: calc(0.6vh + 0.6vw);
 }
 
 .Toolbar {
