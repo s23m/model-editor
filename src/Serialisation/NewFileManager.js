@@ -93,6 +93,7 @@ export function load(jsonString){
     var newVertices = [];
     var newArrows = [];
 
+    //vertices
     for(let vert of saveData.vertices){
         console.log(vert)
         vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
@@ -101,7 +102,31 @@ export function load(jsonString){
         vert = new Vertex ({newConstructor: 1,loadedVertex: vert})
         newVertices.push(vert)
     }
+
+    //arrows
+    function remakeSemantic(semantic){
+        return new SemanticIdentity(semantic.name, semantic.description, semantic.abbreviation, semantic.shortAbbreviation, semantic.UUID, semantic.translations);
+    }
+
+    function remakeCardinality(cardinality){
+        return new Cardinality(cardinality.numLowerBound, cardinality.numUpperBound, cardinality.attachedToUUID, cardinality.isVisible, remakeSemantic(cardinality.semanticIdentity));
+    }
  
+    function remakeEdge(edge){
+        return new EdgeEnd(edge.attachedToUUID, edge.headType, remakeCardinality(edge.cardinality), edge.label, remakeSemantic(edge.semanticIdentity));
+    }
+
+    function remakeArrow(arrow){
+        var newArrow = new Arrow(newVertices, arrow.pathData, arrow.edgeType, remakeSemantic(arrow.semanticIdentity));
+            newArrow.sourceEdgeEnd = remakeEdge(arrow.sourceEdgeEnd);
+            newArrow.destEdgeEnd = remakeEdge(arrow.destEdgeEnd);
+            return newArrow;
+    }
+
+    for(let arrow of saveData.arrows){
+        arrow = remakeArrow(arrow)
+        newArrows.push(arrow)
+    }
 
 
     setFolderData(saveData.packages);
