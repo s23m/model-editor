@@ -149,17 +149,11 @@ function loadFirstModel(){
         setNewRenderKey(modelObjects[0].data.renderKey)
         setNewModel(modelObjects[0].data.modelKey)
         setSelectedFolderKey(modelObjects[0].data.renderKey)
-        document.getElementById("SelectedFolder").value = getContainerData().find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
-        document.getElementById("SelectedContainer").value = getContainerData().find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
-        document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
     }
     else{
         setNewRenderKey(1)
         setNewModel(-1)
         setSelectedFolderKey(1)
-        document.getElementById("SelectedFolder").value = getContainerData().find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
-        document.getElementById("SelectedContainer").value = "No container selected"
-        document.getElementById("SelectedModel").value = "no models available to be selected"
     }
 
     //taken from handleElementSelect for loading the new models canvas
@@ -336,6 +330,8 @@ export function handleAddVertex(vertexName, parentKey = 0){
     console.log(vertexData)
 
     vertexAltered = true;
+
+    return vertexThing2
     
 }
 
@@ -592,15 +588,18 @@ export class ContainmentTree extends React.Component {
 
         
         if (initialFolderAdded === false){
+            handleAddFolder("Package");
+            //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
+            handleAddFolder("Package 2")
+            handleAddModel("Graph",1) 
+            handleAddModel("Graph 2",2)
+            handleAddFolder("Subfolder",1)
+            handleAddVertex("Vertex",1)
+            handleAddVertex("Vertex 2",2)
             setNewRenderKey(1);
             setNewModel(1);
             setSelectedFolderKey(1);
-            handleAddFolder("Folder");
-            //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
-            handleAddModel("Model",1) 
             initialFolderAdded = true;
-            handleAddFolder("Subfolder",getCurrentRenderKey())
-            handleAddVertex("new Vertex",getCurrentRenderKey())
         }
         
 
@@ -923,23 +922,6 @@ export class ContainmentTree extends React.Component {
             //console.log("This is not root")
         }
 
-        //used to update the currently selected model/folders fields - Lachlan
-        if(getSelectedFolderKey() === 0){
-            document.getElementById("SelectedFolder").value = "Root"
-        }
-        else{
-            
-        document.getElementById("SelectedFolder").value = getContainerData().find(folder => { return folder.renderKey === getSelectedFolderKey()}).text
-        }
-        try{
-        document.getElementById("SelectedContainer").value = getContainerData().find(folder => { return folder.renderKey === getCurrentRenderKey()}).text
-        document.getElementById("SelectedModel").value = modelObjects.find(model => { return model.modelKey === getCurrentModel()}).text
-        //console.log(modelObjects)
-        }
-        catch(e){
-            console.log(e)
-        }
-    
 
     }
 

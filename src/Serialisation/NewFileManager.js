@@ -59,7 +59,7 @@ export function save(){
     let dataTransformed = JSON.stringify(JSONdata);
     let dataFile = new Blob([dataTransformed], {type: 'text/json'});
     //default file name
-    let title = "s23m model";
+    let title = prompt("Please name your file", 's23m Model')
 
     //Download the file
     let DLelement = document.createElement("a");
@@ -128,7 +128,7 @@ export function load(jsonString){
         newArrows.push(arrow)
     }
 
-
+    setTranslationColumns(saveData.translationColumns)
     setFolderData(saveData.packages);
     setDecoyFolderData(saveData.dPackages);
     setVertexData(saveData.treeVertex);
@@ -138,14 +138,11 @@ export function load(jsonString){
     setTreeData(saveData.tree)
     setTotalRenderKey(saveData.renderKeys)
     setTotalModelKeys(saveData.modelKeys)
+    setCurrentObjects(new Graph(newVertices, newArrows));
+    updateArrows()
     setSelectedFolderKey(1)
     setNewRenderKey(1)
     setNewModel(1)
-
-
-    
-    setCurrentObjects(new Graph(newVertices, newArrows));
-    updateArrows()
     drawAll()
 
 
