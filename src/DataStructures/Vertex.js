@@ -481,7 +481,7 @@ export class Vertex {
 
         }
 
-       /* for (let i = 0; i < this.icons[0].length; i++) {
+        for (let i = 0; i < this.icons[0].length; i++) {
 
             if (this.icons[1][i] === true) {
                 if (this.icons[2][i] === true) {
@@ -508,7 +508,7 @@ export class Vertex {
                 yPos += iconHeight + (iconPadding * 2);
             }
             
-        } */
+        } 
 
         // Reset color for text
         canvasContext.fillStyle = "#000000";
