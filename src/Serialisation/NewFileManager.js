@@ -76,20 +76,12 @@ export function load(jsonString){
     if (jsonString == null) return;
     let saveData = JSON.parse(jsonString);
 
-    
-
-
-    
-
-    
     //TreeVertices need to convert semanticIdentity back to a sI object
     for(let vert of saveData.treeVertex){
         vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
             vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
     }
-
     //Models and arrows need to be converted back to their explicit types
-
     var newVertices = [];
     var newArrows = [];
 
@@ -147,6 +139,24 @@ export function load(jsonString){
 
 
 
-console.log("load finished")
+    console.log("load finished")
 
 }
+
+
+export function importLoad(jsonString){
+
+    //prompt user to name the new package
+
+     //Models and folders,treevertex's need to be given new keys
+     //arrows and vertex's will need new keys to match their updated parent keys
+
+     //recreat vertex/arrow objects as in load
+
+     //models,folders,tree verts need to be added to current data
+     //vertex's and arrows add to current data
+     
+
+ return;
+}
+
