@@ -98,7 +98,7 @@ export function load(jsonString){
         vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
             vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
         //atm its a bit messy as vert constructor doesnt use destructuring so we can specifiy options, when it does this can be changed
-        vert = new Vertex (0,0,0,0,0,0,0,0,1,vert)
+        vert = new Vertex ({newConstructor: 1,loadedVertex: vert})
         newVertices.push(vert)
     }
  

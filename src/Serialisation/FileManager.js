@@ -61,7 +61,7 @@ export function save() {
 export function rebuildObject(item, verticesArray) {
     switch (item.typeName) {
         case "Vertex":
-            var vertex = new Vertex(item.title, item.content, item.x, item.y, item.width, item.height, item.semanticIdentity);
+            var vertex = new Vertex({title: item.title, content: item.content, x: item.x, y: item.y, width: item.width, height: item.height, semanticIdentity: item.semanticIdentity});
             return vertex;
 
         case "Arrow":
