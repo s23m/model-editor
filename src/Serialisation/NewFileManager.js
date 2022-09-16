@@ -128,7 +128,7 @@ export function load(jsonString){
         newArrows.push(arrow)
     }
 
-
+    setTranslationColumns(saveData.translationColumns)
     setFolderData(saveData.packages);
     setDecoyFolderData(saveData.dPackages);
     setVertexData(saveData.treeVertex);
