@@ -5,6 +5,7 @@
 import { drawMarker, distanceThreshold, getCurrentRenderKey, getCurrentModel } from "../UIElements/CanvasDraw";
 import { getModelRenderKey } from "../UIElements/ContainmentTree";
 import { SemanticIdentity, createUUID } from "./SemanticIdentity";
+import {serverURL} from "../UIElements/MainView"
 
 export var padding = 5;
 export var defaultColour = "#FFD5A9";
@@ -481,7 +482,7 @@ export class Vertex {
 
         }
 
-       /* for (let i = 0; i < this.icons[0].length; i++) {
+        for (let i = 0; i < this.icons[0].length; i++) {
 
             if (this.icons[1][i] === true) {
                 if (this.icons[2][i] === true) {
@@ -494,7 +495,7 @@ export class Vertex {
                 if (element === undefined) {
 
                     let imageElement = new Image();
-                    imageElement.src = "http://localhost:8080/icons/" + this.icons[0][i];
+                    imageElement.src = serverURL + "/icons/" + this.icons[0][i];
                     imageElement.crossOrigin = "anonymous";
 
                     imageElement.onload = () => {
@@ -508,7 +509,7 @@ export class Vertex {
                 yPos += iconHeight + (iconPadding * 2);
             }
             
-        } */
+        } 
 
         // Reset color for text
         canvasContext.fillStyle = "#000000";

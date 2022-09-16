@@ -35,6 +35,8 @@ import iconaddVertex from "../Resources/createVertex.svg"
 
 export const version = 1;
 
+export const serverURL = 'http://localhost:8080'
+
 let folderName = "Unnamed Folder";
 
 export class MainProgramClass extends React.Component {
