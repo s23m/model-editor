@@ -6,10 +6,12 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import {getFolderNameFromKey, getModelData,handleAddModel, modelObjects, vertexData} from "./ContainmentTree";
+import {getFolderNameFromKey, getModelData,handleAddModel, handleAddVertex, modelObjects, vertexData} from "./ContainmentTree";
 import { rgbToHex } from "@material-ui/core";
 import { Canvas } from "./Canvas";
 
+//false unless the onMouseMove function is executing, Is used to stop vertex created with leftmenu tool creating multiple vertex's when dragging for an inital size
+let dragging = false;
 
 // Core variables
 let canvasElement;
@@ -1493,6 +1495,7 @@ export function onLeftMouseRelease(canvas, x, y) {
 }
 
 function onMouseMove(e, canvas) {
+    dragging = true;
     let position = getGraphXYFromMouseEvent(e);
 
     // Redraw Existing Objects
@@ -1506,6 +1509,7 @@ function onMouseMove(e, canvas) {
         newObject.draw(canvasContext);
     }
     canvasContext.globalAlpha = 1.0;
+    dragging = false;
 }
 
 export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = false) {
@@ -1761,6 +1765,7 @@ function createArtifact(canvas, x1, y1) {
 
         // Add vertex
         return new Vertex({title: "", content: [""], x:  pos[0], y:  findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1});
+        
 
     }
     return null;
@@ -1892,14 +1897,19 @@ function createObject(canvas, x1, y1, x2, y2) {
     let newPath;
     let currentObjectsFlattened = currentObjects.flatten();
 
-    if (canvas.tool === "Vertex") {
+    if (canvas.tool === "Vertex" && dragging === false) {
         // Get positions
         let pos = orderCoordinates(x1, y1, x2 + 10, y2);
         let vy1 = findNearestGridY(pos[1], 0);
         let vy2 = findNearestGridY(pos[3], 0);
 
         // Add vertex
-        return new Vertex({title: "", content: [""], x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1});
+        console.log("draw vertex")
+        let newVert = handleAddVertex("Drawn Vertex" ,getCurrentRenderKey())
+        console.log(newVert.semanticIdentity.UUID)
+
+        return new Vertex({title: "Drawn Vertex", content: newVert,colour: newVert.colour, x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1, semanticIdentity: newVert.semanticIdentity});
+        
 
     } else if (arrowToolSelected()) {
         // Generate path

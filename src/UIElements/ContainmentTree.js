@@ -336,6 +336,8 @@ export function handleAddVertex(vertexName, parentKey = 0){
     console.log(vertexData)
 
     vertexAltered = true;
+
+    return vertexThing2
     
 }
 
