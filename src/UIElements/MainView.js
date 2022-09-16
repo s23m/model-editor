@@ -345,7 +345,9 @@ export class MainProgramClass extends React.Component {
                     </div>
 
                     <input className="TopBarSearch" id="ModelName" type="text" name="modelName" placeholder="Graph Name" onChange={(e) => this.setModelName(e)} />
-                    <input className="TopBarSearch" id="FolderName" type="text" name="folderName" placeholder="New Container/Model" onChange={(e) => this.updateFolderName(e)} />
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    {/*<input className="TopBarSearch" id="FolderName" type="text" name="folderName" placeholder="New Container/Model" onChange={(e) => this.updateFolderName(e)} />*/}
                     {/*<div className="TopBarIcon">&nbsp;</div>*/}
                     {/*The + and - are backwards on purpose here*/}
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>
@@ -359,7 +361,7 @@ export class MainProgramClass extends React.Component {
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>
+                    {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.deleteFolder()}><img src={iconDeleteFolder} alt="Delete Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.editFolderName()}><img src={iconEditFolder} alt="Edit Container" /></div>
                     <div className="TopBarSpace">&nbsp;</div>
@@ -367,7 +369,7 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.addModel()}><img src={iconNewModel} alt="Add Model" /></div>
                     <div className="TopBarIcon" onClick={() => this.deleteModel()}><img src={iconDeleteModel} alt="Delete Model" /></div>
-                    <div className="TopBarIcon" onClick={() => this.editModelName()}><img src={iconEditModel} alt="Edit Model" /></div>
+                    <div className="TopBarIcon" onClick={() => this.editModelName()}><img src={iconEditModel} alt="Edit Model" /></div>*/}
 
 
 
