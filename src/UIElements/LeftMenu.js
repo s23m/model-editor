@@ -6,6 +6,7 @@ import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
 import {LineColourToStringName, LineTypeToString} from "../DataStructures/ArrowProperties"
 import { ContainmentTree, handleAddVertex, handleDeleteVertex } from "./ContainmentTree";
+import {serverURL} from ".//MainView"
 
 import { SketchPicker } from 'react-color';
 
@@ -185,7 +186,7 @@ export class LeftMenu extends React.Component{
     }
 
     setIcons() {
-        fetch('http://localhost:8080/icons/list',{
+        fetch(serverURL + '/icons/list',{
             method:'GET',
             headers: {
                 'Accept': '*/*',
