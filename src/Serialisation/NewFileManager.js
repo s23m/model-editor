@@ -59,7 +59,7 @@ export function save(){
     let dataTransformed = JSON.stringify(JSONdata);
     let dataFile = new Blob([dataTransformed], {type: 'text/json'});
     //default file name
-    let title = "s23m model";
+    let title = prompt("Please name your file", 's23m Model')
 
     //Download the file
     let DLelement = document.createElement("a");
