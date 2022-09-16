@@ -1760,7 +1760,7 @@ function createArtifact(canvas, x1, y1) {
         let vy2 = findNearestGridY(pos[3], 0);
 
         // Add vertex
-        return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+        return new Vertex({title: "", content: [""], x:  pos[0], y:  findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1});
 
     }
     return null;
@@ -1777,7 +1777,7 @@ function createContainer(canvas, x1, y1) {
         let vy2 = findNearestGridY(pos[3], 0);
 
         // Add Container
-        let newVert =  new Vertex("new Container", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+        let newVert =  new Vertex({title: "new Container", content: [""], x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1});
         newVert.setIsContainer(true);
         return newVert;
 
@@ -1831,7 +1831,7 @@ export function updateLinkedContainers(inputContainer){
 //Function for creating a vertex object without the left menu tools - Lachlan
 export function createVertex(x1, y1, width, height,name,content,colour,icons,imageElements,fontSize,semanticIdentity){
 
-    return new Vertex(name, content, colour, x1, findNearestGridY(y1, 1), width, height,semanticIdentity);
+    return new Vertex({title: name,content: content, colour: colour, x: x1, y: findNearestGridY(y1, 1), width: width, height: height, semanticIdentity: semanticIdentity});
 
 }
 
@@ -1899,7 +1899,7 @@ function createObject(canvas, x1, y1, x2, y2) {
         let vy2 = findNearestGridY(pos[3], 0);
 
         // Add vertex
-        return new Vertex("", [""], pos[0], findNearestGridY(y1, 1), pos[2] - pos[0], vy2 - vy1);
+        return new Vertex({title: "", content: [""], x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1});
 
     } else if (arrowToolSelected()) {
         // Generate path

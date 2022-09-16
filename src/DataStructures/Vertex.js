@@ -15,7 +15,7 @@ export class Vertex {
     //As javascript doesnt have method overloading, newConstructor is used to access the secondary constructor when flagged 1 
 
     //at some point change to use destructuring, which will require changing every use of this method to use destructing too
-    constructor(title = "unnamed", content, colour, x, y, width, height, semanticIdentity,newConstructor=0,loadedVertex=0) {
+    constructor({title = "unnamed", content, colour, x, y, width, height, semanticIdentity,newConstructor=0,loadedVertex=0}) {
         console.log(newConstructor)
 
         //This constructor is used to turn a vertex loaded from JSON.parse back into a vertex object
