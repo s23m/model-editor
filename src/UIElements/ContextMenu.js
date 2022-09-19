@@ -345,6 +345,14 @@ export class ContextMenu extends React.Component {
                     }
                 }
             }
+
+            if(e.target.text === "Root"){
+                
+                //console.log("matching folder found")
+                menuType = "Root"
+                rightClickedItem = e.target.text;
+                rightClickedItemKey = getSelectedFolderKey();
+            }
             
         }
 
@@ -409,6 +417,16 @@ export class ContextMenu extends React.Component {
                     <div className="CMitem" id="AddGraph"> Add Graph</div>
                     <div className="CMitem" id="AddPackage"> Add Package</div>
                     <div className="CMitem" id="DeletePackage"> Delete Package</div>
+                    </div>
+                )
+            }
+            else if(menuType === "Root"){
+                return (
+
+                //options are given classnames to identify what has been selected
+                    <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
+                    <div className="CMSelected" id="CMSelected"><b>{rightClickedItem}</b></div>   
+                    <div className="CMitem" id="AddPackage"> Add Package</div>
                     </div>
                 )
             }

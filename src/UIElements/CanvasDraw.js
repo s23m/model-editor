@@ -1636,7 +1636,7 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
             }
 
 
-
+            
             if (arrowsVert !== null) {
                 let conData = 0;
                 let j = 0;
@@ -1647,15 +1647,16 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                     conData = getConnectionDataForArrow(arrowsVert[j].path[1][0], arrowsVert[j].path[1][1]);
 
 
+                    
 
                     if (conData['nearest'] !== null) {
-
+                        
                         arrowsVert[j].pathData[1] = conData['nearest'];
                         StickArrowToObject(conData, arrowsVert[j], 0);
                         //console.log(arrowsVert[j].path);
                     } else {
                         //delete arrow                        
-                        deleteElement(arrowsVert[j]);
+                        
                     }
                 }
             }
@@ -1667,7 +1668,8 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                     // source = one that's been clicked
                     arrowsHoriz[k].path[1][1] = arrowsHoriz[k].path[0][1];
                     conData = getConnectionDataForArrow(arrowsHoriz[k].path[1][0], arrowsHoriz[k].path[1][1]);
-
+                    console.log(conData)
+                    
                     if (conData['nearest'] !== null) {
 
                         arrowsHoriz[k].pathData[1] = conData['nearest'];
@@ -1675,7 +1677,7 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                         //console.log(arrowsHoriz[k].path);
                     } else {
                         //delete arrow
-                        deleteElement(arrowsHoriz[k]);
+                        
                     }
                 }
             }

@@ -257,8 +257,32 @@ export class Arrow {
            // }
             if (objects[i] !== null && objects[i] !== undefined) {
                 if (objects[i].semanticIdentity.UUID === pathItem[1]) {
-                    let x = pathItem[2]*objects[i].width + objects[i].x;
-                    let y = pathItem[3]*objects[i].realHeight + objects[i].y;
+                    
+                    
+                  //  let minX = objects[i].x
+                   // let maxX = objects[i].x + objects[i].width
+                   // let minY = objects[i].y
+                   // let maxY = objects[i].y + objects[i].realHeight // get the minimum and maximum x,y coords for the object. 
+                                                                    // this will serve as a range so that arrows can't automatically pass these points
+                    let newX = pathItem[2]*objects[i].width + objects[i].x;
+                    let newY = pathItem[3]*objects[i].realHeight + objects[i].y;
+                    let x = newX
+                    let y = newY
+                    
+                 //   if (newX <= minX){
+                  //      x = minX
+                  //  }
+                  //  else if (newX >= maxX){
+                    //    x = maxX
+                    //}
+                    //else if (newY <= minY){
+                      //  y = minY
+                    //}
+                    //else if (newY >= maxY){
+                     //   y = maxY
+                    //}
+                   
+              
                     return [x, y]
                 }
             }
