@@ -779,6 +779,7 @@ export function compareSizesToMoveAll(Object) {
     let horizontalArray = [];
     let box;
     let boxArray = [];
+    let allArrows = [];
 
     objectID = Object.semanticIdentity.UUID;
     console.log(Object);
@@ -825,10 +826,12 @@ export function compareSizesToMoveAll(Object) {
                 }
 
             }
+
+            allArrows.push(item);
         }
 
     });
-    return [boxArray, verticalArray, horizontalArray];
+    return [boxArray, verticalArray, horizontalArray, allArrows];
 }
 
 export function checkBoxSizesAndReturnBigBox(first, second) {
@@ -1530,7 +1533,7 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
     let selectedObject = findIntersected(x, y);
 
     //compareSizesToMoveAll returns any connected vertices to the selected along with the arrows themselves to be updated
-    let [friendObject, arrowsVert, arrowsHoriz] = compareSizesToMoveAll(selectedObject);
+    let [friendObject, arrowsVert, arrowsHoriz, allArrows] = compareSizesToMoveAll(selectedObject);
 
         //If the selected block has a friend (connected by arrow) it will begin to try and identify friends of friends
     if (friendObject !== null || friendObject.length >= 1) {
@@ -1594,7 +1597,7 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
         let saveDisY = y - selectedObject.y;
 
 
-        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, friendObject, F, savedObjects, S, saveDisX, saveDisY, arrowsVert, arrowsHoriz, shiftDown) }
+        canvasElement.onmousemove = function (e) { moveObject(e, selectedObject, friendObject, F, savedObjects, S, saveDisX, saveDisY, arrowsVert, arrowsHoriz, allArrows, shiftDown) }
     }
 
 }
@@ -1607,7 +1610,7 @@ export function onMouseLeave() {
 
 // moving objects in respect to cursor values saveDisX, saveDisY
 // friends = the smaller boxes that are connected to the bigger box
-function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, saveDisY, arrowsVert, arrowsHoriz, shiftDown) {
+function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, saveDisY, arrowsVert, arrowsHoriz, allArrows, shiftDown) {
     if (object != null) {
         if (object.typeName === "Vertex") {
             let position = getGraphXYFromMouseEvent(e);
@@ -1636,7 +1639,7 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
             }
 
 
-
+            
             if (arrowsVert !== null) {
                 let conData = 0;
                 let j = 0;
@@ -1647,37 +1650,33 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                     conData = getConnectionDataForArrow(arrowsVert[j].path[1][0], arrowsVert[j].path[1][1]);
 
 
+                    
 
-                    if (conData['nearest'] !== null) {
-
-                        arrowsVert[j].pathData[1] = conData['nearest'];
+                    
                         StickArrowToObject(conData, arrowsVert[j], 0);
                         //console.log(arrowsVert[j].path);
-                    } else {
-                        //delete arrow                        
-                        deleteElement(arrowsVert[j]);
-                    }
                 }
             }
-
-            if (arrowsHoriz !== null) {
+            else if (arrowsHoriz !== null) {
                 let conData = 0;
                 let k = 0;
                 for (k; k < arrowsHoriz.length; k++) {
                     // source = one that's been clicked
                     arrowsHoriz[k].path[1][1] = arrowsHoriz[k].path[0][1];
                     conData = getConnectionDataForArrow(arrowsHoriz[k].path[1][0], arrowsHoriz[k].path[1][1]);
+                    
+               
 
-                    if (conData['nearest'] !== null) {
-
-                        arrowsHoriz[k].pathData[1] = conData['nearest'];
                         StickArrowToObject(conData, arrowsHoriz[k], 0);
                         //console.log(arrowsHoriz[k].path);
-                    } else {
-                        //delete arrow
-                        deleteElement(arrowsHoriz[k]);
-                    }
+                  
                 }
+            }
+            else if (allArrows !== null){
+                console.log("arrowsVert, arrowsHoriz, allArrows")
+                console.log(arrowsVert)
+                console.log(arrowsHoriz)
+                console.log(allArrows)
             }
 
             object.x = x;
