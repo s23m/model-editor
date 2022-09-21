@@ -1673,10 +1673,6 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                 }
             }
             else if (allArrows !== null){
-                console.log("arrowsVert, arrowsHoriz, allArrows")
-                console.log(arrowsVert)
-                console.log(arrowsHoriz)
-                console.log(allArrows)
             }
 
             object.x = x;

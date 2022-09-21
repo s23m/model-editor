@@ -568,7 +568,7 @@ export class Vertex {
         if (x < this.x) return false;
         if (y < this.y) return false;
         if (x > this.x+this.width) return false;
-        return y <= this.y + this.height;
+        return y <= this.y + this.realHeight;
 
     }
 
