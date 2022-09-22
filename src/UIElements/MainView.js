@@ -31,6 +31,8 @@ import iconNewModel from "../Resources/NewModel.svg"
 import iconDeleteModel from "../Resources/DeleteModel.svg"
 import iconEditModel from "../Resources/editModel.svg"
 import iconaddVertex from "../Resources/createVertex.svg"
+import iconRedo from "../Resources/redo.svg"
+import iconUndo from "../Resources/undo.svg"
 
 
 export const version = 1;
@@ -397,6 +399,9 @@ export class MainProgramClass extends React.Component {
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarIcon" ><img src={iconUndo} alt="Delete Container" /></div>
+                    <div className="TopBarIcon" ><img src={iconRedo} alt="Add Container" /></div>
+                    
 
                     {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.deleteFolder()}><img src={iconDeleteFolder} alt="Delete Container" /></div>
