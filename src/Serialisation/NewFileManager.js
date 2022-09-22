@@ -143,7 +143,6 @@ export function load(jsonString){
 
 }
 
-
 export function importLoad(jsonString){
 
     //prompt user to name the new package
@@ -160,3 +159,58 @@ export function importLoad(jsonString){
  return;
 }
 
+//Loads saveData in memory (not from json string)
+function loadDirect(saveData){
+
+    setTranslationColumns(saveData.translationColumns)
+    setFolderData(saveData.packages);
+    setDecoyFolderData(saveData.dPackages);
+    setVertexData(saveData.treeVertex);
+    setDecoyVertexData(saveData.dTreeVertex);
+    setModelData(saveData.graph)
+    setDecoyModelData(saveData.dGrraph)
+    setTreeData(saveData.tree)
+    setTotalRenderKey(saveData.renderKeys)
+    setTotalModelKeys(saveData.modelKeys)
+    setCurrentObjects(new Graph(saveData.vertices, saveData.arrow));
+    updateArrows()
+    setSelectedFolderKey(1)
+    setNewRenderKey(1)
+    setNewModel(1)
+    drawAll()
+
+}
+
+
+let saveStates = []
+let CurrentState = 0
+let maxSavedStates = 10;
+
+export function createSaveState(){
+    //Remove everything infront of the current state eg. When the user has hit undo and then does an action
+    if(CurrentState !== 0){
+        for(let i = 0; i < CurrentState; i++){
+            saveStates.shift()
+        }
+    }
+    //push the chnage to saveStates and remove the oldest state if above threshold
+    saveStates.push(getSaveData())
+    if(saveStates.length > maxSavedStates){
+        saveStates.shift()
+    }
+}
+
+export function undo(){
+    if(CurrentState < (maxSavedStates - 1)){
+        CurrentState ++
+        loadDirect(saveStates[CurrentState])
+    }
+}
+
+export function redo(){
+    if(CurrentState > 0){
+        CurrentState --
+        loadDirect(saveStates[CurrentState])
+    }
+
+}
