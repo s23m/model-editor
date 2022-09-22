@@ -137,15 +137,6 @@ export class LeftMenu extends React.Component{
 
 
     onKeyPressed(e) {
-        if (e.keyCode === 86 && this.state.selectedObject === null){
-            this.props.setMode(Tool.Vertex);
-        }
-
-
-        if (e.keyCode === 69 && this.state.selectedObject === null){
-            this.props.setMode(Tool.Edge);
-        }
-
         if (e.keyCode === 46){
             console.log(this.state.selectedObject);
             if(this.state.selectedObject.typeName === "Vertex"){
