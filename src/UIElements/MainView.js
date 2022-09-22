@@ -22,7 +22,7 @@ import { handleDeleteFolder } from './ContainmentTree';
 import { showVertexPath } from './ContainmentTree';
 import { someVertexPath } from './ContainmentTree';
 import { ContextMenu } from './ContextMenu'
-import {save, load} from '../Serialisation/NewFileManager'
+import {save, load, importLoad} from '../Serialisation/NewFileManager'
 
 import iconNewFolder from "../Resources/create_folder.svg"
 import iconDeleteFolder from "../Resources/delete_folder.svg"
@@ -286,6 +286,28 @@ export class MainProgramClass extends React.Component {
         return 0;
     };
 
+    importFile = () => {
+        let refreshTree = this.setLeftMenuToTree //This is used so we can point to setLeftMenuToTree within the reader object
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            try {
+                let file = document.querySelector('input[type=file]').files[0];
+                let reader = new FileReader();
+                reader.readAsText(file);
+                console.log(reader.result)
+                reader.onload = function () {
+                    let text = reader.result
+                    importLoad(text)
+                    refreshTree();
+                }
+            }catch(e){
+                alert(e +" did you select a file?")
+            }
+        } else {
+            alert("Your browser is too old to support HTML5 File API");
+        }
+        return 0;
+    };
+
 
 
     // Used to enable/disable the semantic domain editor
@@ -335,11 +357,21 @@ export class MainProgramClass extends React.Component {
                         </div>
 
 
+
+                        <div className="TopBar">
+                            <label>Import</label>
+                            <input type="file" id="File-Select-Import" onChange={this.importFile} />
+                        </div>
+
+
+
                         <Dropdown.Item>
                             <div className="TopBar">
                                 <button id="json-downloader" onClick={() => save()}>Save (as Json)</button>
                             </div>
                         </Dropdown.Item>
+
+                        
 
                     </DropdownButton>
 
