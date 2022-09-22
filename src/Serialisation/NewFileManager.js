@@ -76,20 +76,12 @@ export function load(jsonString){
     if (jsonString == null) return;
     let saveData = JSON.parse(jsonString);
 
-    
-
-
-    
-
-    
     //TreeVertices need to convert semanticIdentity back to a sI object
     for(let vert of saveData.treeVertex){
         vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
             vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
     }
-
     //Models and arrows need to be converted back to their explicit types
-
     var newVertices = [];
     var newArrows = [];
 
@@ -147,6 +139,78 @@ export function load(jsonString){
 
 
 
-console.log("load finished")
+    console.log("load finished")
+
+}
+
+export function importLoad(jsonString){
+
+    //prompt user to name the new package
+
+     //Models and folders,treevertex's need to be given new keys
+     //arrows and vertex's will need new keys to match their updated parent keys
+
+     //recreat vertex/arrow objects as in load
+
+     //models,folders,tree verts need to be added to current data
+     //vertex's and arrows add to current data
+     
+
+ return;
+}
+
+//Loads saveData in memory (not from json string)
+function loadDirect(saveData){
+
+    setTranslationColumns(saveData.translationColumns)
+    setFolderData(saveData.packages);
+    setDecoyFolderData(saveData.dPackages);
+    setVertexData(saveData.treeVertex);
+    setDecoyVertexData(saveData.dTreeVertex);
+    setModelData(saveData.graph)
+    setDecoyModelData(saveData.dGrraph)
+    setTreeData(saveData.tree)
+    setTotalRenderKey(saveData.renderKeys)
+    setTotalModelKeys(saveData.modelKeys)
+    setCurrentObjects(new Graph(saveData.vertices, saveData.arrow));
+    updateArrows()
+    setSelectedFolderKey(1)
+    setNewRenderKey(1)
+    setNewModel(1)
+    drawAll()
+
+}
+
+
+let saveStates = []
+let CurrentState = 0
+let maxSavedStates = 10;
+
+export function createSaveState(){
+    //Remove everything infront of the current state eg. When the user has hit undo and then does an action
+    if(CurrentState !== 0){
+        for(let i = 0; i < CurrentState; i++){
+            saveStates.shift()
+        }
+    }
+    //push the chnage to saveStates and remove the oldest state if above threshold
+    saveStates.push(getSaveData())
+    if(saveStates.length > maxSavedStates){
+        saveStates.shift()
+    }
+}
+
+export function undo(){
+    if(CurrentState < (maxSavedStates - 1)){
+        CurrentState ++
+        loadDirect(saveStates[CurrentState])
+    }
+}
+
+export function redo(){
+    if(CurrentState > 0){
+        CurrentState --
+        loadDirect(saveStates[CurrentState])
+    }
 
 }

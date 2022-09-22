@@ -22,7 +22,7 @@ import { handleDeleteFolder } from './ContainmentTree';
 import { showVertexPath } from './ContainmentTree';
 import { someVertexPath } from './ContainmentTree';
 import { ContextMenu } from './ContextMenu'
-import {save, load} from '../Serialisation/NewFileManager'
+import {save, load, importLoad} from '../Serialisation/NewFileManager'
 
 import iconNewFolder from "../Resources/create_folder.svg"
 import iconDeleteFolder from "../Resources/delete_folder.svg"
@@ -31,6 +31,8 @@ import iconNewModel from "../Resources/NewModel.svg"
 import iconDeleteModel from "../Resources/DeleteModel.svg"
 import iconEditModel from "../Resources/editModel.svg"
 import iconaddVertex from "../Resources/createVertex.svg"
+import iconRedo from "../Resources/redo.svg"
+import iconUndo from "../Resources/undo.svg"
 
 
 export const version = 1;
@@ -286,6 +288,28 @@ export class MainProgramClass extends React.Component {
         return 0;
     };
 
+    importFile = () => {
+        let refreshTree = this.setLeftMenuToTree //This is used so we can point to setLeftMenuToTree within the reader object
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            try {
+                let file = document.querySelector('input[type=file]').files[0];
+                let reader = new FileReader();
+                reader.readAsText(file);
+                console.log(reader.result)
+                reader.onload = function () {
+                    let text = reader.result
+                    importLoad(text)
+                    refreshTree();
+                }
+            }catch(e){
+                alert(e +" did you select a file?")
+            }
+        } else {
+            alert("Your browser is too old to support HTML5 File API");
+        }
+        return 0;
+    };
+
 
 
     // Used to enable/disable the semantic domain editor
@@ -335,11 +359,21 @@ export class MainProgramClass extends React.Component {
                         </div>
 
 
+
+                        <div className="TopBar">
+                            <label>Import</label>
+                            <input type="file" id="File-Select-Import" onChange={this.importFile} />
+                        </div>
+
+
+
                         <Dropdown.Item>
                             <div className="TopBar">
                                 <button id="json-downloader" onClick={() => save()}>Save (as Json)</button>
                             </div>
                         </Dropdown.Item>
+
+                        
 
                     </DropdownButton>
 
@@ -365,6 +399,9 @@ export class MainProgramClass extends React.Component {
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarIcon" ><img src={iconUndo} alt="Delete Container" /></div>
+                    <div className="TopBarIcon" ><img src={iconRedo} alt="Add Container" /></div>
+                    
 
                     {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.deleteFolder()}><img src={iconDeleteFolder} alt="Delete Container" /></div>

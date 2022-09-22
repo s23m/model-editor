@@ -138,7 +138,7 @@ input,button{
  }
 
 
-#downloader, #json-downloader, #File-Select, #file{
+#downloader, #json-downloader,#File-Select-Import, #File-Select, #file{
     color: black;
     text-decoration: none;
     border: none;
