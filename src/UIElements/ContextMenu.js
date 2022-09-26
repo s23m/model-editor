@@ -208,6 +208,7 @@ export class ContextMenu extends React.Component {
                 this.props.setLeftMenuToTree();
                 }
                 catch(e){ //Not sure why theres an error here as it performs the method, then says the method doesnt exists, doesnt trigger on other uses of method either.-Lachlan
+                    //believe the issue is enter key event is fireing twice, will fix later, not a critical/detrimental or performance effecting issue - Lachlan
                     console.log(e)
                 }
                 console.log("menu change fin")
@@ -220,7 +221,7 @@ export class ContextMenu extends React.Component {
                 try{
                 this.props.setLeftMenuToTree();
                 }
-                catch(e){ //Not sure why theres an error here as it performs the method, then says the method doesnt exists, doesnt trigger on other uses of method either.-Lachlan
+                catch(e){ 
                     console.log(e)
                 }
                 console.log("menu change fin")
@@ -233,7 +234,7 @@ export class ContextMenu extends React.Component {
                 try{
                 this.props.setLeftMenuToTree();
                 }
-                catch(e){ //Not sure why theres an error here as it performs the method, then says the method doesnt exists, doesnt trigger on other uses of method either.-Lachlan
+                catch(e){ 
                     console.log(e)
                 }
                 console.log("rightClickedObject")

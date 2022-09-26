@@ -206,7 +206,7 @@ export function createSaveState(){
 
 //I beleive the first part of the if statement can be deleted as part 2 covers it ie.there will never be 11 savestates, but havent tested yet
 export function undo(){
-    if(currentState < (maxSavedStates - 1) && saveStates[currentState++] !== undefined && saveStates.length !== 0){
+    if(currentState < (maxSavedStates - 1) && saveStates[currentState + 1] !== undefined && saveStates.length !== 0){
         currentState ++
         console.log(saveStates[currentState])
         loadDirect(saveStates[currentState])
