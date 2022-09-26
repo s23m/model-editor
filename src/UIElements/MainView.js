@@ -295,7 +295,7 @@ export class MainProgramClass extends React.Component {
         let refreshTree = this.setLeftMenuToTree //make setLeftMenuToTree local to the block so the reader can use it
         if (window.File && window.FileReader && window.FileList && window.Blob) {
             try {
-                let file = document.querySelector('input[type=file]').files[0];
+                let file = document.getElementById('File-Select-Import').files[0];
                 let reader = new FileReader();
                 reader.readAsText(file);
                 console.log(reader.result)
