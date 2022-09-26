@@ -151,16 +151,91 @@ export function load(jsonString){
 }
 
 export function importLoad(jsonString){
-
+    //load the file
+    if (jsonString == null) return;
+    let saveData = JSON.parse(jsonString);
     //prompt user to name the new package
 
-     //Models and folders,treevertex's need to be given new keys
-     //arrows and vertex's will need new keys to match their updated parent keys
 
-     //recreat vertex/arrow objects as in load
 
-     //models,folders,tree verts need to be added to current data
-     //vertex's and arrows add to current data
+    //Models and folders,treevertex's need to be given new keys
+    //arrows and vertex's will need new keys to match their updated parent keys
+    let folderKeyMap = [];
+    let modelKeyMap = [];
+    let renderKeys = getTotalRenderKeys();
+    let modelKeys = getTotalModels();
+
+    console.log(saveData)
+
+    //assign a new key for each package/vertex
+    for(let folder of saveData.packages){
+        renderKeys++;
+        let folderKey = {originalKey: folder.renderKey, originalParentKey: folder.parentRenderKey, newKey: renderKeys, newParentKey: 0}
+        folderKeyMap.push(folderKey)
+    }
+    for(let vert of saveData.treeVertex){
+        renderKeys++;
+        let folderKey = {originalKey: vert.renderKey, originalParentKey: vert.parentRenderKey, newKey: renderKeys, newParentKey: 0}
+        folderKeyMap.push(folderKey)
+    }
+    for(let model of saveData.graph){
+        modelKeys++;
+        let modelKey = {originalModeltKey: model.modelKey, originalKey: model.renderKey, newModelKey: modelKeys, newKey: 0}
+        modelKeyMap.push(modelKey)
+    }
+
+    //assign new relative parent keys
+    for(let packages of folderKeyMap){
+        for(let packagesCompare of folderKeyMap){
+            if(packages.originalParentKey === packagesCompare.originalKey){
+                packages.newParentKey = packagesCompare.newKey;
+            }
+        }
+    }
+
+    for(let models of modelKeyMap){
+        for(let packages of folderKeyMap){
+            if(models.originalKey === packages.originalKey){
+                models.newKey = packages.originalKey;
+            }
+        }
+    }
+
+    console.log(folderKeyMap)
+    console.log(modelKeyMap)
+
+
+    //assign the new keys to the vertex's model's and packages
+
+    for(let i = 0; i < saveData.packages.length; i++){
+        saveData.packages[i].renderKey = folderKeyMap[i].newKey;
+        saveData.packages[i].parentRenderKey = folderKeyMap[i].newParentKey;
+
+        saveData.dPackages[i].renderKey = folderKeyMap[i].newKey;
+        saveData.dPackages[i].parentRenderKey = folderKeyMap[i].newParentKey;
+    }
+
+    for(let i = saveData.packages.length; i < saveData.packages.length + saveData.treeVertex.length; i++){
+        saveData.treeVertex[i - saveData.packages.length].renderKey = folderKeyMap[i].newKey;
+        saveData.treeVertex[i - saveData.packages.length].parentRenderKey = folderKeyMap[i].newParentKey;
+
+        saveData.dTreeVertex[i - saveData.packages.length].renderKey = folderKeyMap[i].newKey;
+        saveData.dTreeVertex[i - saveData.packages.length].parentRenderKey = folderKeyMap[i].newParentKey;
+    }
+
+    //assign the new keys to vertex's and arrows
+
+    
+
+
+
+
+    //recreat vertex/arrow objects as in load()
+
+    //models,folders,tree verts need to be added to current data
+    //vertex's and arrows add to current data
+    //set the new currentkeys and currentmodels
+    //update arrows drawall
      
 
  return;
