@@ -22,7 +22,7 @@ import { handleDeleteFolder } from './ContainmentTree';
 import { showVertexPath } from './ContainmentTree';
 import { someVertexPath } from './ContainmentTree';
 import { ContextMenu } from './ContextMenu'
-import {save, load, importLoad} from '../Serialisation/NewFileManager'
+import {save, load, importLoad, undo, redo} from '../Serialisation/NewFileManager'
 
 import iconNewFolder from "../Resources/create_folder.svg"
 import iconDeleteFolder from "../Resources/delete_folder.svg"
@@ -399,8 +399,8 @@ export class MainProgramClass extends React.Component {
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarIcon" ><img src={iconUndo} alt="Delete Container" /></div>
-                    <div className="TopBarIcon" ><img src={iconRedo} alt="Add Container" /></div>
+                    <div className="TopBarIcon" onClick={() => undo()} ><img src={iconUndo} alt="Delete Container" /></div>
+                    <div className="TopBarIcon" onClick={() => redo()} ><img src={iconRedo} alt="Add Container" /></div>
                     
 
                     {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>

@@ -181,36 +181,43 @@ function loadDirect(saveData){
 
 }
 
-
+// index 0 is the most recent change
 let saveStates = []
-let CurrentState = 0
-let maxSavedStates = 10;
+let currentState = 0
+//Save states limit as its all stored in memeory (save states are relativley small though and only scale to be a few kilobytes per object though)
+let maxSavedStates = 10; //Could probably get away with a limit in the range of 20-50 for really large model "depositories"
 
 export function createSaveState(){
     //Remove everything infront of the current state eg. When the user has hit undo and then does an action
-    if(CurrentState !== 0){
-        for(let i = 0; i < CurrentState; i++){
+    if(currentState !== 0){
+        for(let i = 0; i < currentState; i++){
             saveStates.shift()
         }
+        currentState = 0;
     }
     //push the chnage to saveStates and remove the oldest state if above threshold
-    saveStates.push(getSaveData())
+    saveStates.unshift(getSaveData())
     if(saveStates.length > maxSavedStates){
-        saveStates.shift()
+        saveStates.pop()
     }
+
+    console.log(saveStates)
 }
 
+//I beleive the first part of the if statement can be deleted as part 2 covers it ie.there will never be 11 savestates, but havent tested yet
 export function undo(){
-    if(CurrentState < (maxSavedStates - 1)){
-        CurrentState ++
-        loadDirect(saveStates[CurrentState])
+    if(currentState < (maxSavedStates - 1) && saveStates[currentState++] !== undefined && saveStates.length !== 0){
+        currentState ++
+        console.log(saveStates[currentState])
+        loadDirect(saveStates[currentState])
     }
+    console.log(currentState)
 }
 
 export function redo(){
-    if(CurrentState > 0){
-        CurrentState --
-        loadDirect(saveStates[CurrentState])
+    if(currentState > 0 && saveStates.length !== 0){
+        currentState --
+        loadDirect(saveStates[currentState])
     }
-
+    console.log(currentState)
 }

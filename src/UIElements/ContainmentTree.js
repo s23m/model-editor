@@ -19,6 +19,7 @@ import { ContactsOutlined } from '@material-ui/icons';
 import { LeftMenu, LeftMenuType } from './LeftMenu';
 import { MainProgramClass } from './MainView';
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity.js";
+import { createSaveState } from '../Serialisation/NewFileManager';
 //import { remove,toTreeViewElement } from "../DataStructures/Graph";
 //import { ContactsOutlined, Remove } from '@material-ui/icons';
 
@@ -600,6 +601,7 @@ export class ContainmentTree extends React.Component {
             setNewModel(1);
             setSelectedFolderKey(1);
             initialFolderAdded = true;
+            createSaveState();
         }
         
 
