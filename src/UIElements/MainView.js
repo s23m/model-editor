@@ -16,7 +16,7 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex, getModelNameFromKey} from './ContainmentTree';
+import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex, getModelNameFromKey, getFolderData} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
@@ -103,6 +103,7 @@ export class MainProgramClass extends React.Component {
         //ContainmentTree.state = ContainmentTree.state;
         //LeftMenu.state = LeftMenu.state;
         (async() => {
+        //Your IDE might tell you this and following await's do nothing, but it is neccesary to stop setLeftMenuToTree fireing early - Lachlan
         await handleAddFolder(folderName,getSelectedFolderKey());
         this.setLeftMenuToTree();
         })();
@@ -329,18 +330,15 @@ export class MainProgramClass extends React.Component {
         }
     };
 
-    mainUndo(){
-        undo();
+    async mainUndo(){
+        await undo();
         this.setLeftMenuToTree();
-        console.log('undo end')
-        console.log(getsaveStates())
+
     }
 
-    mainRedo(){
-        redo();
+    async mainRedo(){
+        await redo();
         this.setLeftMenuToTree();
-        console.log('redo end')
-        console.log(getsaveStates())
     }
 
 

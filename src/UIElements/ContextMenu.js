@@ -107,6 +107,7 @@ export class ContextMenu extends React.Component {
                 }
                 this.setState({showMenu: false})
                 this.props.setLeftMenuToTree();
+                createSaveState();
             }
             else if(e.target.id === "DeletePackageConfirmed"){
                 for(let folder of getFolderData()){
@@ -116,6 +117,7 @@ export class ContextMenu extends React.Component {
                 }
                 this.setState({showMenu: false})
                 this.props.setLeftMenuToTree();
+                createSaveState();
             }
             else if(e.target.id === "DeleteModelConfirmed"){
                 for(let model of modelObjects){
@@ -125,6 +127,7 @@ export class ContextMenu extends React.Component {
                 }
                 this.setState({showMenu: false})
                 this.props.setLeftMenuToTree();
+                createSaveState();
             }
             else if(e.target.id === "RenameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
             }
@@ -214,6 +217,7 @@ export class ContextMenu extends React.Component {
                 }
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
+                createSaveState();
             }
             else if(menuType === "RenameModel"){
                 let newName = document.getElementById("RenameModelBox").value
@@ -227,6 +231,7 @@ export class ContextMenu extends React.Component {
                 }
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
+                createSaveState();
             }
             else if(menuType === "RenameVertex"){
                 let newName = document.getElementById("RenameVertexBox").value
@@ -244,6 +249,7 @@ export class ContextMenu extends React.Component {
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
                 drawAll()
+                createSaveState();
             }
             else if(menuType === "AddVertex"){
                 
@@ -256,6 +262,7 @@ export class ContextMenu extends React.Component {
                     console.log(e);
                 }
                 this.setState({showMenu: false});
+                createSaveState();
             }
             else if(menuType === "AddGraph"){
                 
@@ -268,6 +275,7 @@ export class ContextMenu extends React.Component {
                     console.log(e);
                 }
                 this.setState({showMenu: false});
+                createSaveState();
             }
             else if(menuType === "AddPackage"){
                 
@@ -280,6 +288,7 @@ export class ContextMenu extends React.Component {
                     console.log(e);
                 }
                 this.setState({showMenu: false});
+                createSaveState();
             }
         }
         /*if(e.key === 'Enter'){
