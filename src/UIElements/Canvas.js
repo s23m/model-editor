@@ -1,4 +1,5 @@
 import React from 'react';
+import { createSaveState } from '../Serialisation/NewFileManager';
 import * as canvasDraw from "./CanvasDraw";
 import { getFolderNameFromKey, getVertexData, modelObjects } from './ContainmentTree';
 import { Tool } from './LeftMenu';
@@ -55,7 +56,7 @@ export class Canvas extends React.Component {
     drop(e) {
         if(canvasDraw.getCurrentModel() <= 0){ // stops the user dragging and dropping without a model being selected
             console.log("attempted to drag and drop vertex while there are no available models to draw on");
-            window.alert("You need to create a model first before you can start drawing!");
+            window.alert("You need to create and select a graph first before you can start drawing!");
         }
         else{
             console.log('dropped')
@@ -100,6 +101,7 @@ export class Canvas extends React.Component {
             canvasDraw.addObject(canvasVert)
             canvasDraw.drawAll()
 
+            createSaveState() //Used for undo/redo functionality
         }
 
         //canvas

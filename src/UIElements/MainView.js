@@ -16,13 +16,13 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex, getModelNameFromKey} from './ContainmentTree';
+import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex, getModelNameFromKey, getFolderData} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
 import { someVertexPath } from './ContainmentTree';
 import { ContextMenu } from './ContextMenu'
-import {save, load, importLoad} from '../Serialisation/NewFileManager'
+import {save, load, importLoad, undo, redo, getsaveStates} from '../Serialisation/NewFileManager'
 
 import iconNewFolder from "../Resources/create_folder.svg"
 import iconDeleteFolder from "../Resources/delete_folder.svg"
@@ -33,6 +33,7 @@ import iconEditModel from "../Resources/editModel.svg"
 import iconaddVertex from "../Resources/createVertex.svg"
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
+import { Undo } from '@material-ui/icons';
 
 
 export const version = 1;
@@ -102,6 +103,7 @@ export class MainProgramClass extends React.Component {
         //ContainmentTree.state = ContainmentTree.state;
         //LeftMenu.state = LeftMenu.state;
         (async() => {
+        //Your IDE might tell you this and following await's do nothing, but it is neccesary to stop setLeftMenuToTree fireing early - Lachlan
         await handleAddFolder(folderName,getSelectedFolderKey());
         this.setLeftMenuToTree();
         })();
@@ -168,6 +170,7 @@ export class MainProgramClass extends React.Component {
             console.log("Invalid Zoom Type")
         }
     };
+
 
     setMode(mode) {
 
@@ -289,7 +292,7 @@ export class MainProgramClass extends React.Component {
     };
 
     importFile = () => {
-        let refreshTree = this.setLeftMenuToTree //This is used so we can point to setLeftMenuToTree within the reader object
+        let refreshTree = this.setLeftMenuToTree //make setLeftMenuToTree local to the block so the reader can use it
         if (window.File && window.FileReader && window.FileList && window.Blob) {
             try {
                 let file = document.querySelector('input[type=file]').files[0];
@@ -326,6 +329,17 @@ export class MainProgramClass extends React.Component {
             console.log("Semantic Domain enabled");
         }
     };
+
+    async mainUndo(){
+        await undo();
+        this.setLeftMenuToTree();
+
+    }
+
+    async mainRedo(){
+        await redo();
+        this.setLeftMenuToTree();
+    }
 
 
 
@@ -399,8 +413,8 @@ export class MainProgramClass extends React.Component {
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarIcon" ><img src={iconUndo} alt="Delete Container" /></div>
-                    <div className="TopBarIcon" ><img src={iconRedo} alt="Add Container" /></div>
+                    <div className="TopBarIcon" onClick={() => this.mainUndo()} ><img src={iconUndo} alt="Delete Container" /></div>
+                    <div className="TopBarIcon" onClick={() => this.mainRedo()} ><img src={iconRedo} alt="Add Container" /></div>
                     
 
                     {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>

@@ -19,6 +19,7 @@ import { ContactsOutlined } from '@material-ui/icons';
 import { LeftMenu, LeftMenuType } from './LeftMenu';
 import { MainProgramClass } from './MainView';
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity.js";
+import { createSaveState } from '../Serialisation/NewFileManager';
 //import { remove,toTreeViewElement } from "../DataStructures/Graph";
 //import { ContactsOutlined, Remove } from '@material-ui/icons';
 
@@ -327,7 +328,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
     
 
     vertexData.push(vertexThing2);
-    console.log(vertexData)
+    //console.log(vertexData)
 
     vertexAltered = true;
 
@@ -380,7 +381,7 @@ export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticI
     };
  
     modelObjects.push(tempModelThing);
-    console.log(modelObjects)
+    //console.log(modelObjects)
 
     modelAltered = true;
 
@@ -600,6 +601,7 @@ export class ContainmentTree extends React.Component {
             setNewModel(1);
             setSelectedFolderKey(1);
             initialFolderAdded = true;
+            createSaveState();
         }
         
 
@@ -644,7 +646,7 @@ export class ContainmentTree extends React.Component {
         }
 
         for(let vert of getVertexData()){
-            console.log(vert.children)
+            //console.log(vert.children)
             if(vert.children.length === 0){
                 vert.text = vert.text.replace(" 🟧","");
                 vert.text = vert.text.replace(" 📂","");

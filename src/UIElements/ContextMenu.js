@@ -7,6 +7,7 @@ import {setLeftMenuToTree} from "./LeftMenu"
 import { ContactsOutlined, LocalConvenienceStoreOutlined } from '@material-ui/icons';
 import {getSemanticIdentity} from "../DataStructures/Vertex"
 import {handleAddVertex, handleDeleteVertex, getVertexData} from "./ContainmentTree";
+import { createSaveState } from '../Serialisation/NewFileManager';
 let rightClickedItem = "Default"; //Name of the right clicked item where "Default" is a non-object such as empty canvas space
 let rightClickedItemType = "None"
 let rightClickedItemKey = 0; // Identifying key of selected item needed to use relating methods eg. selectedFolderKey, ModelKey,VertexKey.
@@ -106,6 +107,7 @@ export class ContextMenu extends React.Component {
                 }
                 this.setState({showMenu: false})
                 this.props.setLeftMenuToTree();
+                createSaveState();
             }
             else if(e.target.id === "DeletePackageConfirmed"){
                 for(let folder of getFolderData()){
@@ -115,6 +117,7 @@ export class ContextMenu extends React.Component {
                 }
                 this.setState({showMenu: false})
                 this.props.setLeftMenuToTree();
+                createSaveState();
             }
             else if(e.target.id === "DeleteModelConfirmed"){
                 for(let model of modelObjects){
@@ -124,6 +127,7 @@ export class ContextMenu extends React.Component {
                 }
                 this.setState({showMenu: false})
                 this.props.setLeftMenuToTree();
+                createSaveState();
             }
             else if(e.target.id === "RenameBox" || e.target.id === "CMSelected"){ //This prevents the context menu closing when certain targets are clicked
             }
@@ -208,10 +212,12 @@ export class ContextMenu extends React.Component {
                 this.props.setLeftMenuToTree();
                 }
                 catch(e){ //Not sure why theres an error here as it performs the method, then says the method doesnt exists, doesnt trigger on other uses of method either.-Lachlan
+                    //believe the issue is enter key event is fireing twice, will fix later, not a critical/detrimental or performance effecting issue - Lachlan
                     console.log(e)
                 }
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
+                createSaveState();
             }
             else if(menuType === "RenameModel"){
                 let newName = document.getElementById("RenameModelBox").value
@@ -220,11 +226,12 @@ export class ContextMenu extends React.Component {
                 try{
                 this.props.setLeftMenuToTree();
                 }
-                catch(e){ //Not sure why theres an error here as it performs the method, then says the method doesnt exists, doesnt trigger on other uses of method either.-Lachlan
+                catch(e){ 
                     console.log(e)
                 }
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
+                createSaveState();
             }
             else if(menuType === "RenameVertex"){
                 let newName = document.getElementById("RenameVertexBox").value
@@ -233,7 +240,7 @@ export class ContextMenu extends React.Component {
                 try{
                 this.props.setLeftMenuToTree();
                 }
-                catch(e){ //Not sure why theres an error here as it performs the method, then says the method doesnt exists, doesnt trigger on other uses of method either.-Lachlan
+                catch(e){ 
                     console.log(e)
                 }
                 console.log("rightClickedObject")
@@ -242,6 +249,7 @@ export class ContextMenu extends React.Component {
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
                 drawAll()
+                createSaveState();
             }
             else if(menuType === "AddVertex"){
                 
@@ -254,6 +262,7 @@ export class ContextMenu extends React.Component {
                     console.log(e);
                 }
                 this.setState({showMenu: false});
+                createSaveState();
             }
             else if(menuType === "AddGraph"){
                 
@@ -266,6 +275,7 @@ export class ContextMenu extends React.Component {
                     console.log(e);
                 }
                 this.setState({showMenu: false});
+                createSaveState();
             }
             else if(menuType === "AddPackage"){
                 
@@ -278,6 +288,7 @@ export class ContextMenu extends React.Component {
                     console.log(e);
                 }
                 this.setState({showMenu: false});
+                createSaveState();
             }
         }
         /*if(e.key === 'Enter'){
