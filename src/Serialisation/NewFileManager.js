@@ -1,4 +1,4 @@
-import {currentObjects, drawAll, getCurrentObjects, getTotalModels, getTotalRenderKeys, setCurrentObjects, setNewModel, setNewRenderKey, setTotalModelKeys, setTotalRenderKey, updateArrows} from "../UIElements/CanvasDraw"
+import {currentObjects, drawAll, getCurrentModel, getCurrentObjects, getCurrentRenderKey, getTotalModels, getTotalRenderKeys, setCurrentObjects, setNewModel, setNewRenderKey, setTotalModelKeys, setTotalRenderKey, updateArrows} from "../UIElements/CanvasDraw"
 import {version} from "../UIElements/MainView"
 import {setTranslationColumns, translationColumns} from "../UIElements/SemanticDomainEditor"
 import {getModelName} from "../UIElements/CanvasDraw";
@@ -9,7 +9,7 @@ import {Cardinality} from "../DataStructures/Cardinality";
 import {EdgeEnd} from "../DataStructures/EdgeEnd";
 import {Graph} from "../DataStructures/Graph";
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity";
-import { getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderData, getModelData, getTreeData, getVertexData, setDecoyFolderData, setDecoyModelData, setDecoyVertexData, setFolderData, setModelData, setSelectedFolderKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
+import { getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderData, getModelData, getSelectedFolderKey, getTreeData, getVertexData, setDecoyFolderData, setDecoyModelData, setDecoyVertexData, setFolderData, setModelData, setSelectedFolderKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
 
 //Get all the data that needs to be saved, to restore a session
 export function getSaveData() {
@@ -28,6 +28,10 @@ export function getSaveData() {
     let totalRenderKeys = getTotalRenderKeys();
     let totalModels = getTotalModels();
 
+    let currentModel = getCurrentModel();
+    let currentKey = getCurrentRenderKey();
+    let currentFolder = getSelectedFolderKey();
+
 
     let saveData = {
 
@@ -44,6 +48,9 @@ export function getSaveData() {
         dGrraph: decoyModelObjects,
         renderKeys: totalRenderKeys,
         modelKeys: totalModels,
+        currentKey: currentKey,
+        currentMod: currentModel,
+        currentFol: currentFolder,
 
 
         "modelName":getModelName()
@@ -174,9 +181,9 @@ function loadDirect(saveData){
     setTotalModelKeys(saveData.modelKeys)
     setCurrentObjects(new Graph(saveData.vertices, saveData.arrow));
     updateArrows()
-    setSelectedFolderKey(1)
-    setNewRenderKey(1)
-    setNewModel(1)
+    setSelectedFolderKey(saveData.currentFol)
+    setNewRenderKey(saveData.currentKey)
+    setNewModel(saveData.currentMod)
     drawAll()
 
 }
@@ -188,7 +195,7 @@ let currentState = 0
 let maxSavedStates = 10; //Could probably get away with a limit in the range of 20-50 for really large model "depositories"
 
 export function createSaveState(){
-    //Remove everything infront of the current state eg. When the user has hit undo and then does an action
+    //Remove everything infront of the current state if not most recent eg. When the user has hit undo and then does an action
     if(currentState !== 0){
         for(let i = 0; i < currentState; i++){
             saveStates.shift()
@@ -208,7 +215,6 @@ export function createSaveState(){
 export function undo(){
     if(currentState < (maxSavedStates - 1) && saveStates[currentState + 1] !== undefined && saveStates.length !== 0){
         currentState ++
-        console.log(saveStates[currentState])
         loadDirect(saveStates[currentState])
     }
     console.log(currentState)

@@ -33,6 +33,7 @@ import iconEditModel from "../Resources/editModel.svg"
 import iconaddVertex from "../Resources/createVertex.svg"
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
+import { Undo } from '@material-ui/icons';
 
 
 export const version = 1;
@@ -168,6 +169,7 @@ export class MainProgramClass extends React.Component {
             console.log("Invalid Zoom Type")
         }
     };
+
 
     setMode(mode) {
 
@@ -327,6 +329,16 @@ export class MainProgramClass extends React.Component {
         }
     };
 
+    mainUndo(){
+        undo()
+        this.setLeftMenuToTree()
+    }
+
+    mainRedo(){
+        redo()
+        this.setLeftMenuToTree()
+    }
+
 
 
     render() {
@@ -399,8 +411,8 @@ export class MainProgramClass extends React.Component {
                     {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarIcon" onClick={() => undo()} ><img src={iconUndo} alt="Delete Container" /></div>
-                    <div className="TopBarIcon" onClick={() => redo()} ><img src={iconRedo} alt="Add Container" /></div>
+                    <div className="TopBarIcon" onClick={() => this.mainUndo()} ><img src={iconUndo} alt="Delete Container" /></div>
+                    <div className="TopBarIcon" onClick={() => this.mainRedo()} ><img src={iconRedo} alt="Add Container" /></div>
                     
 
                     {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>
