@@ -9,21 +9,23 @@ import {Cardinality} from "../DataStructures/Cardinality";
 import {EdgeEnd} from "../DataStructures/EdgeEnd";
 import {Graph} from "../DataStructures/Graph";
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity";
-import { getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderData, getModelData, getSelectedFolderKey, getTreeData, getVertexData, setDecoyFolderData, setDecoyModelData, setDecoyVertexData, setFolderData, setModelData, setSelectedFolderKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
+import { folderData, getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderData, getModelData, getSelectedFolderKey, getTreeData, getVertexData, setDecoyFolderData, setDecoyModelData, setDecoyVertexData, setFolderData, setModelData, setSelectedFolderKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
+import { CompassCalibrationOutlined } from "@material-ui/icons";
 
 //Get all the data that needs to be saved, to restore a session
+// .slice() is added to everything returning arrays as we just want the value, not a reference.
 export function getSaveData() {
     let vertexObjects = currentObjects.flatten(true, false);
     let arrowObjects = currentObjects.flatten(false, true);
-    let treeData = getTreeData();
-    let folderData = getFolderData();
-    let decoyFolderData = getDecoyFolderData();
+    let treeData = getTreeData().slice();
+    let folderData = getFolderData().slice();
+    let decoyFolderData = getDecoyFolderData().slice();
 
-    let vertexData = getVertexData();
-    let decoyVertexData = getDecoyVertexData();
+    let vertexData = getVertexData().slice();
+    let decoyVertexData = getDecoyVertexData().slice();
 
-    let modelObjects = getModelData();
-    let decoyModelObjects = getDecoyModelData();
+    let modelObjects = getModelData().slice();
+    let decoyModelObjects = getDecoyModelData().slice();
 
     let totalRenderKeys = getTotalRenderKeys();
     let totalModels = getTotalModels();
@@ -31,7 +33,6 @@ export function getSaveData() {
     let currentModel = getCurrentModel();
     let currentKey = getCurrentRenderKey();
     let currentFolder = getSelectedFolderKey();
-
 
     let saveData = {
 
@@ -51,13 +52,12 @@ export function getSaveData() {
         currentKey: currentKey,
         currentMod: currentModel,
         currentFol: currentFolder,
+        
 
 
         "modelName":getModelName()
     };
-
     return saveData;
-
 }
 
 //Create the JSON file with the save data
@@ -194,7 +194,15 @@ let currentState = 0
 //Save states limit as its all stored in memeory (save states are relativley small though and only scale to be a few kilobytes per object though)
 let maxSavedStates = 10; //Could probably get away with a limit in the range of 20-50 for really large model "depositories"
 
+export function getsaveStates(){
+    return saveStates;
+}
+
+
 export function createSaveState(){
+
+    //This line is needed as some of the variables in saveData
+    let newData = Object.assign({}, getSaveData());
     //Remove everything infront of the current state if not most recent eg. When the user has hit undo and then does an action
     if(currentState !== 0){
         for(let i = 0; i < currentState; i++){
@@ -203,11 +211,11 @@ export function createSaveState(){
         currentState = 0;
     }
     //push the chnage to saveStates and remove the oldest state if above threshold
-    saveStates.unshift(getSaveData())
+    saveStates.unshift(newData)
     if(saveStates.length > maxSavedStates){
         saveStates.pop()
     }
-
+    console.log('end')
     console.log(saveStates)
 }
 

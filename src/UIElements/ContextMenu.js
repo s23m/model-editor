@@ -214,7 +214,6 @@ export class ContextMenu extends React.Component {
                 }
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
-                createSaveState();
             }
             else if(menuType === "RenameModel"){
                 let newName = document.getElementById("RenameModelBox").value
@@ -228,7 +227,6 @@ export class ContextMenu extends React.Component {
                 }
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
-                createSaveState();
             }
             else if(menuType === "RenameVertex"){
                 let newName = document.getElementById("RenameVertexBox").value
@@ -246,7 +244,6 @@ export class ContextMenu extends React.Component {
                 console.log("menu change fin")
                 this.setState({ showMenu: false })
                 drawAll()
-                createSaveState();
             }
             else if(menuType === "AddVertex"){
                 
@@ -259,7 +256,6 @@ export class ContextMenu extends React.Component {
                     console.log(e);
                 }
                 this.setState({showMenu: false});
-                createSaveState();
             }
             else if(menuType === "AddGraph"){
                 
@@ -272,7 +268,6 @@ export class ContextMenu extends React.Component {
                     console.log(e);
                 }
                 this.setState({showMenu: false});
-                createSaveState();
             }
             else if(menuType === "AddPackage"){
                 
@@ -285,7 +280,6 @@ export class ContextMenu extends React.Component {
                     console.log(e);
                 }
                 this.setState({showMenu: false});
-                createSaveState();
             }
         }
         /*if(e.key === 'Enter'){

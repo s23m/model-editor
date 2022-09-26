@@ -22,7 +22,7 @@ import { handleDeleteFolder } from './ContainmentTree';
 import { showVertexPath } from './ContainmentTree';
 import { someVertexPath } from './ContainmentTree';
 import { ContextMenu } from './ContextMenu'
-import {save, load, importLoad, undo, redo} from '../Serialisation/NewFileManager'
+import {save, load, importLoad, undo, redo, getsaveStates} from '../Serialisation/NewFileManager'
 
 import iconNewFolder from "../Resources/create_folder.svg"
 import iconDeleteFolder from "../Resources/delete_folder.svg"
@@ -291,7 +291,7 @@ export class MainProgramClass extends React.Component {
     };
 
     importFile = () => {
-        let refreshTree = this.setLeftMenuToTree //This is used so we can point to setLeftMenuToTree within the reader object
+        let refreshTree = this.setLeftMenuToTree //make setLeftMenuToTree local to the block so the reader can use it
         if (window.File && window.FileReader && window.FileList && window.Blob) {
             try {
                 let file = document.querySelector('input[type=file]').files[0];
@@ -330,13 +330,17 @@ export class MainProgramClass extends React.Component {
     };
 
     mainUndo(){
-        undo()
-        this.setLeftMenuToTree()
+        undo();
+        this.setLeftMenuToTree();
+        console.log('undo end')
+        console.log(getsaveStates())
     }
 
     mainRedo(){
-        redo()
-        this.setLeftMenuToTree()
+        redo();
+        this.setLeftMenuToTree();
+        console.log('redo end')
+        console.log(getsaveStates())
     }
 
 
