@@ -313,7 +313,10 @@ export class MainProgramClass extends React.Component {
         return 0;
     };
 
-
+    async updateTree(){ // have to use this weird function to update tree when swapping back from semantic editor.
+        await this.setLeftMenuToTree(); 
+        this.setLeftMenuToTree();
+    }
 
     // Used to enable/disable the semantic domain editor
     toggleSemanticDomainState = () => {
@@ -321,7 +324,9 @@ export class MainProgramClass extends React.Component {
             this.semanticTableEnabled = false;
             canvasDraw.drawAll();
             this.setState(this.state);
+            this.updateTree()
             console.log("Semantic Domain disabled");
+            
         } else {
             this.semanticTableEnabled = true;
             resetRows();
@@ -391,7 +396,7 @@ export class MainProgramClass extends React.Component {
 
                     </DropdownButton>
 
-                    <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>
+                    <div className="TopBar" onClick={() =>  this.toggleSemanticDomainState()}>
                         Semantic Editor
                     </div>
 
