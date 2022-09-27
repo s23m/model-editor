@@ -39,8 +39,9 @@ import {
 } from '@devexpress/dx-react-core';
 
 // In program imports
-import {currentObjects} from "./CanvasDraw";
-import {getVertexData, vertexData} from "./ContainmentTree"
+import {currentObjects, getSelectedObject, setSelectedObject, updateVertex} from "./CanvasDraw";
+import {getTreeData, getVertexData, vertexData} from "./ContainmentTree"
+import { Update } from '@material-ui/icons';
 
 // Globals
 let rows;
@@ -142,6 +143,7 @@ const FocusableCell = ({ onClick, ...restProps }) => (
 );
 
 export default () => {
+    
     // Create columns
     let [columns, setColumnsRet] = useState(createColumns());
     setColumns = setColumnsRet;
@@ -356,12 +358,15 @@ function createColumns() {
 function updateChangedObject(object, row) {
     // If should update
     if (object.semanticIdentity.UUID === row['UUID']) {
+        
         // Constants
         object.semanticIdentity.abbreviation = row['abbreviation'];
         object.semanticIdentity.shortAbbreviation = row['shortAbbreviation'];
         object.semanticIdentity.name = row['name'];
+        object.title = row['name']; // update the title of the vertex to be the same as semantic name
         object.semanticIdentity.description = row['description'];
-
+        object.text = row['name'] + " 🟧"
+        
         // Translations
         for (let translation of translationColumns) {
             // Find translation in list
@@ -379,13 +384,14 @@ function updateChangedObject(object, row) {
             }
         }
     }
-
+    
     return row;
 }
 
 function updateChangedObjects(rows) {
+    
     let currentObjectsFlattened = currentObjects.flatten();
-    let treeVert = getVertexData()
+    let treeVert = vertexData
 
     // Iterate through all rows
     for (let i = 0; i < rows.length; i++) {

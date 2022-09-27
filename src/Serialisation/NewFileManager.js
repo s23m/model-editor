@@ -9,7 +9,7 @@ import {Cardinality} from "../DataStructures/Cardinality";
 import {EdgeEnd} from "../DataStructures/EdgeEnd";
 import {Graph} from "../DataStructures/Graph";
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity";
-import { folderData, getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderData, getModelData, getSelectedFolderKey, getTreeData, getVertexData, setDecoyFolderData, setDecoyModelData, setDecoyVertexData, setFolderData, setModelData, setSelectedFolderKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
+import { getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderData, getModelData, getSelectedFolderKey, getTreeData, getVertexData, setDecoyFolderData, setDecoyModelData, setDecoyVertexData, setFolderData, setModelData, setSelectedFolderKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
 import { CompassCalibrationOutlined } from "@material-ui/icons";
 
 //Get all the data that needs to be saved, to restore a session
@@ -254,7 +254,7 @@ function loadDirect(saveData){
     setTreeData(saveData.tree)
     setTotalRenderKey(saveData.renderKeys)
     setTotalModelKeys(saveData.modelKeys)
-    setCurrentObjects(new Graph(saveData.vertices, saveData.arrow));
+    setCurrentObjects(new Graph(saveData.vertices, saveData.arrows));
     updateArrows()
     setSelectedFolderKey(saveData.currentFol)
     setNewRenderKey(saveData.currentKey)
