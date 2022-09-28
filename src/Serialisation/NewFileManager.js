@@ -13,19 +13,20 @@ import { getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderDat
 import { CompassCalibrationOutlined } from "@material-ui/icons";
 
 //Get all the data that needs to be saved, to restore a session
-// .slice() is added to everything returning arrays as we just want the value, not a reference.
+// .slice() only creates a shallow copy of arrays which means that it copies literal values but only makes referneces to arrays and objects.
+// turning the object into a string and back into an object creates a deep copy which is an actual standalone copy and not an array of references
 export function getSaveData() {
     let vertexObjects = currentObjects.flatten(true, false);
     let arrowObjects = currentObjects.flatten(false, true);
-    let treeData = getTreeData().slice();
-    let folderData = getFolderData().slice();
-    let decoyFolderData = getDecoyFolderData().slice();
+    let treeData = JSON.parse(JSON.stringify(getTreeData()))
+    let folderData = JSON.parse(JSON.stringify(getFolderData()))
+    let decoyFolderData = JSON.parse(JSON.stringify(getDecoyFolderData()))
 
-    let vertexData = getVertexData().slice();
-    let decoyVertexData = getDecoyVertexData().slice();
+    let vertexData = JSON.parse(JSON.stringify(getVertexData()));
+    let decoyVertexData = JSON.parse(JSON.stringify(getDecoyVertexData()));
 
-    let modelObjects = getModelData().slice();
-    let decoyModelObjects = getDecoyModelData().slice();
+    let modelObjects = JSON.parse(JSON.stringify(getModelData()));
+    let decoyModelObjects = JSON.parse(JSON.stringify(getDecoyModelData())) 
 
     let totalRenderKeys = getTotalRenderKeys();
     let totalModels = getTotalModels();
