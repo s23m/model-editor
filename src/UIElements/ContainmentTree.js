@@ -462,6 +462,7 @@ export function handleModelRebase(mKey,newRkey){
     }
     console.log(modelObjects)
     treeNeedsUpdate = 1;
+    createSaveState();
 }
 
 

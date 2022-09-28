@@ -10,6 +10,7 @@ import {getFolderNameFromKey, getModelData,getModelNameFromKey,handleAddModel, h
 import { rgbToHex } from "@material-ui/core";
 import { Canvas } from "./Canvas";
 import { setCurrentGraph } from "./MainView";
+import { createSaveState } from "../Serialisation/NewFileManager";
 
 //false unless the onMouseMove function is executing, Is used to stop vertex created with leftmenu tool creating multiple vertex's when dragging for an inital size
 let dragging = false;
@@ -1482,6 +1483,7 @@ export function onLeftMouseRelease(canvas, x, y) {
 
         canvas.props.setLeftMenu(newObject);
         canvas.props.setMode(Tool.Select);
+        createSaveState();
     }
     if (canvas.tool === Tool.Artifact) {
         let newObject = createArtifact(canvas, mouseStartX, mouseStartY);
