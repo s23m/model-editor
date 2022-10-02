@@ -422,7 +422,7 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarIcon" ><img src={iconHelp} alt="Help" /></div>
+                    <div className="TopBarIcon" ><a href="UserManual.pdf"><img src={iconHelp} alt="Help"/></a></div>
                     
 
                     {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>
