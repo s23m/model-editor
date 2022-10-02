@@ -33,6 +33,7 @@ import iconEditModel from "../Resources/editModel.svg"
 import iconaddVertex from "../Resources/createVertex.svg"
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
+import iconHelp from "../Resources/help.svg"
 import { Undo } from '@material-ui/icons';
 
 
@@ -313,10 +314,7 @@ export class MainProgramClass extends React.Component {
         return 0;
     };
 
-    async updateTree(){ // have to use this weird function to update tree when swapping back from semantic editor.
-        await this.setLeftMenuToTree(); 
-        this.setLeftMenuToTree();
-    }
+
 
     // Used to enable/disable the semantic domain editor
     toggleSemanticDomainState = () => {
@@ -324,9 +322,7 @@ export class MainProgramClass extends React.Component {
             this.semanticTableEnabled = false;
             canvasDraw.drawAll();
             this.setState(this.state);
-            this.updateTree()
             console.log("Semantic Domain disabled");
-            
         } else {
             this.semanticTableEnabled = true;
             resetRows();
@@ -396,12 +392,12 @@ export class MainProgramClass extends React.Component {
 
                     </DropdownButton>
 
-                    <div className="TopBar" onClick={() =>  this.toggleSemanticDomainState()}>
+                    <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>
                         Semantic Editor
                     </div>
 
-                    {/*<input className="TopBarSearch" id="ModelName" type="text" name="modelName" placeholder="Graph Name" onChange={(e) => this.setModelName(e)} />*/}
-                    <input className="SelectedModel" id="SelectedModel" type="text" name="selectedModel" readonly='readonly' />
+                    {/*<input className="TopBarSearch" id="ModelName" type="text" name="modelName" placeholder="Graph NOme" onChange={(e) => this.setModelName(e)} />*/}
+                    <input className="SelectedModel" id="SelectedModel" type="text" name="selectedModel" readOnly='readonly' />
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
                     {/*<input className="TopBarSearch" id="FolderName" type="text" name="folderName" placeholder="New Container/Model" onChange={(e) => this.updateFolderName(e)} />*/}
@@ -420,6 +416,13 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.mainUndo()} ><img src={iconUndo} alt="Delete Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.mainRedo()} ><img src={iconRedo} alt="Add Container" /></div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarIcon" ><a href="UserManual.pdf"><img src={iconHelp} alt="Help"/></a></div>
                     
 
                     {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>

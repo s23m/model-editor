@@ -386,9 +386,6 @@ export class LeftMenu extends React.Component{
 
             <div id = "Vertex" className="ToolbarItem" onClick={() => {this.props.setMode(Tool.Vertex); }} onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt ="Vertex"/></div>
 
-            <div id="Artifact" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Artifact)} onKeyDown={() => this.onKeyPressed()}    ><img src={iconArtifact} alt="Artifact" /></div>
-            <div id="Container" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Container)} onKeyDown={() => this.onKeyPressed()}    ><img src={iconContainer} alt="Container" /></div>
-
             <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt ="Edge"/></div>
 
         </div>;
