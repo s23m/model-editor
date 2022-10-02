@@ -566,7 +566,7 @@ export class LeftMenu extends React.Component{
     render() {
         let menu = this.getMenu();
         if (this.formRef !== null) {
-            this.formRef.reset();
+            this.formRef = null;
         }
         return menu;
     }
