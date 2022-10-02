@@ -39,9 +39,8 @@ import {
 } from '@devexpress/dx-react-core';
 
 // In program imports
-import {currentObjects, getSelectedObject, setSelectedObject, updateVertex} from "./CanvasDraw";
-import {getTreeData, getVertexData, vertexData} from "./ContainmentTree"
-import { Update } from '@material-ui/icons';
+import {currentObjects} from "./CanvasDraw";
+import {vertexData} from "./ContainmentTree"
 
 // Globals
 let rows;

@@ -2,9 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { drawMarker, distanceThreshold, getCurrentRenderKey, getCurrentModel } from "../UIElements/CanvasDraw";
+import { drawMarker, distanceThreshold, getCurrentModel } from "../UIElements/CanvasDraw";
 import { getModelRenderKey } from "../UIElements/ContainmentTree";
-import { SemanticIdentity, createUUID } from "./SemanticIdentity";
+import { SemanticIdentity} from "./SemanticIdentity";
 import {serverURL} from "../UIElements/MainView"
 
 export var padding = 5;
@@ -79,7 +79,7 @@ export class Vertex {
             this.imageElements = {};
             this.fontSize = 12;
             this.orignalVertex = true; // bool to see if the selected vertex is the original
-            this.originalUUID = this.originalUUID // going to store the UUID of the original vertex here as canvas objects need to be given a unique semanticUUID 
+            //this.originalUUID = this.originalUUID // going to store the UUID of the original vertex here as canvas objects need to be given a unique semanticUUID 
             this.isContainer = false; //Ignore this now, Kieth explained how containers work after finishing old implementation, direction other team was going was wrong - Lachlan
             this.Origin = "" //package the vertex originates from if needed
     

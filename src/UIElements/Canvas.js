@@ -1,10 +1,9 @@
 import React from 'react';
 import { createSaveState } from '../Serialisation/NewFileManager';
 import * as canvasDraw from "./CanvasDraw";
-import { getFolderNameFromKey, getVertexData, modelObjects } from './ContainmentTree';
+import { getFolderNameFromKey, getVertexData} from './ContainmentTree';
 import { Tool } from './LeftMenu';
 
-let movingAllowed = false;
 let selectMultiple = false;
 let selectDown = false;
 let savedObjects = [];
@@ -17,11 +16,7 @@ export class Canvas extends React.Component {
         this.state = {}
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        this.zoom = nextProps.mainState.zoomLevel;
-        this.tool = nextProps.mainState.drawMode;
 
-    }
 
     componentDidMount() {
         this.zoom = this.props.mainState.zoomLevel;
@@ -39,6 +34,11 @@ export class Canvas extends React.Component {
         document.getElementById("Canvas").removeEventListener('dragover', this.dragOver);
         document.getElementById("Canvas").removeEventListener('dragleave', this.dragLeave);
         document.getElementById("Canvas").removeEventListener('drop', this.drop);
+    }
+
+    componentDidUpdate(){
+        this.zoom = this.props.mainState.zoomLevel;
+        this.tool = this.props.mainState.drawMode;
     }
 
     dragEnter(e) {

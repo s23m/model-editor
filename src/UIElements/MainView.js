@@ -5,7 +5,6 @@
 import React from 'react';
 import '../App.css';
 import * as canvasDraw from "./CanvasDraw";
-import * as fileManager from '../Serialisation/FileManager';
 import {DropdownButton,Dropdown} from "react-bootstrap";
 
 import {Canvas} from './Canvas';
@@ -16,25 +15,19 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex, getModelNameFromKey, getFolderData} from './ContainmentTree';
+import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
 import { someVertexPath } from './ContainmentTree';
 import { ContextMenu } from './ContextMenu'
-import {save, load, importLoad, undo, redo, getsaveStates} from '../Serialisation/NewFileManager'
+import {save, load, importLoad, undo, redo} from '../Serialisation/NewFileManager'
 
-import iconNewFolder from "../Resources/create_folder.svg"
-import iconDeleteFolder from "../Resources/delete_folder.svg"
-import iconEditFolder from  "../Resources/changeFolderName.svg"
-import iconNewModel from "../Resources/NewModel.svg"
-import iconDeleteModel from "../Resources/DeleteModel.svg"
-import iconEditModel from "../Resources/editModel.svg"
-import iconaddVertex from "../Resources/createVertex.svg"
+
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
 import iconHelp from "../Resources/help.svg"
-import { Undo } from '@material-ui/icons';
+
 
 
 export const version = 1;
