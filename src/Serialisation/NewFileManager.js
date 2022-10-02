@@ -1,7 +1,7 @@
-import {currentObjects, drawAll, getCurrentModel, getCurrentObjects, getCurrentRenderKey, getTotalModels, getTotalRenderKeys, setCurrentObjects, setNewModel, setNewRenderKey, setTotalModelKeys, setTotalRenderKey, updateArrows} from "../UIElements/CanvasDraw"
-import {version} from "../UIElements/MainView"
+import {currentObjects, drawAll, getCurrentModel, getCurrentRenderKey, getTotalModels, getTotalRenderKeys, 
+    setCurrentObjects, setNewModel, setNewRenderKey, setTotalModelKeys, setTotalRenderKey, updateArrows} from "../UIElements/CanvasDraw"
+
 import {setTranslationColumns, translationColumns} from "../UIElements/SemanticDomainEditor"
-import {getModelName} from "../UIElements/CanvasDraw";
 
 import {Vertex} from "../DataStructures/Vertex";
 import {Arrow} from "../DataStructures/Arrow";
@@ -10,7 +10,7 @@ import {EdgeEnd} from "../DataStructures/EdgeEnd";
 import {Graph} from "../DataStructures/Graph";
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity";
 import { getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderData, getModelData, getSelectedFolderKey, getTreeData, getVertexData, setDecoyFolderData, setDecoyModelData, setDecoyVertexData, setFolderData, setModelData, setSelectedFolderKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
-import { CompassCalibrationOutlined } from "@material-ui/icons";
+
 
 //Get all the data that needs to be saved, to restore a session
 // .slice() only creates a shallow copy of arrays which means that it copies literal values but only makes referneces to arrays and objects.
@@ -56,7 +56,7 @@ export function getSaveData() {
         
 
 
-        "modelName":getModelName()
+
     };
     return saveData;
 }
@@ -291,8 +291,6 @@ export function createSaveState(){
     if(saveStates.length > maxSavedStates){
         saveStates.pop()
     }
-    console.log('end')
-    console.log(saveStates)
 }
 
 //I beleive the first part of the if statement can be deleted as part 2 covers it ie.there will never be 11 savestates, but havent tested yet

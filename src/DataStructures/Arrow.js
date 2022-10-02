@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { SemanticIdentity } from "./SemanticIdentity";
-import {drawMarker, getDistance, getCurrentRenderKey} from "../UIElements/CanvasDraw";
+import {drawMarker, getDistance,} from "../UIElements/CanvasDraw";
 import {getModelRenderKey} from "../UIElements/ContainmentTree";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";

@@ -4,8 +4,8 @@
 
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
-import {LineColourToStringName, LineTypeToString} from "../DataStructures/ArrowProperties"
-import { ContainmentTree, handleAddVertex, handleDeleteVertex } from "./ContainmentTree";
+import {LineColourToStringName,} from "../DataStructures/ArrowProperties"
+import { ContainmentTree,} from "./ContainmentTree";
 import {serverURL} from ".//MainView"
 
 import { SketchPicker } from 'react-color';
@@ -13,24 +13,14 @@ import { SketchPicker } from 'react-color';
 // Icons
 import iconVertex from "../Resources/vertex.svg";
 import iconEdge from "../Resources/edge.svg";
-import iconSpecialisation from "../Resources/specialisation.svg";
-import iconVisibility from "../Resources/visibility.svg"
 import iconSelect from "../Resources/select.svg"
-import iconArtifact from "../Resources/artifact.svg"
-import iconContainer from "../Resources/container.svg"
 
 
-import {deleteElement, currentObjects} from "./CanvasDraw";
+
+import {deleteElement} from "./CanvasDraw";
 import { vertexDeleteElement } from './CanvasDraw';
 import DropdownButton from "react-bootstrap/DropdownButton";
-import {vertexData} from "./ContainmentTree.js"
 
-// Show the vertex path
-import {showVertexPath} from "./ContainmentTree.js";
-
-// The variable that contains the found path of a given vertex
-import { someVertexPath } from './ContainmentTree';
-import e from 'cors';
 
 //Property Enums
 export const LeftMenuType = {
@@ -152,8 +142,15 @@ export class LeftMenu extends React.Component{
         
     }
     
-    componentWillReceiveProps(nextProps,nextContext) {
-        this.setState({menu:nextProps.mainState.menu,selectedObject:nextProps.mainState.selectedObject});
+    static getDerivedStateFromProps(props,state) {
+
+        return {
+            menu: props.mainState.menu,
+            selectedObject: props.mainState.selectedObject
+
+        };
+
+        //this.setState({menu:nextProps.mainState.menu,selectedObject:nextProps.mainState.selectedObject});
         
         //document.removeEventListener("keydown", this.onKeyPressed.bind(this));
 
@@ -161,6 +158,7 @@ export class LeftMenu extends React.Component{
     
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+
 
         let leftMenu = document.getElementById("VertexMenu");
         if(leftMenu === null){

@@ -6,10 +6,7 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import {getFolderNameFromKey, getModelData,getModelNameFromKey,handleAddModel, handleAddVertex, modelObjects, vertexData} from "./ContainmentTree";
-import { rgbToHex } from "@material-ui/core";
-import { Canvas } from "./Canvas";
-import { setCurrentGraph } from "./MainView";
+import {getModelNameFromKey, handleAddVertex, vertexData} from "./ContainmentTree";
 import { createSaveState } from "../Serialisation/NewFileManager";
 
 //false unless the onMouseMove function is executing, Is used to stop vertex created with leftmenu tool creating multiple vertex's when dragging for an inital size
@@ -113,9 +110,6 @@ export var arrowPath = [];
 let lastX = 0;
 let lastY = 0;
 
-// Arrow moving
-let startMoveX = 0;
-let startMoveY = 0;
 
 // Resize status
 let resizing = false;
@@ -140,17 +134,7 @@ export function assignElement(elementID) {
 
 }
 
-export function getModelName() {
-    let nameElement = document.getElementById("ModelName")
 
-    if (nameElement === null) {
-        return "Root"
-    }
-    if (nameElement.value === "" || nameElement.value === null || nameElement.value === undefined) {
-        return "Root"
-    }
-    return nameElement.value;
-}
 
 export function resetMouseOrigin() {
     try {
@@ -914,7 +898,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
             }
             if (blockPre >= blockSec) {
                 previousObject.width = previousObject.width + ((secondObject.x + secondObject.width) - (previousObject.x + previousObject.width));
-                previousObject.x = previousObject.x;
 
                 startY = secondObject.y + secondObject.height;
                 startX = secondObject.x + secondObject.width / 2;
@@ -989,7 +972,7 @@ export function lineIntersect(canvas, x, y, secondObject) {
             }
             if (blockPre >= blockSec) {
                 previousObject.width = previousObject.width + ((secondObject.x + secondObject.width) - (previousObject.x + previousObject.width));
-                previousObject.x = previousObject.x;
+
 
                 startY = secondObject.y;
                 startX = secondObject.x + secondObject.width / 2;
@@ -1526,9 +1509,7 @@ function onMouseMove(e, canvas) {
 }
 
 export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = false) {
-    // for arrows
-    startMoveX = x;
-    startMoveY = y;
+
     // selecting the object based on coordinate
     // if it doesnt find an object dont run it
 
@@ -1544,7 +1525,7 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
 
         //For loop to check all the closest friends (connected directly to selected )
         for (let n = 0; n < ObjectsToCheck.length; n++) {
-            let [newfriendObject, newarrowsVert, newarrowsHoriz] = compareSizesToMoveAll(ObjectsToCheck[n]);
+            let [newfriendObject] = compareSizesToMoveAll(ObjectsToCheck[n]);
             if (newfriendObject !== null) {
 
                 //for loop to check for duplicates and remove if any
@@ -1759,8 +1740,6 @@ export function findIntersected(x, y) {
 }
 
 function createArtifact(canvas, x1, y1) {
-    let newPath;
-    let currentObjectsFlattened = currentObjects.flatten();
 
     if (canvas.tool === Tool.Artifact) {
         // Get positions
@@ -1777,8 +1756,6 @@ function createArtifact(canvas, x1, y1) {
 }
 
 function createContainer(canvas, x1, y1) {
-    let newPath;
-    let currentObjectsFlattened = currentObjects.flatten();
 
     if (canvas.tool === Tool.Container) {
         // Get positions
