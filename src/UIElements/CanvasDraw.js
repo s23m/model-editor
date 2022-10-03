@@ -8,6 +8,7 @@ import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
 import {getModelNameFromKey, handleAddVertex, vertexData} from "./ContainmentTree";
 import { createSaveState } from "../Serialisation/NewFileManager";
+import {selectedCanvasObject} from "./Canvas"
 
 //false unless the onMouseMove function is executing, Is used to stop vertex created with leftmenu tool creating multiple vertex's when dragging for an inital size
 let dragging = false;
@@ -661,12 +662,12 @@ export function saveBlockStates(canvas, x, y) {
     if (getSelectedObject(canvas) === null) {
         selectedObject = findIntersected(x, y);
     }
-    if (selectedObject !== null) {
+    if (selectedCanvasObject !== null) {
         blockBeenSelected = true;
 
         //console.log("Block States Have been Saved");
-        past_location = [selectedObject.x, selectedObject.y];
-        past_size = [selectedObject.width, selectedObject.height];
+        past_location = [selectedCanvasObject.x, selectedCanvasObject.y];
+        past_size = [selectedCanvasObject.width, selectedCanvasObject.height];
     }
 }
 
@@ -675,9 +676,9 @@ export function setArrowType(type) {
 }
 
 //make sure boxes don't collide
-export function checkCollision(canvas, x, y) {
+export function checkCollision(canvasObject) {
     //console.log("Collision Tests:");
-    let object = selectedObject;
+    let object = canvasObject
     let CollideCount = 0;
     //console.log(past_size);
     // for loop to check all boxes in the list
@@ -691,7 +692,6 @@ export function checkCollision(canvas, x, y) {
                 // error of 10 pixels for item's height
                 else if ((object.y > (item.y + item.height + 10)) || (object.x > (item.x + item.width))
                     || (item.x > (object.x + object.width)) || (item.y > (object.y + object.height + 10))) {
-                    //console.log("NoCollide");
                 }
                 else {
                     // revert to past stored location
