@@ -7,6 +7,8 @@ import { Tool } from './LeftMenu';
 let selectMultiple = false;
 let selectDown = false;
 let savedObjects = [];
+export let selectedCanvasObject = null;
+
 
 export class Canvas extends React.Component {
     constructor(props) {
@@ -134,6 +136,7 @@ export class Canvas extends React.Component {
         // If it was a left click
         if (e.button === 0 && !selectMultiple) {
             let intersection = canvasDraw.findIntersected(x, y);
+            selectedCanvasObject = intersection
             // check if there's an object
             if (intersection !== null) {
                 //if object is a box, move the object
@@ -249,7 +252,7 @@ export class Canvas extends React.Component {
 
         }
 		if (canvasDraw.blockBeenSelected === true){
-			canvasDraw.checkCollision(canvas, x, y);
+			canvasDraw.checkCollision(selectedCanvasObject);
 		}
 		
     };

@@ -215,14 +215,18 @@ export function handleDeleteFolder(selectedRenderKey){ // changing the deleting 
 function deleteFolderChildren(selectedFolder){ // function for deleting all the children of a folder.
     let folderChildren = selectedFolder.children;
     for (let i = 0; i < folderChildren.length; i++){
-        if (folderChildren.type === "Folder"){
+        if (folderChildren[i].type === "Folder"){
             let selectedRenderKey = folderChildren[i].renderKey;
             handleDeleteFolder(selectedRenderKey);
 
         }
-        else if (folderChildren.type === "Model"){
+        else if (folderChildren[i].type === "Model"){
             let selectedModelKey = folderChildren[i].modelKey;
             handleDeleteModel(selectedModelKey);
+        }
+        else if (folderChildren[i].type === "treeVertex"){
+            let selectedUUID = folderChildren[i].semanticIdentity.UUID;
+            handleDeleteVertex(selectedUUID);
         }
     }
 }
