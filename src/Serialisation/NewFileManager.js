@@ -1,4 +1,4 @@
-import {currentObjects, drawAll, getCurrentModel, getCurrentRenderKey, getTotalModels, getTotalRenderKeys, 
+import {addObject, currentObjects, drawAll, getCurrentModel, getCurrentObjects, getCurrentRenderKey, getTotalModels, getTotalRenderKeys, 
     setCurrentObjects, setNewModel, setNewRenderKey, setTotalModelKeys, setTotalRenderKey, updateArrows} from "../UIElements/CanvasDraw"
 
 import {setTranslationColumns, translationColumns} from "../UIElements/SemanticDomainEditor"
@@ -47,7 +47,7 @@ export function getSaveData() {
         treeVertex: vertexData,
         dTreeVertex: decoyVertexData,
         graph: modelObjects,
-        dGrraph: decoyModelObjects,
+        dGraph: decoyModelObjects,
         renderKeys: totalRenderKeys,
         modelKeys: totalModels,
         currentKey: currentKey,
@@ -151,13 +151,11 @@ export function load(jsonString){
 
 }
 
+//Import a package or save file into root
 export function importLoad(jsonString){
     //load the file
     if (jsonString == null) return;
     let saveData = JSON.parse(jsonString);
-    //prompt user to name the new package
-
-
 
     //Models and folders,treevertex's need to be given new keys
     //arrows and vertex's will need new keys to match their updated parent keys
@@ -166,7 +164,7 @@ export function importLoad(jsonString){
     let renderKeys = getTotalRenderKeys();
     let modelKeys = getTotalModels();
 
-    console.log(saveData)
+
 
     //assign a new key for each package/vertex
     for(let folder of saveData.packages){
@@ -181,7 +179,7 @@ export function importLoad(jsonString){
     }
     for(let model of saveData.graph){
         modelKeys++;
-        let modelKey = {originalModeltKey: model.modelKey, originalKey: model.renderKey, newModelKey: modelKeys, newKey: 0}
+        let modelKey = {originalModelKey: model.modelKey, originalKey: model.renderKey, newModelKey: modelKeys, newKey: 0}
         modelKeyMap.push(modelKey)
     }
 
@@ -197,20 +195,21 @@ export function importLoad(jsonString){
     for(let models of modelKeyMap){
         for(let packages of folderKeyMap){
             if(models.originalKey === packages.originalKey){
-                models.newKey = packages.originalKey;
+                models.newKey = packages.newKey;
             }
         }
     }
 
-    console.log(folderKeyMap)
-    console.log(modelKeyMap)
 
 
-    //assign the new keys to the vertex's model's and packages
+    //assign the new keys to the vertex's, model's and packages
 
     for(let i = 0; i < saveData.packages.length; i++){
         saveData.packages[i].renderKey = folderKeyMap[i].newKey;
         saveData.packages[i].parentRenderKey = folderKeyMap[i].newParentKey;
+
+        saveData.packages[i].data.renderKey = folderKeyMap[i].newKey;
+        saveData.packages[i].data.parentRenderKey = folderKeyMap[i].newParentKey;
 
         saveData.dPackages[i].renderKey = folderKeyMap[i].newKey;
         saveData.dPackages[i].parentRenderKey = folderKeyMap[i].newParentKey;
@@ -220,23 +219,134 @@ export function importLoad(jsonString){
         saveData.treeVertex[i - saveData.packages.length].renderKey = folderKeyMap[i].newKey;
         saveData.treeVertex[i - saveData.packages.length].parentRenderKey = folderKeyMap[i].newParentKey;
 
+        saveData.treeVertex[i - saveData.packages.length].data.renderKey = folderKeyMap[i].newKey;
+        saveData.treeVertex[i - saveData.packages.length].data.parentRenderKey = folderKeyMap[i].newParentKey;
+
         saveData.dTreeVertex[i - saveData.packages.length].renderKey = folderKeyMap[i].newKey;
         saveData.dTreeVertex[i - saveData.packages.length].parentRenderKey = folderKeyMap[i].newParentKey;
     }
 
+    for(let i =0; i< saveData.graph.length; i++){
+        saveData.graph[i].renderKey = modelKeyMap[i].newKey
+        saveData.graph[i].modelKey = modelKeyMap[i].newModelKey
+
+        saveData.graph[i].data.renderKey = modelKeyMap[i].newKey
+        saveData.graph[i].data.modelKey = modelKeyMap[i].newModelKey
+
+        saveData.dGraph[i].renderKey = modelKeyMap[i].newKey
+        saveData.dGraph[i].modelKey = modelKeyMap[i].newModelKey
+    }
+
     //assign the new keys to vertex's and arrows
+    for(let packages of folderKeyMap){
+        for(let vertex of saveData.vertices){
+            if(vertex.vertexRenderKey === packages.originalKey){
+                vertex.vertexRenderKey = packages.newKey;
+            }
+        }
 
+        for(let arrow of saveData.arrows){
+            if(arrow.arrowRenderKey === packages.originalKey){
+                arrow.arrowRenderKey = packages.newKey;
+            }
+        }
+            
+    }
+
+    for(let models of modelKeyMap){
+        for(let vertex of saveData.vertices){
+            if(vertex.vertexModelKey === models.originalModelKey){
+                vertex.vertexModelKey = models.newModelKey;
+            }
+        }
+
+        for(let arrow of saveData.arrows){
+            if(arrow.arrowModelKey === models.originalModelKey){
+                arrow.arrowModelKey = models.newModelKey;
+            }
+        }
+    }
     
-
+    console.log(saveData.arrows)
 
 
 
     //recreat vertex/arrow objects as in load()
 
+    var newVertices = [];
+    var newArrows = [];
+    for(let vert of saveData.vertices){
+        vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
+            vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
+        //atm its a bit messy as vert constructor doesnt use destructuring so we can specifiy options, when it does this can be changed
+        vert = new Vertex ({newConstructor: 1,loadedVertex: vert})
+        newVertices.push(vert)
+    }
+
+    function remakeSemantic(semantic){
+        return new SemanticIdentity(semantic.name, semantic.description, semantic.abbreviation, semantic.shortAbbreviation, semantic.UUID, semantic.translations);
+    }
+
+    function remakeCardinality(cardinality){
+        return new Cardinality(cardinality.numLowerBound, cardinality.numUpperBound, cardinality.attachedToUUID, cardinality.isVisible, remakeSemantic(cardinality.semanticIdentity));
+    }
+ 
+    function remakeEdge(edge){
+        return new EdgeEnd(edge.attachedToUUID, edge.headType, remakeCardinality(edge.cardinality), edge.label, remakeSemantic(edge.semanticIdentity));
+    }
+
+    function remakeArrow(arrow){
+        var newArrow = new Arrow(newVertices, arrow.pathData, arrow.edgeType, remakeSemantic(arrow.semanticIdentity));
+            newArrow.setRenderKey(arrow.arrowRenderKey)
+            newArrow.setModelKey(arrow.arrowModelKey)
+            newArrow.sourceEdgeEnd = remakeEdge(arrow.sourceEdgeEnd);
+            newArrow.destEdgeEnd = remakeEdge(arrow.destEdgeEnd);
+            return newArrow;
+    }
+
+    for(let arrow of saveData.arrows){
+        arrow = remakeArrow(arrow)
+        newArrows.push(arrow)
+    }
+
+
     //models,folders,tree verts need to be added to current data
+
+    setFolderData(getFolderData().concat(saveData.packages))
+    setDecoyFolderData(getDecoyFolderData().concat(saveData.dPackages))
+
+    setVertexData(getVertexData().concat(saveData.treeVertex))
+    setDecoyVertexData(getDecoyVertexData().concat(saveData.dTreeVertex))
+
+    setModelData(getModelData().concat(saveData.graph)) 
+    setDecoyModelData(getDecoyModelData().concat(saveData.dGraph))
+
+
     //vertex's and arrows add to current data
-    //set the new currentkeys and currentmodels
+
+    console.log(getCurrentObjects())
+    console.log(newVertices)
+
+    for(let vertex of newVertices){
+        addObject(vertex)
+    }
+    for(let arrow of newArrows){
+        addObject(arrow)
+    }
+
+    //reset current keys to reload a few things eg. turn any loaded vertices invisible is they were present in save
+
+    setSelectedFolderKey(getSelectedFolderKey())
+    setNewRenderKey(getCurrentRenderKey())
+    setNewModel(getCurrentModel())
+    //set the new latest index's
+    setTotalRenderKey(renderKeys)
+    setTotalModelKeys(modelKeys)
     //update arrows drawall
+    updateArrows()
+    drawAll()
+
+    console.log(getCurrentObjects())
      
 
  return;

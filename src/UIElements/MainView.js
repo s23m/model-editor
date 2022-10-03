@@ -292,7 +292,6 @@ export class MainProgramClass extends React.Component {
                 let file = document.getElementById('File-Select-Import').files[0];
                 let reader = new FileReader();
                 reader.readAsText(file);
-                console.log(reader.result)
                 reader.onload = function () {
                     let text = reader.result
                     importLoad(text)
