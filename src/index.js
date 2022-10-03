@@ -9,7 +9,6 @@ import App from './App';
 import * as ServiceWorker from './ServiceWorker';
 import {MainProgramClass} from './UIElements/MainView';
 import {assignElement} from "./UIElements/CanvasDraw";
-import {getSaveData} from "./Serialisation/FileManager";
 
 
 ReactDOM.render(

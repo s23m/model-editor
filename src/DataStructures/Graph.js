@@ -2,8 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { CollectionsBookmarkOutlined, ContactSupportOutlined } from "@material-ui/icons";
-import { currentObjects, getModelName, createVertex } from "../UIElements/CanvasDraw";
+import { currentObjects,} from "../UIElements/CanvasDraw";
 import {SemanticIdentity} from "./SemanticIdentity";
 
 
@@ -15,8 +14,8 @@ export class VertexNode {
         this.typeName = "VertexNode";
 
         //The path of this particular vertex node for displaying on the tree view element
-        this.cleanObjectPath = (getModelName(),"/","Vertices")
-        this.vertexObjectPath = (getModelName(),"/","Vertices")
+        this.cleanObjectPath = ("Root","/","Vertices")
+        this.vertexObjectPath = ("Root","/","Vertices")
     }
 
     add(node) {

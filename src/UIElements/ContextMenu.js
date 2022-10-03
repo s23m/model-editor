@@ -1,15 +1,11 @@
-import { ClickAwayListener } from '@material-ui/core';
 import React from 'react';
-import {getFolderData,setFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel, getModelNameFromKey, folderData, modelObjects, handleAddFolder, handleDeleteFolder, handleDeleteModel, handleRenameModel} from "./ContainmentTree"
-import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects,setCurrentObjects,
-    linkContainer,updateLinkedContainers, currentObjects, drawAll, updateVertex} from "./CanvasDraw";
-import {setLeftMenuToTree} from "./LeftMenu"
-import { ContactsOutlined, LocalConvenienceStoreOutlined } from '@material-ui/icons';
-import {getSemanticIdentity} from "../DataStructures/Vertex"
+import {getFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel, getModelNameFromKey, modelObjects, 
+    handleAddFolder, handleDeleteFolder, handleDeleteModel, handleRenameModel} from "./ContainmentTree"
+import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects,
+    linkContainer, currentObjects, drawAll, updateVertex} from "./CanvasDraw";
 import {handleAddVertex, handleDeleteVertex, getVertexData} from "./ContainmentTree";
 import { createSaveState } from '../Serialisation/NewFileManager';
 let rightClickedItem = "Default"; //Name of the right clicked item where "Default" is a non-object such as empty canvas space
-let rightClickedItemType = "None"
 let rightClickedItemKey = 0; // Identifying key of selected item needed to use relating methods eg. selectedFolderKey, ModelKey,VertexKey.
 let menuType = "Default"; //Which menu type to return based on the selected item and what operations are available to it
 let rightClickedObject; // the canvas object which was right clicked
@@ -18,11 +14,7 @@ let rightClickedObject; // the canvas object which was right clicked
 
 //Right click menu component used to access certain function of program
 export class ContextMenu extends React.Component {
-    constructor(props){ // added the constructer to drag props in from MainView class (setLeftMenuToTree function)
-        super(props);
-        
-    }
-    
+
     
     state = {
         xPos: "0px",

@@ -5,7 +5,6 @@
 import React from 'react';
 import '../App.css';
 import * as canvasDraw from "./CanvasDraw";
-import * as fileManager from '../Serialisation/FileManager';
 import {DropdownButton,Dropdown} from "react-bootstrap";
 
 import {Canvas} from './Canvas';
@@ -16,24 +15,19 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex, getModelNameFromKey, getFolderData} from './ContainmentTree';
+import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex} from './ContainmentTree';
 import { handleDeleteFolder } from './ContainmentTree';
 
 import { showVertexPath } from './ContainmentTree';
 import { someVertexPath } from './ContainmentTree';
 import { ContextMenu } from './ContextMenu'
-import {save, load, importLoad, undo, redo, getsaveStates} from '../Serialisation/NewFileManager'
+import {save, load, importLoad, undo, redo} from '../Serialisation/NewFileManager'
 
-import iconNewFolder from "../Resources/create_folder.svg"
-import iconDeleteFolder from "../Resources/delete_folder.svg"
-import iconEditFolder from  "../Resources/changeFolderName.svg"
-import iconNewModel from "../Resources/NewModel.svg"
-import iconDeleteModel from "../Resources/DeleteModel.svg"
-import iconEditModel from "../Resources/editModel.svg"
-import iconaddVertex from "../Resources/createVertex.svg"
+
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
-import { Undo } from '@material-ui/icons';
+import iconHelp from "../Resources/help.svg"
+
 
 
 export const version = 1;
@@ -313,10 +307,7 @@ export class MainProgramClass extends React.Component {
         return 0;
     };
 
-    async updateTree(){ // have to use this weird function to update tree when swapping back from semantic editor.
-        await this.setLeftMenuToTree(); 
-        this.setLeftMenuToTree();
-    }
+
 
     // Used to enable/disable the semantic domain editor
     toggleSemanticDomainState = () => {
@@ -324,9 +315,7 @@ export class MainProgramClass extends React.Component {
             this.semanticTableEnabled = false;
             canvasDraw.drawAll();
             this.setState(this.state);
-            this.updateTree()
             console.log("Semantic Domain disabled");
-            
         } else {
             this.semanticTableEnabled = true;
             resetRows();
@@ -396,12 +385,12 @@ export class MainProgramClass extends React.Component {
 
                     </DropdownButton>
 
-                    <div className="TopBar" onClick={() =>  this.toggleSemanticDomainState()}>
+                    <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>
                         Semantic Editor
                     </div>
 
-                    {/*<input className="TopBarSearch" id="ModelName" type="text" name="modelName" placeholder="Graph Name" onChange={(e) => this.setModelName(e)} />*/}
-                    <input className="SelectedModel" id="SelectedModel" type="text" name="selectedModel" readonly='readonly' />
+                    {/*<input className="TopBarSearch" id="ModelName" type="text" name="modelName" placeholder="Graph NOme" onChange={(e) => this.setModelName(e)} />*/}
+                    <input className="SelectedModel" id="SelectedModel" type="text" name="selectedModel" readOnly='readonly' />
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
                     {/*<input className="TopBarSearch" id="FolderName" type="text" name="folderName" placeholder="New Container/Model" onChange={(e) => this.updateFolderName(e)} />*/}
@@ -420,6 +409,13 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.mainUndo()} ><img src={iconUndo} alt="Delete Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.mainRedo()} ><img src={iconRedo} alt="Add Container" /></div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarSpace">&nbsp;</div>
+                    <div className="TopBarIcon" ><a href="UserManual.pdf"><img src={iconHelp} alt="Help"/></a></div>
                     
 
                     {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>
