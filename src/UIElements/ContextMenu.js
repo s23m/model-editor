@@ -228,6 +228,7 @@ export class ContextMenu extends React.Component {
             else if(menuType === "RenameVertex"){
                 let newName = document.getElementById("RenameVertexBox").value
                 rightClickedObject.text = newName;
+                rightClickedObject.data.text = newName;
                 console.log("menu change")
                 try{
                 this.props.setLeftMenuToTree();

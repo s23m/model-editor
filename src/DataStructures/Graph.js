@@ -512,7 +512,7 @@ export class Graph {
         } else { // else its a copy of the original
             //console.log("a copy vertex was attempted")
             
-            let newTitle = ":: " + vertex.title
+            let newTitle = " :: " + vertex.title
             vertex.title = newTitle
             vertex.originalVertex = false;
             /* For now im going to give the copies their own unique semantic UUID, as a lot of stuff in the program hinges off of vertex items

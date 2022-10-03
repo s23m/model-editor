@@ -252,6 +252,7 @@ export function handleRenameFolder(newName,rKey){
         for (let i = 0; i < folderData.length; i++){
             if (folderData[i].renderKey === rKey){
                 folderData[i].text = newName + " 📁";
+                folderData[i].data.text = newName + " 📁";
                 break;
             }
         }
@@ -402,6 +403,7 @@ export function handleRenameModel(newName,mKey){
     for (let i = 0; i < modelObjects.length; i++){
         if (modelObjects[i].modelKey === mKey){
             modelObjects[i].text = newName + " 📈";
+            modelObjects[i].data.text = newName + " 📈";
             break;
         }
     }
@@ -668,7 +670,7 @@ export class ContainmentTree extends React.Component {
 
         // Try catch used to catch undefined data type eg. root
         try{
-            console.log(data.node.data)
+            console.log(data.node)
 
             if(data.node.data.type === "Folder" || data.node.data.type === "treeVertex" ){
                 setSelectedFolderKey(data.node.data.renderKey)
