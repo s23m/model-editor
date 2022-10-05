@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8dd5eb120a885896cd2dfc0d3ab30115",
+    "revision": "29aba369e3a398ece54c6082706425e8",
     "url": "/lclb/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/lclb/static/css/2.ee344228.chunk.css"
   },
   {
-    "revision": "7e0b4417f9f2f8ff91b2",
+    "revision": "3671e52b6a4e1c19f4b4",
     "url": "/lclb/static/css/main.147a4f1e.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/lclb/static/js/2.99b418f3.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "7e0b4417f9f2f8ff91b2",
-    "url": "/lclb/static/js/main.6491dd04.chunk.js"
+    "revision": "3671e52b6a4e1c19f4b4",
+    "url": "/lclb/static/js/main.df8642eb.chunk.js"
   },
   {
     "revision": "ad7acf11104de4a0b644",
@@ -32,8 +32,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/lclb/static/media/edge.09e9d9dc.svg"
   },
   {
-    "revision": "30e05672f403958dd1f467af904c6880",
-    "url": "/lclb/static/media/help.30e05672.svg"
+    "revision": "80a7660bf9c2a8c3b3f48a7f5c0981ce",
+    "url": "/lclb/static/media/help.80a7660b.svg"
   },
   {
     "revision": "a80ea341c8a60e8d245b39118d4a40f1",
