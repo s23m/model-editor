@@ -9,7 +9,9 @@ import {Cardinality} from "../DataStructures/Cardinality";
 import {EdgeEnd} from "../DataStructures/EdgeEnd";
 import {Graph} from "../DataStructures/Graph";
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity";
-import { getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderData, getModelData, getSelectedFolderKey, getTreeData, getVertexData, setDecoyFolderData, setDecoyModelData, setDecoyVertexData, setFolderData, setModelData, setSelectedFolderKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
+import { getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderData, getModelData, 
+    getSelectedFolderKey, getTreeData, getVertexData, setDecoyFolderData, setDecoyModelData, setDecoyVertexData, 
+    setFolderData, setModelData, setSelectedFolderKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
 
 
 //Get all the data that needs to be saved, to restore a session
@@ -60,6 +62,7 @@ export function getSaveData() {
     };
     return saveData;
 }
+
 
 //Create the JSON file with the save data
 export function save(){
