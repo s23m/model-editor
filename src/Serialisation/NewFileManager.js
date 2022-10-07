@@ -159,11 +159,14 @@ export function importLoad(jsonString){
     //load the file
     if (jsonString == null) return;
     let saveData = JSON.parse(jsonString);
+    console.log("saveData")
+    console.log(saveData)
 
     //Models and folders,treevertex's need to be given new keys
     //arrows and vertex's will need new keys to match their updated parent keys
     let folderKeyMap = [];
     let modelKeyMap = [];
+    let arrowUpdated = []; // list of arrows that have already updated. Used to stop arrows updating multiple times due to newkeys overlapping with oldkey numbers.
     let renderKeys = getTotalRenderKeys();
     let modelKeys = getTotalModels();
 
@@ -242,6 +245,9 @@ export function importLoad(jsonString){
 
     //assign the new keys to vertex's and arrows
     for(let packages of folderKeyMap){
+        console.log(folderKeyMap)
+        console.log("folderKeyMap")
+        
         for(let vertex of saveData.vertices){
             if(vertex.vertexRenderKey === packages.originalKey){
                 vertex.vertexRenderKey = packages.newKey;
@@ -249,8 +255,13 @@ export function importLoad(jsonString){
         }
 
         for(let arrow of saveData.arrows){
-            if(arrow.arrowRenderKey === packages.originalKey){
+           
+
+            if(arrow.arrowRenderKey === packages.originalKey && !arrowUpdated.includes(arrow)){
+                console.log("saveData.arrows")
+                console.log(saveData.arrows)
                 arrow.arrowRenderKey = packages.newKey;
+                arrowUpdated.push(arrow);
             }
         }
             

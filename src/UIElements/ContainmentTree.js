@@ -560,14 +560,13 @@ export class ContainmentTree extends React.Component {
 
         
         if (initialFolderAdded === false){
-            handleAddFolder("Package");
-            //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
-            handleAddFolder("Package 2")
+            handleAddFolder("Package"); //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
             handleAddModel("Graph",1) 
-            handleAddModel("Graph 2",2)
             handleAddFolder("Subfolder",1)
             handleAddVertex("Vertex",1)
-            handleAddVertex("Vertex 2",2)
+            handleAddFolder("Package 2")
+            handleAddModel("Graph 2",4)
+            handleAddVertex("Vertex 2",4)
             setNewRenderKey(1);
             setNewModel(1);
             setSelectedFolderKey(1);
