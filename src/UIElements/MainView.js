@@ -1,28 +1,17 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import React from 'react';
 import '../App.css';
 import * as canvasDraw from "./CanvasDraw";
-import {DropdownButton,Dropdown} from "react-bootstrap";
-
-import {Canvas} from './Canvas';
-import {LeftMenu, LeftMenuType, StringToLeftMenuType, Tool} from './LeftMenu';
-
-// Semantic domain editor
+import { DropdownButton, Dropdown } from "react-bootstrap";
+import { Canvas } from './Canvas';
+import { LeftMenu, LeftMenuType, StringToLeftMenuType, Tool } from './LeftMenu';
 import SemanticDomainEditor from "./SemanticDomainEditor";
-import {resetRows} from "./SemanticDomainEditor";
-
-//Adding folders to the tree view
-import {handleAddPackage, handleDeleteGraph, handleAddGraph,handleRenameFolder, getSelectedPackageKey, handleRenameGraph, handleAddVertex} from './ContainmentTree';
-import { handleDeletePackage } from './ContainmentTree';
-
-
+import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
-import {save, load, importLoad, undo, redo} from '../Serialisation/NewFileManager'
-
-
+import { save, load, importLoad, undo, redo } from '../Serialisation/NewFileManager'
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
 import iconHelp from "../Resources/help.svg"
@@ -30,10 +19,7 @@ import iconHelp from "../Resources/help.svg"
 
 
 export const version = 1;
-
 export const serverURL = 'http://localhost:8080'
-
-let folderName = "Unnamed Package";
 
 
 export class MainProgramClass extends React.Component {
@@ -60,133 +46,56 @@ export class MainProgramClass extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         let div = document.getElementById(prevState.SelectedTool);
-
         if (div !== null) {
             div.style.backgroundColor = "#FFFFFF";
         }
-
         div = document.getElementById(this.state.SelectedTool);
-
         div.style.backgroundColor = "#CFFFFF";
-
-        //console.log("Mode set to: " + this.state.SelectedTool);
-
-
-
-        
-        
-    }
-
-
-
-    updateFolderName = () => {
-        folderName = document.getElementById("FolderName").value
-    }
-
-    //The following add/delete functions Now reload the treeview on add/deleteing folders and models - Lachlan
-    //The async function is due to javascript executing SetLeftMenuToTree without waiting for handleadd/delete to manipulate data for the new tree - LAchlan
-    addFolder = () => {
-        //handleAddFolder({modelName:document.getElementById("FolderName").value});
-        //ContainmentTree.state = ContainmentTree.state;
-        //LeftMenu.state = LeftMenu.state;
-        (async() => {
-        //Your IDE might tell you this and following await's do nothing, but it is neccesary to stop setLeftMenuToTree fireing early - Lachlan
-        await handleAddPackage(folderName,getSelectedPackageKey());
-        this.setLeftMenuToTree();
-        })();
-        
-    }
-
-    deleteFolder = () => {
-        (async() => {
-            await handleDeletePackage(getSelectedPackageKey());
-            this.setLeftMenuToTree();
-            })();
-    }
-
-    editFolderName = () => {
-        (async() => {
-            await handleRenameFolder(folderName,getSelectedPackageKey());
-            this.setLeftMenuToTree();
-        })();
-    }
-
-    addVertex = () =>{
-        (async() => {
-            await handleAddVertex(folderName,getSelectedPackageKey());
-            this.setLeftMenuToTree();
-        })();
-    }
-
-    addModel = () => {
-        (async() => {
-            await handleAddGraph(folderName);
-            this.setLeftMenuToTree();
-            })();
-    }
-
-    deleteModel = () => {
-        
-        (async() => {
-            await handleDeleteGraph(canvasDraw.getCurrentModel());
-            this.setLeftMenuToTree();
-            })();
-    }
-
-    editModelName = () => {
-        (async() => {
-            await handleRenameGraph(folderName,canvasDraw.getCurrentModel());
-            this.setLeftMenuToTree();
-        })();
     }
 
     zoom = (type) => {
         let cZoom = this.state.zoomLevel;
         if (type === "+") {
             if (this.state.zoomLevel < 500) {
-                this.setState({zoomLevel:cZoom += 25});
+                this.setState({ zoomLevel: cZoom += 25 });
                 canvasDraw.setZoom(cZoom);
             }
         } else if (type === "-") {
             if (this.state.zoomLevel > 100) {
-                this.setState({zoomLevel:cZoom -= 25});
+                this.setState({ zoomLevel: cZoom -= 25 });
                 canvasDraw.setZoom(cZoom);
             }
-
         } else {
             console.log("Invalid Zoom Type")
         }
     };
 
-
     setMode(mode) {
 
-        if(mode === Tool.Visibility || mode === Tool.Edge || mode === Tool.Specialisation){
-            this.setState({drawMode: "Arrow"})
-        }else if (mode === Tool.Vertex){
-            this.setState({drawMode: "Vertex"})
-        }else if (mode === Tool.Select){
-            this.setState({drawMode: "Select"})
+        if (mode === Tool.Visibility || mode === Tool.Edge || mode === Tool.Specialisation) {
+            this.setState({ drawMode: "Arrow" })
+        } else if (mode === Tool.Vertex) {
+            this.setState({ drawMode: "Vertex" })
+        } else if (mode === Tool.Select) {
+            this.setState({ drawMode: "Select" })
         } else if (mode === Tool.Artifact) {
             this.setState({ drawMode: "Artifact" })
         } else if (mode === Tool.Container) {
             this.setState({ drawMode: "Container" })
         }
 
-        //console.log(Tool[mode]);
-
-        this.setState({SelectedTool: Tool[mode]});
+        this.setState({ SelectedTool: Tool[mode] });
 
         canvasDraw.setArrowType(mode)
-
     };
 
     // chooses which left hand menu to display, based on the selected item
     setLeftMenu(nearestObject, ctrl = false, OP = []) {
-        
-        if (OP !== null){
-            for(let i = 0;i<OP.length;i++){
-                OP[i].setSelected(false); //visually deselects elements
+
+        if (OP !== null) {
+            for (let i = 0; i < OP.length; i++) {
+                //visually deselects elements
+                OP[i].setSelected(false);
             }
         }
         // checks if that specific object was clicked
@@ -194,7 +103,7 @@ export class MainProgramClass extends React.Component {
         // i.e. determines if objects are selected or not
         if (this.state.selectedObject !== null && ctrl === false) {
             this.state.selectedObject.setSelected(false);
-            
+
         }
 
         // check if the nearest object was too far away or didnt exist
@@ -203,7 +112,6 @@ export class MainProgramClass extends React.Component {
                 menu: LeftMenuType.TreeView,
                 selectedObject: null,
             });
-
         }
 
         // if the selected object has a left menu,
@@ -212,14 +120,11 @@ export class MainProgramClass extends React.Component {
                 menu: nearestObject.typeName,
                 selectedObject: nearestObject
             });
-            //console.log("below should be selectedObject");
-            //console.log(this.state.selectedObject)
             nearestObject.setSelected(true);
         } else {
             if (this.state.selectedObject !== null) {
                 canvasDraw.drawAll();
             }
-
             this.setState({
                 menu: LeftMenuType.TreeView,
                 selectedObject: null
@@ -229,74 +134,65 @@ export class MainProgramClass extends React.Component {
     }
 
     //Function for setting left menu to tree
-    //This function serves as a direct way to "statechange" the treeview menu - Lachlan
-    setLeftMenuToTree(){
-        
+    //This function serves as a direct way to "setState" the treeview menu
+    setLeftMenuToTree() {
         if (this.state.selectedObject !== null) {
-            
             canvasDraw.drawAll();
         }
         this.setState({
-            
             menu: LeftMenuType.None,
         });
         this.setState({
             menu: LeftMenuType.TreeView,
             selectedObject: null
-            
         });
-        console.log("set left menu To Tree enacted")
-        
     }
 
-    setModelName = () => {
-        this.setState({modelName:document.getElementById("ModelName").value})
-    };
-
-    // Code for file uploading
-    // If you know how to move it elsewhere to clean up this file
-    // Please move it to src/DataStructures/FileManager.js or similar
-    showFile = () => {
+    /**
+     * Function For Loading or Importing a File
+     * @param {string} loadOrImport "Load" / "Import"
+     */
+    loadImport(loadOrImport) {
         let refreshTree = this.setLeftMenuToTree //This is used so we can point to setLeftMenuToTree within the reader object
         if (window.File && window.FileReader && window.FileList && window.Blob) {
             try {
-                let file = document.querySelector('input[type=file]').files[0];
+                let file = null;
+                if (loadOrImport === "Load") {
+                    file = document.getElementById("File-Select").files[0];
+                }
+                else if (loadOrImport === "Import") {
+                    file = document.getElementById('File-Select-Import').files[0];
+                }
                 let reader = new FileReader();
                 reader.readAsText(file);
-                console.log(reader.result)
                 reader.onload = function () {
                     let text = reader.result
-                    load(text)
+                    if (loadOrImport === "Load") {
+                        load(text)
+                    }
+                    else if (loadOrImport === "Import") {
+                        importLoad(text)
+                    }
                     refreshTree();
                 }
-            }catch(e){
-                alert(e +" did you select a file?")
+            } catch (e) {
+                alert(e + " did you select a file?")
             }
         } else {
             alert("Your browser is too old to support HTML5 File API");
         }
         return 0;
-    };
+    }
 
+    // Method For Loading a File
+    showFile = () => {
+        this.loadImport("Load");
+    }
+
+
+    //Method For Importing a File
     importFile = () => {
-        let refreshTree = this.setLeftMenuToTree //make setLeftMenuToTree local to the block so the reader can use it
-        if (window.File && window.FileReader && window.FileList && window.Blob) {
-            try {
-                let file = document.getElementById('File-Select-Import').files[0];
-                let reader = new FileReader();
-                reader.readAsText(file);
-                reader.onload = function () {
-                    let text = reader.result
-                    importLoad(text)
-                    refreshTree();
-                }
-            }catch(e){
-                alert(e +" did you select a file?")
-            }
-        } else {
-            alert("Your browser is too old to support HTML5 File API");
-        }
-        return 0;
+        this.loadImport("Import");
     };
 
 
@@ -316,13 +212,13 @@ export class MainProgramClass extends React.Component {
         }
     };
 
-    async mainUndo(){
+    async mainUndo() {
         await undo();
         this.setLeftMenuToTree();
 
     }
 
-    async mainRedo(){
+    async mainRedo() {
         await redo();
         this.setLeftMenuToTree();
     }
@@ -331,7 +227,7 @@ export class MainProgramClass extends React.Component {
 
     render() {
         let GUI =
-        <><ContextMenu setLeftMenuToTree={this.setLeftMenuToTree} /><div className="Program">
+            <><ContextMenu setLeftMenuToTree={this.setLeftMenuToTree} /><div className="Program">
                 <div className={this.semanticTableEnabled ? "SemanticDomain" : "hidden"}>
                     <SemanticDomainEditor />
                 </div>
@@ -352,20 +248,15 @@ export class MainProgramClass extends React.Component {
                             </div>
                         </Dropdown.Item>
 
-
                         <div className="TopBar">
                             <label>Load</label>
                             <input type="file" id="File-Select" onChange={this.showFile} />
                         </div>
 
-
-
                         <div className="TopBar">
                             <label>Import</label>
                             <input type="file" id="File-Select-Import" onChange={this.importFile} />
                         </div>
-
-
 
                         <Dropdown.Item>
                             <div className="TopBar">
@@ -373,30 +264,16 @@ export class MainProgramClass extends React.Component {
                             </div>
                         </Dropdown.Item>
 
-                        
-
                     </DropdownButton>
 
-                    <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>
-                        Semantic Editor
-                    </div>
+                    <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>Semantic Editor</div>
 
-                    {/*<input className="TopBarSearch" id="ModelName" type="text" name="modelName" placeholder="Graph NOme" onChange={(e) => this.setModelName(e)} />*/}
+
                     <input className="SelectedModel" id="SelectedModel" type="text" name="selectedModel" readOnly='readonly' />
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
-                    {/*<input className="TopBarSearch" id="FolderName" type="text" name="folderName" placeholder="New Container/Model" onChange={(e) => this.updateFolderName(e)} />*/}
-                    {/*<div className="TopBarIcon">&nbsp;</div>*/}
-                    {/*The + and - are backwards on purpose here*/}
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>
-
-                    {/*<div className="TopBarLabel"> {this.state.zoomLevel}% </div>*/}
-
                     <div className="TopBarIcon" onClick={() => this.zoom('+')}> + </div>
-
-
-                    {/*<div className="TopBarIdentifier">Rows:&nbsp;</div>*/}
-                    {/*<input className="TopBarSelector" style={{"border-left": "0px"}} type="number" id = "canvasRows" defaultValue="70" min="0" max="105" onChange={() => canvasDraw.updateRows()}/>*/}
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.mainUndo()} ><img src={iconUndo} alt="Delete Container" /></div>
@@ -407,26 +284,13 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarIcon" ><a href="UserManual.pdf"><img src={iconHelp} alt="Help"/></a></div>
-                    
-
-                    {/*<div className="TopBarIcon" onClick={() => this.addFolder()}><img src={iconNewFolder} alt="Add Container" /></div>
-                    <div className="TopBarIcon" onClick={() => this.deleteFolder()}><img src={iconDeleteFolder} alt="Delete Container" /></div>
-                    <div className="TopBarIcon" onClick={() => this.editFolderName()}><img src={iconEditFolder} alt="Edit Container" /></div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarIcon" onClick={() => this.addVertex()}><img src={iconaddVertex} alt="Add Vertex" /></div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarIcon" onClick={() => this.addModel()}><img src={iconNewModel} alt="Add Model" /></div>
-                    <div className="TopBarIcon" onClick={() => this.deleteModel()}><img src={iconDeleteModel} alt="Delete Model" /></div>
-                    <div className="TopBarIcon" onClick={() => this.editModelName()}><img src={iconEditModel} alt="Edit Model" /></div>*/}
-
-
+                    <div className="TopBarIcon" ><a href="UserManual.pdf"><img src={iconHelp} alt="Help" /></a></div>
 
                 </div>
 
-                <div className="LowerPanel" id= "LowerPanel">
+                <div className="LowerPanel" id="LowerPanel">
                     <LeftMenu setMode={this.setMode} setLeftMenu={this.setLeftMenu} mainState={this.state} className="LeftMenus" />
-                    <div className="Canvas" id = "Canvas">
+                    <div className="Canvas" id="Canvas">
                         <Canvas setLeftMenu={this.setLeftMenu} setMode={this.setMode} mainState={this.state} />
                     </div>
                 </div>

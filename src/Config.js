@@ -30,8 +30,8 @@ export function initialObjects(){
     handleAddVertex("Vertex",1)
     handleAddVertex("Vertex 2",1)
     handleAddPackage("Package 2")
-    handleAddGraph("Graph 2",4)
-    handleAddVertex("Vertex 3",4)
+    handleAddGraph("Graph 2",5)
+    handleAddVertex("Vertex 3",5)
     
 
 }
