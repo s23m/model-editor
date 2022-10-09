@@ -388,10 +388,10 @@ export function handleModelRebase(gKey,newkey){
                 for(let object of objects){
                     object.renderkey = newkey;
                     if(object.data.typeName === "Vertex"){
-                    object.data.vertexRenderKey = newkey;
+                    object.data.vertexContainerKey = newkey;
                     }
                     else{
-                    object.data.arrowRenderKey = newkey;
+                    object.data.arrowContainerKey = newkey;
                     }
                 }
             } 
@@ -598,9 +598,9 @@ export class ContainmentTree extends React.Component {
                         this.setState({
                             selectedVertex: vertex
                         });
-                        setNewPackageKey(vertex.vertexRenderKey);
-                        setNewGraphKey(vertex.vertexModelKey); 
-                        setSelectedPackageKey(vertex.vertexRenderKey)
+                        setNewPackageKey(vertex.vertexContainerKey);
+                        setNewGraphKey(vertex.vertexGraphKey); 
+                        setSelectedPackageKey(vertex.vertexContainerKey)
                         
                         for (let item of currentObjects.flatten()){
                             if (item.typeName === "Vertex" && item.getModelKey() === getCurrentGraph()){

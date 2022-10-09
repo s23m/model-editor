@@ -1709,7 +1709,7 @@ export function updateVertex(selectedObject){ // function to update the data of 
 
             //check if This graph vertex is in a different folder to the base vertex, if so make it white and add location
 
-            if(vertex.parentRenderKey === verticies.vertexRenderKey){
+            if(vertex.parentRenderKey === verticies.vertexContainerKey){
                 
             //If the vertex's model is in same folder
             verticies.title = vertex.text.replace(" " + getTreeVertexEmptyIcon(), "")

@@ -40,8 +40,8 @@ export class Vertex {
             this.realHeight = loadedVertex.realHeight;
             this.isAbstract = loadedVertex.isAbstract;
             this.vertexPath = loadedVertex.vertexPath;
-            this.vertexModelKey = loadedVertex.vertexModelKey;
-            this.vertexRenderKey = loadedVertex.vertexRenderKey;
+            this.vertexGraphKey = loadedVertex.vertexGraphKey;
+            this.vertexContainerKey = loadedVertex.vertexContainerKey;
             this.renderedx = loadedVertex.renderedx;
             this.renderedy = loadedVertex.renderedy;
             this.awayx = loadedVertex.awayx;
@@ -98,10 +98,10 @@ export class Vertex {
             this.vertexPath = "";
 
             // USed to decide where to render the object
-            this.vertexModelKey = getCurrentGraph();
+            this.vertexGraphKey = getCurrentGraph();
 
             // Used to decide where the object goes in the tree
-            this.vertexRenderKey = getGraphRenderKey(this.vertexModelKey);
+            this.vertexContainerKey = getGraphRenderKey(this.vertexGraphKey);
 
 
             // Used for moving vertices out of the way when they're not being rendered to prevent invisible overlap
@@ -143,11 +143,11 @@ export class Vertex {
     }
 
     setGraphKey(key){
-        this.vertexModelKey = key;
+        this.vertexGraphKey = key;
     }
 
     getGraphKey(){
-        return this.vertexModelKey;
+        return this.vertexGraphKey;
     }
 
 
@@ -161,12 +161,12 @@ export class Vertex {
 
     // Set the render key. Done in ContainmentTree.js
     setContainerKey(key){
-        this.vertexRenderKey = key;
+        this.vertexContainerKey = key;
     }
 
     // Get the render key. Called in CanvasDraw.js
     getContainerKey(){
-        return this.vertexRenderKey;
+        return this.vertexContainerKey;
     }
 
     setPath(path){

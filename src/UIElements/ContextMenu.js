@@ -547,7 +547,7 @@ export class ContextMenu extends React.Component {
                     }
                 }
 
-                let renderedContainers = matchingContainers.map(item => <div className="CMitem" id={'Nav'+ item.vertex.vertexModelKey + " " + item.vertex.vertexRenderKey} key={'Nav'+ item.vertex.semanticIdentity.UUID + " " + item.vertex.awayx}> {getModelNameFromKey(item.vertex.vertexModelKey)} / {item.vertex.title} </div>)
+                let renderedContainers = matchingContainers.map(item => <div className="CMitem" id={'Nav'+ item.vertex.vertexGraphKey + " " + item.vertex.vertexContainerKey} key={'Nav'+ item.vertex.semanticIdentity.UUID + " " + item.vertex.awayx}> {getModelNameFromKey(item.vertex.vertexGraphKey)} / {item.vertex.title} </div>)
                 let renderedModels = matchingModels.map(item => <div className="CMitem" id={'Nav'+ item.modelKey + " " + item.renderKey} key={'Nav'+ item.semanticIdentity.UUID}> {item.text}</div>)
                 
 
