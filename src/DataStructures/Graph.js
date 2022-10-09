@@ -128,20 +128,13 @@ export class VertexNode {
     }
 
     toTreeViewElement(returnOption, parsedRenderKey) { //added the model key parameter to we can specifiy what models vertexes belong to
-        //console.log("toTreeViewElement called successfully")
+
         //Pretty much everything that's currently on the canvas is searched and then converted into the tree appropriate struct in the below if else statements.
         //Then, the vertices and arrows folder nodes can display their appropriate children.
         let ArrowChildren = [];
         let VertexChildren = [];
-    
 
-        //These are no longer needed due to rework of assigning model children - Lachlan
-        /*
-        let verticies = []; // need to store the 'verticies folder' in an array for it to be iterable in a for loop - cooper
-        let arrows = []; // same issue as vertices not being iterable - Lachlan
-        */
         
-
 
         //Check which folder we're sticking these things into
         if (returnOption === "Vertex Folder"){                  // they had a different spelling for vertex folder :DDDDD - cooper
@@ -150,7 +143,7 @@ export class VertexNode {
                 
 
                 //We onlt want the vertices in this folder
-                if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
+                if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedRenderKey){
                     //Set the append the name of the path to include the vertex name
                     if(currentObjects.flatten()[i].title === ""){
                         this.setVertexTreePath("Unnamed Vertex");
@@ -168,8 +161,8 @@ export class VertexNode {
                         text: currentObjects.flatten()[i].title,
                         children: [],
                         data: currentObjects.flatten()[i],
-                        renderkey: currentObjects.flatten()[i].getRenderKey(),
-                        modelkey: currentObjects.flatten()[i].getModelKey(),
+                        renderkey: currentObjects.flatten()[i].getContainerKey(),
+                        modelkey: currentObjects.flatten()[i].getGraphKey(),
                         state: {opened: false}
                     };
 
@@ -199,30 +192,11 @@ export class VertexNode {
             }
         }
 
-        //No longer necessary due to the rework of assigning model children - Lachlan
-            /*
-            let verticiesObject = { // push the vertex folder into an array of vertex folders - cooper
-                text: "Vertices",
-                children: VertexChildren,
-                data: null,
-                state: { opened: true },
-                type: "Vertex Folder"
-            }
-            verticies.push(verticiesObject)
-            //vertices folder
-            return verticies
-                
-            
-        }
-        */
-
         //same typo as above if statement but for arrows
         else if (returnOption === "Arrow Folder"){ //same thing but arrows folder - Lachlan
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
-                if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
-                    //console.log("arrow key")
-                    //console.log(currentObjects.flatten()[i].getModelKey())
+                if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedRenderKey){
 
                         // Find the source and destination vertex as Keith defined in spec
                         let ourSourceEnd = currentObjects.flatten()[i].pathData[1][1]
@@ -286,8 +260,8 @@ export class VertexNode {
                             text: finalString,
                             children: [],
                             data: currentObjects.flatten()[i],
-                            renderkey: currentObjects.flatten()[i].getRenderKey(),
-                            modelkey: currentObjects.flatten()[i].getModelKey(),
+                            renderkey: currentObjects.flatten()[i].getContainerKey(),
+                            modelkey: currentObjects.flatten()[i].getGraphKey(),
                             state: {opened: false}
                         };
 
@@ -483,7 +457,6 @@ export class Graph {
         for (let object of objects) {
             switch (object.typeName) {
                 case "Vertex":
-                    //console.log("add vert trigs")
                     this.addVertex(object);               
                     break;
                 case "Arrow":
@@ -496,9 +469,7 @@ export class Graph {
                     this.arrows.add(object);
                     break;
                 default:
-                    //console.error("Attempted to add object to unknown type %s to Graph", object.typeName)
-                    //console.log(object)
-                    //console.log(object.constructor)
+
                     break;
             }
         }
@@ -510,7 +481,7 @@ export class Graph {
             vertex = new VertexNode(vertex);
             this.rootVertices.add(vertex);
         } else { // else its a copy of the original
-            //console.log("a copy vertex was attempted")
+
             
             let newTitle = " :: " + vertex.title
             vertex.title = newTitle
@@ -522,10 +493,8 @@ export class Graph {
             let sID = new SemanticIdentity(vertex.title,"","","", undefined ,[]) 
             vertex.semanticIdentity = sID;
             vertex = new VertexNode(vertex);
-
            
             this.rootVertices.add(vertex);
-            console.log(vertex)
         }
     }
 
@@ -605,13 +574,11 @@ export class Graph {
 
     //Removes and object while shifting it's children's position in the tree
     remove(object) {
-        console.log("remove 2 is called")
         //By this point rootVertices doesnt actually contain the vertex we want to delete which makes the isRemoved Logic hard to follow as has returns true when the item is present- Lachlan
-        console.log(this.rootVertices)
         if (object.typeName === "Vertex") {
             let newobject = this.getVertexNode(object);
             let isRemoved = this.rootVertices.has(newobject);
-            console.log(isRemoved)
+
 
 
             //Remove from the root
@@ -619,7 +586,7 @@ export class Graph {
             for (let child of newobject.children) {
                 this.rootVertices.add(child);
             }
-            //console.log("It removes from the root fine")
+
 
             
             //Remove from anywhere deeper in the tree
@@ -628,7 +595,6 @@ export class Graph {
                 if (!traversedVertices.has(vertexNode)) {
                     traversedVertices.add(vertexNode);
                     vertexNode.remove(traversedVertices, newobject);
-                    console.log(isRemoved)
                 }
             }
             

@@ -23,24 +23,13 @@ import Button from 'react-bootstrap/Button'
 
 import { GridExporter } from '@devexpress/dx-react-grid-export';
 
-import {
-    Grid,
-    Table,
-    TableHeaderRow,
-    TableInlineCellEditing,
-    Toolbar,
-    ExportPanel,
-} from '@devexpress/dx-react-grid-material-ui';
+import {Grid,Table,TableHeaderRow,TableInlineCellEditing,Toolbar,ExportPanel} from '@devexpress/dx-react-grid-material-ui';
 
-import {
-    Plugin,
-    Template,
-    TemplatePlaceholder,
-} from '@devexpress/dx-react-core';
+import {Plugin,Template,TemplatePlaceholder} from '@devexpress/dx-react-core';
 
-// In program imports
 import {currentObjects} from "./CanvasDraw";
-import {vertexData} from "./ContainmentTree"
+import {getVertexData} from "./ContainmentTree"
+import { getTreeVertexEmptyIcon } from '../Config';
 
 // Globals
 let rows;
@@ -316,8 +305,8 @@ export function resetRows() {
     let newRows = [];
     let currentObjectsFlattened = currentObjects.flatten();
 
-    for (let i = 0; i < vertexData.length; i++) {
-        newRows.push(getRowForObject(vertexData[i]));
+    for (let i = 0; i < getVertexData().length; i++) {
+        newRows.push(getRowForObject(getVertexData()[i]));
     }
     for(let i = 0; i < currentObjectsFlattened.length; i++){
         // Add Arrow Ends
@@ -364,7 +353,7 @@ function updateChangedObject(object, row) {
         object.semanticIdentity.name = row['name'];
         object.title = row['name']; // update the title of the vertex to be the same as semantic name
         object.semanticIdentity.description = row['description'];
-        object.text = row['name'] + " 🟧"
+        object.text = row['name'] + " " + getTreeVertexEmptyIcon();
         
         // Translations
         for (let translation of translationColumns) {
@@ -390,7 +379,7 @@ function updateChangedObject(object, row) {
 function updateChangedObjects(rows) {
     
     let currentObjectsFlattened = currentObjects.flatten();
-    let treeVert = vertexData
+    let treeVert = getVertexData()
 
     // Iterate through all rows
     for (let i = 0; i < rows.length; i++) {
@@ -398,7 +387,6 @@ function updateChangedObjects(rows) {
         //itterate through tree verts
         for (let j = 0; j < treeVert.length; j++) {
             rows[i] = updateChangedObject(treeVert[j],rows[i])
-            console.log(treeVert[j])
         }
 
         // Iterate through all objects

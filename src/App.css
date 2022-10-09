@@ -294,7 +294,7 @@ input,button{
 }
 
 
-.SelectedModel{
+.SelectedGraph{
     display: flex;
     flex-direction: row;
     background-color: #ffffff;

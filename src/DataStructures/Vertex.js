@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { drawMarker, distanceThreshold, getCurrentModel } from "../UIElements/CanvasDraw";
-import { getModelRenderKey } from "../UIElements/ContainmentTree";
+import { drawMarker, distanceThreshold, getCurrentGraph } from "../UIElements/CanvasDraw";
+import { getGraphRenderKey } from "../UIElements/ContainmentTree";
 import { SemanticIdentity} from "./SemanticIdentity";
 import {serverURL} from "../UIElements/MainView"
 
@@ -40,8 +40,8 @@ export class Vertex {
             this.realHeight = loadedVertex.realHeight;
             this.isAbstract = loadedVertex.isAbstract;
             this.vertexPath = loadedVertex.vertexPath;
-            this.vertexModelKey = loadedVertex.vertexModelKey;
-            this.vertexRenderKey = loadedVertex.vertexRenderKey;
+            this.vertexGraphKey = loadedVertex.vertexGraphKey;
+            this.vertexContainerKey = loadedVertex.vertexContainerKey;
             this.renderedx = loadedVertex.renderedx;
             this.renderedy = loadedVertex.renderedy;
             this.awayx = loadedVertex.awayx;
@@ -98,10 +98,10 @@ export class Vertex {
             this.vertexPath = "";
 
             // USed to decide where to render the object
-            this.vertexModelKey = getCurrentModel();
+            this.vertexGraphKey = getCurrentGraph();
 
             // Used to decide where the object goes in the tree
-            this.vertexRenderKey = getModelRenderKey(this.vertexModelKey);
+            this.vertexContainerKey = getGraphRenderKey(this.vertexGraphKey);
 
 
             // Used for moving vertices out of the way when they're not being rendered to prevent invisible overlap
@@ -142,12 +142,12 @@ export class Vertex {
         
     }
 
-    setModelKey(key){
-        this.vertexModelKey = key;
+    setGraphKey(key){
+        this.vertexGraphKey = key;
     }
 
-    getModelKey(){
-        return this.vertexModelKey;
+    getGraphKey(){
+        return this.vertexGraphKey;
     }
 
 
@@ -160,13 +160,13 @@ export class Vertex {
     }
 
     // Set the render key. Done in ContainmentTree.js
-    setRenderKey(key){
-        this.vertexRenderKey = key;
+    setContainerKey(key){
+        this.vertexContainerKey = key;
     }
 
     // Get the render key. Called in CanvasDraw.js
-    getRenderKey(){
-        return this.vertexRenderKey;
+    getContainerKey(){
+        return this.vertexContainerKey;
     }
 
     setPath(path){
@@ -590,7 +590,6 @@ export class Vertex {
 
         // If can connect to top/bottom
         if (cursorX > this.x && cursorX < this.x+this.width) {
-            //console.log("success");
             let xPercentage = (cursorX-this.x)/this.width;
 
             sides.push([Math.abs(cursorY-(this.y)), xPercentage, 0]);
@@ -599,7 +598,6 @@ export class Vertex {
 
         // If can connect to left/right
         else if (cursorY > this.y && cursorY < this.y+(this.realHeight)) {
-            //console.log("success");
             let yPercentage = (cursorY-this.y)/(this.realHeight);
 
             sides.push([Math.abs(cursorX-(this.x)), 0, yPercentage]);
@@ -618,7 +616,6 @@ export class Vertex {
 
         if(goodSide === false && cursorX > this.x && cursorX < this.x + this.width && cursorY > this.y && cursorY < this.y+this.realHeight){
                 // click was inside the vertex but not in tolerance
-                //console.log("trying things")
                 let yPercentage = (cursorY-this.y)/(this.realHeight);
                 let xPercentage = (cursorX-this.x)/this.width;
 

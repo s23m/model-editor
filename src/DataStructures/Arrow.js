@@ -4,7 +4,7 @@
 
 import { SemanticIdentity } from "./SemanticIdentity";
 import {drawMarker, getDistance,} from "../UIElements/CanvasDraw";
-import {getModelRenderKey} from "../UIElements/ContainmentTree";
+import {getGraphRenderKey} from "../UIElements/ContainmentTree";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
 import {Tool} from "../UIElements/LeftMenu";
@@ -86,29 +86,29 @@ export class Arrow {
         this.destIsAggregation = false;
 
         // Model key for rendering
-        this.arrowModelKey = canvasDraw.getCurrentModel();
+        this.arrowGraphKey = canvasDraw.getCurrentGraph();
 
         // Render key for the arrow for placing in tree
-        this.arrowRenderKey = getModelRenderKey(this.arrowModelKey);
+        this.arrowContainerKey = getGraphRenderKey(this.arrowGraphKey);
     }
 
     // Set the model key
-    setModelKey(key){
-        this.arrowModelKey = key;
+    setGraphKey(key){
+        this.arrowGraphKey = key;
     }
 
-    getModelKey(){
-        return this.arrowModelKey;
+    getGraphKey(){
+        return this.arrowGraphKey;
     }
 
     // Set the render key. This is done in ContainmentTree.js
-    setRenderKey(key){
-        this.arrowRenderKey = key;
+    setContainerKey(key){
+        this.arrowContainerKey = key;
     }
 
     // Return the render key. This is called in CanvasDraw
-    getRenderKey(){
-        return this.arrowRenderKey;
+    getContainerKey(){
+        return this.arrowContainerKey;
     }
 
     toggleNavigable(side){

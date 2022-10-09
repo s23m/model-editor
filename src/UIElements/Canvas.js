@@ -1,7 +1,8 @@
 import React from 'react';
+import { getTreeVertexEmptyIcon, getTreeVertexFullIcon } from '../Config';
 import { createSaveState } from '../Serialisation/NewFileManager';
 import * as canvasDraw from "./CanvasDraw";
-import { getFolderNameFromKey, getVertexData} from './ContainmentTree';
+import { getContainerNameFromKey, getVertexData} from './ContainmentTree';
 import { Tool } from './LeftMenu';
 
 let selectMultiple = false;
@@ -17,7 +18,6 @@ export class Canvas extends React.Component {
 
         this.state = {}
     }
-
 
 
     componentDidMount() {
@@ -56,13 +56,11 @@ export class Canvas extends React.Component {
     }
     
     drop(e) {
-        if(canvasDraw.getCurrentModel() <= 0){ // stops the user dragging and dropping without a model being selected
+        if(canvasDraw.getCurrentGraph() <= 0){ // stops the user dragging and dropping without a model being selected
             console.log("attempted to drag and drop vertex while there are no available models to draw on");
             window.alert("You need to create and select a graph first before you can start drawing!");
         }
         else{
-            console.log('dropped')
-            console.log(canvasDraw.getCurrentModel())
             //Find the vertex object that was dragged
             let droppedSemanticID = e.dataTransfer.getData('text/plain');
             let droppedVertex = 0;
@@ -70,17 +68,15 @@ export class Canvas extends React.Component {
                 if (vert.semanticIdentity.UUID === droppedSemanticID)
                 droppedVertex = vert;
             }
-            //console.log(droppedVertex)
             //get canvas relative coordinates for where the object was dropped
             let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
-
-            let newName = droppedVertex.text.replace(" 🟧","");
-            newName = newName.replace(" 📂","")
+            let newName = droppedVertex.text.replace(" "+ getTreeVertexEmptyIcon(),"");
+            newName = newName.replace(" " + getTreeVertexFullIcon(),"")
             let newColour;
             let visibilityCheck = false;
 
             //check if selected model is located in the same package or not
-            if(droppedVertex.parentRenderKey !== canvasDraw.getCurrentRenderKey()){
+            if(droppedVertex.parentRenderKey !== canvasDraw.getCurrentContainerKey()){
                 newColour = "#FFFFFF";
                 visibilityCheck = true; //used to determine if the vertex has an origin package added
             }
@@ -95,22 +91,16 @@ export class Canvas extends React.Component {
             droppedVertex.content,newColour,droppedVertex.icons,droppedVertex.imageElements,droppedVertex.fontSize,droppedVertex.semanticIdentity)
             if(visibilityCheck === true){
                 //add origin package
-                let originText = getFolderNameFromKey(droppedVertex.parentRenderKey)
-                originText = originText.replace(" 🟧","")
-                originText = originText.replace(" 📁","")
+                let originText = getContainerNameFromKey(droppedVertex.parentRenderKey)
+                originText = originText.replace(" "+ getTreeVertexEmptyIcon(),"")
+                originText = originText.replace(" "+ getTreeVertexFullIcon(),"")
                 canvasVert.setOrigin(originText + " :: ")
             }
             canvasDraw.addObject(canvasVert)
             canvasDraw.drawAll()
 
-            createSaveState() //Used for undo/redo functionality
+            createSaveState()
         }
-
-        //canvas
-        //mouseStartX
-        //mouseStartY
-        //x mose+10
-        //x mouse +10
 
     }
 
@@ -145,7 +135,6 @@ export class Canvas extends React.Component {
                     // brings up the menu
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
                     canvasDraw.onMiddleClick(canvas, x, y,null,selectDown);
-                    //console.log(selectDown);
 
                 } else {
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
@@ -178,7 +167,6 @@ export class Canvas extends React.Component {
 
             }
             if (intersection !== null) {
-                //console.log(selectMultiple);
                 // Remove dupes
                 let foundEnd = 0;
                 //start at 0
@@ -194,7 +182,6 @@ export class Canvas extends React.Component {
                     foundEnd++;
                 }
                 //ideally want to push in the first object that has already been selected
-                console.log(savedObjects);
                 savedObjects.push(canvasDraw.findIntersected(x, y));
                 canvasDraw.onMiddleClick(canvas, x, y, savedObjects)
                 
@@ -202,7 +189,6 @@ export class Canvas extends React.Component {
                     this.props.setLeftMenu(savedObjects[i], selectMultiple);
                 }
                 
-
             }
         }
 

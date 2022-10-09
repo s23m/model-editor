@@ -6,9 +6,10 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import {getModelNameFromKey, handleAddVertex, vertexData} from "./ContainmentTree";
+import {getModelNameFromKey as getGraphNameFromKey, getVertexData, handleAddVertex} from "./ContainmentTree";
 import { createSaveState } from "../Serialisation/NewFileManager";
 import {selectedCanvasObject} from "./Canvas"
+import { getTreeVertexEmptyIcon } from "../Config";
 
 //false unless the onMouseMove function is executing, Is used to stop vertex created with leftmenu tool creating multiple vertex's when dragging for an inital size
 let dragging = false;
@@ -41,37 +42,34 @@ export var currentObjects = new Graph();
 
 export var savedArrows = [];
 
-// The naming conventions here are terrible, but basically the render keys determine where
-// a tree view element is placed in the graph while the model functions determine what's 
-// actually being rendered
+export let currentContainerKey = 0;
+//Total keys are to identify what key to give the next created object
+export let totalContainerKeys = 0
 
-export let currentRenderKey = 0;
-export let totalRenderKeys = 0
+export let currentGraph = 0;
+export let totalGraphs = 0;
 
-export let currentModel = 0;
-export let totalModels = 0;
-
-export function setTotalRenderKey(newData){
-    totalRenderKeys = newData;
+export function setTotalContainerKey(newData){
+    totalContainerKeys = newData;
 }
-export function setTotalModelKeys(newData){
-    totalModels = newData;
+export function setTotalGraphKeys(newData){
+    totalGraphs = newData;
 }
 
-export function getCurrentRenderKey() {
-    return currentRenderKey;
+export function getCurrentContainerKey() {
+    return currentContainerKey;
 }
 
-export function setNewRenderKey(newKey) {
-    currentRenderKey = newKey;
+export function setNewContainerKey(newKey) {
+    currentContainerKey = newKey;
 }
 
-export function getTotalRenderKeys() {
-    return totalRenderKeys;
+export function getTotalContainerKeys() {
+    return totalContainerKeys;
 }
 
-export function incrementTotalRenderKeys() {
-    totalRenderKeys = totalRenderKeys += 1;
+export function incrementTotalContainerKeys() {
+    totalContainerKeys = totalContainerKeys += 1;
 }
 
 export function getCurrentObjects() {
@@ -80,14 +78,14 @@ export function getCurrentObjects() {
 
 // --- Model Key Stuff --- //
 
-export function getCurrentModel() {
-    return currentModel;
+export function getCurrentGraph() {
+    return currentGraph;
 }
 
-export function setNewModel(newModel) {
-    currentModel = newModel;
+export function setNewGraph(newGraph) {
+    currentGraph = newGraph;
     try {
-        document.getElementById("SelectedModel").value = getModelNameFromKey(newModel)
+        document.getElementById("SelectedGraph").value = getGraphNameFromKey(newGraph)
     } catch (error) {
         
     }
@@ -95,12 +93,12 @@ export function setNewModel(newModel) {
 
 }
 
-export function getTotalModels() {
-    return totalModels;
+export function getTotalGraphs() {
+    return totalGraphs;
 }
 
-export function incrementTotalModels() {
-    totalModels = totalModels += 1;
+export function incrementTotalGraphs() {
+    totalGraphs = totalGraphs += 1;
 }
 
 
@@ -123,7 +121,6 @@ let cancelDraw = false;
 //Block Past location var
 let past_location = [];
 let past_size = [];
-let selectedObject;
 export var blockBeenSelected = false;
 
 // Init
@@ -134,8 +131,6 @@ export function assignElement(elementID) {
     resetMouseOrigin();
 
 }
-
-
 
 export function resetMouseOrigin() {
     try {
@@ -160,28 +155,11 @@ export function drawAll() {
 
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
-            //console.log("HERE " + item.typeName)
-            //Only render the objects which are in the currently selected containment
-
-            if (item.getModelKey() === currentModel) {
-                /*
-                if (item.typeName === "Vertex"){
-                    console.log("Item is set as present")
-                    item.setPresent();
-                }
-                */
+            //Only render the objects which are in the currently selected Graph
+            if (item.getGraphKey() === currentGraph) {
                 item.draw(canvasContext);
 
             }
-
-            /*
-            else if (item.getModelKey() !== currentModel && item.typeName === "Vertex"){
-                console.log("Item is sent away")
-                item.setAway();
-                //console.log("The item to not be rendered is" + item.typeName);
-            }
-            */
-
         }
     });
 
@@ -199,33 +177,18 @@ export function deleteElement(element) {
     drawAll()
 }
 
-//this is the same as the above, except when you're deleting a vertex with an arrow connected the edge connection code freaks out.
-//this here deletes any arrows connected to the vertex before deleting the vertex to get around this
+//Deletes any arrows connected to Vertex, then the Vertex
 export function vertexDeleteElement(element) {
     console.log("vDeleteE occurs")
-    //find the UUID of the vertex for arrow dest and source matching
-    //let selectedVertUUID = element.semanticIdentity.UUID;
-
     //Get the arrow UUID's
     let sourceUUIDs = currentObjects.ArrowUUIDSource(element);
     let destUUIDs = currentObjects.ArrowUUIDDest(element);
     //find an arrow with matching source/dest if they exist
-
     sourceUUIDs.forEach(element => currentObjects.remove(element.arrow));
     destUUIDs.forEach(element => currentObjects.remove(element.arrow))
 
-    //Now that the arrows are out of the way, we're safe to delete the vertex (same code as above)
-    if (element !== null) {
-        console.log("vdl if staement pass")
-        if (!currentObjects.remove(element)) {
-            
-            console.error("Failed to delete object with UUID %s", element.semanticIdentity.UUID);
-        }
-    } else {
-        console.error("Attempted to delete a null element");
-    }
-
-    drawAll()
+    //Now that the arrows are out of the way, we're safe to delete the vertex
+    deleteElement(element);
 
 }
 
@@ -448,7 +411,6 @@ function findNearestArrowPointIndex(x, y) {
         if (item.typeName === "Arrow") {
             item.path.forEach((point) => {
                 cDist = Math.hypot(x - point[0], y - point[1]);
-                console.log(cDist);
                 if (cDist < nearestDistance) {
                     nearestDistance = cDist;
                     nearestPointIndex = item.path.indexOf(point);
@@ -504,14 +466,10 @@ export function onLeftMousePress(canvas, x, y) {
                 
                 return;
             }
-        } else {
         }
-
-
 
         let intersection = findIntersected(x, y);
         if (canvas.tool === Tool.Vertex && intersection !== null) {
-            //console.log("Selecting intersected Vertex");
             canvas.props.setLeftMenu(intersection);
             canvas.props.setMode(Tool.Select);
             cancelDraw = true;
@@ -523,7 +481,6 @@ export function onLeftMousePress(canvas, x, y) {
     if (canvas.tool === Tool.Select) {
         let index, arrow;
         [index, arrow] = findNearestArrowPointIndex(x, y);
-        //console.log(index, arrow);
         if (arrow === getSelectedObject(canvas)) {
             if (index !== -1) {
                 resizing = true;
@@ -535,7 +492,6 @@ export function onLeftMousePress(canvas, x, y) {
                 canvasElement.addEventListener("mousemove", func);
                 canvasElement.addEventListener("mouseup", () => {
                     canvasElement.removeEventListener("mousemove", func);
-                    console.log("removed")
                 })
             }
         }
@@ -545,12 +501,8 @@ export function onLeftMousePress(canvas, x, y) {
     mouseStartX = x;
     mouseStartY = y;
 
-
-
     // Enable example draw while user is deciding shape
     canvasElement.onmousemove = function (e) { onMouseMove(e, canvas) }
-
-
 }
 
 //aligning lines when large box moved
@@ -564,14 +516,12 @@ export function checkArrowsConnectedToBox(Object) {
 
     resizing = true;
     objectID = Object.semanticIdentity.UUID;
-    console.log(objectID);
     currentObjects.flatten().forEach((item) => {
         if (item.typeName === "Arrow") {
             let conData = 0;
             //If the object is connected to destination
             if (objectID === item.destVertexUUID) {
                 arrowArray.push(item);
-
                 // get connection data calcs min dist to travel and hopefully it's straight up
                 // first object destination y is less than object y
                 if (item.path[0][1] < Object.y) {
@@ -581,9 +531,7 @@ export function checkArrowsConnectedToBox(Object) {
                     conData = getConnectionDataForArrow(item.path[0][0], Object.y + Object.height);
                 }
                 item.pathData[1] = conData['nearest'];
-                console.log("dest one")
                 StickArrowToObject(conData, item, 1);
-
                 //If the object is connected to Source
             } else if (objectID === item.sourceVertexUUID) {
                 arrowArray.push(item);
@@ -594,27 +542,18 @@ export function checkArrowsConnectedToBox(Object) {
                     conData = getConnectionDataForArrow(item.path[1][0], Object.y + Object.height);
                 }
                 item.pathData[0] = conData['nearest'];
-                console.log("source one");
                 StickArrowToObject(conData, item, 0);
-
             }
         }
-
     });
-
     resizing = false;
-
-
 }
 
 export function checkHorizArrowsConnectedToBox(Object) {
     let objectID;
-
     let arrowArray = [];
-
     resizing = true;
     objectID = Object.semanticIdentity.UUID;
-    console.log(objectID);
     currentObjects.flatten().forEach((item) => {
         if (item.typeName === "Arrow") {
             let conData = 0;
@@ -629,7 +568,6 @@ export function checkHorizArrowsConnectedToBox(Object) {
                     conData = getConnectionDataForArrow(Object.x + Object.width - 1, item.path[0][1]);
                 }
                 item.pathData[1] = conData['nearest'];
-                console.log("dest one")
                 StickArrowToObject(conData, item, 1);
 
                 //If the object is connected to Source
@@ -642,30 +580,19 @@ export function checkHorizArrowsConnectedToBox(Object) {
                     conData = getConnectionDataForArrow(Object.x + Object.width - 1, item.path[0][1]);
                 }
                 item.pathData[0] = conData['nearest'];
-                console.log("source one");
                 StickArrowToObject(conData, item, 0);
-
             }
         }
-
     });
-
     resizing = false;
-
-
 }
 
 
 //save the position of the clicked variable as global
 export function saveBlockStates(canvas, x, y) {
-    selectedObject = getSelectedObject(canvas);
-    if (getSelectedObject(canvas) === null) {
-        selectedObject = findIntersected(x, y);
-    }
     if (selectedCanvasObject !== null) {
         blockBeenSelected = true;
 
-        //console.log("Block States Have been Saved");
         past_location = [selectedCanvasObject.x, selectedCanvasObject.y];
         past_size = [selectedCanvasObject.width, selectedCanvasObject.height];
     }
@@ -677,17 +604,14 @@ export function setArrowType(type) {
 
 //make sure boxes don't collide
 export function checkCollision(canvasObject) {
-    //console.log("Collision Tests:");
     let object = canvasObject
     let CollideCount = 0;
-    //console.log(past_size);
     // for loop to check all boxes in the list
     if (currentObjects.flatten() !== null && object !== null) {
         currentObjects.flatten().forEach((item) => {
             if (item.typeName === "Vertex") {
                 //make sure coords are > coords of box u just placed + its width
                 if (object.x === item.x && object.y === item.y) {
-                    //console.log("collides with itself");
                 }
                 // error of 10 pixels for item's height
                 else if ((object.y > (item.y + item.height + 10)) || (object.x > (item.x + item.width))
@@ -700,7 +624,6 @@ export function checkCollision(canvasObject) {
                     object.width = past_size[0];
                     object.height = past_size[1];
                     CollideCount++;
-                    //console.log("Collided");
                 }
             }
         });
@@ -708,7 +631,6 @@ export function checkCollision(canvasObject) {
         if (CollideCount === 0) {
             past_location = [object.x, object.y];
             past_size = [object.width, object.height]
-            //console.log(CollideCount);
         }
         blockBeenSelected = false;
         drawAll(currentObjects);
@@ -767,7 +689,6 @@ export function compareSizesToMoveAll(Object) {
     let allArrows = [];
 
     objectID = Object.semanticIdentity.UUID;
-    console.log(Object);
     currentObjects.flatten().forEach((item) => {
         if (item.typeName === "Arrow") {
 
@@ -835,12 +756,10 @@ export function lineIntersect(canvas, x, y, secondObject) {
     startX = 0;
     startY = 0;
 
-    console.log("\n \n arrow path: " + arrowPath + "\n\n");
     arrowPath = [];
 
     //previous object is below
     if (previousObject.y > y && previousObject.x + previousObject.width > x) {
-        console.log("\n\n\n prev object was below \n\n\n");
         startY = previousObject.y;
         startX = previousObject.x + (0.5 * previousObject.width);
 
@@ -850,7 +769,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
     }
     // previous object is above
     else if (previousObject.y < y && previousObject.x + previousObject.width > x && previousObject.x < x) {
-        console.log("\n\n\n prev object was above \n\n\n");
         startY = previousObject.y + previousObject.height + 10; //+ means go to bottom
         startX = previousObject.x + (0.5 * previousObject.width);
 
@@ -865,7 +783,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
     //previous object is below
     if (previousObject.y > (secondObject.y + secondObject.height + 10)) {
-        //console.log("\n\n\n prev object was below \n\n\n");
         //if previous is inside second range
         if ((previousObject.x > secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))) {
             startY = previousObject.y;
@@ -938,7 +855,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
     }
     // previous object is above
     else if (previousObject.y + previousObject.height + 10 < secondObject.y) {
-        //console.log("\n\n\n prev object was above \n\n\n");
         //if previous is inside second range
         if ((previousObject.x > secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))) {
             startY = previousObject.y + previousObject.height;
@@ -1048,8 +964,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
-
-                console.log("m");
             }
 
             if (blockPre >= blockSec) {
@@ -1058,7 +972,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
                 //resizeVars[0] returns the box if there is a
                 //resizeVars[1] is which side/corner of the box that its coords are expected to be at (else null)
                 let resizeVars = checkResizeBounds(previousObject.x + previousObject.width, previousObject.y + previousObject.height + 10);
-                console.log(resizeVars);
                 resizeVars[0].expandSide(resizeVars[1], previousObject.x + previousObject.width, previousObject.y + increase, canvasContext);
 
 
@@ -1070,7 +983,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(previousObject);
 
-                console.log("n");
             }
         }
         //Bottom Left and peeking
@@ -1080,7 +992,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
                 let increase = secondObject.y + secondObject.height + 10 + ((previousObject.y + previousObject.height + 10) - (secondObject.y + secondObject.height + 10));
 
                 let resizeVars = checkResizeBounds(secondObject.x + secondObject.width, secondObject.y + secondObject.height + 10);
-                console.log(resizeVars);
                 resizeVars[0].expandSide(resizeVars[1], secondObject.x + secondObject.width, increase, canvasContext);
 
 
@@ -1092,7 +1003,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(secondObject);
 
-                console.log("o");
             }
 
             if (blockPre >= blockSec) {
@@ -1107,7 +1017,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(previousObject);
 
-                console.log("p");
             }
         }
 
@@ -1136,7 +1045,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
             endX = previousObject.x;
             endY = startY;
 
-            console.log("r");
         }
         //Top Right and peeking
         else if (previousObject.y + previousObject.height + 10 > secondObject.y && secondObject.y > previousObject.y) {
@@ -1152,7 +1060,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(secondObject);
 
-                console.log("s");
             }
 
             if (blockPre >= blockSec) {
@@ -1166,7 +1073,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(previousObject);
 
-                console.log("t");
             }
 
         }
@@ -1175,7 +1081,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
             if (blockPre <= blockSec) {
                 let increase = secondObject.height + 10 + ((previousObject.y + previousObject.height + 10) - (secondObject.y + secondObject.height + 10));
                 let resizeVars = checkResizeBounds(secondObject.x + secondObject.width, secondObject.y + secondObject.height + 10);
-                console.log(resizeVars);
                 resizeVars[0].expandSide(resizeVars[1], secondObject.x + secondObject.width, secondObject.y + increase, canvasContext);
 
 
@@ -1187,13 +1092,11 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(secondObject);
 
-                console.log("u");
             }
 
             if (blockPre >= blockSec) {
                 let increase = previousObject.height + 10 + (previousObject.y - secondObject.y);
                 let resizeVars = checkResizeBounds(previousObject.x + previousObject.width, previousObject.y + previousObject.height + 10);
-                console.log(resizeVars);
                 resizeVars[0].expandSide(resizeVars[1], previousObject.x + previousObject.width, previousObject.y + increase, canvasContext);
 
                 previousObject.y = secondObject.y;
@@ -1207,7 +1110,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(previousObject);
 
-                console.log("v");
             }
         }
 
@@ -1229,7 +1131,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 //
 export function collectMehBox(boxes, arrows, bigbox, item, index) {
 
-    //console.log("runningcollect");
     if (bigbox.semanticIdentity.UUID === item.destVertexUUID) {
         let box = getObjectFromUUID(item.sourceVertexUUID);
         if ((bigbox.y) * index + (box.y) * (1 - index) > (box.y + box.height + 10) * index + (bigbox.y + bigbox.height + 10) * (1 - index)) {
@@ -1269,7 +1170,6 @@ export function arrangeboxesandarrows(bigbox, boxes, arrows, index) {
         }
         b = 0;
         for (b; b < boxes.length; b++) {
-            console.log(arrows[b]);
             let conData = getConnectionDataForArrow(boxes[b].x + boxes[b].width / 2, bigbox.y + (bigbox.height + 10) * (1 - index));
             arrows[b].pathData[1] = conData['nearest'];
             StickArrowToObject(conData, arrows[b], 1);
@@ -1313,7 +1213,6 @@ export function arrangeboxesandarrowshorizontal(bigbox, boxes, arrows, index) {
         }
         b = 0;
         for (b; b < boxes.length; b++) {
-            console.log(arrows[b]);
             let conData = getConnectionDataForArrow(bigbox.x + (bigbox.width) * (1 - index), boxes[b].y + (boxes[b].height + 10) / 2);
             arrows[b].pathData[1] = conData['nearest'];
             StickArrowToObject(conData, arrows[b], 1);
@@ -1362,14 +1261,8 @@ export function shiftBoxes(secondObject) {
     //0 = down
     arrangeboxesandarrows(bigBox, downBoxes, downArrows, 0);
     arrangeboxesandarrows(bigBox, upBoxes, upArrows, 1);
-
     arrangeboxesandarrowshorizontal(bigBox, leftBoxes, leftArrows, 1);
     arrangeboxesandarrowshorizontal(bigBox, rightBoxes, rightArrows, 0);
-
-    //console.log(downboxes.length);
-
-
-
 }
 
 export function onLeftMouseRelease(canvas, x, y) {
@@ -1415,10 +1308,7 @@ export function onLeftMouseRelease(canvas, x, y) {
                 addObject(newObject);
             }
 
-
             drawAll(currentObjects);
-
-
 
             //converting all arrows to savedArrows array
             let i = 0;
@@ -1440,15 +1330,12 @@ export function onLeftMouseRelease(canvas, x, y) {
             }
             previousObject = null;
 
-
         } else {
             //maybe here where we can disable compound lines
 
             //save object here
             previousObject = findIntersected(x, y);
-            
-        
-
+  
             arrowPath.push(getConnectionDataForArrow(x, y).coord);
             lastX = x;
             lastY = y;
@@ -1457,7 +1344,6 @@ export function onLeftMouseRelease(canvas, x, y) {
             };
             firstArrowJoint = false;
         }
-
     }
 
     if (canvas.tool === Tool.Vertex) {
@@ -1482,9 +1368,6 @@ export function onLeftMouseRelease(canvas, x, y) {
         canvas.props.setLeftMenu(newObject);
         canvas.props.setMode(Tool.Select);
     }
-
-
-
 
     drawAll(currentObjects);
 
@@ -1530,7 +1413,6 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
 
                 //for loop to check for duplicates and remove if any
                 for (let nf = 0; nf < newfriendObject.length; nf++) {
-                    console.log(ObjectsToCheck.length)
                     for (let of = 0; of < ObjectsToCheck.length; of++) {
                         //doesn't get run?:
                         if (newfriendObject[nf].semanticIdentity.UUID === ObjectsToCheck[of].semanticIdentity.UUID) {
@@ -1560,7 +1442,6 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
         let i = 0;
         for (i; i < friendObject.length; i++) {
             F.push([x - friendObject[i].x, y - friendObject[i].y]); //distance from mouse to actual object's x, y
-            //console.log(F);
         }
     }
 
@@ -1569,7 +1450,6 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
         let i = 0;
         for (i; i < savedObjects.length; i++) {
             S.push([x - savedObjects[i].x, y - savedObjects[i].y]);
-            //console.log(F);
         }
     }
 
@@ -1621,8 +1501,6 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                 }
             }
 
-
-            
             if (arrowsVert !== null) {
                 let conData = 0;
                 let j = 0;
@@ -1633,11 +1511,7 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                     conData = getConnectionDataForArrow(arrowsVert[j].path[1][0], arrowsVert[j].path[1][1]);
 
 
-                    
-
-                    
                         StickArrowToObject(conData, arrowsVert[j], 0);
-                        //console.log(arrowsVert[j].path);
                 }
             }
             else if (arrowsHoriz !== null) {
@@ -1647,12 +1521,8 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                     // source = one that's been clicked
                     arrowsHoriz[k].path[1][1] = arrowsHoriz[k].path[0][1];
                     conData = getConnectionDataForArrow(arrowsHoriz[k].path[1][0], arrowsHoriz[k].path[1][1]);
-                    
-               
 
-                        StickArrowToObject(conData, arrowsHoriz[k], 0);
-                        //console.log(arrowsHoriz[k].path);
-                  
+                    StickArrowToObject(conData, arrowsHoriz[k], 0);
                 }
             }
             else if (allArrows !== null){
@@ -1662,7 +1532,6 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
             object.y = y;
 
             updateArrows();
-
 
         } else if (object.typeName === "Arrow") {
             return;
@@ -1731,7 +1600,6 @@ export function findIntersected(x, y) {
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
             if (item.intersects(x, y)) {
-                //console.log("Intersection detected with ", item.typeName);
                 selectedItem = item;
             }
         }
@@ -1776,7 +1644,6 @@ function createContainer(canvas, x1, y1) {
 
 export function linkContainer(baseUUID,mirrorUUID){
     let baseSemantic = null;
-    console.log(currentObjects.rootVertices) 
     //Since rootvertices was made as a set, cant just find indexes to reference, have to keep for looping to what we want
     for(let i of currentObjects.rootVertices){
         if(i.vertex.semanticIdentity.UUID === baseUUID){
@@ -1796,7 +1663,6 @@ export function linkContainer(baseUUID,mirrorUUID){
         }
     }
 
-    console.log(currentObjects.rootVertices)
 
 }
 //Updates the appearances of linked containers to match the input container
@@ -1827,18 +1693,11 @@ export function updateVertex(selectedObject){ // function to update the data of 
     if(selectedObject.type !== "treeVertex"){
         vertex = getLinkedVertex(selectedObject); // 'vertex' refers to the treeview object.
 
-        vertex.text = selectedObject.title + " 🟧";
+        vertex.text = selectedObject.title + " " + getTreeVertexEmptyIcon();
         vertex.content = selectedObject.content;
         vertex.width = selectedObject.width;
         vertex.height = selectedObject.height;
 
-        if(vertex.parentRenderKey === selectedObject.vertexRenderKey){
-            console.log(vertex)
-            console.log(selectedObject)
-        }
-        else{
-        
-        }
     }
     else{
         vertex = selectedObject;
@@ -1849,18 +1708,16 @@ export function updateVertex(selectedObject){ // function to update the data of 
         if(vertex.semanticIdentity.UUID === verticies.originalUUID && verticies !== selectedObject){ // updates all of the canvas objects that come from the treeview object.
 
             //check if This graph vertex is in a different folder to the base vertex, if so make it white and add location
-            //console.log(vertex.parentRenderKey)
-            //console.log(verticies.vertexRenderKey)
 
-            if(vertex.parentRenderKey === verticies.vertexRenderKey){
+            if(vertex.parentRenderKey === verticies.vertexContainerKey){
                 
             //If the vertex's model is in same folder
-            verticies.title = vertex.text.replace(" 🟧", "")
+            verticies.title = vertex.text.replace(" " + getTreeVertexEmptyIcon(), "")
             verticies.colour = vertex.colour;
             verticies.content = vertex.content;
             }
             else{
-            verticies.title = vertex.text.replace(" 🟧", "")
+            verticies.title = vertex.text.replace(" " + getTreeVertexEmptyIcon(), "")
             verticies.colour = "#FFFFFF";
             verticies.content = vertex.content;
             }
@@ -1869,7 +1726,7 @@ export function updateVertex(selectedObject){ // function to update the data of 
 }
 
 export function getLinkedVertex(selectedObject){ // grabs the contaiment tree object - cooper
-    for(let vertex of vertexData){
+    for(let vertex of getVertexData()){
         if(vertex.semanticIdentity.UUID === selectedObject.originalUUID)
         return vertex;
     }
@@ -1887,8 +1744,7 @@ function createObject(canvas, x1, y1, x2, y2) {
 
         // Add vertex
         console.log("draw vertex")
-        let newVert = handleAddVertex("Drawn Vertex" ,getCurrentRenderKey())
-        console.log(newVert.semanticIdentity.UUID)
+        let newVert = handleAddVertex("Drawn Vertex" ,getCurrentContainerKey())
 
         return new Vertex({title: "Drawn Vertex", content: newVert,colour: newVert.colour, x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1, semanticIdentity: newVert.semanticIdentity});
         
