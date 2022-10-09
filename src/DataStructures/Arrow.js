@@ -4,7 +4,7 @@
 
 import { SemanticIdentity } from "./SemanticIdentity";
 import {drawMarker, getDistance,} from "../UIElements/CanvasDraw";
-import {getModelRenderKey} from "../UIElements/ContainmentTree";
+import {getGraphRenderKey} from "../UIElements/ContainmentTree";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
 import {Tool} from "../UIElements/LeftMenu";
@@ -89,7 +89,7 @@ export class Arrow {
         this.arrowModelKey = canvasDraw.getCurrentModel();
 
         // Render key for the arrow for placing in tree
-        this.arrowRenderKey = getModelRenderKey(this.arrowModelKey);
+        this.arrowRenderKey = getGraphRenderKey(this.arrowModelKey);
     }
 
     // Set the model key

@@ -9,9 +9,9 @@ import {Cardinality} from "../DataStructures/Cardinality";
 import {EdgeEnd} from "../DataStructures/EdgeEnd";
 import {Graph} from "../DataStructures/Graph";
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity";
-import { getDecoyFolderData, getDecoyModelData, getDecoyVertexData, getFolderData, getModelData, 
-    getSelectedFolderKey, getTreeData, getVertexData, setDecoyFolderData, setDecoyModelData, setDecoyVertexData, 
-    setFolderData, setModelData, setSelectedFolderKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
+import { getDecoyPackageData, getDecoyGraphData, getDecoyVertexData, getPackageData, getGraphData, 
+    getSelectedPackageKey, getTreeData, getVertexData, setDecoyPackageData, setDecoyGraphData, setDecoyVertexData, 
+    setPackageData, setGraphData, setSelectedPackageKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
 
 
 //Get all the data that needs to be saved, to restore a session
@@ -21,21 +21,21 @@ export function getSaveData() {
     let vertexObjects = currentObjects.flatten(true, false);
     let arrowObjects = currentObjects.flatten(false, true);
     let treeData = JSON.parse(JSON.stringify(getTreeData()))
-    let folderData = JSON.parse(JSON.stringify(getFolderData()))
-    let decoyFolderData = JSON.parse(JSON.stringify(getDecoyFolderData()))
+    let folderData = JSON.parse(JSON.stringify(getPackageData()))
+    let decoyFolderData = JSON.parse(JSON.stringify(getDecoyPackageData()))
 
     let vertexData = JSON.parse(JSON.stringify(getVertexData()));
     let decoyVertexData = JSON.parse(JSON.stringify(getDecoyVertexData()));
 
-    let modelObjects = JSON.parse(JSON.stringify(getModelData()));
-    let decoyModelObjects = JSON.parse(JSON.stringify(getDecoyModelData())) 
+    let modelObjects = JSON.parse(JSON.stringify(getGraphData()));
+    let decoyModelObjects = JSON.parse(JSON.stringify(getDecoyGraphData())) 
 
     let totalRenderKeys = getTotalRenderKeys();
     let totalModels = getTotalModels();
 
     let currentModel = getCurrentModel();
     let currentKey = getCurrentRenderKey();
-    let currentFolder = getSelectedFolderKey();
+    let currentFolder = getSelectedPackageKey();
 
     let saveData = {
 
@@ -132,18 +132,18 @@ export function load(jsonString){
     }
 
     setTranslationColumns(saveData.translationColumns)
-    setFolderData(saveData.packages);
-    setDecoyFolderData(saveData.dPackages);
+    setPackageData(saveData.packages);
+    setDecoyPackageData(saveData.dPackages);
     setVertexData(saveData.treeVertex);
     setDecoyVertexData(saveData.dTreeVertex);
-    setModelData(saveData.graph)
-    setDecoyModelData(saveData.dGrraph)
+    setGraphData(saveData.graph)
+    setDecoyGraphData(saveData.dGrraph)
     setTreeData(saveData.tree)
     setTotalRenderKey(saveData.renderKeys)
     setTotalModelKeys(saveData.modelKeys)
     setCurrentObjects(new Graph(newVertices, newArrows));
     updateArrows()
-    setSelectedFolderKey(1)
+    setSelectedPackageKey(1)
     setNewRenderKey(1)
     setNewModel(1)
     drawAll()
@@ -326,14 +326,14 @@ export function importLoad(jsonString){
 
     //models,folders,tree verts need to be added to current data
 
-    setFolderData(getFolderData().concat(saveData.packages))
-    setDecoyFolderData(getDecoyFolderData().concat(saveData.dPackages))
+    setPackageData(getPackageData().concat(saveData.packages))
+    setDecoyPackageData(getDecoyPackageData().concat(saveData.dPackages))
 
     setVertexData(getVertexData().concat(saveData.treeVertex))
     setDecoyVertexData(getDecoyVertexData().concat(saveData.dTreeVertex))
 
-    setModelData(getModelData().concat(saveData.graph)) 
-    setDecoyModelData(getDecoyModelData().concat(saveData.dGraph))
+    setGraphData(getGraphData().concat(saveData.graph)) 
+    setDecoyGraphData(getDecoyGraphData().concat(saveData.dGraph))
 
 
     //vertex's and arrows add to current data
@@ -350,7 +350,7 @@ export function importLoad(jsonString){
 
     //reset current keys to reload a few things eg. turn any loaded vertices invisible is they were present in save
 
-    setSelectedFolderKey(getSelectedFolderKey())
+    setSelectedPackageKey(getSelectedPackageKey())
     setNewRenderKey(getCurrentRenderKey())
     setNewModel(getCurrentModel())
     //set the new latest index's
@@ -370,18 +370,18 @@ export function importLoad(jsonString){
 function loadDirect(saveData){
 
     setTranslationColumns(saveData.translationColumns)
-    setFolderData(saveData.packages);
-    setDecoyFolderData(saveData.dPackages);
+    setPackageData(saveData.packages);
+    setDecoyPackageData(saveData.dPackages);
     setVertexData(saveData.treeVertex);
     setDecoyVertexData(saveData.dTreeVertex);
-    setModelData(saveData.graph)
-    setDecoyModelData(saveData.dGrraph)
+    setGraphData(saveData.graph)
+    setDecoyGraphData(saveData.dGrraph)
     setTreeData(saveData.tree)
     setTotalRenderKey(saveData.renderKeys)
     setTotalModelKeys(saveData.modelKeys)
     setCurrentObjects(new Graph(saveData.vertices, saveData.arrows));
     updateArrows()
-    setSelectedFolderKey(saveData.currentFol)
+    setSelectedPackageKey(saveData.currentFol)
     setNewRenderKey(saveData.currentKey)
     setNewModel(saveData.currentMod)
     drawAll()

@@ -15,11 +15,10 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import {resetRows} from "./SemanticDomainEditor";
 
 //Adding folders to the tree view
-import {handleAddFolder, handleDeleteModel, handleAddModel,handleRenameFolder, getSelectedFolderKey, handleRenameModel, handleAddVertex} from './ContainmentTree';
-import { handleDeleteFolder } from './ContainmentTree';
+import {handleAddPackage, handleDeleteGraph, handleAddGraph,handleRenameFolder, getSelectedPackageKey, handleRenameGraph, handleAddVertex} from './ContainmentTree';
+import { handleDeletePackage } from './ContainmentTree';
 
-import { showVertexPath } from './ContainmentTree';
-import { someVertexPath } from './ContainmentTree';
+
 import { ContextMenu } from './ContextMenu'
 import {save, load, importLoad, undo, redo} from '../Serialisation/NewFileManager'
 
@@ -34,7 +33,7 @@ export const version = 1;
 
 export const serverURL = 'http://localhost:8080'
 
-let folderName = "Unnamed Folder";
+let folderName = "Unnamed Package";
 
 
 export class MainProgramClass extends React.Component {
@@ -72,13 +71,7 @@ export class MainProgramClass extends React.Component {
 
         //console.log("Mode set to: " + this.state.SelectedTool);
 
-        // This bit of code here updates the path for whatever vertex is being updated
-        if (this.state.selectedObject !== null){
-            if (this.state.selectedObject.typeName === "Vertex"){
-                showVertexPath(this.state.selectedObject)
-                this.state.selectedObject.setPath(someVertexPath)
-            }
-        }
+
 
         
         
@@ -98,7 +91,7 @@ export class MainProgramClass extends React.Component {
         //LeftMenu.state = LeftMenu.state;
         (async() => {
         //Your IDE might tell you this and following await's do nothing, but it is neccesary to stop setLeftMenuToTree fireing early - Lachlan
-        await handleAddFolder(folderName,getSelectedFolderKey());
+        await handleAddPackage(folderName,getSelectedPackageKey());
         this.setLeftMenuToTree();
         })();
         
@@ -106,28 +99,28 @@ export class MainProgramClass extends React.Component {
 
     deleteFolder = () => {
         (async() => {
-            await handleDeleteFolder(getSelectedFolderKey());
+            await handleDeletePackage(getSelectedPackageKey());
             this.setLeftMenuToTree();
             })();
     }
 
     editFolderName = () => {
         (async() => {
-            await handleRenameFolder(folderName,getSelectedFolderKey());
+            await handleRenameFolder(folderName,getSelectedPackageKey());
             this.setLeftMenuToTree();
         })();
     }
 
     addVertex = () =>{
         (async() => {
-            await handleAddVertex(folderName,getSelectedFolderKey());
+            await handleAddVertex(folderName,getSelectedPackageKey());
             this.setLeftMenuToTree();
         })();
     }
 
     addModel = () => {
         (async() => {
-            await handleAddModel(folderName);
+            await handleAddGraph(folderName);
             this.setLeftMenuToTree();
             })();
     }
@@ -135,14 +128,14 @@ export class MainProgramClass extends React.Component {
     deleteModel = () => {
         
         (async() => {
-            await handleDeleteModel(canvasDraw.getCurrentModel());
+            await handleDeleteGraph(canvasDraw.getCurrentModel());
             this.setLeftMenuToTree();
             })();
     }
 
     editModelName = () => {
         (async() => {
-            await handleRenameModel(folderName,canvasDraw.getCurrentModel());
+            await handleRenameGraph(folderName,canvasDraw.getCurrentModel());
             this.setLeftMenuToTree();
         })();
     }

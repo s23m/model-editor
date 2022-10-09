@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { drawMarker, distanceThreshold, getCurrentModel } from "../UIElements/CanvasDraw";
-import { getModelRenderKey } from "../UIElements/ContainmentTree";
+import { getGraphRenderKey } from "../UIElements/ContainmentTree";
 import { SemanticIdentity} from "./SemanticIdentity";
 import {serverURL} from "../UIElements/MainView"
 
@@ -101,7 +101,7 @@ export class Vertex {
             this.vertexModelKey = getCurrentModel();
 
             // Used to decide where the object goes in the tree
-            this.vertexRenderKey = getModelRenderKey(this.vertexModelKey);
+            this.vertexRenderKey = getGraphRenderKey(this.vertexModelKey);
 
 
             // Used for moving vertices out of the way when they're not being rendered to prevent invisible overlap

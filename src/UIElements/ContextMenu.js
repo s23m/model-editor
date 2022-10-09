@@ -1,6 +1,6 @@
 import React from 'react';
-import {getFolderData,getModelData,getSelectedFolderKey,setSelectedFolderKey,handleModelRebase,handleRenameFolder, handleAddModel, getModelNameFromKey, modelObjects, 
-    handleAddFolder, handleDeleteFolder, handleDeleteModel, handleRenameModel} from "./ContainmentTree"
+import {getPackageData,getGraphData,getSelectedPackageKey,setSelectedPackageKey,handleModelRebase,handleRenameFolder, handleAddGraph, getModelNameFromKey,
+    handleAddPackage, handleDeletePackage, handleDeleteGraph, handleRenameGraph} from "./ContainmentTree"
 import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects,
     linkContainer, currentObjects, drawAll, updateVertex} from "./CanvasDraw";
 import {handleAddVertex, handleDeleteVertex, getVertexData} from "./ContainmentTree";
@@ -47,8 +47,8 @@ export class ContextMenu extends React.Component {
                 menuType = "MoveModel";
                 this.setState({showMenu: true})
             }
-            else if(menuType === 'MoveModel' && e.target.id.includes("Folder")){
-                let newFolderKey = e.target.id.replace("Folder",'')
+            else if(menuType === 'MoveModel' && e.target.id.includes("Package")){
+                let newFolderKey = e.target.id.replace("Package",'')
                 //console.log(newFolderKey) 
                 handleModelRebase(rightClickedItemKey,parseInt(newFolderKey));
                 console.log("model ", rightClickedItemKey, " moved to folder id ",newFolderKey)
@@ -102,9 +102,9 @@ export class ContextMenu extends React.Component {
                 createSaveState();
             }
             else if(e.target.id === "DeletePackageConfirmed"){
-                for(let folder of getFolderData()){
+                for(let folder of getPackageData()){
                     if(folder.renderKey === rightClickedItemKey){
-                        handleDeleteFolder(rightClickedItemKey)
+                        handleDeletePackage(rightClickedItemKey)
                     }
                 }
                 this.setState({showMenu: false})
@@ -112,9 +112,9 @@ export class ContextMenu extends React.Component {
                 createSaveState();
             }
             else if(e.target.id === "DeleteModelConfirmed"){
-                for(let model of modelObjects){
+                for(let model of getGraphData()){
                     if(model.modelKey === rightClickedItemKey){
-                        handleDeleteModel(rightClickedItemKey)
+                        handleDeleteGraph(rightClickedItemKey)
                     }
                 }
                 this.setState({showMenu: false})
@@ -137,10 +137,10 @@ export class ContextMenu extends React.Component {
                 menuType = "AddContainerModel";
                 this.setState({showMenu: true})
             }
-            else if(menuType === 'AddContainerModel' && e.target.id.includes("Folder")){
+            else if(menuType === 'AddContainerModel' && e.target.id.includes("Package")){
                 console.log(rightClickedObject)  
-                let newFolderKey = e.target.id.replace("Folder",'')
-                handleAddModel(rightClickedObject.title,parseInt(newFolderKey),rightClickedObject.semanticIdentity)
+                let newFolderKey = e.target.id.replace("Package",'')
+                handleAddGraph(rightClickedObject.title,parseInt(newFolderKey),rightClickedObject.semanticIdentity)
                 this.props.setLeftMenuToTree();
                 this.setState({showMenu: false})
             }
@@ -171,7 +171,7 @@ export class ContextMenu extends React.Component {
 
                 setNewModel(parseInt(keys[0]));
                 setNewRenderKey(keys[1]); // automatically sets the renderkey to be the same as the models as this was causing issues - cooper
-                setSelectedFolderKey(keys[1]);
+                setSelectedPackageKey(keys[1]);
                 for (let item of currentObjects.flatten()){
                     if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
                         item.setPresent();
@@ -213,7 +213,7 @@ export class ContextMenu extends React.Component {
             }
             else if(menuType === "RenameModel"){
                 let newName = document.getElementById("RenameModelBox").value
-                handleRenameModel(newName,rightClickedItemKey)
+                handleRenameGraph(newName,rightClickedItemKey)
                 console.log("menu change")
                 try{
                 this.props.setLeftMenuToTree();
@@ -247,7 +247,7 @@ export class ContextMenu extends React.Component {
             else if(menuType === "AddVertex"){
                 
                 let vertexName = document.getElementById("VertexNameBox").value;
-                handleAddVertex(vertexName, getSelectedFolderKey());
+                handleAddVertex(vertexName, getSelectedPackageKey());
                 try{
                 this.props.setLeftMenuToTree();
                 }
@@ -260,7 +260,7 @@ export class ContextMenu extends React.Component {
             else if(menuType === "AddGraph"){
                 
                 let graphName = document.getElementById("GraphNameBox").value;
-                handleAddModel(graphName, getSelectedFolderKey());
+                handleAddGraph(graphName, getSelectedPackageKey());
                 try{
                 this.props.setLeftMenuToTree();
                 }
@@ -273,7 +273,7 @@ export class ContextMenu extends React.Component {
             else if(menuType === "AddPackage"){
                 
                 let packageName = document.getElementById("PackageNameBox").value;
-                handleAddFolder(packageName, getSelectedFolderKey());
+                handleAddPackage(packageName, getSelectedPackageKey());
                 try{
                 this.props.setLeftMenuToTree();
                 }
@@ -312,22 +312,22 @@ export class ContextMenu extends React.Component {
             //console.log("clicked a tree object")
             //if target is existing folder, load the folder menu
             if(e.target.text.includes("📁")){
-                for(let folder of getFolderData()){
+                for(let folder of getPackageData()){
                     if(e.target.text === folder.text){
                         //console.log("matching folder found")
-                        menuType = "Folder"
+                        menuType = "Package"
                         rightClickedItem = e.target.text;
-                        rightClickedItemKey = getSelectedFolderKey();
+                        rightClickedItemKey = getSelectedPackageKey();
                     }
                 }
             }
 
             //if target is existing model, load model menu
             if(e.target.text.includes("📈")){
-                for(let model of getModelData()){
+                for(let model of getGraphData()){
                     if(e.target.text === model.text){
                         //console.log("matching model found")
-                        menuType = "Model"
+                        menuType = "Graph"
                         rightClickedItem = e.target.text;
                         rightClickedItemKey = getCurrentModel();
                     }
@@ -344,7 +344,7 @@ export class ContextMenu extends React.Component {
                         menuType = "Vertex"
                         rightClickedObject = vertex;
                         rightClickedItem = e.target.text;
-                        rightClickedItemKey = getSelectedFolderKey();
+                        rightClickedItemKey = getSelectedPackageKey();
 
                     }
                 }
@@ -355,7 +355,7 @@ export class ContextMenu extends React.Component {
                 //console.log("matching folder found")
                 menuType = "Root"
                 rightClickedItem = e.target.text;
-                rightClickedItemKey = getSelectedFolderKey();
+                rightClickedItemKey = getSelectedPackageKey();
             }
             
         }
@@ -410,7 +410,7 @@ export class ContextMenu extends React.Component {
                     </div>
                 )
             }
-            else if(menuType === "Folder"){
+            else if(menuType === "Package"){
                 return (
 
                 //options are given classnames to identify what has been selected
@@ -467,7 +467,7 @@ export class ContextMenu extends React.Component {
                     </div>
                 )
             }
-            else if(menuType === "Model"){
+            else if(menuType === "Graph"){
                 return (
 
                 //options are given classnames to identify what has been selected
@@ -481,7 +481,7 @@ export class ContextMenu extends React.Component {
             }
             else if(menuType === "MoveModel"){
 
-                let renderedOutput = getFolderData().map(item => <div className="CMitem" id={'Folder'+ item.renderKey} key={item.text}> {item.text} </div>);
+                let renderedOutput = getPackageData().map(item => <div className="CMitem" id={"Package"+ item.renderKey} key={item.text}> {item.text} </div>);
 
                 return (
 
@@ -630,7 +630,7 @@ export class ContextMenu extends React.Component {
             }
             else if(menuType === "AddContainerModel"){
                 
-                let renderedOutput = getFolderData().map(item => <div className="CMitem" id={'Folder'+ item.renderKey} key={item.text}> {item.text} </div>);
+                let renderedOutput = getPackageData().map(item => <div className="CMitem" id={"Package"+ item.renderKey} key={item.text}> {item.text} </div>);
 
                 return (
 
@@ -663,7 +663,7 @@ export class ContextMenu extends React.Component {
                         matchingContainers.push(vert)
                     }
                 }
-                for(let model of getModelData()){
+                for(let model of getGraphData()){
                     if(model.semanticIdentity.UUID === matchingUUID){
                         matchingModels.push(model)
                     }

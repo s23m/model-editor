@@ -40,7 +40,7 @@ import {
 
 // In program imports
 import {currentObjects} from "./CanvasDraw";
-import {vertexData} from "./ContainmentTree"
+import {getVertexData} from "./ContainmentTree"
 
 // Globals
 let rows;
@@ -316,8 +316,8 @@ export function resetRows() {
     let newRows = [];
     let currentObjectsFlattened = currentObjects.flatten();
 
-    for (let i = 0; i < vertexData.length; i++) {
-        newRows.push(getRowForObject(vertexData[i]));
+    for (let i = 0; i < getVertexData().length; i++) {
+        newRows.push(getRowForObject(getVertexData()[i]));
     }
     for(let i = 0; i < currentObjectsFlattened.length; i++){
         // Add Arrow Ends
@@ -390,7 +390,7 @@ function updateChangedObject(object, row) {
 function updateChangedObjects(rows) {
     
     let currentObjectsFlattened = currentObjects.flatten();
-    let treeVert = vertexData
+    let treeVert = getVertexData()
 
     // Iterate through all rows
     for (let i = 0; i < rows.length; i++) {

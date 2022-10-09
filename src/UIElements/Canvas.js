@@ -1,7 +1,7 @@
 import React from 'react';
 import { createSaveState } from '../Serialisation/NewFileManager';
 import * as canvasDraw from "./CanvasDraw";
-import { getFolderNameFromKey, getVertexData} from './ContainmentTree';
+import { getContainerNameFromKey, getVertexData} from './ContainmentTree';
 import { Tool } from './LeftMenu';
 
 let selectMultiple = false;
@@ -95,7 +95,7 @@ export class Canvas extends React.Component {
             droppedVertex.content,newColour,droppedVertex.icons,droppedVertex.imageElements,droppedVertex.fontSize,droppedVertex.semanticIdentity)
             if(visibilityCheck === true){
                 //add origin package
-                let originText = getFolderNameFromKey(droppedVertex.parentRenderKey)
+                let originText = getContainerNameFromKey(droppedVertex.parentRenderKey)
                 originText = originText.replace(" 🟧","")
                 originText = originText.replace(" 📁","")
                 canvasVert.setOrigin(originText + " :: ")

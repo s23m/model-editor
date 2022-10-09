@@ -6,61 +6,50 @@
 import React from 'react';
 import TreeView from 'react-simple-jstree';
 
-import { currentObjects, setNewRenderKey, 
-    getTotalRenderKeys, incrementTotalRenderKeys, 
-    getCurrentModel, setNewModel, getTotalModels, incrementTotalModels, deleteElement} from "./CanvasDraw";
+import { currentObjects, setNewRenderKey as setNewPackageKey, getTotalRenderKeys, incrementTotalRenderKeys, 
+    getCurrentModel, setNewModel as setNewGraphKey, getTotalModels, incrementTotalModels as incrementTotalGraph} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
 import {VertexNode} from "../DataStructures/Graph.js"
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity.js";
 import { createSaveState } from '../Serialisation/NewFileManager';
-
-// I need to export this so I can access it in the left menu and then set it to the correct vertex;
-export var someVertexPath = "";
-
-let currentlySelectedObject = null; //The currently selected object
-
-let showingVertPath = false;
+import {getGraphIcon, getPackageIcon, getTreeVertexEmptyIcon, getTreeVertexFullIcon, initialObjects} from '../Config.js';
 
 // Accesor for tree data
 let treeData = [];
 
-// I need this to store the folders. Initially, it has one folder simply titled 'Unnamed Folder'.
-export let folderData = [];
+// Stores data for packages
+let packageData = [];
 
-// used to store Vertex objects in tree data (Used to create the vertex objects in CanvasDraw/currentObjects)
-export let vertexData = [];
-let decoyVertexData = [] //here because of how old team did folder indexing
+// The decoy packages something to do with past teams indexing? can probably refactor and remove them? - Lachlan
+let decoyPackageData = [];
 
-//used as a container to seperate "root" folders and subfolders so that only the root folders are pushed to root.children in the constructor - Lachlan
-let folderDataRoot = [];
+// Stores data for Vertex's (Tree)
+let vertexData = [];
 
-//This variable will be used to store the "selected folder" for creating new folders or models
-// As renderKey is tied too many methods related to syncing data between canvas and tree/ creating data in tree control of the current renderkey 
-//has been taken away from the user and will always be set to the parent folder of the selected model (this happens in elementSelect on a model click) - Lachlan
-let selectedFolderKey = 0;
+// The decoy Vertex something to do with past teams indexing? can probably refactor and remove them? - Lachlan
+let decoyVertexData = [] 
 
-// This is to do with getting the data indexing to be
-let decoyFolderData = [];
+// Stores data for Graphs
+let graphObjects = [];
 
-// An array for holding model names
-export let modelObjects = [];
+// The decoy Graph something to do with past teams indexing? can probably refactor and remove them? - Lachlan
+let decoyGraphObjects = [];
 
-let decoyModelObjects = []; // doing the same data referencing as folder data because currently the data being referenced in the models is the model beforehand which
-                            // i dont tink is intended. - cooper
+//used as a container for sorting root from subPackages when pushing Packages to root.
+let packageDataRoot = [];
 
-
-// created a boolean which whill tell the leftmenu that the containment tree needs to update
-export var treeNeedsUpdate = 0;
+//Index of Currently Selected Container by user
+let selectedContainerKey = 0;
 
 
 
-export function setSelectedFolderKey(newKey){
-    selectedFolderKey = newKey;
+export function setSelectedPackageKey(newKey){
+    selectedContainerKey = newKey;
 }
 
-export function getSelectedFolderKey(){
-    return selectedFolderKey;
+export function getSelectedPackageKey(){
+    return selectedContainerKey;
 }
 
 export function getTreeData(){
@@ -71,20 +60,20 @@ export function setTreeData(newTreeData){
     treeData = newTreeData;
 }
 
-export function getFolderData(){
-    return folderData;
+export function getPackageData(){
+    return packageData;
 }
 
-export function setFolderData(newFolderData){
-    folderData = newFolderData;
+export function setPackageData(newPackageData){
+    packageData = newPackageData;
 }
 
-export function getDecoyFolderData(){
-    return decoyFolderData
+export function getDecoyPackageData(){
+    return decoyPackageData
 }
 
-export function setDecoyFolderData(newData){
-    decoyFolderData = newData;
+export function setDecoyPackageData(newData){
+    decoyPackageData = newData;
 }
 
 export function getVertexData(){
@@ -103,44 +92,45 @@ export function setDecoyVertexData(newData){
     decoyVertexData = newData;
 }
 
-//returns a concated array of the folders and vertex(containers)
+//returns a concated array of the folders and vertex (Tree
 export function getContainerData(){
-    return folderData.concat(vertexData);
+    return packageData.concat(vertexData);
 }
 
-export function getModelData(){
-    return modelObjects;
+export function getGraphData(){
+    return graphObjects;
 }
 
-export function setModelData(newData){
-    modelObjects = newData;
+export function setGraphData(newData){
+    graphObjects = newData;
 }
-export function getDecoyModelData(){
-    return decoyModelObjects;
+export function getDecoyGraphData(){
+    return decoyGraphObjects;
 }
-export function setDecoyModelData(newData){
-    decoyModelObjects = newData;
+export function setDecoyGraphData(newData){
+    decoyGraphObjects = newData;
 }
 
-//This function is used to load the first available model and canvas from the modelObjects array
-//Used to fix thye tree/canvas desync bug when deleting - Lachlan
-function loadFirstModel(){
-    //set selected model/render key to the 1st available as so a canvas isnt loaded for a nonexistant model
-    // if there is atleast one or more items inside of modelObjects set the renderkey to the first object, else set the renderkey and model keys to 1.
-    console.log("below is modelObjects")
-    console.log(modelObjects)
-    if(modelObjects.length > 0){
-        setNewRenderKey(modelObjects[0].data.renderKey)
-        setNewModel(modelObjects[0].data.modelKey)
-        setSelectedFolderKey(modelObjects[0].data.renderKey)
+
+
+
+/**
+ * Loads the First available/oldest Graph
+ */
+function loadFirstGraph(){
+    //Load first Graph
+    if(graphObjects.length > 0){
+        setNewPackageKey(graphObjects[0].data.renderKey)
+        setNewGraphKey(graphObjects[0].data.modelKey)
+        setSelectedPackageKey(graphObjects[0].data.renderKey)
     }
+    //set keys to (none selected) values
     else{
-        setNewRenderKey(1)
-        setNewModel(-1)
-        setSelectedFolderKey(1)
+        setNewPackageKey(0)
+        setNewGraphKey(-1)
+        setSelectedPackageKey(0)
     }
-
-    //taken from handleElementSelect for loading the new models canvas
+    //load the model to canvas
     for (let item of currentObjects.flatten()){
         if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
             item.setPresent();
@@ -150,118 +140,50 @@ function loadFirstModel(){
         }
     }
     drawAll()
-    
 }
 
 
-//parent key is for dictating subfolders where 0 is root, else pKey is a folder renderKey - Lachlan
-export function handleAddFolder(folderName, parentKey = 0){
-    //Create a new folder using the known node type
+/**
+ * Create a Package in Treeview
+ * @param {string} packageName Name of new Package
+ * @param {number} parentKey Index of Parent, Defaults to 0 ("Root")
+ */
+export function handleAddPackage(packageName, parentKey = 0){
 
     incrementTotalRenderKeys();
 
     let tempFolderThing = {
-        text: folderName + " 📁", //If icon is changed, youll have to change the folder icon in context menu too
+        text: packageName + " " + getPackageIcon(), 
         children: treeData[getTotalRenderKeys()],
         data: NaN,
         state: {opened: true},
-        type: "Folder",
-        typeName: "Folder",
+        type: "Package",
+        typeName: "Package",
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey
     }
 
-    decoyFolderData.push(tempFolderThing)
+    decoyPackageData.push(tempFolderThing)
 
     let folderThing2 = {
-        text: folderName + " 📁", //If icon is changed, youll have to change the folder icon in context menu too
+        text: packageName + " " + getPackageIcon(), 
         children: treeData[getTotalRenderKeys()],
-        data: decoyFolderData[folderData.length],
+        data: decoyPackageData[packageData.length],
         state: {opened: true},
-        type: "Folder",
-        typeName: "Folder",
+        type: "Package",
+        typeName: "Package",
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey
     }
     
-
-    folderData.push(folderThing2);
-
-
-    
+    packageData.push(folderThing2);
 }
-
-// Function to remove a folder in the tree
-export function handleDeleteFolder(selectedRenderKey){ // changing the deleting functions to delete based on renderkey & modelkeys - cooper
-    console.log("below is the selected render key")
-    console.log(selectedRenderKey)
-    if(folderData.length > 1){ //cannot delete folder if it is the only one excluding root - Lachlan
-        for (let i = 0; i < folderData.length; i++){
-            if (folderData[i].renderKey === selectedRenderKey){
-                console.log("below is folderdata")
-                console.log(folderData)
-                deleteFolderChildren(folderData[i]);
-                decoyFolderData.splice(i,1); // have to delete from this array as well because this is where folders obtain the data of themselves 
-                folderData.splice(i,1); 
-            }
-        }
-    
-    }
-    else{console.log("Cannot delete only folder")}
-    
-    loadFirstModel()
-}
-
-function deleteFolderChildren(selectedFolder){ // function for deleting all the children of a folder.
-    let folderChildren = selectedFolder.children;
-    for (let i = 0; i < folderChildren.length; i++){
-        if (folderChildren[i].type === "Folder"){
-            let selectedRenderKey = folderChildren[i].renderKey;
-            handleDeleteFolder(selectedRenderKey);
-
-        }
-        else if (folderChildren[i].type === "Model"){
-            let selectedModelKey = folderChildren[i].modelKey;
-            handleDeleteModel(selectedModelKey);
-        }
-        else if (folderChildren[i].type === "treeVertex"){
-            let selectedUUID = folderChildren[i].semanticIdentity.UUID;
-            handleDeleteVertex(selectedUUID);
-        }
-    }
-}
-
-function deleteModelChildren(selectedModel){ // function for deleting all the children of the model.
-    if(selectedModel.children.length > 0){
-        let verticesFolder = selectedModel.children;
-        for (let i = 0; i < verticesFolder.length; i++){ // had to make a nested for loop due to the encompassing 'vertices' folder
-            let vertices = verticesFolder[i].children;
-            for (let v = 0; v < vertices.length; v++){
-                if (vertices[v].modelkey === selectedModel.modelKey){
-                    let chosenObject = vertices[v].data
-                    deleteElement(chosenObject);
-                }
-            }    
-        }
-    }   
-}
-
-
-export function handleRenameFolder(newName,rKey){
-    if(newName !== ""){
-        for (let i = 0; i < folderData.length; i++){
-            if (folderData[i].renderKey === rKey){
-                folderData[i].text = newName + " 📁";
-                folderData[i].data.text = newName + " 📁";
-                break;
-            }
-        }
-    }
-    else{
-        console.log("Cannot have empty name")
-    }
-}
-
+/**
+ * Create a Vertex in Treeview
+ * @param {string} vertexName 
+ * @param {number} parentKey 
+ * @returns Created Vertex Object
+ */
 export function handleAddVertex(vertexName, parentKey = 0){
     //Create a new folder using the known node type
 
@@ -269,7 +191,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
     let sID = new SemanticIdentity(vertexName,"","","", undefined ,[])
 
     let tempVertexThing = {
-        text: vertexName + " 🟧", //If icon is changed, youll have to change the folder icon in context menu too
+        text: vertexName + " " + getTreeVertexEmptyIcon(), 
         children: treeData[getTotalRenderKeys()],
         data: NaN,
         state: {opened: true},
@@ -278,7 +200,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
         originalVertex: true,
         renderKey: getTotalRenderKeys(),
         parentRenderKey: parentKey,
-        content: "content",
+        content: "",
         colour: "#FFD5A9",
         height: 50,
         width: 70,
@@ -291,7 +213,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
     decoyVertexData.push(tempVertexThing)
 
     let vertexThing2 = {
-        text: vertexName + " 🟧", //If icon is changed, youll have to change the folder icon in context menu too
+        text: vertexName + " " + getTreeVertexEmptyIcon(), //If icon is changed, youll have to change the folder icon in context menu too
         children: treeData[getTotalRenderKeys()],
         data: decoyVertexData[vertexData.length],
         state: {opened: true},
@@ -309,65 +231,28 @@ export function handleAddVertex(vertexName, parentKey = 0){
         fontSize: 12,
         semanticIdentity: sID
     }
-    
-
     vertexData.push(vertexThing2);
-    //console.log(vertexData)
-
-
     return vertexThing2
-    
 }
 
-
-
-// Added optional parameter render key, atm used to handle create a model with no folder selected - Lachlan
-//initial "children" are to prevent erros caused by children initialy not being iterable - Lachlan
-export function handleAddModel(modelName, rKey=getSelectedFolderKey(), semanticID=undefined){
-    incrementTotalModels();
-    let sID = undefined;
-    let icon = " 📈"; //If icon is changed, youll have to change toe folder icon in context menu too
-    
-    if (semanticID !== undefined){
-        sID = semanticID;
-        icon = " ⛶"; //If icon is changed, youll have to change toe folder icon in context menu too
-    } else {
-        sID = new SemanticIdentity(modelName,"","","", undefined ,[]);
+/**
+ * @param {number} selectedRenderKey 
+ */
+export function handleDeletePackage(selectedRenderKey){ 
+    for (let i = 0; i < packageData.length; i++){
+        if (packageData[i].renderKey === selectedRenderKey){
+            deletePackageChildren(packageData[i]);
+            decoyPackageData.splice(i,1); 
+            packageData.splice(i,1); 
+        }
     }
-
-    if(rKey <= 0) return //stops the creation of models in the root or otherwise non-existent folders
-    
-    let decoyModelThing = {
-        text: modelName + icon,
-        children: [],
-        data: NaN,
-        state: {opened: true},
-        type: "Model",
-        typeName: "Model",
-        renderKey: rKey,
-        modelKey: getTotalModels(),
-        semanticIdentity: sID
-    }
-    decoyModelObjects.push(decoyModelThing);
-
-
-    let tempModelThing = {
-        text: modelName + icon,
-        children: [],
-        data: decoyModelObjects[modelObjects.length],
-        state: {opened: true},
-        type: "Model",
-        typeName: "Model",
-        renderKey: rKey,
-        modelKey: getTotalModels(),
-        semanticIdentity: sID
-    };
- 
-    modelObjects.push(tempModelThing);
-    //console.log(modelObjects)
-
+    //set index to first graph
+    loadFirstGraph()
 }
-
+/**
+ * Delete a vertex From Treedata, and appearances on graphs
+ * @param {*} selectedUUID 
+ */
 export function handleDeleteVertex(selectedUUID){
     for(let vertex of currentObjects.flatten()){
         if(vertex.originalUUID === selectedUUID){
@@ -383,105 +268,158 @@ export function handleDeleteVertex(selectedUUID){
     drawAll();
 }
 
-export function handleDeleteModel(selectedModelKey){
-
-
-    for (let i = 0; i < modelObjects.length; i++){
-        if (modelObjects[i].modelKey === selectedModelKey){
-            console.log("model deleted below")
-            console.log(modelObjects[i])
-            deleteModelChildren(modelObjects[i]);
-            modelObjects.splice(i, 1);
-            decoyModelObjects.splice(i, 1);
+function deletePackageChildren(selectedFolder){
+    let folderChildren = selectedFolder.children;
+    for (let i = 0; i < folderChildren.length; i++){
+        if (folderChildren[i].type === "Package"){
+            let selectedRenderKey = folderChildren[i].renderKey;
+            handleDeletePackage(selectedRenderKey);
+        }
+        else if (folderChildren[i].type === "Graph"){
+            let selectedModelKey = folderChildren[i].modelKey;
+            handleDeleteGraph(selectedModelKey);
+        }
+        else if (folderChildren[i].type === "treeVertex"){
+            let selectedUUID = folderChildren[i].semanticIdentity.UUID;
+            handleDeleteVertex(selectedUUID);
         }
     }
-
-    loadFirstModel()
 }
 
-export function handleRenameModel(newName,mKey){
-    for (let i = 0; i < modelObjects.length; i++){
-        if (modelObjects[i].modelKey === mKey){
-            modelObjects[i].text = newName + " 📈";
-            modelObjects[i].data.text = newName + " 📈";
+
+export function handleRenameFolder(newName,rKey){
+    if(newName !== ""){
+        for (let i = 0; i < packageData.length; i++){
+            if (packageData[i].renderKey === rKey){
+                packageData[i].text = newName + " " + getPackageIcon();
+                packageData[i].data.text = newName + " " + getPackageIcon();
+                break;
+            }
+        }
+    }
+    else{
+        console.log("Cannot have empty name")
+    }
+}
+
+
+
+/**
+ * Add Graph to Treeview
+ * @param {string} graphName 
+ * @param {number} rKey 
+ */
+export function handleAddGraph(graphName, rKey=getSelectedPackageKey()){
+    //stops the creation of models in the root or otherwise non-existent folders
+    if(rKey <= 0) return 
+
+    incrementTotalGraph();
+    
+    let decoyModelThing = {
+        text: graphName + " " + getGraphIcon(),
+        children: [],
+        data: NaN,
+        state: {opened: true},
+        type: "Graph",
+        typeName: "Graph",
+        renderKey: rKey,
+        modelKey: getTotalModels(),
+    }
+
+    decoyGraphObjects.push(decoyModelThing);
+
+    let tempModelThing = {
+        text: graphName + " " + getGraphIcon(),
+        children: [],
+        data: decoyGraphObjects[graphObjects.length],
+        state: {opened: true},
+        type: "Graph",
+        typeName: "Graph",
+        renderKey: rKey,
+        modelKey: getTotalModels(),
+    };
+ 
+    graphObjects.push(tempModelThing);
+}
+
+export function handleDeleteGraph(selectedGraphKey){
+    for (let i = 0; i < graphObjects.length; i++){
+        if (graphObjects[i].modelKey === selectedGraphKey){
+            graphObjects.splice(i, 1);
+            decoyGraphObjects.splice(i, 1);
+        }
+    }
+    loadFirstGraph()
+}
+
+export function handleRenameGraph(newName,gKey){
+    for (let i = 0; i < graphObjects.length; i++){
+        if (graphObjects[i].modelKey === gKey){
+            graphObjects[i].text = newName + " " + getGraphIcon();
+            graphObjects[i].data.text = newName + " " + getGraphIcon();
             break;
         }
     }
 }
 
-
-export function getModelRenderKey(selectedModelKey){ // this function is to fetch the renderkey of the selected model to ensure verticies get created with the correct renderkey -- cooper
-    for(let i = 0; i < modelObjects.length; i++){
-        if (modelObjects[i].modelKey === selectedModelKey){
-            return modelObjects[i].renderKey
+/**
+ * 
+ * @param {number} selectedGraphKey 
+ * @returns {number} The Key of The Graphs Parent Container
+ */
+export function getGraphRenderKey(selectedGraphKey){ 
+    for(let i = 0; i < graphObjects.length; i++){
+        if (graphObjects[i].modelKey === selectedGraphKey){
+            return graphObjects[i].renderKey
         }
     }
 }
 
-//Function for changing the parent folder of a model - Lachlan
-export function handleModelRebase(mKey,newRkey){
-    console.log("Rebase test")
-    console.log(modelObjects)
-    for(let model of modelObjects){
-        if(model.modelKey === mKey){
-           for(let objectFolders of model.children){  
+/**
+ * Changes the Parent Container of a Graph
+ * @param {number} gKey 
+ * @param {number} newkey 
+ */
+export function handleModelRebase(gKey,newkey){
+    for(let graph of graphObjects){
+        if(graph.modelKey === gKey){
+           for(let objectFolders of graph.children){  
                 let objects = objectFolders.children
                 for(let object of objects){
-                    object.renderkey = newRkey;
+                    object.renderkey = newkey;
                     if(object.data.typeName === "Vertex"){
-                    object.data.vertexRenderKey = newRkey;
+                    object.data.vertexRenderKey = newkey;
                     }
                     else{
-                    object.data.arrowRenderKey = newRkey;
+                    object.data.arrowRenderKey = newkey;
                     }
                 }
             } 
-            console.log(model)
-            model.renderKey = newRkey;
-            console.log(model)
+            graph.renderKey = newkey;
         }
     }
-    console.log(modelObjects)
-    treeNeedsUpdate = 1;
     createSaveState();
 }
 
 
 
-// This is a function to display the path of a given vertex
-// It's called in the left menu of a vertex
-export function showVertexPath(theObject){
 
-    if (currentObjects.flatten().length > 0){
-        currentlySelectedObject = theObject;
-        if (showingVertPath === false){
-            showingVertPath = true;
-        }
-    
-        else if (showingVertPath === true){
-            showingVertPath = false;
-        }
-    }
 
-}
-
-// This function is used to determine which object should be owned by which folder object.
-// Works by taking a look at the children of the treeData array and seeing if their render 
-// key matches the one parsed to the function
-function determineOwnership(parsedRenderKey){
+/**
+ * Determines Children for a Container
+ * @param {number} parsedContainerKey 
+ * @returns Array of Container's children
+ */
+function determineOwnership(parsedContainerKey){
     let returnArray = []
     let i = 0
     for (let vertexOrArrow of treeData){
         if(vertexOrArrow !== undefined){
-            //console.log("treeData object name: " + vertexOrArrow.text)
-
-            if (vertexOrArrow.type === "Model"){
-                if (vertexOrArrow.renderKey === parsedRenderKey){
+            if (vertexOrArrow.type === "Graph"){
+                if (vertexOrArrow.renderKey === parsedContainerKey){
                     returnArray.push(treeData[i])
                 }
-                
             }
-
         }
         i += 1
     }
@@ -489,32 +427,35 @@ function determineOwnership(parsedRenderKey){
     return returnArray
 }
 
-//function used for determineing which folders are owned by a higher folder - Lachlan
-function determineSubFolders(parsedRenderKey){
+/**
+ * Determines SubContainers for a Container
+ * @param {*} parsedContainerKey 
+ * @returns Array of Container's SubContainer's
+ */
+function determineSubFolders(parsedContainerKey){
     let returnArray = []
-    for (let folder of getContainerData()){
-        if(folder.parentRenderKey === parsedRenderKey)
-        returnArray.push(folder)
+    for (let Container of getContainerData()){
+        if(Container.parentRenderKey === parsedContainerKey)
+        returnArray.push(Container)
     }
-    //console.log("subfolder return")
-    //console.log(returnArray)
     return returnArray
 }
 
 export function getModelNameFromKey(key){
-    let model = modelObjects.find(model => model.modelKey === key)
+    let model = graphObjects.find(model => model.modelKey === key)
     return model.text
 }
 
-export function getFolderNameFromKey(key){
+export function getContainerNameFromKey(key){
     let folder = getContainerData().find(folder => folder.renderKey === key)
     return folder.text
 }
 
+//Flag for when the editor is first opened or a new file is loaded.
+let initialPackageAdded = false;
 
-
-let initialFolderAdded = false;
 export class ContainmentTree extends React.Component {
+    
 
     componentDidMount() {
         document.getElementById("LowerPanel").addEventListener('dragstart', this.dragStart);
@@ -527,21 +468,17 @@ export class ContainmentTree extends React.Component {
     }
 
     dragStart(e) {
-        //console.log(e)
-        //When we have a better method of getting data without the click, Use the new method to assign the data value - Lachlan
+        //click required as JStree requires a "Selecting a node" to bring data forward. (Element only stores name)
         e.target.click();
         let vertData = 0;
         for(let folder of getContainerData()){
-            if(getSelectedFolderKey() === folder.renderKey)
+            if(getSelectedPackageKey() === folder.renderKey)
             vertData = folder;
         }
-
         let data = vertData;
-        console.log('drag starts...');
         //Prevents errors when a folder or model is dragged etc. 
         if(vertData.type === "treeVertex"){
         e.dataTransfer.setData('text/plain',data.semanticIdentity.UUID)
-        //console.log(data.semanticIdentity.UUID)
         }
         else{
             console.log("This object has no drag/drop feature")
@@ -553,138 +490,101 @@ export class ContainmentTree extends React.Component {
         super(props);
 
         treeData = []; 
-        //let i = 0;
-        //console.log("props")
-        //console.log(props)
-        
 
-        
-        if (initialFolderAdded === false){
-            handleAddFolder("Package"); //The initial folder has render key 1, the initial model needs this to be specified as nothing is selected
-            handleAddModel("Graph",1) 
-            handleAddFolder("Subfolder",1)
-            handleAddVertex("Vertex",1)
-            handleAddFolder("Package 2")
-            handleAddModel("Graph 2",4)
-            handleAddVertex("Vertex 2",4)
-            setNewRenderKey(1);
-            setNewModel(1);
-            setSelectedFolderKey(1);
-            initialFolderAdded = true;
+        if (initialPackageAdded === false){
+            initialObjects()
+
+            setNewPackageKey(1);
+            setNewGraphKey(1);
+            setSelectedPackageKey(1);
+            initialPackageAdded = true;
             createSaveState();
         }
         
 
-            // Push the model objects in. --- I moved the position of these for loops outside of the vertex for loop as it was creating a few problems - cooper
-        for (let model of modelObjects){
+        // Push the model objects in
+        for (let model of graphObjects){
             treeData.push(model);           
             
         }
-        for (let folder of getContainerData()){ // this for loop is to define the ownership of the models - cooper
-                let canvasItems = determineOwnership(folder.renderKey) 
-                let subFolderItems = determineSubFolders(folder.renderKey)
-                let combinedItems = canvasItems.concat(subFolderItems)
-                folder.children = combinedItems;
+        //define owenerships
+        for (let folder of getContainerData()){ 
+            let canvasItems = determineOwnership(folder.renderKey) 
+            let subFolderItems = determineSubFolders(folder.renderKey)
+            let combinedItems = canvasItems.concat(subFolderItems)
+            folder.children = combinedItems;
                 
 
-            }
-               // treeData.push(vertex.toTreeViewElement(new Set())); --- not too sure what the point of this .push was - cooper   
-            
-        for (let folder of getContainerData()){ // this for loop is to define the ownership of the vertices & arrows - cooper
+        }
+
+        //define ownership of canvas arrows   
+        for (let folder of getContainerData()){ 
             let vertex = new VertexNode() 
-
-
             if (vertex.toTreeViewElement("Arrow Folder", folder.renderKey) !== undefined){
                 folder.children.push(vertex.toTreeViewElement("Arrow Folder", folder.renderKey))
             }  
             
         }
-
+        //determine if vertex's are empty or not
         for(let vert of getVertexData()){
             if(vert.children.length === 0){
-                vert.text = vert.text.replace(" 🟧","");
-                vert.text = vert.text.replace(" 📂","");
-                vert.text = vert.text + " 🟧"
+                vert.text = vert.text.replace(" " + getTreeVertexEmptyIcon(),"");
+                vert.text = vert.text.replace(" " + getTreeVertexFullIcon(),"");
+                vert.text = vert.text + " " + getTreeVertexEmptyIcon();
             }
             else{
-                vert.text = vert.text.replace(" 🟧","");
-                vert.text = vert.text.replace(" 📂","");
-                vert.text = vert.text + " 📂"
+                vert.text = vert.text.replace(" " + getTreeVertexEmptyIcon(),"");
+                vert.text = vert.text.replace(" " + getTreeVertexFullIcon(),"");
+                vert.text = vert.text + " " + getTreeVertexFullIcon()
             }
         }
 
-        folderDataRoot = [];
+        //Determine which folders are root folders
+        packageDataRoot = [];
         for (let folder of getContainerData()){
             if(folder.parentRenderKey ===0){
-                folderDataRoot.push(folder)
+                packageDataRoot.push(folder)
             }
 
         }
 
+        //Set the TreeData
         this.state = {
             data: {
                 core: {
                     data: [
                         { text: "Root", 
-                        children: folderDataRoot, state: { opened: true }, 
+                        children: packageDataRoot, state: { opened: true }, 
                         root: true},
                     ]
                 }
             },
             selectedVertex: null
         }
-
-
-
-        if(showingVertPath === true){
-
-            let highestLevel = "Root";
-            let nextLevel = "";
-            let vertexOrEdge = "";
-            let actualObject = "";
-
-            let b = 0;
-            //First, we need to actually determine where the vertex is
-            //Take a look at our container
-            for (let cont of getContainerData()){
-                for (let treeDat of cont.children){
-                    if(b === 0){
-                        for (let treeElement of treeDat.children){
-                                if ((treeElement.text === currentlySelectedObject.title)){
-                                    nextLevel = cont.text;
-                                    vertexOrEdge = "Vertices"
-                                    actualObject = currentlySelectedObject.title
-                                    someVertexPath = highestLevel +"::"+ nextLevel +"::"+ vertexOrEdge +"::"+ actualObject;
-                                    b = 1;
-                                }
-                        }
-                    }
-                }
-            }
-        }
     }
 
-    //Function called when an object in treeview is clicked
+    /**
+     * Function called when Treeview Element is clicked
+     * @param {*} e The target element
+     * @param {*} data The treeNodes data
+     */
     handleElementSelect(e, data) {
 
-        // Try catch used to catch undefined data type eg. root
+        //catch undefined data type eg. root
         try{
-            console.log(data.node)
-
-            if(data.node.data.type === "Folder" || data.node.data.type === "treeVertex" ){
-                setSelectedFolderKey(data.node.data.renderKey)
+            if(data.node.data.type === "Package" || data.node.data.type === "treeVertex" ){
+                setSelectedPackageKey(data.node.data.renderKey)
             }
 
-            else if (data.node.data.type === "Model"){
-                setNewModel(data.node.data.modelKey);
-                setNewRenderKey(data.node.data.renderKey);
-                setSelectedFolderKey(data.node.data.renderKey)
+            else if (data.node.data.type === "Graph"){
+                setNewGraphKey(data.node.data.modelKey);
+                setNewPackageKey(data.node.data.renderKey);
+                setSelectedPackageKey(data.node.data.renderKey)
                 // Move everything away
                 for (let item of currentObjects.flatten()){
                     if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
                         item.setPresent();
                     }
-
                     else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
                         item.setAway();
                     }
@@ -698,11 +598,9 @@ export class ContainmentTree extends React.Component {
                         this.setState({
                             selectedVertex: vertex
                         });
-
-                        //The following is required to change canvas to the selected vertex's model preventing desync issues of tree and canvas - Lachlan
-                        setNewRenderKey(vertex.vertexRenderKey);
-                        setNewModel(vertex.vertexModelKey); 
-                        setSelectedFolderKey(vertex.vertexRenderKey)
+                        setNewPackageKey(vertex.vertexRenderKey);
+                        setNewGraphKey(vertex.vertexModelKey); 
+                        setSelectedPackageKey(vertex.vertexRenderKey)
                         
                         for (let item of currentObjects.flatten()){
                             if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
@@ -724,13 +622,12 @@ export class ContainmentTree extends React.Component {
             drawAll();
         }
         catch(e){
-            //console.log("If True,a null type error has been caught, If the selected object should be selectable, this is an issue")
+            console.log("If True,a null type error has been caught, If the selected object should be selectable, this is an issue")
         }
-
         //If the user clicks the root folder
         try{
             if(data.node.original.root === true){
-                setSelectedFolderKey(0) //renderkey 0 will be used for root
+                setSelectedPackageKey(0) //renderkey 0 will be used for root
             }
         }
         catch(e){
@@ -738,12 +635,6 @@ export class ContainmentTree extends React.Component {
 
 
     }
-
-    handleContextMenu(){
-        console.log("CM triggered for tree")
-    }
-
-
 
     render() {
         const data = this.state.data;

@@ -424,7 +424,6 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
                 
     
-                <input id="VertPath" className="vertexPath" defaultValue={this.state.selectedObject.vertexPath}/>
                 
 
 
