@@ -19,7 +19,6 @@ export class Canvas extends React.Component {
     }
 
 
-
     componentDidMount() {
         this.zoom = this.props.mainState.zoomLevel;
         this.tool = this.props.mainState.drawMode;
@@ -61,8 +60,6 @@ export class Canvas extends React.Component {
             window.alert("You need to create and select a graph first before you can start drawing!");
         }
         else{
-            console.log('dropped')
-            console.log(canvasDraw.getCurrentGraph())
             //Find the vertex object that was dragged
             let droppedSemanticID = e.dataTransfer.getData('text/plain');
             let droppedVertex = 0;
@@ -70,10 +67,8 @@ export class Canvas extends React.Component {
                 if (vert.semanticIdentity.UUID === droppedSemanticID)
                 droppedVertex = vert;
             }
-            //console.log(droppedVertex)
             //get canvas relative coordinates for where the object was dropped
             let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
-
             let newName = droppedVertex.text.replace(" 🟧","");
             newName = newName.replace(" 📂","")
             let newColour;
@@ -103,14 +98,8 @@ export class Canvas extends React.Component {
             canvasDraw.addObject(canvasVert)
             canvasDraw.drawAll()
 
-            createSaveState() //Used for undo/redo functionality
+            createSaveState()
         }
-
-        //canvas
-        //mouseStartX
-        //mouseStartY
-        //x mose+10
-        //x mouse +10
 
     }
 
@@ -178,7 +167,6 @@ export class Canvas extends React.Component {
 
             }
             if (intersection !== null) {
-                //console.log(selectMultiple);
                 // Remove dupes
                 let foundEnd = 0;
                 //start at 0
@@ -202,7 +190,6 @@ export class Canvas extends React.Component {
                     this.props.setLeftMenu(savedObjects[i], selectMultiple);
                 }
                 
-
             }
         }
 
