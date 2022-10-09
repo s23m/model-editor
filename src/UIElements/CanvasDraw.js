@@ -9,6 +9,7 @@ import { Graph } from "../DataStructures/Graph";
 import {getModelNameFromKey as getGraphNameFromKey, getVertexData, handleAddVertex} from "./ContainmentTree";
 import { createSaveState } from "../Serialisation/NewFileManager";
 import {selectedCanvasObject} from "./Canvas"
+import { getTreeVertexEmptyIcon } from "../Config";
 
 //false unless the onMouseMove function is executing, Is used to stop vertex created with leftmenu tool creating multiple vertex's when dragging for an inital size
 let dragging = false;
@@ -41,37 +42,34 @@ export var currentObjects = new Graph();
 
 export var savedArrows = [];
 
-// The naming conventions here are terrible, but basically the render keys determine where
-// a tree view element is placed in the graph while the model functions determine what's 
-// actually being rendered
+export let currentContainerKey = 0;
+//Total keys are to identify what key to give the next created object
+export let totalContainerKeys = 0
 
-export let currentRenderKey = 0;
-export let totalRenderKeys = 0
-
-export let currentModel = 0;
-export let totalModels = 0;
+export let currentGraph = 0;
+export let totalGraphs = 0;
 
 export function setTotalContainerKey(newData){
-    totalRenderKeys = newData;
+    totalContainerKeys = newData;
 }
 export function setTotalGraphKeys(newData){
-    totalModels = newData;
+    totalGraphs = newData;
 }
 
 export function getCurrentContainerKey() {
-    return currentRenderKey;
+    return currentContainerKey;
 }
 
 export function setNewContainerKey(newKey) {
-    currentRenderKey = newKey;
+    currentContainerKey = newKey;
 }
 
 export function getTotalContainerKeys() {
-    return totalRenderKeys;
+    return totalContainerKeys;
 }
 
 export function incrementTotalContainerKeys() {
-    totalRenderKeys = totalRenderKeys += 1;
+    totalContainerKeys = totalContainerKeys += 1;
 }
 
 export function getCurrentObjects() {
@@ -81,13 +79,13 @@ export function getCurrentObjects() {
 // --- Model Key Stuff --- //
 
 export function getCurrentGraph() {
-    return currentModel;
+    return currentGraph;
 }
 
-export function setNewGraph(newModel) {
-    currentModel = newModel;
+export function setNewGraph(newGraph) {
+    currentGraph = newGraph;
     try {
-        document.getElementById("SelectedModel").value = getGraphNameFromKey(newModel)
+        document.getElementById("SelectedGraph").value = getGraphNameFromKey(newGraph)
     } catch (error) {
         
     }
@@ -96,11 +94,11 @@ export function setNewGraph(newModel) {
 }
 
 export function getTotalGraphs() {
-    return totalModels;
+    return totalGraphs;
 }
 
 export function incrementTotalGraphs() {
-    totalModels = totalModels += 1;
+    totalGraphs = totalGraphs += 1;
 }
 
 
@@ -134,8 +132,6 @@ export function assignElement(elementID) {
 
 }
 
-
-
 export function resetMouseOrigin() {
     try {
         let canvasRect = canvasElement.getBoundingClientRect();
@@ -159,9 +155,8 @@ export function drawAll() {
 
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
-            //Only render the objects which are in the currently selected containment
-
-            if (item.getGraphKey() === currentModel) {
+            //Only render the objects which are in the currently selected Graph
+            if (item.getGraphKey() === currentGraph) {
                 item.draw(canvasContext);
 
             }
@@ -182,33 +177,18 @@ export function deleteElement(element) {
     drawAll()
 }
 
-//this is the same as the above, except when you're deleting a vertex with an arrow connected the edge connection code freaks out.
-//this here deletes any arrows connected to the vertex before deleting the vertex to get around this
+//Deletes any arrows connected to Vertex, then the Vertex
 export function vertexDeleteElement(element) {
     console.log("vDeleteE occurs")
-    //find the UUID of the vertex for arrow dest and source matching
-    //let selectedVertUUID = element.semanticIdentity.UUID;
-
     //Get the arrow UUID's
     let sourceUUIDs = currentObjects.ArrowUUIDSource(element);
     let destUUIDs = currentObjects.ArrowUUIDDest(element);
     //find an arrow with matching source/dest if they exist
-
     sourceUUIDs.forEach(element => currentObjects.remove(element.arrow));
     destUUIDs.forEach(element => currentObjects.remove(element.arrow))
 
-    //Now that the arrows are out of the way, we're safe to delete the vertex (same code as above)
-    if (element !== null) {
-        console.log("vdl if staement pass")
-        if (!currentObjects.remove(element)) {
-            
-            console.error("Failed to delete object with UUID %s", element.semanticIdentity.UUID);
-        }
-    } else {
-        console.error("Attempted to delete a null element");
-    }
-
-    drawAll()
+    //Now that the arrows are out of the way, we're safe to delete the vertex
+    deleteElement(element);
 
 }
 
@@ -486,10 +466,7 @@ export function onLeftMousePress(canvas, x, y) {
                 
                 return;
             }
-        } else {
         }
-
-
 
         let intersection = findIntersected(x, y);
         if (canvas.tool === Tool.Vertex && intersection !== null) {
@@ -524,12 +501,8 @@ export function onLeftMousePress(canvas, x, y) {
     mouseStartX = x;
     mouseStartY = y;
 
-
-
     // Enable example draw while user is deciding shape
     canvasElement.onmousemove = function (e) { onMouseMove(e, canvas) }
-
-
 }
 
 //aligning lines when large box moved
@@ -549,7 +522,6 @@ export function checkArrowsConnectedToBox(Object) {
             //If the object is connected to destination
             if (objectID === item.destVertexUUID) {
                 arrowArray.push(item);
-
                 // get connection data calcs min dist to travel and hopefully it's straight up
                 // first object destination y is less than object y
                 if (item.path[0][1] < Object.y) {
@@ -560,7 +532,6 @@ export function checkArrowsConnectedToBox(Object) {
                 }
                 item.pathData[1] = conData['nearest'];
                 StickArrowToObject(conData, item, 1);
-
                 //If the object is connected to Source
             } else if (objectID === item.sourceVertexUUID) {
                 arrowArray.push(item);
@@ -572,22 +543,15 @@ export function checkArrowsConnectedToBox(Object) {
                 }
                 item.pathData[0] = conData['nearest'];
                 StickArrowToObject(conData, item, 0);
-
             }
         }
-
     });
-
     resizing = false;
-
-
 }
 
 export function checkHorizArrowsConnectedToBox(Object) {
     let objectID;
-
     let arrowArray = [];
-
     resizing = true;
     objectID = Object.semanticIdentity.UUID;
     currentObjects.flatten().forEach((item) => {
@@ -617,15 +581,10 @@ export function checkHorizArrowsConnectedToBox(Object) {
                 }
                 item.pathData[0] = conData['nearest'];
                 StickArrowToObject(conData, item, 0);
-
             }
         }
-
     });
-
     resizing = false;
-
-
 }
 
 
@@ -1302,14 +1261,8 @@ export function shiftBoxes(secondObject) {
     //0 = down
     arrangeboxesandarrows(bigBox, downBoxes, downArrows, 0);
     arrangeboxesandarrows(bigBox, upBoxes, upArrows, 1);
-
     arrangeboxesandarrowshorizontal(bigBox, leftBoxes, leftArrows, 1);
     arrangeboxesandarrowshorizontal(bigBox, rightBoxes, rightArrows, 0);
-
-
-
-
-
 }
 
 export function onLeftMouseRelease(canvas, x, y) {
@@ -1355,10 +1308,7 @@ export function onLeftMouseRelease(canvas, x, y) {
                 addObject(newObject);
             }
 
-
             drawAll(currentObjects);
-
-
 
             //converting all arrows to savedArrows array
             let i = 0;
@@ -1380,15 +1330,12 @@ export function onLeftMouseRelease(canvas, x, y) {
             }
             previousObject = null;
 
-
         } else {
             //maybe here where we can disable compound lines
 
             //save object here
             previousObject = findIntersected(x, y);
-            
-        
-
+  
             arrowPath.push(getConnectionDataForArrow(x, y).coord);
             lastX = x;
             lastY = y;
@@ -1397,7 +1344,6 @@ export function onLeftMouseRelease(canvas, x, y) {
             };
             firstArrowJoint = false;
         }
-
     }
 
     if (canvas.tool === Tool.Vertex) {
@@ -1422,9 +1368,6 @@ export function onLeftMouseRelease(canvas, x, y) {
         canvas.props.setLeftMenu(newObject);
         canvas.props.setMode(Tool.Select);
     }
-
-
-
 
     drawAll(currentObjects);
 
@@ -1558,8 +1501,6 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                 }
             }
 
-
-            
             if (arrowsVert !== null) {
                 let conData = 0;
                 let j = 0;
@@ -1570,9 +1511,6 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                     conData = getConnectionDataForArrow(arrowsVert[j].path[1][0], arrowsVert[j].path[1][1]);
 
 
-                    
-
-                    
                         StickArrowToObject(conData, arrowsVert[j], 0);
                 }
             }
@@ -1583,11 +1521,8 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                     // source = one that's been clicked
                     arrowsHoriz[k].path[1][1] = arrowsHoriz[k].path[0][1];
                     conData = getConnectionDataForArrow(arrowsHoriz[k].path[1][0], arrowsHoriz[k].path[1][1]);
-                    
-               
 
-                        StickArrowToObject(conData, arrowsHoriz[k], 0);
-                  
+                    StickArrowToObject(conData, arrowsHoriz[k], 0);
                 }
             }
             else if (allArrows !== null){
@@ -1597,7 +1532,6 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
             object.y = y;
 
             updateArrows();
-
 
         } else if (object.typeName === "Arrow") {
             return;
@@ -1759,7 +1693,7 @@ export function updateVertex(selectedObject){ // function to update the data of 
     if(selectedObject.type !== "treeVertex"){
         vertex = getLinkedVertex(selectedObject); // 'vertex' refers to the treeview object.
 
-        vertex.text = selectedObject.title + " 🟧";
+        vertex.text = selectedObject.title + " " + getTreeVertexEmptyIcon();
         vertex.content = selectedObject.content;
         vertex.width = selectedObject.width;
         vertex.height = selectedObject.height;
@@ -1778,12 +1712,12 @@ export function updateVertex(selectedObject){ // function to update the data of 
             if(vertex.parentRenderKey === verticies.vertexRenderKey){
                 
             //If the vertex's model is in same folder
-            verticies.title = vertex.text.replace(" 🟧", "")
+            verticies.title = vertex.text.replace(" " + getTreeVertexEmptyIcon(), "")
             verticies.colour = vertex.colour;
             verticies.content = vertex.content;
             }
             else{
-            verticies.title = vertex.text.replace(" 🟧", "")
+            verticies.title = vertex.text.replace(" " + getTreeVertexEmptyIcon(), "")
             verticies.colour = "#FFFFFF";
             verticies.content = vertex.content;
             }

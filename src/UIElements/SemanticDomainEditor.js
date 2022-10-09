@@ -23,24 +23,13 @@ import Button from 'react-bootstrap/Button'
 
 import { GridExporter } from '@devexpress/dx-react-grid-export';
 
-import {
-    Grid,
-    Table,
-    TableHeaderRow,
-    TableInlineCellEditing,
-    Toolbar,
-    ExportPanel,
-} from '@devexpress/dx-react-grid-material-ui';
+import {Grid,Table,TableHeaderRow,TableInlineCellEditing,Toolbar,ExportPanel} from '@devexpress/dx-react-grid-material-ui';
 
-import {
-    Plugin,
-    Template,
-    TemplatePlaceholder,
-} from '@devexpress/dx-react-core';
+import {Plugin,Template,TemplatePlaceholder} from '@devexpress/dx-react-core';
 
-// In program imports
 import {currentObjects} from "./CanvasDraw";
 import {getVertexData} from "./ContainmentTree"
+import { getTreeVertexEmptyIcon } from '../Config';
 
 // Globals
 let rows;
@@ -364,7 +353,7 @@ function updateChangedObject(object, row) {
         object.semanticIdentity.name = row['name'];
         object.title = row['name']; // update the title of the vertex to be the same as semantic name
         object.semanticIdentity.description = row['description'];
-        object.text = row['name'] + " 🟧"
+        object.text = row['name'] + " " + getTreeVertexEmptyIcon();
         
         // Translations
         for (let translation of translationColumns) {

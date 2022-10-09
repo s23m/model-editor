@@ -1,4 +1,5 @@
 import React from 'react';
+import { getTreeVertexEmptyIcon, getTreeVertexFullIcon } from '../Config';
 import { createSaveState } from '../Serialisation/NewFileManager';
 import * as canvasDraw from "./CanvasDraw";
 import { getContainerNameFromKey, getVertexData} from './ContainmentTree';
@@ -69,8 +70,8 @@ export class Canvas extends React.Component {
             }
             //get canvas relative coordinates for where the object was dropped
             let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
-            let newName = droppedVertex.text.replace(" 🟧","");
-            newName = newName.replace(" 📂","")
+            let newName = droppedVertex.text.replace(" "+ getTreeVertexEmptyIcon(),"");
+            newName = newName.replace(" " + getTreeVertexFullIcon(),"")
             let newColour;
             let visibilityCheck = false;
 
@@ -91,8 +92,8 @@ export class Canvas extends React.Component {
             if(visibilityCheck === true){
                 //add origin package
                 let originText = getContainerNameFromKey(droppedVertex.parentRenderKey)
-                originText = originText.replace(" 🟧","")
-                originText = originText.replace(" 📁","")
+                originText = originText.replace(" "+ getTreeVertexEmptyIcon(),"")
+                originText = originText.replace(" "+ getTreeVertexFullIcon(),"")
                 canvasVert.setOrigin(originText + " :: ")
             }
             canvasDraw.addObject(canvasVert)

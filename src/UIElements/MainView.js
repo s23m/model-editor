@@ -269,7 +269,7 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>Semantic Editor</div>
 
 
-                    <input className="SelectedModel" id="SelectedModel" type="text" name="selectedModel" readOnly='readonly' />
+                    <input className="SelectedGraph" id="SelectedGraph" type="text" name="selectedGraph" readOnly='readonly' />
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>

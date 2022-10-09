@@ -122,11 +122,6 @@ export class LeftMenu extends React.Component{
             selectedObject: props.mainState.selectedObject
 
         };
-
-        //this.setState({menu:nextProps.mainState.menu,selectedObject:nextProps.mainState.selectedObject});
-        
-        //document.removeEventListener("keydown", this.onKeyPressed.bind(this));
-
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -164,7 +159,6 @@ export class LeftMenu extends React.Component{
     }
 
     //VERTEX SETTERS
-
     setTitle() {
         let newTitle = document.getElementById("LeftTitle").value;
         this.state.selectedObject.setTitle(newTitle);
@@ -358,7 +352,6 @@ export class LeftMenu extends React.Component{
 
         if (this.state.menu === LeftMenuType.TreeView) {
             leftMenuContents = <ContainmentTree setLeftMenu = {this.props.setLeftMenu} />
-            //console.log("A new tree has been created");
 
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();
