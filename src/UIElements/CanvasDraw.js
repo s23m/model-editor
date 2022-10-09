@@ -6,7 +6,7 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import {getModelNameFromKey, getVertexData, handleAddVertex} from "./ContainmentTree";
+import {getModelNameFromKey as getGraphNameFromKey, getVertexData, handleAddVertex} from "./ContainmentTree";
 import { createSaveState } from "../Serialisation/NewFileManager";
 import {selectedCanvasObject} from "./Canvas"
 
@@ -51,26 +51,26 @@ export let totalRenderKeys = 0
 export let currentModel = 0;
 export let totalModels = 0;
 
-export function setTotalRenderKey(newData){
+export function setTotalContainerKey(newData){
     totalRenderKeys = newData;
 }
-export function setTotalModelKeys(newData){
+export function setTotalGraphKeys(newData){
     totalModels = newData;
 }
 
-export function getCurrentRenderKey() {
+export function getCurrentContainerKey() {
     return currentRenderKey;
 }
 
-export function setNewRenderKey(newKey) {
+export function setNewContainerKey(newKey) {
     currentRenderKey = newKey;
 }
 
-export function getTotalRenderKeys() {
+export function getTotalContainerKeys() {
     return totalRenderKeys;
 }
 
-export function incrementTotalRenderKeys() {
+export function incrementTotalContainerKeys() {
     totalRenderKeys = totalRenderKeys += 1;
 }
 
@@ -80,14 +80,14 @@ export function getCurrentObjects() {
 
 // --- Model Key Stuff --- //
 
-export function getCurrentModel() {
+export function getCurrentGraph() {
     return currentModel;
 }
 
-export function setNewModel(newModel) {
+export function setNewGraph(newModel) {
     currentModel = newModel;
     try {
-        document.getElementById("SelectedModel").value = getModelNameFromKey(newModel)
+        document.getElementById("SelectedModel").value = getGraphNameFromKey(newModel)
     } catch (error) {
         
     }
@@ -95,11 +95,11 @@ export function setNewModel(newModel) {
 
 }
 
-export function getTotalModels() {
+export function getTotalGraphs() {
     return totalModels;
 }
 
-export function incrementTotalModels() {
+export function incrementTotalGraphs() {
     totalModels = totalModels += 1;
 }
 
@@ -163,7 +163,7 @@ export function drawAll() {
             //console.log("HERE " + item.typeName)
             //Only render the objects which are in the currently selected containment
 
-            if (item.getModelKey() === currentModel) {
+            if (item.getGraphKey() === currentModel) {
                 /*
                 if (item.typeName === "Vertex"){
                     console.log("Item is set as present")
@@ -1887,7 +1887,7 @@ function createObject(canvas, x1, y1, x2, y2) {
 
         // Add vertex
         console.log("draw vertex")
-        let newVert = handleAddVertex("Drawn Vertex" ,getCurrentRenderKey())
+        let newVert = handleAddVertex("Drawn Vertex" ,getCurrentContainerKey())
         console.log(newVert.semanticIdentity.UUID)
 
         return new Vertex({title: "Drawn Vertex", content: newVert,colour: newVert.colour, x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1, semanticIdentity: newVert.semanticIdentity});

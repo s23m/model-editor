@@ -150,7 +150,7 @@ export class VertexNode {
                 
 
                 //We onlt want the vertices in this folder
-                if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
+                if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedRenderKey){
                     //Set the append the name of the path to include the vertex name
                     if(currentObjects.flatten()[i].title === ""){
                         this.setVertexTreePath("Unnamed Vertex");
@@ -168,8 +168,8 @@ export class VertexNode {
                         text: currentObjects.flatten()[i].title,
                         children: [],
                         data: currentObjects.flatten()[i],
-                        renderkey: currentObjects.flatten()[i].getRenderKey(),
-                        modelkey: currentObjects.flatten()[i].getModelKey(),
+                        renderkey: currentObjects.flatten()[i].getContainerKey(),
+                        modelkey: currentObjects.flatten()[i].getGraphKey(),
                         state: {opened: false}
                     };
 
@@ -220,7 +220,7 @@ export class VertexNode {
         else if (returnOption === "Arrow Folder"){ //same thing but arrows folder - Lachlan
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
-                if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getRenderKey() === parsedRenderKey){
+                if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedRenderKey){
                     //console.log("arrow key")
                     //console.log(currentObjects.flatten()[i].getModelKey())
 
@@ -286,8 +286,8 @@ export class VertexNode {
                             text: finalString,
                             children: [],
                             data: currentObjects.flatten()[i],
-                            renderkey: currentObjects.flatten()[i].getRenderKey(),
-                            modelkey: currentObjects.flatten()[i].getModelKey(),
+                            renderkey: currentObjects.flatten()[i].getContainerKey(),
+                            modelkey: currentObjects.flatten()[i].getGraphKey(),
                             state: {opened: false}
                         };
 

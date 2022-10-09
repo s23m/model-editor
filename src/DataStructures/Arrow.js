@@ -86,28 +86,28 @@ export class Arrow {
         this.destIsAggregation = false;
 
         // Model key for rendering
-        this.arrowModelKey = canvasDraw.getCurrentModel();
+        this.arrowModelKey = canvasDraw.getCurrentGraph();
 
         // Render key for the arrow for placing in tree
         this.arrowRenderKey = getGraphRenderKey(this.arrowModelKey);
     }
 
     // Set the model key
-    setModelKey(key){
+    setGraphKey(key){
         this.arrowModelKey = key;
     }
 
-    getModelKey(){
+    getGraphKey(){
         return this.arrowModelKey;
     }
 
     // Set the render key. This is done in ContainmentTree.js
-    setRenderKey(key){
+    setContainerKey(key){
         this.arrowRenderKey = key;
     }
 
     // Return the render key. This is called in CanvasDraw
-    getRenderKey(){
+    getContainerKey(){
         return this.arrowRenderKey;
     }
 

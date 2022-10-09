@@ -1,7 +1,7 @@
 import React from 'react';
 import {getPackageData,getGraphData,getSelectedPackageKey,setSelectedPackageKey,handleModelRebase,handleRenameFolder, handleAddGraph, getModelNameFromKey,
     handleAddPackage, handleDeletePackage, handleDeleteGraph, handleRenameGraph} from "./ContainmentTree"
-import {getCurrentRenderKey, setNewRenderKey, getCurrentModel, setNewModel, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects,
+import {getCurrentContainerKey, setNewContainerKey, getCurrentGraph, setNewGraph, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects,
     linkContainer, currentObjects, drawAll, updateVertex} from "./CanvasDraw";
 import {handleAddVertex, handleDeleteVertex, getVertexData} from "./ContainmentTree";
 import { createSaveState } from '../Serialisation/NewFileManager';
@@ -169,19 +169,19 @@ export class ContextMenu extends React.Component {
                 console.log(keys)
 
 
-                setNewModel(parseInt(keys[0]));
-                setNewRenderKey(keys[1]); // automatically sets the renderkey to be the same as the models as this was causing issues - cooper
+                setNewGraph(parseInt(keys[0]));
+                setNewContainerKey(keys[1]); // automatically sets the renderkey to be the same as the models as this was causing issues - cooper
                 setSelectedPackageKey(keys[1]);
                 for (let item of currentObjects.flatten()){
-                    if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
+                    if (item.typeName === "Vertex" && item.getModelKey() === getCurrentGraph()){
                         item.setPresent();
                     }
-                    else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
+                    else if (item.getModelKey() !== getCurrentGraph() && item.typeName === "Vertex"){
                         item.setAway();
                     }
                 }
                 drawAll();
-                console.log(getCurrentModel(),getCurrentRenderKey())
+                console.log(getCurrentGraph(),getCurrentContainerKey())
                 this.props.setLeftMenuToTree();
 
 
@@ -329,7 +329,7 @@ export class ContextMenu extends React.Component {
                         //console.log("matching model found")
                         menuType = "Graph"
                         rightClickedItem = e.target.text;
-                        rightClickedItemKey = getCurrentModel();
+                        rightClickedItemKey = getCurrentGraph();
                     }
                 }
             }

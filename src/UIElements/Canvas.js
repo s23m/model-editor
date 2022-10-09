@@ -56,13 +56,13 @@ export class Canvas extends React.Component {
     }
     
     drop(e) {
-        if(canvasDraw.getCurrentModel() <= 0){ // stops the user dragging and dropping without a model being selected
+        if(canvasDraw.getCurrentGraph() <= 0){ // stops the user dragging and dropping without a model being selected
             console.log("attempted to drag and drop vertex while there are no available models to draw on");
             window.alert("You need to create and select a graph first before you can start drawing!");
         }
         else{
             console.log('dropped')
-            console.log(canvasDraw.getCurrentModel())
+            console.log(canvasDraw.getCurrentGraph())
             //Find the vertex object that was dragged
             let droppedSemanticID = e.dataTransfer.getData('text/plain');
             let droppedVertex = 0;
@@ -80,7 +80,7 @@ export class Canvas extends React.Component {
             let visibilityCheck = false;
 
             //check if selected model is located in the same package or not
-            if(droppedVertex.parentRenderKey !== canvasDraw.getCurrentRenderKey()){
+            if(droppedVertex.parentRenderKey !== canvasDraw.getCurrentContainerKey()){
                 newColour = "#FFFFFF";
                 visibilityCheck = true; //used to determine if the vertex has an origin package added
             }

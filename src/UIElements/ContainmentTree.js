@@ -6,8 +6,8 @@
 import React from 'react';
 import TreeView from 'react-simple-jstree';
 
-import { currentObjects, setNewRenderKey as setNewPackageKey, getTotalRenderKeys, incrementTotalRenderKeys, 
-    getCurrentModel, setNewModel as setNewGraphKey, getTotalModels, incrementTotalModels as incrementTotalGraph} from "./CanvasDraw";
+import { currentObjects, setNewContainerKey as setNewPackageKey, getTotalContainerKeys, incrementTotalContainerKeys, 
+    getCurrentGraph, setNewGraph as setNewGraphKey, getTotalGraphs, incrementTotalGraphs as incrementTotalGraph} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
 import {VertexNode} from "../DataStructures/Graph.js"
@@ -132,10 +132,10 @@ function loadFirstGraph(){
     }
     //load the model to canvas
     for (let item of currentObjects.flatten()){
-        if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
+        if (item.typeName === "Vertex" && item.getModelKey() === getCurrentGraph()){
             item.setPresent();
         }
-        else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
+        else if (item.getModelKey() !== getCurrentGraph() && item.typeName === "Vertex"){
             item.setAway();
         }
     }
@@ -150,16 +150,16 @@ function loadFirstGraph(){
  */
 export function handleAddPackage(packageName, parentKey = 0){
 
-    incrementTotalRenderKeys();
+    incrementTotalContainerKeys();
 
     let tempFolderThing = {
         text: packageName + " " + getPackageIcon(), 
-        children: treeData[getTotalRenderKeys()],
+        children: treeData[getTotalContainerKeys()],
         data: NaN,
         state: {opened: true},
         type: "Package",
         typeName: "Package",
-        renderKey: getTotalRenderKeys(),
+        renderKey: getTotalContainerKeys(),
         parentRenderKey: parentKey
     }
 
@@ -167,12 +167,12 @@ export function handleAddPackage(packageName, parentKey = 0){
 
     let folderThing2 = {
         text: packageName + " " + getPackageIcon(), 
-        children: treeData[getTotalRenderKeys()],
+        children: treeData[getTotalContainerKeys()],
         data: decoyPackageData[packageData.length],
         state: {opened: true},
         type: "Package",
         typeName: "Package",
-        renderKey: getTotalRenderKeys(),
+        renderKey: getTotalContainerKeys(),
         parentRenderKey: parentKey
     }
     
@@ -187,18 +187,18 @@ export function handleAddPackage(packageName, parentKey = 0){
 export function handleAddVertex(vertexName, parentKey = 0){
     //Create a new folder using the known node type
 
-    incrementTotalRenderKeys();
+    incrementTotalContainerKeys();
     let sID = new SemanticIdentity(vertexName,"","","", undefined ,[])
 
     let tempVertexThing = {
         text: vertexName + " " + getTreeVertexEmptyIcon(), 
-        children: treeData[getTotalRenderKeys()],
+        children: treeData[getTotalContainerKeys()],
         data: NaN,
         state: {opened: true},
         type: "treeVertex",
         typeName: "VertexNode",
         originalVertex: true,
-        renderKey: getTotalRenderKeys(),
+        renderKey: getTotalContainerKeys(),
         parentRenderKey: parentKey,
         content: "",
         colour: "#FFD5A9",
@@ -214,13 +214,13 @@ export function handleAddVertex(vertexName, parentKey = 0){
 
     let vertexThing2 = {
         text: vertexName + " " + getTreeVertexEmptyIcon(), //If icon is changed, youll have to change the folder icon in context menu too
-        children: treeData[getTotalRenderKeys()],
+        children: treeData[getTotalContainerKeys()],
         data: decoyVertexData[vertexData.length],
         state: {opened: true},
         type: "treeVertex",
         typeName: "VertexNode",
         originalVertex: true,
-        renderKey: getTotalRenderKeys(),
+        renderKey: getTotalContainerKeys(),
         parentRenderKey: parentKey,
         content: "",
         colour: "#FFD5A9",
@@ -323,7 +323,7 @@ export function handleAddGraph(graphName, rKey=getSelectedPackageKey()){
         type: "Graph",
         typeName: "Graph",
         renderKey: rKey,
-        modelKey: getTotalModels(),
+        modelKey: getTotalGraphs(),
     }
 
     decoyGraphObjects.push(decoyModelThing);
@@ -336,7 +336,7 @@ export function handleAddGraph(graphName, rKey=getSelectedPackageKey()){
         type: "Graph",
         typeName: "Graph",
         renderKey: rKey,
-        modelKey: getTotalModels(),
+        modelKey: getTotalGraphs(),
     };
  
     graphObjects.push(tempModelThing);
@@ -582,10 +582,10 @@ export class ContainmentTree extends React.Component {
                 setSelectedPackageKey(data.node.data.renderKey)
                 // Move everything away
                 for (let item of currentObjects.flatten()){
-                    if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
+                    if (item.typeName === "Vertex" && item.getModelKey() === getCurrentGraph()){
                         item.setPresent();
                     }
-                    else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
+                    else if (item.getModelKey() !== getCurrentGraph() && item.typeName === "Vertex"){
                         item.setAway();
                     }
                 }
@@ -603,10 +603,10 @@ export class ContainmentTree extends React.Component {
                         setSelectedPackageKey(vertex.vertexRenderKey)
                         
                         for (let item of currentObjects.flatten()){
-                            if (item.typeName === "Vertex" && item.getModelKey() === getCurrentModel()){
+                            if (item.typeName === "Vertex" && item.getModelKey() === getCurrentGraph()){
                                 item.setPresent();
                             }
-                            else if (item.getModelKey() !== getCurrentModel() && item.typeName === "Vertex"){
+                            else if (item.getModelKey() !== getCurrentGraph() && item.typeName === "Vertex"){
                                 item.setAway();
                             }
                         }
