@@ -1,4 +1,4 @@
-import {addObject, currentObjects, drawAll, getCurrentContainerKey, getCurrentObjects, getTotalGraphs, getTotalContainerKeys as getTotalPackageKeys, 
+import {addObject, currentObjects, drawAll, getCurrentContainerKey, getTotalGraphs, getTotalContainerKeys as getTotalPackageKeys, 
     setCurrentObjects, setNewGraph, setNewContainerKey, setTotalGraphKeys, setTotalContainerKey, updateArrows} from "../UIElements/CanvasDraw"
 
 import {setTranslationColumns, translationColumns} from "../UIElements/SemanticDomainEditor"
@@ -91,7 +91,6 @@ export function load(jsonString){
 
     //vertices
     for(let vert of saveData.vertices){
-        console.log(vert)
         vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
             vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
         vert = new Vertex ({newConstructor: 1,loadedVertex: vert})
@@ -146,8 +145,6 @@ export function importLoad(jsonString){
     //load the file
     if (jsonString == null) return;
     let saveData = JSON.parse(jsonString);
-    console.log("saveData")
-    console.log(saveData)
 
     //Graph and containers,treevertex's need to be given new keys
     //arrows and vertex's will need new keys to match their updated parent keys
@@ -230,8 +227,6 @@ export function importLoad(jsonString){
 
     //assign the new keys to vertex's and arrows
     for(let packages of packageKeyMap){
-        console.log(packageKeyMap)
-        console.log("containerKeyMap")
         
         for(let vertex of saveData.vertices){
             if(vertex.vertexContainerKey === packages.originalKey){
@@ -241,8 +236,6 @@ export function importLoad(jsonString){
 
         for(let arrow of saveData.arrows){
             if(arrow.arrowContainerKey === packages.originalKey && !arrowUpdated.includes(arrow)){
-                console.log("saveData.arrows")
-                console.log(saveData.arrows)
                 arrow.arrowContainerKey = packages.newKey;
                 arrowUpdated.push(arrow);
             }
@@ -264,7 +257,6 @@ export function importLoad(jsonString){
         }
     }
     
-    console.log(saveData.arrows)
 
     //recreat vertex/arrow objects as in load()
 
@@ -318,8 +310,6 @@ export function importLoad(jsonString){
 
     //vertex's and arrows add to current data
 
-    console.log(getCurrentObjects())
-    console.log(newVertices)
 
     for(let vertex of newVertices){
         addObject(vertex)
@@ -340,7 +330,6 @@ export function importLoad(jsonString){
     updateArrows()
     drawAll()
 
-    console.log(getCurrentObjects())
      
 
  return;
@@ -403,7 +392,6 @@ export function undo(){
         currentState ++
         loadDirect(saveStates[currentState])
     }
-    console.log(currentState)
 }
 
 export function redo(){
@@ -411,5 +399,4 @@ export function redo(){
         currentState --
         loadDirect(saveStates[currentState])
     }
-    console.log(currentState)
 }

@@ -398,7 +398,6 @@ function updateChangedObjects(rows) {
         //itterate through tree verts
         for (let j = 0; j < treeVert.length; j++) {
             rows[i] = updateChangedObject(treeVert[j],rows[i])
-            console.log(treeVert[j])
         }
 
         // Iterate through all objects

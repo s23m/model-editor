@@ -7,14 +7,12 @@ import * as canvasDraw from "./CanvasDraw";
 import {LineColourToStringName,} from "../DataStructures/ArrowProperties"
 import { ContainmentTree,} from "./ContainmentTree";
 import {serverURL} from ".//MainView"
-
 import { SketchPicker } from 'react-color';
 
 // Icons
 import iconVertex from "../Resources/vertex.svg";
 import iconEdge from "../Resources/edge.svg";
 import iconSelect from "../Resources/select.svg"
-
 
 
 import {deleteElement} from "./CanvasDraw";
@@ -92,43 +90,18 @@ export class LeftMenu extends React.Component{
         this.setTitle();
         this.setContent();
     }
-    /*
-    leftMenuContents = <form id = "VertexMenu">
-                <div className="LeftHeader">Vertex Properties</div>
-                <label className="LeftLabel">Title</label>
-                <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()}/>
-                <label className="LeftSpacer">&nbsp;</label>
-    
-                */
-               
-    /// This is a test function, remove it if I forget to
-    testUpdateLabel = () =>{
-        this.setPath("fffffffff")
-        //document.getElementById("VertPath").value = "It doth been updated";
-        
-        //console.log("RIGHT HERE " + document.getElementById("VertPath").value)
-    }
-
-
-
-    /// 
 
     componentDidMount() {
         this.menu = this.props.mainState.menu;
         this.selectedItem = this.props.mainState.drawMode;
         this.props.setMode(this.selectedItem)
-
-        document.addEventListener("keydown", this.onKeyPressed.bind(this));
-        
+        document.addEventListener("keydown", this.onKeyPressed.bind(this));  
     }
 
 
     //For quickKeys
-
-
     onKeyPressed(e) {
         if (e.keyCode === 46){
-            console.log(this.state.selectedObject);
             if(this.state.selectedObject.typeName === "Vertex"){
                 vertexDeleteElement(this.state.selectedObject);
             }
@@ -155,7 +128,6 @@ export class LeftMenu extends React.Component{
         //document.removeEventListener("keydown", this.onKeyPressed.bind(this));
 
     }
-    
 
     componentDidUpdate(prevProps, prevState, snapshot) {
 
@@ -193,7 +165,6 @@ export class LeftMenu extends React.Component{
 
     //VERTEX SETTERS
 
-    
     setTitle() {
         let newTitle = document.getElementById("LeftTitle").value;
         this.state.selectedObject.setTitle(newTitle);
@@ -353,9 +324,6 @@ export class LeftMenu extends React.Component{
     }
 
     showTreeView(){
-        //this.state.menu = LeftMenuType.TreeView;
-        //console.log("HENLO: " + this.state);
-        //leftMenuContents = <ContainmentTree setLeftMenu = {this.props.setLeftMenu} />;
         this.state.selectedObject(null)
         canvasDraw.drawAll();
     }
@@ -419,13 +387,7 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={() => {/*deleteElement(this.state.selectedObject)*/vertexDeleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
 
-
-
                 <label className="LeftSpacer">&nbsp;</label>
-                
-    
-                
-
 
             </form>;
             
@@ -482,8 +444,6 @@ export class LeftMenu extends React.Component{
             </form>;
 
         }else if (this.state.menu === LeftMenuType.Arrow) {
-            console.log("Arrow Selected");
-            console.log(this.state.selectedObject)
 
             if(this.state.selectedObject.edgeType === Tool.Edge){
 
@@ -549,9 +509,6 @@ export class LeftMenu extends React.Component{
                     <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                     <label className="LeftSpacer">&nbsp;</label>
                     <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
-
-                    
-
                     </form>
             }
         }

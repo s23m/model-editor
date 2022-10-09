@@ -134,7 +134,6 @@ export class Canvas extends React.Component {
                     // brings up the menu
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
                     canvasDraw.onMiddleClick(canvas, x, y,null,selectDown);
-                    //console.log(selectDown);
 
                 } else {
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
@@ -182,7 +181,6 @@ export class Canvas extends React.Component {
                     foundEnd++;
                 }
                 //ideally want to push in the first object that has already been selected
-                console.log(savedObjects);
                 savedObjects.push(canvasDraw.findIntersected(x, y));
                 canvasDraw.onMiddleClick(canvas, x, y, savedObjects)
                 

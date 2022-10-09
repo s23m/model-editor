@@ -123,7 +123,6 @@ let cancelDraw = false;
 //Block Past location var
 let past_location = [];
 let past_size = [];
-let selectedObject;
 export var blockBeenSelected = false;
 
 // Init
@@ -160,28 +159,12 @@ export function drawAll() {
 
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
-            //console.log("HERE " + item.typeName)
             //Only render the objects which are in the currently selected containment
 
             if (item.getGraphKey() === currentModel) {
-                /*
-                if (item.typeName === "Vertex"){
-                    console.log("Item is set as present")
-                    item.setPresent();
-                }
-                */
                 item.draw(canvasContext);
 
             }
-
-            /*
-            else if (item.getModelKey() !== currentModel && item.typeName === "Vertex"){
-                console.log("Item is sent away")
-                item.setAway();
-                //console.log("The item to not be rendered is" + item.typeName);
-            }
-            */
-
         }
     });
 
@@ -448,7 +431,6 @@ function findNearestArrowPointIndex(x, y) {
         if (item.typeName === "Arrow") {
             item.path.forEach((point) => {
                 cDist = Math.hypot(x - point[0], y - point[1]);
-                console.log(cDist);
                 if (cDist < nearestDistance) {
                     nearestDistance = cDist;
                     nearestPointIndex = item.path.indexOf(point);
@@ -511,7 +493,6 @@ export function onLeftMousePress(canvas, x, y) {
 
         let intersection = findIntersected(x, y);
         if (canvas.tool === Tool.Vertex && intersection !== null) {
-            //console.log("Selecting intersected Vertex");
             canvas.props.setLeftMenu(intersection);
             canvas.props.setMode(Tool.Select);
             cancelDraw = true;
@@ -523,7 +504,6 @@ export function onLeftMousePress(canvas, x, y) {
     if (canvas.tool === Tool.Select) {
         let index, arrow;
         [index, arrow] = findNearestArrowPointIndex(x, y);
-        //console.log(index, arrow);
         if (arrow === getSelectedObject(canvas)) {
             if (index !== -1) {
                 resizing = true;
@@ -535,7 +515,6 @@ export function onLeftMousePress(canvas, x, y) {
                 canvasElement.addEventListener("mousemove", func);
                 canvasElement.addEventListener("mouseup", () => {
                     canvasElement.removeEventListener("mousemove", func);
-                    console.log("removed")
                 })
             }
         }
@@ -564,7 +543,6 @@ export function checkArrowsConnectedToBox(Object) {
 
     resizing = true;
     objectID = Object.semanticIdentity.UUID;
-    console.log(objectID);
     currentObjects.flatten().forEach((item) => {
         if (item.typeName === "Arrow") {
             let conData = 0;
@@ -581,7 +559,6 @@ export function checkArrowsConnectedToBox(Object) {
                     conData = getConnectionDataForArrow(item.path[0][0], Object.y + Object.height);
                 }
                 item.pathData[1] = conData['nearest'];
-                console.log("dest one")
                 StickArrowToObject(conData, item, 1);
 
                 //If the object is connected to Source
@@ -594,7 +571,6 @@ export function checkArrowsConnectedToBox(Object) {
                     conData = getConnectionDataForArrow(item.path[1][0], Object.y + Object.height);
                 }
                 item.pathData[0] = conData['nearest'];
-                console.log("source one");
                 StickArrowToObject(conData, item, 0);
 
             }
@@ -614,7 +590,6 @@ export function checkHorizArrowsConnectedToBox(Object) {
 
     resizing = true;
     objectID = Object.semanticIdentity.UUID;
-    console.log(objectID);
     currentObjects.flatten().forEach((item) => {
         if (item.typeName === "Arrow") {
             let conData = 0;
@@ -629,7 +604,6 @@ export function checkHorizArrowsConnectedToBox(Object) {
                     conData = getConnectionDataForArrow(Object.x + Object.width - 1, item.path[0][1]);
                 }
                 item.pathData[1] = conData['nearest'];
-                console.log("dest one")
                 StickArrowToObject(conData, item, 1);
 
                 //If the object is connected to Source
@@ -642,7 +616,6 @@ export function checkHorizArrowsConnectedToBox(Object) {
                     conData = getConnectionDataForArrow(Object.x + Object.width - 1, item.path[0][1]);
                 }
                 item.pathData[0] = conData['nearest'];
-                console.log("source one");
                 StickArrowToObject(conData, item, 0);
 
             }
@@ -658,14 +631,9 @@ export function checkHorizArrowsConnectedToBox(Object) {
 
 //save the position of the clicked variable as global
 export function saveBlockStates(canvas, x, y) {
-    selectedObject = getSelectedObject(canvas);
-    if (getSelectedObject(canvas) === null) {
-        selectedObject = findIntersected(x, y);
-    }
     if (selectedCanvasObject !== null) {
         blockBeenSelected = true;
 
-        //console.log("Block States Have been Saved");
         past_location = [selectedCanvasObject.x, selectedCanvasObject.y];
         past_size = [selectedCanvasObject.width, selectedCanvasObject.height];
     }
@@ -677,17 +645,14 @@ export function setArrowType(type) {
 
 //make sure boxes don't collide
 export function checkCollision(canvasObject) {
-    //console.log("Collision Tests:");
     let object = canvasObject
     let CollideCount = 0;
-    //console.log(past_size);
     // for loop to check all boxes in the list
     if (currentObjects.flatten() !== null && object !== null) {
         currentObjects.flatten().forEach((item) => {
             if (item.typeName === "Vertex") {
                 //make sure coords are > coords of box u just placed + its width
                 if (object.x === item.x && object.y === item.y) {
-                    //console.log("collides with itself");
                 }
                 // error of 10 pixels for item's height
                 else if ((object.y > (item.y + item.height + 10)) || (object.x > (item.x + item.width))
@@ -700,7 +665,6 @@ export function checkCollision(canvasObject) {
                     object.width = past_size[0];
                     object.height = past_size[1];
                     CollideCount++;
-                    //console.log("Collided");
                 }
             }
         });
@@ -708,7 +672,6 @@ export function checkCollision(canvasObject) {
         if (CollideCount === 0) {
             past_location = [object.x, object.y];
             past_size = [object.width, object.height]
-            //console.log(CollideCount);
         }
         blockBeenSelected = false;
         drawAll(currentObjects);
@@ -767,7 +730,6 @@ export function compareSizesToMoveAll(Object) {
     let allArrows = [];
 
     objectID = Object.semanticIdentity.UUID;
-    console.log(Object);
     currentObjects.flatten().forEach((item) => {
         if (item.typeName === "Arrow") {
 
@@ -835,12 +797,10 @@ export function lineIntersect(canvas, x, y, secondObject) {
     startX = 0;
     startY = 0;
 
-    console.log("\n \n arrow path: " + arrowPath + "\n\n");
     arrowPath = [];
 
     //previous object is below
     if (previousObject.y > y && previousObject.x + previousObject.width > x) {
-        console.log("\n\n\n prev object was below \n\n\n");
         startY = previousObject.y;
         startX = previousObject.x + (0.5 * previousObject.width);
 
@@ -850,7 +810,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
     }
     // previous object is above
     else if (previousObject.y < y && previousObject.x + previousObject.width > x && previousObject.x < x) {
-        console.log("\n\n\n prev object was above \n\n\n");
         startY = previousObject.y + previousObject.height + 10; //+ means go to bottom
         startX = previousObject.x + (0.5 * previousObject.width);
 
@@ -865,7 +824,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
     //previous object is below
     if (previousObject.y > (secondObject.y + secondObject.height + 10)) {
-        //console.log("\n\n\n prev object was below \n\n\n");
         //if previous is inside second range
         if ((previousObject.x > secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))) {
             startY = previousObject.y;
@@ -938,7 +896,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
     }
     // previous object is above
     else if (previousObject.y + previousObject.height + 10 < secondObject.y) {
-        //console.log("\n\n\n prev object was above \n\n\n");
         //if previous is inside second range
         if ((previousObject.x > secondObject.x) && ((previousObject.x + previousObject.width) < (secondObject.x + secondObject.width))) {
             startY = previousObject.y + previousObject.height;
@@ -1048,8 +1005,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
                 endY = startY;
 
                 checkHorizArrowsConnectedToBox(secondObject);
-
-                console.log("m");
             }
 
             if (blockPre >= blockSec) {
@@ -1058,7 +1013,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
                 //resizeVars[0] returns the box if there is a
                 //resizeVars[1] is which side/corner of the box that its coords are expected to be at (else null)
                 let resizeVars = checkResizeBounds(previousObject.x + previousObject.width, previousObject.y + previousObject.height + 10);
-                console.log(resizeVars);
                 resizeVars[0].expandSide(resizeVars[1], previousObject.x + previousObject.width, previousObject.y + increase, canvasContext);
 
 
@@ -1070,7 +1024,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(previousObject);
 
-                console.log("n");
             }
         }
         //Bottom Left and peeking
@@ -1080,7 +1033,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
                 let increase = secondObject.y + secondObject.height + 10 + ((previousObject.y + previousObject.height + 10) - (secondObject.y + secondObject.height + 10));
 
                 let resizeVars = checkResizeBounds(secondObject.x + secondObject.width, secondObject.y + secondObject.height + 10);
-                console.log(resizeVars);
                 resizeVars[0].expandSide(resizeVars[1], secondObject.x + secondObject.width, increase, canvasContext);
 
 
@@ -1092,7 +1044,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(secondObject);
 
-                console.log("o");
             }
 
             if (blockPre >= blockSec) {
@@ -1107,7 +1058,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(previousObject);
 
-                console.log("p");
             }
         }
 
@@ -1136,7 +1086,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
             endX = previousObject.x;
             endY = startY;
 
-            console.log("r");
         }
         //Top Right and peeking
         else if (previousObject.y + previousObject.height + 10 > secondObject.y && secondObject.y > previousObject.y) {
@@ -1152,7 +1101,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(secondObject);
 
-                console.log("s");
             }
 
             if (blockPre >= blockSec) {
@@ -1166,7 +1114,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(previousObject);
 
-                console.log("t");
             }
 
         }
@@ -1175,7 +1122,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
             if (blockPre <= blockSec) {
                 let increase = secondObject.height + 10 + ((previousObject.y + previousObject.height + 10) - (secondObject.y + secondObject.height + 10));
                 let resizeVars = checkResizeBounds(secondObject.x + secondObject.width, secondObject.y + secondObject.height + 10);
-                console.log(resizeVars);
                 resizeVars[0].expandSide(resizeVars[1], secondObject.x + secondObject.width, secondObject.y + increase, canvasContext);
 
 
@@ -1187,13 +1133,11 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(secondObject);
 
-                console.log("u");
             }
 
             if (blockPre >= blockSec) {
                 let increase = previousObject.height + 10 + (previousObject.y - secondObject.y);
                 let resizeVars = checkResizeBounds(previousObject.x + previousObject.width, previousObject.y + previousObject.height + 10);
-                console.log(resizeVars);
                 resizeVars[0].expandSide(resizeVars[1], previousObject.x + previousObject.width, previousObject.y + increase, canvasContext);
 
                 previousObject.y = secondObject.y;
@@ -1207,7 +1151,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
                 checkHorizArrowsConnectedToBox(previousObject);
 
-                console.log("v");
             }
         }
 
@@ -1229,7 +1172,6 @@ export function lineIntersect(canvas, x, y, secondObject) {
 //
 export function collectMehBox(boxes, arrows, bigbox, item, index) {
 
-    //console.log("runningcollect");
     if (bigbox.semanticIdentity.UUID === item.destVertexUUID) {
         let box = getObjectFromUUID(item.sourceVertexUUID);
         if ((bigbox.y) * index + (box.y) * (1 - index) > (box.y + box.height + 10) * index + (bigbox.y + bigbox.height + 10) * (1 - index)) {
@@ -1269,7 +1211,6 @@ export function arrangeboxesandarrows(bigbox, boxes, arrows, index) {
         }
         b = 0;
         for (b; b < boxes.length; b++) {
-            console.log(arrows[b]);
             let conData = getConnectionDataForArrow(boxes[b].x + boxes[b].width / 2, bigbox.y + (bigbox.height + 10) * (1 - index));
             arrows[b].pathData[1] = conData['nearest'];
             StickArrowToObject(conData, arrows[b], 1);
@@ -1313,7 +1254,6 @@ export function arrangeboxesandarrowshorizontal(bigbox, boxes, arrows, index) {
         }
         b = 0;
         for (b; b < boxes.length; b++) {
-            console.log(arrows[b]);
             let conData = getConnectionDataForArrow(bigbox.x + (bigbox.width) * (1 - index), boxes[b].y + (boxes[b].height + 10) / 2);
             arrows[b].pathData[1] = conData['nearest'];
             StickArrowToObject(conData, arrows[b], 1);
@@ -1366,7 +1306,7 @@ export function shiftBoxes(secondObject) {
     arrangeboxesandarrowshorizontal(bigBox, leftBoxes, leftArrows, 1);
     arrangeboxesandarrowshorizontal(bigBox, rightBoxes, rightArrows, 0);
 
-    //console.log(downboxes.length);
+
 
 
 
@@ -1530,7 +1470,6 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
 
                 //for loop to check for duplicates and remove if any
                 for (let nf = 0; nf < newfriendObject.length; nf++) {
-                    console.log(ObjectsToCheck.length)
                     for (let of = 0; of < ObjectsToCheck.length; of++) {
                         //doesn't get run?:
                         if (newfriendObject[nf].semanticIdentity.UUID === ObjectsToCheck[of].semanticIdentity.UUID) {
@@ -1560,7 +1499,6 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
         let i = 0;
         for (i; i < friendObject.length; i++) {
             F.push([x - friendObject[i].x, y - friendObject[i].y]); //distance from mouse to actual object's x, y
-            //console.log(F);
         }
     }
 
@@ -1569,7 +1507,6 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
         let i = 0;
         for (i; i < savedObjects.length; i++) {
             S.push([x - savedObjects[i].x, y - savedObjects[i].y]);
-            //console.log(F);
         }
     }
 
@@ -1637,7 +1574,6 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
 
                     
                         StickArrowToObject(conData, arrowsVert[j], 0);
-                        //console.log(arrowsVert[j].path);
                 }
             }
             else if (arrowsHoriz !== null) {
@@ -1651,7 +1587,6 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                
 
                         StickArrowToObject(conData, arrowsHoriz[k], 0);
-                        //console.log(arrowsHoriz[k].path);
                   
                 }
             }
@@ -1731,7 +1666,6 @@ export function findIntersected(x, y) {
     currentObjects.flatten().forEach((item) => {
         if (item !== null) {
             if (item.intersects(x, y)) {
-                //console.log("Intersection detected with ", item.typeName);
                 selectedItem = item;
             }
         }
@@ -1776,7 +1710,6 @@ function createContainer(canvas, x1, y1) {
 
 export function linkContainer(baseUUID,mirrorUUID){
     let baseSemantic = null;
-    console.log(currentObjects.rootVertices) 
     //Since rootvertices was made as a set, cant just find indexes to reference, have to keep for looping to what we want
     for(let i of currentObjects.rootVertices){
         if(i.vertex.semanticIdentity.UUID === baseUUID){
@@ -1796,7 +1729,6 @@ export function linkContainer(baseUUID,mirrorUUID){
         }
     }
 
-    console.log(currentObjects.rootVertices)
 
 }
 //Updates the appearances of linked containers to match the input container
@@ -1832,13 +1764,6 @@ export function updateVertex(selectedObject){ // function to update the data of 
         vertex.width = selectedObject.width;
         vertex.height = selectedObject.height;
 
-        if(vertex.parentRenderKey === selectedObject.vertexRenderKey){
-            console.log(vertex)
-            console.log(selectedObject)
-        }
-        else{
-        
-        }
     }
     else{
         vertex = selectedObject;
@@ -1849,8 +1774,6 @@ export function updateVertex(selectedObject){ // function to update the data of 
         if(vertex.semanticIdentity.UUID === verticies.originalUUID && verticies !== selectedObject){ // updates all of the canvas objects that come from the treeview object.
 
             //check if This graph vertex is in a different folder to the base vertex, if so make it white and add location
-            //console.log(vertex.parentRenderKey)
-            //console.log(verticies.vertexRenderKey)
 
             if(vertex.parentRenderKey === verticies.vertexRenderKey){
                 
@@ -1888,7 +1811,6 @@ function createObject(canvas, x1, y1, x2, y2) {
         // Add vertex
         console.log("draw vertex")
         let newVert = handleAddVertex("Drawn Vertex" ,getCurrentContainerKey())
-        console.log(newVert.semanticIdentity.UUID)
 
         return new Vertex({title: "Drawn Vertex", content: newVert,colour: newVert.colour, x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1, semanticIdentity: newVert.semanticIdentity});
         

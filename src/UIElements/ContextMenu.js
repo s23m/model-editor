@@ -5,7 +5,7 @@ import { setNewContainerKey, getCurrentGraph, setNewGraph, findIntersected, getG
      currentObjects, drawAll, updateVertex} from "./CanvasDraw";
 import {handleAddVertex, handleDeleteVertex, getVertexData} from "./ContainmentTree";
 import { createSaveState } from '../Serialisation/NewFileManager';
-import { getGraphIcon, getPackageIcon, getTreeVertexEmptyIcon, getTreeVertexFullIcon } from '../config';
+import { getGraphIcon, getPackageIcon, getTreeVertexEmptyIcon, getTreeVertexFullIcon } from '../Config';
 
 //Name of the right clicked item where "Default" is a non-object such as empty canvas space
 let rightClickedItem = "Default"; 
@@ -271,7 +271,6 @@ export class ContextMenu extends React.Component {
             if(e.target.text.includes(getPackageIcon())){
                 for(let folder of getPackageData()){
                     if(e.target.text === folder.text){
-                        //console.log("matching folder found")
                         menuType = "Package"
                         rightClickedItem = e.target.text;
                         rightClickedItemKey = getSelectedPackageKey();
