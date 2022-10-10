@@ -332,7 +332,7 @@ export class LeftMenu extends React.Component{
     deleteTitle = () => {
         this.setState({title: ""})
     };
-   
+
 
 // return the correct menu based on the selected item
     getMenu = () =>{
@@ -356,7 +356,7 @@ export class LeftMenu extends React.Component{
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();
             
-            leftMenuContents = <form id = "VertexMenu">
+            leftMenuContents = <div id = "VertexMenu">
                 <div className="LeftHeader">Vertex Properties</div>
                 <label className="LeftLabel">Title</label>
                 <input id="LeftTitle" className="LeftTitle" value={this.state.selectedObject.title} onInput={this.handleChange}/>
@@ -378,11 +378,12 @@ export class LeftMenu extends React.Component{
 
                 <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                 <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => {/*deleteElement(this.state.selectedObject)*/vertexDeleteElement(this.state.selectedObject);this.setState({menu:"TreeView"})}} placeholder="NoTabIndex">Remove</button>
+                <button className="LeftMenuButton" onClick={() => { vertexDeleteElement(this.state.selectedObject); this.deselectElement()}}>Remove</button>
 
                 <label className="LeftSpacer">&nbsp;</label>
+                
 
-            </form>;
+            </div>;
             
         } else if (this.state.menu === LeftMenuType.Artifact) {
             canvasDraw.drawAll();
@@ -487,13 +488,10 @@ export class LeftMenu extends React.Component{
                 <label className="LeftLabel">Destination Label</label>
                     <input id="DestLabel" className="LeftTitle" defaultValue={this.state.selectedObject.destEdgeEnd.label} onKeyUp={() => this.setEndLabel()}/>
                 <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.setState({ menu: LeftMenuType.TreeView, selectedObject: null }) }}>Remove</button>
-                <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={(e) => this.stripElement(e)}>Make Straight</button>
+                <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement()}}>Remove</button>
                 <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                 <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
 
             </form>
             }else{
