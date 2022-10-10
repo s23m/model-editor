@@ -4,7 +4,7 @@
 
 import { SemanticIdentity } from "./SemanticIdentity";
 import {drawMarker, getDistance,} from "../UIElements/CanvasDraw";
-import {getGraphRenderKey} from "../UIElements/ContainmentTree";
+import {getGraphContainerKey} from "../UIElements/ContainmentTree";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
 import {Tool} from "../UIElements/LeftMenu";
@@ -85,14 +85,14 @@ export class Arrow {
         this.sourceIsAggregation = false;
         this.destIsAggregation = false;
 
-        // Model key for rendering
+        // Graph key for rendering
         this.arrowGraphKey = canvasDraw.getCurrentGraph();
 
-        // Render key for the arrow for placing in tree
-        this.arrowContainerKey = getGraphRenderKey(this.arrowGraphKey);
+        // Container key for the arrow for placing in tree
+        this.arrowContainerKey = getGraphContainerKey(this.arrowGraphKey);
     }
 
-    // Set the model key
+    // Set the Graph key
     setGraphKey(key){
         this.arrowGraphKey = key;
     }
@@ -101,12 +101,12 @@ export class Arrow {
         return this.arrowGraphKey;
     }
 
-    // Set the render key. This is done in ContainmentTree.js
+    // Set the Container key. This is done in ContainmentTree.js
     setContainerKey(key){
         this.arrowContainerKey = key;
     }
 
-    // Return the render key. This is called in CanvasDraw
+    // Return the Container key. This is called in CanvasDraw
     getContainerKey(){
         return this.arrowContainerKey;
     }

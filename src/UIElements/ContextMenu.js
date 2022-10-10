@@ -1,5 +1,5 @@
 import React from 'react';
-import {getPackageData,getGraphData,getSelectedPackageKey,setSelectedPackageKey,handleModelRebase,handleRenameFolder, handleAddGraph, getModelNameFromKey,
+import {getPackageData,getGraphData,getSelectedPackageKey,setSelectedPackageKey,handleGraphRebase,handleRenamePackage, handleAddGraph, getGraphNameFromKey,
     handleAddPackage, handleDeletePackage, handleDeleteGraph, handleRenameGraph} from "./ContainmentTree"
 import { setNewContainerKey, getCurrentGraph, setNewGraph, findIntersected, getGraphXYFromMouseEvent, getObjectFromUUID, getCurrentObjects,
      currentObjects, drawAll, updateVertex} from "./CanvasDraw";
@@ -43,14 +43,14 @@ export class ContextMenu extends React.Component {
         //ignore clicks if context menu closed
         if (this.state.showMenu) {
             
-            //If Move graph was selected, create a new context menu with available folders
+            //If Move graph was selected, create a new context menu with available package
             if(e.target.id === "MoveGraph"){
                 menuType = "MoveGraph";
                 this.setState({showMenu: true})
             }
             else if(menuType === 'MoveGraph' && e.target.id.includes("Package")){
-                let newFolderKey = e.target.id.replace("Package",'')
-                handleModelRebase(rightClickedItemKey,parseInt(newFolderKey));
+                let newPackageKey = e.target.id.replace("Package",'')
+                handleGraphRebase(rightClickedItemKey,parseInt(newPackageKey));
                 this.setState({showMenu: false})
                 this.props.setLeftMenuToTree();
             }
@@ -92,7 +92,7 @@ export class ContextMenu extends React.Component {
             }
             else if(e.target.id === "DeleteVertexConfirmed"){
                 for(let vertex of getVertexData()){
-                    if(vertex.renderKey === rightClickedItemKey){
+                    if(vertex.containerKey === rightClickedItemKey){
                         handleDeleteVertex(vertex.semanticIdentity.UUID)
                     }
                 }
@@ -101,8 +101,8 @@ export class ContextMenu extends React.Component {
                 createSaveState();
             }
             else if(e.target.id === "DeletePackageConfirmed"){
-                for(let folder of getPackageData()){
-                    if(folder.renderKey === rightClickedItemKey){
+                for(let packages of getPackageData()){
+                    if(packages.containerKey === rightClickedItemKey){
                         handleDeletePackage(rightClickedItemKey)
                     }
                 }
@@ -111,8 +111,8 @@ export class ContextMenu extends React.Component {
                 createSaveState();
             }
             else if(e.target.id === "DeleteGraphConfirmed"){
-                for(let model of getGraphData()){
-                    if(model.modelKey === rightClickedItemKey){
+                for(let graph of getGraphData()){
+                    if(graph.graphKey === rightClickedItemKey){
                         handleDeleteGraph(rightClickedItemKey)
                     }
                 }
@@ -134,7 +134,7 @@ export class ContextMenu extends React.Component {
             else if(e.target.id === "PackageNameBox" || e.target.id === "CMSelected"){ 
             }
             else if(e.target.id === "Create-Graph"){
-                menuType = "AddContainerModel";
+                menuType = "AddContainerGraph";
                 this.setState({showMenu: true})
             }
             else if(e.target.id === "Bi-Nav"){
@@ -145,13 +145,13 @@ export class ContextMenu extends React.Component {
                 let keys = e.target.id.replace("Nav",'');
 
                 setNewGraph(parseInt(keys[0]));
-                setNewContainerKey(keys[1]); // automatically sets the renderkey to be the same as the models as this was causing issues - cooper
+                setNewContainerKey(keys[1]); // automatically sets the containerkey to be the same as the graph as this was causing issues - cooper
                 setSelectedPackageKey(keys[1]);
                 for (let item of currentObjects.flatten()){
-                    if (item.typeName === "Vertex" && item.getModelKey() === getCurrentGraph()){
+                    if (item.typeName === "Vertex" && item.getGraphKey() === getCurrentGraph()){
                         item.setPresent();
                     }
-                    else if (item.getModelKey() !== getCurrentGraph() && item.typeName === "Vertex"){
+                    else if (item.getGraphKey() !== getCurrentGraph() && item.typeName === "Vertex"){
                         item.setAway();
                     }
                 }
@@ -170,7 +170,7 @@ export class ContextMenu extends React.Component {
         if(e.key === 'Enter'){
             if(menuType === "Rename"){
                 let newName = document.getElementById("RenameBox").value
-                handleRenameFolder(newName,rightClickedItemKey)
+                handleRenamePackage(newName,rightClickedItemKey)
                 try{
                 this.props.setLeftMenuToTree();
                 }
@@ -267,10 +267,10 @@ export class ContextMenu extends React.Component {
 
         //If target is tree node
         if(e.target.className === "jstree-anchor jstree-hovered jstree-clicked"){
-            //if target is existing folder, load the folder menu
+            //if target is existing package, load the package menu
             if(e.target.text.includes(getPackageIcon())){
-                for(let folder of getPackageData()){
-                    if(e.target.text === folder.text){
+                for(let packages of getPackageData()){
+                    if(e.target.text === packages.text){
                         menuType = "Package"
                         rightClickedItem = e.target.text;
                         rightClickedItemKey = getSelectedPackageKey();
@@ -278,10 +278,10 @@ export class ContextMenu extends React.Component {
                 }
             }
 
-            //if target is existing model, load model menu
+            //if target is existing graph, load graph menu
             if(e.target.text.includes(getGraphIcon())){
-                for(let model of getGraphData()){
-                    if(e.target.text === model.text){
+                for(let graph of getGraphData()){
+                    if(e.target.text === graph.text){
                         menuType = "Graph"
                         rightClickedItem = e.target.text;
                         rightClickedItemKey = getCurrentGraph();
@@ -425,7 +425,7 @@ export class ContextMenu extends React.Component {
             }
             else if(menuType === "MoveGraph"){
 
-                let renderedOutput = getPackageData().map(item => <div className="CMitem" id={"Package"+ item.renderKey} key={item.text}> {item.text} </div>);
+                let renderedOutput = getPackageData().map(item => <div className="CMitem" id={"Package"+ item.containerKey} key={item.text}> {item.text} </div>);
 
                 return (
 
@@ -527,7 +527,7 @@ export class ContextMenu extends React.Component {
             else if(menuType === "Bi-Nav"){
 
                 let matchingContainers = [];
-                let matchingModels = [];
+                let matchingGraphs = [];
                 let matchingUUID = 0;
 
                 matchingUUID = rightClickedObject.originalUUID;
@@ -541,14 +541,14 @@ export class ContextMenu extends React.Component {
                         matchingContainers.push(vert)
                     }
                 }
-                for(let model of getGraphData()){
-                    if(model.semanticIdentity.UUID === matchingUUID){
-                        matchingModels.push(model)
+                for(let graph of getGraphData()){
+                    if(graph.semanticIdentity.UUID === matchingUUID){
+                        matchingGraphs.push(graph)
                     }
                 }
 
-                let renderedContainers = matchingContainers.map(item => <div className="CMitem" id={'Nav'+ item.vertex.vertexGraphKey + " " + item.vertex.vertexContainerKey} key={'Nav'+ item.vertex.semanticIdentity.UUID + " " + item.vertex.awayx}> {getModelNameFromKey(item.vertex.vertexGraphKey)} / {item.vertex.title} </div>)
-                let renderedModels = matchingModels.map(item => <div className="CMitem" id={'Nav'+ item.modelKey + " " + item.renderKey} key={'Nav'+ item.semanticIdentity.UUID}> {item.text}</div>)
+                let renderedContainers = matchingContainers.map(item => <div className="CMitem" id={'Nav'+ item.vertex.vertexGraphKey + " " + item.vertex.vertexContainerKey} key={'Nav'+ item.vertex.semanticIdentity.UUID + " " + item.vertex.awayx}> {getGraphNameFromKey(item.vertex.vertexGraphKey)} / {item.vertex.title} </div>)
+                let renderedGraphs = matchingGraphs.map(item => <div className="CMitem" id={'Nav'+ item.graphKey + " " + item.containerKey} key={'Nav'+ item.semanticIdentity.UUID}> {item.text}</div>)
                 
 
                 return (
@@ -557,7 +557,7 @@ export class ContextMenu extends React.Component {
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> also appears at:</div>   
                     <div>{renderedContainers}</div>
-                    <div>{renderedModels}</div>
+                    <div>{renderedGraphs}</div>
                     </div>
                 )
             }

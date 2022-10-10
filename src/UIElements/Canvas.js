@@ -56,8 +56,8 @@ export class Canvas extends React.Component {
     }
     
     drop(e) {
-        if(canvasDraw.getCurrentGraph() <= 0){ // stops the user dragging and dropping without a model being selected
-            console.log("attempted to drag and drop vertex while there are no available models to draw on");
+        if(canvasDraw.getCurrentGraph() <= 0){ // stops the user dragging and dropping without a graph being selected
+            console.log("attempted to drag and drop vertex while there are no available graphs to draw on");
             window.alert("You need to create and select a graph first before you can start drawing!");
         }
         else{
@@ -75,8 +75,8 @@ export class Canvas extends React.Component {
             let newColour;
             let visibilityCheck = false;
 
-            //check if selected model is located in the same package or not
-            if(droppedVertex.parentRenderKey !== canvasDraw.getCurrentContainerKey()){
+            //check if selected graph is located in the same package or not
+            if(droppedVertex.parentContainerKey !== canvasDraw.getCurrentContainerKey()){
                 newColour = "#FFFFFF";
                 visibilityCheck = true; //used to determine if the vertex has an origin package added
             }
@@ -91,7 +91,7 @@ export class Canvas extends React.Component {
             droppedVertex.content,newColour,droppedVertex.icons,droppedVertex.imageElements,droppedVertex.fontSize,droppedVertex.semanticIdentity)
             if(visibilityCheck === true){
                 //add origin package
-                let originText = getContainerNameFromKey(droppedVertex.parentRenderKey)
+                let originText = getContainerNameFromKey(droppedVertex.parentContainerKey)
                 originText = originText.replace(" "+ getTreeVertexEmptyIcon(),"")
                 originText = originText.replace(" "+ getTreeVertexFullIcon(),"")
                 canvasVert.setOrigin(originText + " :: ")
