@@ -36,30 +36,30 @@ export class EdgeEnd {
         this.label = label;
 
         // For deciding where it goes in the graph
-        this.edgeEndRenderKey = getCurrentContainerKey();
+        this.edgeEndContainerKey = getCurrentContainerKey();
 
         // For rendering the object
-        this.edgeEndModelKey = getCurrentGraph();
+        this.edgeEndGraphKey = getCurrentGraph();
     }
 
-    // Set the model key
+    // Set the graph key
     setGraphKey(key){
-        this.edgeEndModelKey = key;
+        this.edgeEndGraphKey = key;
     }
 
-    // Return the model key
+    // Return the graph key
     getGraphKey(){
-        return this.edgeEndModelKey;
+        return this.edgeEndGraphKey;
     }
 
-    // Set the render key. Done in ContainmentTree.js
+    // Set the Container key. Done in ContainmentTree.js
     setContainerKey(key){
-        this.edgeEndRenderKey = key;
+        this.edgeEndContainerKey = key;
     }
 
-    // Return the render key. Done in CanvasDraw.js
+    // Return the Container key. Done in CanvasDraw.js
     getContainerKey(key){
-        return this.edgeEndRenderKey;
+        return this.edgeEndContainerKey;
     }
 
     set type(newType){

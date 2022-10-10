@@ -127,23 +127,23 @@ export class VertexNode {
         return false;
     }
 
-    toTreeViewElement(returnOption, parsedRenderKey) { //added the model key parameter to we can specifiy what models vertexes belong to
+    toTreeViewElement(returnOption, parsedContainerKey) { //added graph key parameter to we can specifiy what graphs vertexes belong to
 
         //Pretty much everything that's currently on the canvas is searched and then converted into the tree appropriate struct in the below if else statements.
-        //Then, the vertices and arrows folder nodes can display their appropriate children.
+        //Then, the vertices and arrows package nodes can display their appropriate children.
         let ArrowChildren = [];
         let VertexChildren = [];
 
         
 
-        //Check which folder we're sticking these things into
-        if (returnOption === "Vertex Folder"){                  // they had a different spelling for vertex folder :DDDDD - cooper
-            //All objects currently on the canvas (excluding things like folders which only exist as tree view elements)
+        //Check which package we're sticking these things into
+        if (returnOption === "Vertex Package"){                  // they had a different spelling for vertex package :DDDDD - cooper
+            //All objects currently on the canvas (excluding things like packages which only exist as tree view elements)
             for(let i = 0; i < currentObjects.flatten().length; i++){
                 
 
-                //We onlt want the vertices in this folder
-                if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedRenderKey){
+                //We onlt want the vertices in this package
+                if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedContainerKey){
                     //Set the append the name of the path to include the vertex name
                     if(currentObjects.flatten()[i].title === ""){
                         this.setVertexTreePath("Unnamed Vertex");
@@ -161,8 +161,8 @@ export class VertexNode {
                         text: currentObjects.flatten()[i].title,
                         children: [],
                         data: currentObjects.flatten()[i],
-                        renderkey: currentObjects.flatten()[i].getContainerKey(),
-                        modelkey: currentObjects.flatten()[i].getGraphKey(),
+                        containerKey: currentObjects.flatten()[i].getContainerKey(),
+                        graphKey: currentObjects.flatten()[i].getGraphKey(),
                         state: {opened: false}
                     };
 
@@ -188,15 +188,15 @@ export class VertexNode {
                 children: VertexChildren,
                 data: null,
                 state: { opened: true },
-                type: "Vertex Folder"
+                type: "Vertex Package"
             }
         }
 
         //same typo as above if statement but for arrows
-        else if (returnOption === "Arrow Folder"){ //same thing but arrows folder - Lachlan
+        else if (returnOption === "Arrow Package"){ //same thing but arrows package - Lachlan
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
-                if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedRenderKey){
+                if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedContainerKey){
 
                         // Find the source and destination vertex as Keith defined in spec
                         let ourSourceEnd = currentObjects.flatten()[i].pathData[1][1]
@@ -260,8 +260,8 @@ export class VertexNode {
                             text: finalString,
                             children: [],
                             data: currentObjects.flatten()[i],
-                            renderkey: currentObjects.flatten()[i].getContainerKey(),
-                            modelkey: currentObjects.flatten()[i].getGraphKey(),
+                            containerKey: currentObjects.flatten()[i].getContainerKey(),
+                            graphKey: currentObjects.flatten()[i].getGraphKey(),
                             state: {opened: false}
                         };
 
@@ -283,60 +283,18 @@ export class VertexNode {
                 children: ArrowChildren,
                 data: null,
                 state: { opened: true },
-                type: "Arrow Folder"
+                type: "Arrow Package"
             }
         }
             
         }
-    
 
-        //No longer necessary due to the rework of assigning model children - Lachlan
-            /*
-            let arrowsObject = { //create the arrows folder as an object to push to the arrows array - Lachlan
-                text: "Arrows",
-                children: ArrowChildren,
-                data: null,
-                state: { opened: true },
-                type: "Arrow Folder"
-            }
-
-            arrows.push(arrowsObject)
-            //vertices folder
-            return arrows
-        }
-            */
-            
-        
-        //This down here is for vertex heirarchy stuff, not really needed anymore.
-        /*
-        if (!traversed) {
-            traversedVertices.add(this);
-            
-            for (let child of this.children) {
-                //children.push(child.toTreeViewElement(traversedVertices));
-            }
-            
-        }
-
-        let text = this.vertex.title;
-
-        if (text === null || text === "") {
-            text = "Unnamed Vertex";
-        }
-
-        return {
-            text: text,
-            children: children,
-            data: this.vertex,
-            state: { opened: true }
-        };
-        */
     }
     
-    setTreeViewElement(folderTitle){ //For when you want to make a folder type of element
+    setTreeViewElement(packageTitle){ //For when you want to make a package type of element
         let fakeChildren = [];
         return{
-            text: folderTitle,
+            text: packageTitle,
             children: fakeChildren,
             state: {opened: true}
         };

@@ -34,7 +34,7 @@ export function getMaxSaveStates(){
 export function initialObjects(){
     handleAddPackage("Package");
     handleAddGraph("Graph",1) 
-    handleAddPackage("Subfolder",1)
+    handleAddPackage("SubPackage",1)
     handleAddVertex("Vertex",1)
     handleAddVertex("Vertex 2",1)
     handleAddPackage("Package 2")

@@ -6,7 +6,7 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import {getModelNameFromKey as getGraphNameFromKey, getVertexData, handleAddVertex} from "./ContainmentTree";
+import {getGraphNameFromKey, getVertexData, handleAddVertex} from "./ContainmentTree";
 import { createSaveState } from "../Serialisation/NewFileManager";
 import {selectedCanvasObject} from "./Canvas"
 import { getTreeVertexEmptyIcon } from "../Config";
@@ -76,7 +76,7 @@ export function getCurrentObjects() {
     return currentObjects;
 }
 
-// --- Model Key Stuff --- //
+// --- Graph Key Stuff --- //
 
 export function getCurrentGraph() {
     return currentGraph;
@@ -1707,11 +1707,11 @@ export function updateVertex(selectedObject){ // function to update the data of 
     for(let verticies of currentObjects.flatten()){
         if(vertex.semanticIdentity.UUID === verticies.originalUUID && verticies !== selectedObject){ // updates all of the canvas objects that come from the treeview object.
 
-            //check if This graph vertex is in a different folder to the base vertex, if so make it white and add location
+            //check if This graph vertex is in a different package to the base vertex, if so make it white and add location
 
-            if(vertex.parentRenderKey === verticies.vertexContainerKey){
+            if(vertex.parentContainerKey === verticies.vertexContainerKey){
                 
-            //If the vertex's model is in same folder
+            //If the vertex's graph is in same package
             verticies.title = vertex.text.replace(" " + getTreeVertexEmptyIcon(), "")
             verticies.colour = vertex.colour;
             verticies.content = vertex.content;
