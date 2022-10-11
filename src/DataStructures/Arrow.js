@@ -66,11 +66,11 @@ export class Arrow {
             this.typeName = "Arrow";
         }else if (type === Tool.Specialisation){
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.TRIANGLE
-            this.typeName = "Specialisation";
+            this.typeName = "Arrow";
         }else if (type === Tool.Visibility){
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
             this.lineType = ArrowProps.LineType.DASHED
-            this.typeName = "Visibility";
+            this.typeName = "Arrow";
         }else{
             console.log("Failed to find correct tool");
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
