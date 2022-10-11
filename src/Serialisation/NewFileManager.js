@@ -91,6 +91,9 @@ export function load(jsonString){
 
     //vertices
     for(let vert of saveData.vertices){
+        setSelectedPackageKey(vert.vertexContainerKey)
+        setNewContainerKey(vert.vertexContainerKey)
+        setNewGraph(vert.vertexGraphKey)
         vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
             vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
         vert = new Vertex ({newConstructor: 1,loadedVertex: vert})
@@ -114,6 +117,9 @@ export function load(jsonString){
             return newArrow;
     }
     for(let arrow of saveData.arrows){
+        setSelectedPackageKey(arrow.arrowContainerKey)
+        setNewContainerKey(arrow.arrowContainerKey)
+        setNewGraph(arrow.arrowGraphKey)
         arrow = remakeArrow(arrow)
         newArrows.push(arrow)
     }
