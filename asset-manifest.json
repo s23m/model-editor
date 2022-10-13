@@ -1,31 +1,33 @@
 {
   "files": {
-    "main.css": "/lclb/static/css/main.147a4f1e.chunk.css",
-    "main.js": "/lclb/static/js/main.9c1350dd.chunk.js",
-    "main.js.map": "/lclb/static/js/main.9c1350dd.chunk.js.map",
+    "main.css": "/lclb/static/css/main.a278d1d6.chunk.css",
+    "main.js": "/lclb/static/js/main.cf02ffbf.chunk.js",
+    "main.js.map": "/lclb/static/js/main.cf02ffbf.chunk.js.map",
     "runtime-main.js": "/lclb/static/js/runtime-main.793eeaba.js",
     "runtime-main.js.map": "/lclb/static/js/runtime-main.793eeaba.js.map",
     "static/css/2.ee344228.chunk.css": "/lclb/static/css/2.ee344228.chunk.css",
-    "static/js/2.99b418f3.chunk.js": "/lclb/static/js/2.99b418f3.chunk.js",
-    "static/js/2.99b418f3.chunk.js.map": "/lclb/static/js/2.99b418f3.chunk.js.map",
+    "static/js/2.ea11d51a.chunk.js": "/lclb/static/js/2.ea11d51a.chunk.js",
+    "static/js/2.ea11d51a.chunk.js.map": "/lclb/static/js/2.ea11d51a.chunk.js.map",
     "index.html": "/lclb/index.html",
-    "precache-manifest.52f34c4dbafddf39c7fff34e263cd7fa.js": "/lclb/precache-manifest.52f34c4dbafddf39c7fff34e263cd7fa.js",
+    "precache-manifest.e4fe33db124374824445ff3f6b0b02d7.js": "/lclb/precache-manifest.e4fe33db124374824445ff3f6b0b02d7.js",
     "service-worker.js": "/lclb/service-worker.js",
     "static/css/2.ee344228.chunk.css.map": "/lclb/static/css/2.ee344228.chunk.css.map",
-    "static/css/main.147a4f1e.chunk.css.map": "/lclb/static/css/main.147a4f1e.chunk.css.map",
-    "static/js/2.99b418f3.chunk.js.LICENSE.txt": "/lclb/static/js/2.99b418f3.chunk.js.LICENSE.txt",
+    "static/css/main.a278d1d6.chunk.css.map": "/lclb/static/css/main.a278d1d6.chunk.css.map",
+    "static/js/2.ea11d51a.chunk.js.LICENSE.txt": "/lclb/static/js/2.ea11d51a.chunk.js.LICENSE.txt",
     "static/media/edge.svg": "/lclb/static/media/edge.09e9d9dc.svg",
     "static/media/help.svg": "/lclb/static/media/help.80a7660b.svg",
     "static/media/redo.svg": "/lclb/static/media/redo.a80ea341.svg",
     "static/media/select.svg": "/lclb/static/media/select.8b3cad47.svg",
+    "static/media/specialisation.svg": "/lclb/static/media/specialisation.3320bc80.svg",
     "static/media/undo.svg": "/lclb/static/media/undo.5858a028.svg",
-    "static/media/vertex.svg": "/lclb/static/media/vertex.4937cefd.svg"
+    "static/media/vertex.svg": "/lclb/static/media/vertex.4937cefd.svg",
+    "static/media/visibility.svg": "/lclb/static/media/visibility.5452d398.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.793eeaba.js",
     "static/css/2.ee344228.chunk.css",
-    "static/js/2.99b418f3.chunk.js",
-    "static/css/main.147a4f1e.chunk.css",
-    "static/js/main.9c1350dd.chunk.js"
+    "static/js/2.ea11d51a.chunk.js",
+    "static/css/main.a278d1d6.chunk.css",
+    "static/js/main.cf02ffbf.chunk.js"
   ]
 }
