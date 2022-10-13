@@ -61,7 +61,15 @@ export const Tool = {
     Artifact: "Artifact",
     Container: "Container",
 };
+// for undo/redo, dont want to create a save state each time left menu is opened and nothing is changed
+export let PropertyChange = false;
 
+export function getPropertyChange(){
+    return PropertyChange;
+}
+export function resetPropertyChange(){
+    PropertyChange = false;
+}
 // class to display the left hand menu, where we will be showing
 // object editing tools for now
 export class LeftMenu extends React.Component{
@@ -211,6 +219,7 @@ export class LeftMenu extends React.Component{
         this.state.selectedObject.setTitle(newTitle);
         canvasDraw.updateVertex(this.state.selectedObject);
         canvasDraw.drawAll()
+        PropertyChange = true;
     }
 
 
@@ -220,6 +229,7 @@ export class LeftMenu extends React.Component{
         this.state.selectedObject.setContent(newContent);
         canvasDraw.updateVertex(this.state.selectedObject);
         canvasDraw.drawAll()
+        PropertyChange = true;
     }
 
     //ARROW SETTERS
@@ -227,24 +237,28 @@ export class LeftMenu extends React.Component{
         let newLineType = document.getElementById("LineType").value;
         this.state.selectedObject.setLineType(newLineType);
         canvasDraw.drawAll()
+        PropertyChange = true;
     }
 
     setColour() {
         let newColour = document.getElementById("LineColour").value;
         this.state.selectedObject.setLineColour(newColour);
         canvasDraw.drawAll()
+        PropertyChange = true;
     }
 
     setStartLabel() {
         let newLabel = document.getElementById("SourceLabel").value;
         this.state.selectedObject.setStartLabel(newLabel);
         canvasDraw.drawAll();
+        PropertyChange = true;
     }
 
     setEndLabel() {
         let newLabel = document.getElementById("DestLabel").value;
         this.state.selectedObject.setEndLabel(newLabel);
         canvasDraw.drawAll();
+        PropertyChange = true;
     }
 
     updateCardinality() {
@@ -259,21 +273,25 @@ export class LeftMenu extends React.Component{
         this.state.selectedObject.updateDestCardinality(destLowerBound, destUpperBound, currentDestVisibility);
 
         canvasDraw.drawAll();
+        PropertyChange = true;
     }
 
     toggleSourceCardinalityVisibility() {
         this.state.selectedObject.toggleSourceCardinalityVisibility();
         canvasDraw.drawAll();
+        PropertyChange = true;
     }
 
     toggleDestCardinalityVisibility() {
         this.state.selectedObject.toggleDestCardinalityVisibility();
         canvasDraw.drawAll();
+        PropertyChange = true;
     }
 
     toggleAbstract(){
         this.state.selectedObject.toggleAbstract()
         canvasDraw.drawAll()
+        PropertyChange = true;
     }
 
     getS23MIconsSelector() {
@@ -305,6 +323,7 @@ export class LeftMenu extends React.Component{
         this.state.selectedObject.setColour(colour.hex);
         canvasDraw.updateVertex(this.state.selectedObject);
         canvasDraw.drawAll()
+        PropertyChange = true;
     };
 
     getColourPicker() {
@@ -327,11 +346,13 @@ export class LeftMenu extends React.Component{
     setText(fileName) {
         this.state.selectedObject.setText(fileName);
         canvasDraw.drawAll();
+        PropertyChange = true;
     }
 
     setIcon(fileName) {
         this.state.selectedObject.setIcon(fileName);
         canvasDraw.drawAll();
+        PropertyChange = true;
     }
 
     setNavigable(side){
@@ -341,6 +362,7 @@ export class LeftMenu extends React.Component{
         document.getElementById("SourceIsNavigable").checked = this.state.selectedObject.getNavigable(0);
         document.getElementById("DestIsNavigable").checked = this.state.selectedObject.getNavigable(1);
         canvasDraw.drawAll()
+        PropertyChange = true;
     }
 
     setAggregation(side){
@@ -359,6 +381,7 @@ export class LeftMenu extends React.Component{
         document.getElementById("SourceIsAggregation").checked = SourceAggregation;
         document.getElementById("DestIsAggregation").checked = DestAggregation;
         canvasDraw.drawAll()
+        PropertyChange = true;
     }
 
     deselectElement(){
