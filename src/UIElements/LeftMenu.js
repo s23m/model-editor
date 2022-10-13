@@ -20,6 +20,7 @@ import {deleteElement} from "./CanvasDraw";
 import { vertexDeleteElement } from './CanvasDraw';
 
 import DropdownButton from "react-bootstrap/DropdownButton";
+import { getIsStatic } from '../Config';
 
 
 
@@ -102,7 +103,12 @@ export class LeftMenu extends React.Component{
         this.selectedItem = this.props.mainState.drawMode;
         this.props.setMode(this.selectedItem)
         document.addEventListener("keydown", this.onKeyPressed.bind(this));  
+        if(getIsStatic() === false){
+            this.setIcons()
+        }
+        else{
         this.setIconsStatic();
+        }
     }
 
 

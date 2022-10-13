@@ -32,6 +32,8 @@ import Tacit_Knowledge from '../Resources/S23M_Icons/Tacit Knowledge.png';
 import Team from '../Resources/S23M_Icons/Team.png';
 import Trust from '../Resources/S23M_Icons/Trust.png';
 import UI_Device from '../Resources/S23M_Icons/UI Device.png';
+import { getIsStatic } from "../Config";
+import { serverURL } from "../UIElements/MainView";
 
 
 export var padding = 5;
@@ -391,6 +393,8 @@ export class Vertex {
             default:
                 break;
         }
+
+
         this.height = Math.max(this.height,12+padding);
         this.draw(canvasContext)
     }
@@ -523,7 +527,11 @@ export class Vertex {
                     let imageElement = new Image();
                     imageElement.crossOrigin = "anonymous";
 
-                    //imageElement.src = serverURL + "/icons/" + this.icons[0][i];
+                    if(getIsStatic() === false){
+                    imageElement.src = serverURL + "/icons/" + this.icons[0][i];
+                    }
+                    else{
+
                     switch(this.icons[0][i]){
                         case 'Activity.png':
                             imageElement.src = Activity
@@ -606,9 +614,7 @@ export class Vertex {
                             break;
 
                     }
-                    
-
-                    console.log(this.icons[0][i])
+                }
                     
 
                     imageElement.onload = () => {
