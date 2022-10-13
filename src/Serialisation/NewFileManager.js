@@ -13,14 +13,15 @@ import { getDecoyPackageData, getDecoyGraphData, getDecoyVertexData, getPackageD
     getSelectedPackageKey, getTreeData, getVertexData, setDecoyPackageData, setDecoyGraphData, setDecoyVertexData, 
     setPackageData, setGraphData, setSelectedPackageKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
 import { getMaxSaveStates } from "../Config";
-import { json } from "body-parser";
+
+const lodash = require('lodash');
 
 
 //Get all the data that needs to be saved, to restore a session
 export function getSaveData() {
-
-    let vertexObjects = JSON.parse(JSON.stringify(currentObjects.flatten(true, false))); 
-    let arrowObjects = JSON.parse(JSON.stringify(currentObjects.flatten(false, true))); 
+    
+    let vertexObjects =  lodash.cloneDeep((currentObjects.flatten(true, false)));
+    let arrowObjects = lodash.cloneDeep((currentObjects.flatten(false, true)));
     let treeData = JSON.parse(JSON.stringify(getTreeData()));
     let packageData = JSON.parse(JSON.stringify(getPackageData()));
     let decoyPackageData = JSON.parse(JSON.stringify(getDecoyPackageData()));
