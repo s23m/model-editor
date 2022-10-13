@@ -11,7 +11,7 @@ import { LeftMenu, LeftMenuType, StringToLeftMenuType, Tool } from './LeftMenu';
 import SemanticDomainEditor from "./SemanticDomainEditor";
 import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
-import { save, load, importLoad, undo, redo } from '../Serialisation/NewFileManager'
+import { save, load, importLoad, undo, redo} from '../Serialisation/NewFileManager'
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
 import iconHelp from "../Resources/help.svg"
@@ -92,6 +92,8 @@ export class MainProgramClass extends React.Component {
     // chooses which left hand menu to display, based on the selected item
     setLeftMenu(nearestObject, ctrl = false, OP = []) {
 
+        let lastMenu = this.state.menu;
+
         if (OP !== null) {
             for (let i = 0; i < OP.length; i++) {
                 //visually deselects elements
@@ -130,7 +132,6 @@ export class MainProgramClass extends React.Component {
                 selectedObject: null
             });
         }
-
     }
 
     //Function for setting left menu to tree
