@@ -504,7 +504,7 @@ export class LeftMenu extends React.Component{
                     <div className="LeftHeader">Selected Edge</div>
                     <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                     <label className="LeftSpacer">&nbsp;</label>
-                    <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject);this.setState({menu:LeftMenuType.TreeView,selectedObject:null})}}>Remove</button>
+                    <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject); this.deselectElement()}}>Remove</button>
                     </form>
             }
         }
