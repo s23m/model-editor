@@ -5,7 +5,34 @@
 import { drawMarker, distanceThreshold, getCurrentGraph } from "../UIElements/CanvasDraw";
 import { getGraphContainerKey } from "../UIElements/ContainmentTree";
 import { SemanticIdentity} from "./SemanticIdentity";
-import {serverURL} from "../UIElements/MainView"
+
+//Images for static category
+import Activity from '../Resources/S23M_Icons/Activity.png';
+import Agent from '../Resources/S23M_Icons/Agent.png';
+import BioSphere from '../Resources/S23M_Icons/BioSphere.png';
+import Critical from '../Resources/S23M_Icons/Critical.png';
+import Designed from '../Resources/S23M_Icons/Designed.png';
+import Ecosystem from '../Resources/S23M_Icons/Ecosystem.png';
+import Error from '../Resources/S23M_Icons/Error.png';
+import Event from '../Resources/S23M_Icons/Event.png';
+import Grow_n from '../Resources/S23M_Icons/Grow_n.png';
+import Human from '../Resources/S23M_Icons/Human.png';
+import Make_n from '../Resources/S23M_Icons/Make_n.png';
+import Move_n from '../Resources/S23M_Icons/Move_n.png';
+import Organic from '../Resources/S23M_Icons/Organic.png';
+import Organisation from '../Resources/S23M_Icons/Organisation.png';
+import Play_n from '../Resources/S23M_Icons/Play_n.png';
+import Resource from '../Resources/S23M_Icons/Resource.png';
+import SaaS_n from '../Resources/S23M_Icons/SaaS_n.png';
+import Social from '../Resources/S23M_Icons/Social.png';
+import Software from '../Resources/S23M_Icons/Software.png';
+import Sustain_n from '../Resources/S23M_Icons/Sustain_n.png';
+import Symbolic from '../Resources/S23M_Icons/Symbolic.png';
+import Tacit_Knowledge from '../Resources/S23M_Icons/Tacit Knowledge.png';
+import Team from '../Resources/S23M_Icons/Team.png';
+import Trust from '../Resources/S23M_Icons/Trust.png';
+import UI_Device from '../Resources/S23M_Icons/UI Device.png';
+
 
 export var padding = 5;
 export var defaultColour = "#FFD5A9";
@@ -14,8 +41,6 @@ export var defaultMinimumSize = 30;
 export class Vertex {
 
     //As javascript doesnt have method overloading, newConstructor is used to access the secondary constructor when flagged 1 
-
-    //at some point change to use destructuring, which will require changing every use of this method to use destructing too
     constructor({title = "unnamed", content, colour, x, y, width, height, semanticIdentity,newConstructor=0,loadedVertex=0}) {
 
         //This constructor is used to turn a vertex loaded from JSON.parse back into a vertex object
@@ -239,6 +264,7 @@ export class Vertex {
 
         let index = fileNames.indexOf(fileName);
 
+
         //icon not part of this vertex yet
         if (index === -1) {
             fileNames.push(fileName);
@@ -254,6 +280,8 @@ export class Vertex {
             Text.splice(index,1);
             fileNames.splice(index,1);
         }
+
+        console.log('iconed')
 
     }
 
@@ -493,8 +521,95 @@ export class Vertex {
                 if (element === undefined) {
 
                     let imageElement = new Image();
-                    imageElement.src = serverURL + "/icons/" + this.icons[0][i];
                     imageElement.crossOrigin = "anonymous";
+
+                    //imageElement.src = serverURL + "/icons/" + this.icons[0][i];
+                    switch(this.icons[0][i]){
+                        case 'Activity.png':
+                            imageElement.src = Activity
+                            break;
+                        case 'Agent.png':
+                            imageElement.src = Agent
+                            break;
+                        case 'BioSphere.png':
+                            imageElement.src = BioSphere
+                            break;
+                        case 'Critical.png':
+                            imageElement.src = Critical
+                            break;
+                        case 'Designed.png':
+                            imageElement.src = Designed
+                            break;
+                        case 'Ecosystem.png':
+                            imageElement.src = Ecosystem
+                            break;    
+                        case 'Error.png':
+                            imageElement.src = Error
+                            break;
+
+                        case 'Event.png':
+                            imageElement.src = Event
+                            break;
+                        case 'Grow_n.png':
+                            imageElement.src = Grow_n
+                            break;
+                        case 'Human.png':
+                            imageElement.src = Human
+                            break;
+                        case 'Make_n.png':
+                            imageElement.src = Make_n
+                            break;
+                        case 'Move_n.png':
+                            imageElement.src = Move_n
+                            break;
+                        case 'Organic.png':
+                            imageElement.src = Organic
+                            break;
+                        case 'Organisation.png':
+                            imageElement.src = Organisation
+                            break;
+                        case 'Play_n.png':
+                            imageElement.src = Play_n
+                            break;
+                        case 'Resource.png':
+                            imageElement.src = Resource
+                            break;
+                        case 'SaaS_n.png':
+                            imageElement.src = SaaS_n
+                            break;
+                        case 'Social.png':
+                            imageElement.src = Social
+                            break;
+                        case 'Software.png':
+                            imageElement.src = Software
+                            break;
+                        case 'Sustain_n.png':
+                            imageElement.src = Sustain_n
+                            break;
+                        case 'Symbolic.png':
+                            imageElement.src = Symbolic
+                            break;
+                        case 'Tacit Knowledge.png':
+                            imageElement.src = Tacit_Knowledge
+                            break;
+                        case 'Team.png':
+                            imageElement.src = Team
+                            break;
+                        case 'Trust.png':
+                            imageElement.src = Trust
+                            break;
+                        case 'UI Device.png':
+                            imageElement.src = UI_Device
+                            break;
+                        default:
+                            imageElement.src = Activity
+                            break;
+
+                    }
+                    
+
+                    console.log(this.icons[0][i])
+                    
 
                     imageElement.onload = () => {
                         loadImage(imageElement);
