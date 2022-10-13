@@ -104,8 +104,6 @@ export class Vertex {
             this.imageElements = {};
             this.fontSize = 12;
             this.orignalVertex = true; // bool to see if the selected vertex is the original
-            //this.originalUUID = this.originalUUID // going to store the UUID of the original vertex here as canvas objects need to be given a unique semanticUUID 
-            this.isContainer = false; //Ignore this now, Kieth explained how containers work after finishing old implementation, direction other team was going was wrong - Lachlan
             this.Origin = "" //package the vertex originates from if needed
     
 

@@ -277,21 +277,21 @@ export class LeftMenu extends React.Component{
     }
 
     getS23MIconsSelector() {
-        let dropdownOptions = [<div className="DropdownItem"><div className="dropdownLabel">Name</div><div className="checkBoxContainer">Text</div><div className="checkBoxContainer">Icon</div></div>];
+        let dropdownOptions = [<div className="DropdownItem" key={0}><div className="dropdownLabel">Name</div><div className="checkBoxContainer">Text</div><div className="checkBoxContainer">Icon</div></div>];
 
         let name = "";
         this.state.fileNames.forEach(fileName => {
             if (fileName.slice(-6, -4) === "_n") {
                 name = fileName.slice(0, -6);
-                dropdownOptions.push(<div className="DropdownItem" ref={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' disabled="disabled" /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => {this.setIcon(fileName)}}/></div> </div>)
+                dropdownOptions.push(<div className="DropdownItem" ref={fileName} key={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' disabled="disabled" /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => {this.setIcon(fileName)}}/></div> </div>)
             } else {
                 name = fileName.slice(0, -4);
-                dropdownOptions.push(<div className="DropdownItem" ref={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldTextBeSelected(fileName)} onClick={() => {this.setText(fileName)}} /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => {this.setIcon(fileName)}}/></div> </div>)
+                dropdownOptions.push(<div className="DropdownItem" ref={fileName} key={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldTextBeSelected(fileName)} onClick={() => {this.setText(fileName)}} /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => {this.setIcon(fileName)}}/></div> </div>)
             }
         });
         console.log("icon selector fired")
 
-        return <DropdownButton title="Category Selector" name="Icons" id="IconSelector" className="IconSelector">
+        return <DropdownButton title="Category Selector" name="Icons" id="IconSelector" className="IconSelector" >
             {dropdownOptions}
         </DropdownButton>;
         
@@ -412,11 +412,11 @@ export class LeftMenu extends React.Component{
             leftMenuContents = <div id = "VertexMenu">
                 <div className="LeftHeader">Vertex Properties</div>
                 <label className="LeftLabel">Title</label>
-                <input id="LeftTitle" className="LeftTitle" value={this.state.selectedObject.title} onInput={this.handleChange}/>
+                <input id="LeftTitle" className="LeftTitle" value={this.state.selectedObject.title} onChange={this.handleChange}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Content</label>
-                <textarea id="LeftContent" className ="LeftContent" value={this.state.selectedObject.getContentAsString()} onInput={this.handleChange}/>
+                <textarea id="LeftContent" className ="LeftContent" value={this.state.selectedObject.getContentAsString()} onChange={this.handleChange}/>
                 <label className="LeftSpacer">&nbsp;</label>
 
                 {this.getS23MIconsSelector()}
@@ -441,7 +441,7 @@ export class LeftMenu extends React.Component{
         } else if (this.state.menu === LeftMenuType.Artifact) {
             canvasDraw.drawAll();
 
-            leftMenuContents = <form id="VertexMenu">
+            leftMenuContents = <div id="VertexMenu">
                 <div className="LeftHeader">Vertex Properties</div>
                 <label className="LeftLabel">Title</label>
                 <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()} />
@@ -464,11 +464,11 @@ export class LeftMenu extends React.Component{
                 <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                 <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.setState({ menu: "TreeView" }) }} placeholder="NoTabIndex">Remove</button>
-            </form>;
+            </div>;
 
         } else if (this.state.menu === LeftMenuType.Container) {
             canvasDraw.drawAll();
-            leftMenuContents = <form id="VertexMenu">
+            leftMenuContents = <div id="VertexMenu">
                 <div className="LeftHeader">Vertex Properties</div>
                 <label className="LeftLabel">Title</label>
                 <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()} />
@@ -488,26 +488,26 @@ export class LeftMenu extends React.Component{
                 <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                 <label className="LeftSpacer">&nbsp;</label>
                 <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.setState({ menu: "TreeView" }) }} placeholder="NoTabIndex">Remove</button>
-            </form>;
+            </div>;
 
         }else if (this.state.menu === LeftMenuType.Arrow) {
 
             if(this.state.selectedObject.edgeType === Tool.Edge){
 
-            leftMenuContents = <form id = "ArrowMenu">
+            leftMenuContents = <div id = "ArrowMenu">
                 <div className="LeftHeader">Edge Properties</div>
 
                 <label className="LeftLabel">Source Is Navigable?</label>
-                <input type="checkbox" id="SourceIsNavigable" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getNavigable(0)} onClick={() => this.setNavigable(0)}/>
+                <input type="checkbox" id="SourceIsNavigable" className="LeftCheckbox" checked={this.state.selectedObject.getNavigable(0)} onChange={() => this.setNavigable(0)}/>
 
                 <label className="LeftLabel">Destination Is Navigable?</label>
-                <input type="checkbox" id="DestIsNavigable" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getNavigable(1)} onClick={() => this.setNavigable(1)}/>
+                <input type="checkbox" id="DestIsNavigable" className="LeftCheckbox" checked={this.state.selectedObject.getNavigable(1)} onChange={() => this.setNavigable(1)}/>
 
                 <label className="LeftLabel">Source Is Aggregation?</label>
-                <input type="checkbox" id="SourceIsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation(0)} onClick={() => this.setAggregation(0)}/>
+                <input type="checkbox" id="SourceIsAggregation" className="LeftCheckbox" checked={this.state.selectedObject.getAggregation(0)}onChange={() => this.setAggregation(0)}/>
 
                 <label className="LeftLabel">Destination Is Aggregation?</label>
-                <input type="checkbox" id="DestIsAggregation" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAggregation(1)} onClick={() => this.setAggregation(1)}/>
+                <input type="checkbox" id="DestIsAggregation" className="LeftCheckbox" checked={this.state.selectedObject.getAggregation(1)} onChange={() => this.setAggregation(1)}/>
 
                 <label className="LeftLabel">Line Colour</label>
                 <select name="LineColour" id="LineColour" className="LeftSelector" defaultValue={LineColourToStringName[this.state.selectedObject.lineColour]} onChange={() => this.setColour()}>
@@ -546,7 +546,7 @@ export class LeftMenu extends React.Component{
                 <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                 <label className="LeftSpacer">&nbsp;</label>
 
-            </form>
+            </div>
             }else{
                 leftMenuContents = <form id = "ArrowMenu">
                     <div className="LeftHeader">Selected Edge</div>

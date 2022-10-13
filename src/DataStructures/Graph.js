@@ -532,7 +532,6 @@ export class Graph {
 
     //Removes and object while shifting it's children's position in the tree
     remove(object) {
-        //By this point rootVertices doesnt actually contain the vertex we want to delete which makes the isRemoved Logic hard to follow as has returns true when the item is present- Lachlan
         if (object.typeName === "Vertex") {
             let newobject = this.getVertexNode(object);
             let isRemoved = this.rootVertices.has(newobject);
