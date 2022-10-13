@@ -92,8 +92,6 @@ export class MainProgramClass extends React.Component {
     // chooses which left hand menu to display, based on the selected item
     setLeftMenu(nearestObject, ctrl = false, OP = []) {
 
-        let lastMenu = this.state.menu;
-
         if (OP !== null) {
             for (let i = 0; i < OP.length; i++) {
                 //visually deselects elements
