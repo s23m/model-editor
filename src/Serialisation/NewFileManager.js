@@ -14,18 +14,21 @@ import { getDecoyPackageData, getDecoyGraphData, getDecoyVertexData, getPackageD
     setPackageData, setGraphData, setSelectedPackageKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
 import { getMaxSaveStates } from "../Config";
 
+const lodash = require('lodash');
+
 
 //Get all the data that needs to be saved, to restore a session
 export function getSaveData() {
-    let vertexObjects = currentObjects.flatten(true, false);
-    let arrowObjects = currentObjects.flatten(false, true);
-    let treeData = JSON.parse(JSON.stringify(getTreeData()))
-    let packageData = JSON.parse(JSON.stringify(getPackageData()))
-    let decoyPackageData = JSON.parse(JSON.stringify(getDecoyPackageData()))
+    
+    let vertexObjects =  lodash.cloneDeep((currentObjects.flatten(true, false)));
+    let arrowObjects = lodash.cloneDeep((currentObjects.flatten(false, true)));
+    let treeData = JSON.parse(JSON.stringify(getTreeData()));
+    let packageData = JSON.parse(JSON.stringify(getPackageData()));
+    let decoyPackageData = JSON.parse(JSON.stringify(getDecoyPackageData()));
     let vertexData = JSON.parse(JSON.stringify(getVertexData()));
     let decoyVertexData = JSON.parse(JSON.stringify(getDecoyVertexData()));
     let graphObjects = JSON.parse(JSON.stringify(getGraphData()));
-    let decoyGraphObjects = JSON.parse(JSON.stringify(getDecoyGraphData())) 
+    let decoyGraphObjects = JSON.parse(JSON.stringify(getDecoyGraphData())) ;
     let totalContainerKeys = getTotalPackageKeys();
     let totalGraphs = getTotalGraphs();
     let currentGraph = getCurrentContainerKey();
@@ -390,6 +393,8 @@ export function createSaveState(){
     if(saveStates.length > maxSavedStates){
         saveStates.pop()
     }
+    console.log("saveStates")
+    console.log(saveStates)
 }
 
 

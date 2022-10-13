@@ -7,11 +7,13 @@ import '../App.css';
 import * as canvasDraw from "./CanvasDraw";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import { Canvas } from './Canvas';
-import { LeftMenu, LeftMenuType, StringToLeftMenuType, Tool } from './LeftMenu';
+import { getPropertyChange, LeftMenu, LeftMenuType, StringToLeftMenuType, Tool } from './LeftMenu';
 import SemanticDomainEditor from "./SemanticDomainEditor";
 import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
-import { save, load, importLoad, undo, redo} from '../Serialisation/NewFileManager'
+import { save, load, importLoad, undo, redo, createSaveState } from '../Serialisation/NewFileManager'
+
+
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
 import iconHelp from "../Resources/help.svg"
@@ -108,10 +110,14 @@ export class MainProgramClass extends React.Component {
 
         // check if the nearest object was too far away or didnt exist
         if (nearestObject === null) {
+
             this.setState({
                 menu: LeftMenuType.TreeView,
                 selectedObject: null,
             });
+            if(getPropertyChange() === true){
+                createSaveState();
+            }
         }
 
         // if the selected object has a left menu,
