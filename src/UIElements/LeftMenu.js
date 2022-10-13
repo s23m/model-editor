@@ -289,7 +289,6 @@ export class LeftMenu extends React.Component{
                 dropdownOptions.push(<div className="DropdownItem" ref={fileName} key={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldTextBeSelected(fileName)} onClick={() => {this.setText(fileName)}} /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => {this.setIcon(fileName)}}/></div> </div>)
             }
         });
-        console.log("icon selector fired")
 
         return <DropdownButton title="Category Selector" name="Icons" id="IconSelector" className="IconSelector" >
             {dropdownOptions}
@@ -438,59 +437,7 @@ export class LeftMenu extends React.Component{
 
             </div>;
             
-        } else if (this.state.menu === LeftMenuType.Artifact) {
-            canvasDraw.drawAll();
-
-            leftMenuContents = <div id="VertexMenu">
-                <div className="LeftHeader">Vertex Properties</div>
-                <label className="LeftLabel">Title</label>
-                <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()} />
-                <label className="LeftSpacer">&nbsp;</label>
-
-                <label className="LeftLabel">Content</label>
-                <textarea id="LeftContent" className="LeftContent" defaultValue={this.state.selectedObject.getContentAsString()} onKeyUp={() => this.setContent()} />
-                <label className="LeftSpacer">&nbsp;</label>
-
-                {this.getS23MIconsSelector()}
-                <label className="LeftSpacer">&nbsp;</label>
-
-                {this.getColourPicker()}
-                <label className="LeftSpacer">&nbsp;</label>
-
-                <label className="LeftLabel">Is Abstract?</label>
-                <input type="checkbox" id="IsAbstract" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAbstract()} onClick={() => this.toggleAbstract()} />
-                <label className="LeftSpacer">&nbsp;</label>
-
-                <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
-                <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.setState({ menu: "TreeView" }) }} placeholder="NoTabIndex">Remove</button>
-            </div>;
-
-        } else if (this.state.menu === LeftMenuType.Container) {
-            canvasDraw.drawAll();
-            leftMenuContents = <div id="VertexMenu">
-                <div className="LeftHeader">Vertex Properties</div>
-                <label className="LeftLabel">Title</label>
-                <input id="LeftTitle" className="LeftTitle" defaultValue={this.state.selectedObject.title} onKeyUp={() => this.setTitle()} />
-                <label className="LeftSpacer">&nbsp;</label>
-
-                <label className="LeftLabel">Content</label>
-                <textarea id="LeftContent" className="LeftContent" defaultValue={this.state.selectedObject.getContentAsString()} onKeyUp={() => this.setContent()} />
-                <label className="LeftSpacer">&nbsp;</label>
-
-                {this.getS23MIconsSelector()}
-                <label className="LeftSpacer">&nbsp;</label>
-
-                <label className="LeftLabel">Is Abstract?</label>
-                <input type="checkbox" id="IsAbstract" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAbstract()} onClick={() => this.toggleAbstract()} />
-                <label className="LeftSpacer">&nbsp;</label>
-
-                <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
-                <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.setState({ menu: "TreeView" }) }} placeholder="NoTabIndex">Remove</button>
-            </div>;
-
-        }else if (this.state.menu === LeftMenuType.Arrow) {
+        } else if (this.state.menu === LeftMenuType.Arrow) {
 
             if(this.state.selectedObject.edgeType === Tool.Edge){
 
