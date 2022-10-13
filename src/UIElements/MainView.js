@@ -12,6 +12,8 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
 import { save, load, importLoad, undo, redo, createSaveState } from '../Serialisation/NewFileManager'
+
+
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
 import iconHelp from "../Resources/help.svg"
@@ -134,7 +136,6 @@ export class MainProgramClass extends React.Component {
                 selectedObject: null
             });
         }
-
     }
 
     //Function for setting left menu to tree
