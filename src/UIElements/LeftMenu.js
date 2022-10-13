@@ -18,7 +18,10 @@ import iconVisibility from "../Resources/visibility.svg"
 
 import {deleteElement} from "./CanvasDraw";
 import { vertexDeleteElement } from './CanvasDraw';
+
 import DropdownButton from "react-bootstrap/DropdownButton";
+
+
 
 
 //Property Enums
@@ -82,7 +85,9 @@ export class LeftMenu extends React.Component{
             this.formRef = element;
         };
 
-        this.setIcons();
+        
+        //this.setIcons();
+        
 
     }
     handleChange(event){
@@ -97,6 +102,7 @@ export class LeftMenu extends React.Component{
         this.selectedItem = this.props.mainState.drawMode;
         this.props.setMode(this.selectedItem)
         document.addEventListener("keydown", this.onKeyPressed.bind(this));  
+        this.setIconsStatic();
     }
 
 
@@ -155,8 +161,42 @@ export class LeftMenu extends React.Component{
                 data.icons.forEach((icon) => {
                     fileNames.push(icon)
                 });
+                console.log(fileNames)
                 this.setState({fileNames:fileNames})
             })
+            
+    }
+
+    async setIconsStatic(){
+        const iconNames = ['Activity.png',
+            'Agent.png',
+            'BioSphere.png',
+            'Critical.png',
+            'Designed.png',
+            'Ecosystem.png',
+            'Error.png',
+            'Event.png',
+            'Grow_n.png',
+            'Human.png',
+            'Make_n.png',
+            'Move_n.png',
+            'Organic.png',
+            'Organisation.png',
+            'Play_n.png',
+            'Resource.png',
+            'SaaS_n.png',
+            'Social.png',
+            'Software.png',
+            'Sustain_n.png',
+            'Symbolic.png',
+            'Tacit Knowledge.png',
+            'Team.png',
+            'Trust.png',
+            'UI Device.png']
+            console.log(iconNames)
+            this.setState({fileNames:iconNames})
+            console.log(this.state.fileNames)
+          
     }
 
     //VERTEX SETTERS
@@ -243,10 +283,12 @@ export class LeftMenu extends React.Component{
                 dropdownOptions.push(<div className="DropdownItem" ref={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldTextBeSelected(fileName)} onClick={() => {this.setText(fileName)}} /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => {this.setIcon(fileName)}}/></div> </div>)
             }
         });
+        console.log("icon selector fired")
 
         return <DropdownButton title="Category Selector" name="Icons" id="IconSelector" className="IconSelector">
             {dropdownOptions}
         </DropdownButton>;
+        
     }
 
     getVertexColour = () => {
