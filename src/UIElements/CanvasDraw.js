@@ -1344,6 +1344,7 @@ export function onLeftMouseRelease(canvas, x, y) {
             };
             firstArrowJoint = false;
         }
+        createSaveState()
     }
 
     if (canvas.tool === Tool.Vertex) {
