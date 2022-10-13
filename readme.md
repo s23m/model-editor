@@ -3,6 +3,8 @@ A repository to house all code and configuration artefacts produced by the LCLB 
 
 Live builds hosted @ https://s23m.github.io/lclb/
 
+A User manual is  Located in the public folder, and can be accessed with the help button when using the program.
+
 This project is licensed under the MPL 2.0 license, and this project includes a copy of said license in the LICENSE file. For more information visit: https://www.mozilla.org/en-US/MPL/2.0/FAQ/
 
 
