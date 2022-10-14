@@ -22,13 +22,13 @@ export function getSaveData() {
     
     let vertexObjects =  lodash.cloneDeep((currentObjects.flatten(true, false)));
     let arrowObjects = lodash.cloneDeep((currentObjects.flatten(false, true)));
-    let treeData = JSON.parse(JSON.stringify(getTreeData()));
-    let packageData = JSON.parse(JSON.stringify(getPackageData()));
-    let decoyPackageData = JSON.parse(JSON.stringify(getDecoyPackageData()));
-    let vertexData = JSON.parse(JSON.stringify(getVertexData()));
-    let decoyVertexData = JSON.parse(JSON.stringify(getDecoyVertexData()));
-    let graphObjects = JSON.parse(JSON.stringify(getGraphData()));
-    let decoyGraphObjects = JSON.parse(JSON.stringify(getDecoyGraphData())) ;
+    let treeData = lodash.cloneDeep(getTreeData());
+    let packageData = lodash.cloneDeep(getPackageData());
+    let decoyPackageData = lodash.cloneDeep(getDecoyPackageData());
+    let vertexData = lodash.cloneDeep(getVertexData());
+    let decoyVertexData = lodash.cloneDeep(getDecoyVertexData());
+    let graphObjects = lodash.cloneDeep(getGraphData());
+    let decoyGraphObjects = lodash.cloneDeep(getDecoyGraphData()) ;
     let totalContainerKeys = getTotalPackageKeys();
     let totalGraphs = getTotalGraphs();
     let currentGraph = getCurrentContainerKey();

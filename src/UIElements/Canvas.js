@@ -8,6 +8,8 @@ import { Tool } from './LeftMenu';
 let selectMultiple = false;
 let selectDown = false;
 let savedObjects = [];
+let mouseDownXY =[]; // stores where the mouse button first gets held down
+let mouseUpXY =[]; // stores where the mouse is button is let go
 export let selectedCanvasObject = null;
 
 
@@ -104,7 +106,7 @@ export class Canvas extends React.Component {
 
     }
 
-
+    
 
     // prevent context (right-click) menu from appearing
     ocm = (e) => {
@@ -141,7 +143,8 @@ export class Canvas extends React.Component {
                     canvasDraw.saveBlockStates(canvas, x, y, 1);
                     canvasDraw.onLeftMousePress(canvas, x, y);
                 }
-
+                mouseDownXY[0] = x; mouseDownXY[1] = y; // store mousedownXY in the case that something was clicked
+                console.log(mouseDownXY)
               } else { //clicked nothing
             this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
             canvasDraw.saveBlockStates(canvas, x, y, 1);
@@ -188,6 +191,8 @@ export class Canvas extends React.Component {
                 for(let i = 0; i <savedObjects.length; i++) {
                     this.props.setLeftMenu(savedObjects[i], selectMultiple);
                 }
+
+                mouseDownXY[0] = x; mouseDownXY[1] = y; // also store it in case of multiple objects
                 
             }
         }
@@ -214,10 +219,18 @@ export class Canvas extends React.Component {
         // If it was a left click
         if (e.button === 0) {
             if (canvas.tool === Tool.Select) {
+                mouseUpXY[0] = x; mouseUpXY[1] = y;
                 canvasDraw.drawAll()
+                console.log("mouseUpXY")
+                console.log(mouseUpXY)
+                if(mouseDownXY[0] === mouseUpXY[0] && mouseDownXY[1] === mouseUpXY[1]) return // checks if the mouse moved between mouse down and mouse up
+                createSaveState() // if mouse did move that means something was dragged and we create save state
             }
 			else {
                 canvasDraw.onLeftMouseRelease(canvas, x, y);
+                
+                
+               
             }
 
         }
