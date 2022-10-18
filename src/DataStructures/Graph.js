@@ -144,6 +144,9 @@ export class VertexNode {
                         let ourSourceEnd = currentObjects.flatten()[i].pathData[1][1]
                         let ourDestEnd = currentObjects.flatten()[i].pathData[0][1]
 
+                        console.log(ourSourceEnd)
+                        console.log(ourDestEnd)
+
                         let textSource = "N/A"
                         let textDest = "N/A"
                         let finalString = "N/A"

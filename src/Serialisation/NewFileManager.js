@@ -393,8 +393,8 @@ export function createSaveState(){
     if(saveStates.length > maxSavedStates){
         saveStates.pop()
     }
-    console.log("saveStates")
-    console.log(saveStates)
+    //console.log("saveStates")
+    //console.log(saveStates)
 }
 
 

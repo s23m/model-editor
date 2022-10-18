@@ -76,7 +76,6 @@ export class Canvas extends React.Component {
                 window.alert("You can only drop vertex's on this graph");
                 return;
             }
-            console.log(droppedVertex)
             //get canvas relative coordinates for where the object was dropped
             let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
             let newName = droppedVertex.text.replace(" "+ getTreeVertexEmptyIcon(),"");

@@ -207,9 +207,7 @@ export class LeftMenu extends React.Component{
             'Team.png',
             'Trust.png',
             'UI Device.png']
-            console.log(iconNames)
             this.setState({fileNames:iconNames})
-            console.log(this.state.fileNames)
           
     }
 
@@ -355,13 +353,12 @@ export class LeftMenu extends React.Component{
     }
 
     setNavigable(side){
-
         this.state.selectedObject.toggleNavigable(side);
-
         document.getElementById("SourceIsNavigable").checked = this.state.selectedObject.getNavigable(0);
         document.getElementById("DestIsNavigable").checked = this.state.selectedObject.getNavigable(1);
         canvasDraw.drawAll()
         PropertyChange = true;
+        this.setState({menu: LeftMenuType.Arrow})
     }
 
     setAggregation(side){
@@ -381,6 +378,7 @@ export class LeftMenu extends React.Component{
         document.getElementById("DestIsAggregation").checked = DestAggregation;
         canvasDraw.drawAll()
         PropertyChange = true;
+        this.setState({menu: LeftMenuType.Arrow})
     }
 
     deselectElement(){
