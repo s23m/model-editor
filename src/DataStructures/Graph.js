@@ -141,8 +141,10 @@ export class VertexNode {
                 if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedContainerKey){
 
                         // Find the source and destination vertex as Keith defined in spec
-                        let ourSourceEnd = currentObjects.flatten()[i].pathData[1][1]
+                        let ourSourceEnd = currentObjects.flatten()[i].pathData[currentObjects.flatten()[i].pathData.length - 1][1]
                         let ourDestEnd = currentObjects.flatten()[i].pathData[0][1]
+                        
+                        console.log(currentObjects.flatten()[i].pathData)
 
                         console.log(ourSourceEnd)
                         console.log(ourDestEnd)
