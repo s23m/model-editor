@@ -127,73 +127,15 @@ export class VertexNode {
         return false;
     }
 
-    toTreeViewElement(returnOption, parsedContainerKey) { //added graph key parameter to we can specifiy what graphs vertexes belong to
+    toTreeViewElement(returnOption, parsedContainerKey) { //added graph key parameter so we can specifiy what graphs vertexes belong to
 
-        //Pretty much everything that's currently on the canvas is searched and then converted into the tree appropriate struct in the below if else statements.
-        //Then, the vertices and arrows package nodes can display their appropriate children.
+        //Originaly this function was for arrows and vertex's before Vertex's were changed,
+        //Function scans arrows on canvas to reflect in treeview
         let ArrowChildren = [];
-        let VertexChildren = [];
-
         
 
-        //Check which package we're sticking these things into
-        if (returnOption === "Vertex Package"){                  // they had a different spelling for vertex package :DDDDD - cooper
-            //All objects currently on the canvas (excluding things like packages which only exist as tree view elements)
-            for(let i = 0; i < currentObjects.flatten().length; i++){
-                
-
-                //We onlt want the vertices in this package
-                if (currentObjects.flatten()[i].typeName === "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedContainerKey){
-                    //Set the append the name of the path to include the vertex name
-                    if(currentObjects.flatten()[i].title === ""){
-                        this.setVertexTreePath("Unnamed Vertex");
-                    }
-
-                    else{
-                        this.setVertexTreePath(currentObjects.flatten()[i].title);
-                    }
-                
-                
-
-
-                    //Create the appropriate struct for a tree view element from the vertex data
-                    let tempTreeObj = {
-                        text: currentObjects.flatten()[i].title,
-                        children: [],
-                        data: currentObjects.flatten()[i],
-                        containerKey: currentObjects.flatten()[i].getContainerKey(),
-                        graphKey: currentObjects.flatten()[i].getGraphKey(),
-                        state: {opened: false}
-                    };
-
-                    //So you don't have vertices that are completely blank in the tree, looks kinda weird
-                    if (tempTreeObj.text === ""){
-                        tempTreeObj.text = "Unnamed Vertex";
-                    }
-                    
-                    //Finally, push to children. Makes it look like the following:
-                    //
-                    //  Vertex --+
-                    //           |
-                    //           +-- Unnamed Vertex   
-                    
-                    VertexChildren.push(tempTreeObj);
-
-                
-            }
-        }
-
-            return{
-                text: "Vertices &#128193",
-                children: VertexChildren,
-                data: null,
-                state: { opened: true },
-                type: "Vertex Package"
-            }
-        }
-
         //same typo as above if statement but for arrows
-        else if (returnOption === "Arrow Package"){ //same thing but arrows package - Lachlan
+        if (returnOption === "Arrow Package"){ //same thing but arrows package - Lachlan
             for(let i = 0; i < currentObjects.flatten().length; i++){
 
                 if (currentObjects.flatten()[i].typeName !== "Vertex" && currentObjects.flatten()[i].getContainerKey() === parsedContainerKey){
@@ -207,7 +149,7 @@ export class VertexNode {
                         let finalString = "N/A"
 
                         // Looking through all of the current objects and matching the uuids
-                        for (let j = 0; j <currentObjects.flatten().length; j++){
+                        for (let j = 0; j < currentObjects.flatten().length; j++){
                         
                             let someObject = currentObjects.flatten()[j]
                             
@@ -225,6 +167,8 @@ export class VertexNode {
                             }
                             
                         }
+
+                        
 
                         //this array stores whether source/destination is Navigable/Aggregation so we can display the required icons in the tree
                         //array is ordered source nav, dest nav, source agg, dest agg 
@@ -256,6 +200,9 @@ export class VertexNode {
 
                         finalString = textSource + " " + arrowIcon + " " + textDest
 
+                        console.log(textSource)
+                        console.log(textDest)
+
                         let tempTreeObj = {
                             text: finalString,
                             children: [],
@@ -271,8 +218,6 @@ export class VertexNode {
                 }
 
             }
-
-            //console.log(ArrowChildren.length)
 
             if(ArrowChildren.length === 0){
                 return;

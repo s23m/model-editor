@@ -494,7 +494,7 @@ export class ContextMenu extends React.Component {
 
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>
-                    <div className="CMitem" id="Bi-Nav"> Naviagte </div>   
+                    <div className="CMitem" id="Bi-Nav"> Navigate </div>   
                     <div className="CMitem" id="RenameVertex"> Rename</div>
                     <div className="CMitem" id="AddVertex"> Add Vertex</div>
                     <div className="CMitem" id="AddGraph"> Add Graph</div>
@@ -527,7 +527,6 @@ export class ContextMenu extends React.Component {
             else if(menuType === "Bi-Nav"){
 
                 let matchingContainers = [];
-                let matchingGraphs = [];
                 let matchingUUID = 0;
 
                 matchingUUID = rightClickedObject.originalUUID;
@@ -541,14 +540,9 @@ export class ContextMenu extends React.Component {
                         matchingContainers.push(vert)
                     }
                 }
-                for(let graph of getGraphData()){
-                    if(graph.semanticIdentity.UUID === matchingUUID){
-                        matchingGraphs.push(graph)
-                    }
-                }
 
                 let renderedContainers = matchingContainers.map(item => <div className="CMitem" id={'Nav'+ item.vertex.vertexGraphKey + " " + item.vertex.vertexContainerKey} key={'Nav'+ item.vertex.semanticIdentity.UUID + " " + item.vertex.awayx}> {getGraphNameFromKey(item.vertex.vertexGraphKey)} / {item.vertex.title} </div>)
-                let renderedGraphs = matchingGraphs.map(item => <div className="CMitem" id={'Nav'+ item.graphKey + " " + item.containerKey} key={'Nav'+ item.semanticIdentity.UUID}> {item.text}</div>)
+                
                 
 
                 return (
@@ -557,7 +551,6 @@ export class ContextMenu extends React.Component {
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> also appears at:</div>   
                     <div>{renderedContainers}</div>
-                    <div>{renderedGraphs}</div>
                     </div>
                 )
             }

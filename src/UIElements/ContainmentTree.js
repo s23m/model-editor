@@ -7,7 +7,7 @@ import React from 'react';
 import TreeView from 'react-simple-jstree';
 
 import { currentObjects, setNewContainerKey as setNewPackageKey, getTotalContainerKeys, incrementTotalContainerKeys, 
-    getCurrentGraph, setNewGraph as setNewGraphKey, getTotalGraphs, incrementTotalGraphs as incrementTotalGraph} from "./CanvasDraw";
+    getCurrentGraph, setNewGraph as setNewGraphKey, getTotalGraphs, incrementTotalGraphs as incrementTotalGraph, getCurrentObjects} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
 import {VertexNode} from "../DataStructures/Graph.js"
@@ -569,6 +569,7 @@ export class ContainmentTree extends React.Component {
      * @param {*} data The treeNodes data
      */
     handleElementSelect(e, data) {
+        console.log(getCurrentObjects())
 
         //catch undefined data type eg. root
         try{

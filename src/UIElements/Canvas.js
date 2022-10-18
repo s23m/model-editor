@@ -61,6 +61,7 @@ export class Canvas extends React.Component {
         if(canvasDraw.getCurrentGraph() <= 0){ // stops the user dragging and dropping without a graph being selected
             console.log("attempted to drag and drop vertex while there are no available graphs to draw on");
             window.alert("You need to create and select a graph first before you can start drawing!");
+            
         }
         else{
             //Find the vertex object that was dragged
@@ -70,6 +71,12 @@ export class Canvas extends React.Component {
                 if (vert.semanticIdentity.UUID === droppedSemanticID)
                 droppedVertex = vert;
             }
+            //If Item is not vertex, droppedVertex will remain 0
+            if(droppedVertex === 0){
+                window.alert("You can only drop vertex's on this graph");
+                return;
+            }
+            console.log(droppedVertex)
             //get canvas relative coordinates for where the object was dropped
             let mouseCoords = canvasDraw.getGraphXYFromMouseEvent(e)
             let newName = droppedVertex.text.replace(" "+ getTreeVertexEmptyIcon(),"");
@@ -221,8 +228,6 @@ export class Canvas extends React.Component {
             if (canvas.tool === Tool.Select) {
                 mouseUpXY[0] = x; mouseUpXY[1] = y;
                 canvasDraw.drawAll()
-                console.log("mouseUpXY")
-                console.log(mouseUpXY)
                 if(mouseDownXY[0] === mouseUpXY[0] && mouseDownXY[1] === mouseUpXY[1]) return // checks if the mouse moved between mouse down and mouse up
                 createSaveState() // if mouse did move that means something was dragged and we create save state
             }
