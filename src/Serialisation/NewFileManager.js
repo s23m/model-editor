@@ -1,5 +1,5 @@
 import {addObject, currentObjects, drawAll, getCurrentContainerKey, getTotalGraphs, getTotalContainerKeys as getTotalPackageKeys, 
-    setCurrentObjects, setNewGraph, setNewContainerKey, setTotalGraphKeys, setTotalContainerKey, updateArrows} from "../UIElements/CanvasDraw"
+    setCurrentObjects, setNewGraph, setNewContainerKey, setTotalGraphKeys, setTotalContainerKey, updateArrows, getCurrentGraph} from "../UIElements/CanvasDraw"
 
 import {setTranslationColumns, translationColumns} from "../UIElements/SemanticDomainEditor"
 
@@ -31,7 +31,7 @@ export function getSaveData() {
     let decoyGraphObjects = lodash.cloneDeep(getDecoyGraphData()) ;
     let totalContainerKeys = getTotalPackageKeys();
     let totalGraphs = getTotalGraphs();
-    let currentGraph = getCurrentContainerKey();
+    let currentGraph = getCurrentGraph();
     let currentKey = getCurrentContainerKey();
     let currentPackage = getSelectedPackageKey();
 
@@ -359,9 +359,10 @@ function loadDirect(saveData){
     setTotalGraphKeys(saveData.graphKeys)
     setCurrentObjects(new Graph(saveData.vertices, saveData.arrows));
     updateArrows()
-    setSelectedPackageKey(saveData.currentCon)
+    setSelectedPackageKey(saveData.currentKey)
     setNewContainerKey(saveData.currentKey)
     setNewGraph(saveData.currentGra)
+    console.log(getCurrentGraph())
     drawAll()
 
 }
