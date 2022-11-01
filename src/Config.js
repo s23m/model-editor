@@ -24,7 +24,7 @@ export function getGraphIcon(){
 
 //How many times you can undo/redo from an action
 //Save states limited as its all stored in memeory (save states are relativley small though and only scale to be a few kilobytes per object though)
-const maxSaveStates = 10;
+const maxSaveStates = 20;
 
 export function getMaxSaveStates(){
     return maxSaveStates;
