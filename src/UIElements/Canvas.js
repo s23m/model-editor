@@ -10,6 +10,9 @@ let selectDown = false;
 let savedObjects = [];
 let mouseDownXY =[]; // stores where the mouse button first gets held down
 let mouseUpXY =[]; // stores where the mouse is button is let go
+
+let lastSelectWasCanvas = false;
+
 export let selectedCanvasObject = null;
 
 
@@ -118,8 +121,11 @@ export class Canvas extends React.Component {
     ocm = (e) => {
         e.preventDefault();
     };
+
+    
     // What happens if u click anywhere on the canvas
     mouseDown = (e, canvas) => {
+        console.log('click')
         let position = canvasDraw.getGraphXYFromMouseEvent(e);
         let x = position[0]; let y = position[1];
         this.setState({
@@ -135,8 +141,10 @@ export class Canvas extends React.Component {
         if (e.button === 0 && !selectMultiple) {
             let intersection = canvasDraw.findIntersected(x, y);
             selectedCanvasObject = intersection
+            console.log(selectedCanvasObject)
             // check if there's an object
             if (intersection !== null) {
+                lastSelectWasCanvas = false;
                 //if object is a box, move the object
                 if (canvas.tool === Tool.Select && intersection.typeName === "Vertex") {
                     e.preventDefault();
@@ -151,11 +159,18 @@ export class Canvas extends React.Component {
                 }
                 mouseDownXY[0] = x; mouseDownXY[1] = y; // store mousedownXY in the case that something was clicked
                 console.log(mouseDownXY)
-              } else { //clicked nothing
-            this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
-            canvasDraw.saveBlockStates(canvas, x, y, 1);
-            canvasDraw.onLeftMousePress(canvas, x, y);
+            } 
+            else { //clicked nothing
+                this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
+                canvasDraw.saveBlockStates(canvas, x, y, 1);
+                canvasDraw.onLeftMousePress(canvas, x, y);
+                if(lastSelectWasCanvas === false){
+                    createSaveState()
+                    console.log('creatin save canvas')
+                }
+                lastSelectWasCanvas = true;
             }
+
         }
         
         //toggles ctrl key to be active for selecting multiple.
