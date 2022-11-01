@@ -25,7 +25,8 @@ export function getSaveData() {
     let vertexData = JSON.parse(JSON.stringify(getVertexData()));
     let decoyVertexData = JSON.parse(JSON.stringify(getDecoyVertexData()));
     let graphObjects = JSON.parse(JSON.stringify(getGraphData()));
-    let decoyGraphObjects = JSON.parse(JSON.stringify(getDecoyGraphData())) 
+    console.log(getDecoyGraphData())
+    let decoyGraphObjects = JSON.parse(JSON.stringify(getDecoyGraphData())); 
     let totalContainerKeys = getTotalPackageKeys();
     let totalGraphs = getTotalGraphs();
     let currentGraph = getCurrentContainerKey();
@@ -130,7 +131,7 @@ export function load(jsonString){
     setVertexData(saveData.treeVertex);
     setDecoyVertexData(saveData.dTreeVertex);
     setGraphData(saveData.graph)
-    setDecoyGraphData(saveData.dGrraph)
+    setDecoyGraphData(saveData.dGraph)
     setTreeData(saveData.tree)
     setTotalContainerKey(saveData.containerKeys)
     setTotalGraphKeys(saveData.graphKeys)
@@ -350,7 +351,7 @@ function loadDirect(saveData){
     setVertexData(saveData.treeVertex);
     setDecoyVertexData(saveData.dTreeVertex);
     setGraphData(saveData.graph)
-    setDecoyGraphData(saveData.dGrraph)
+    setDecoyGraphData(saveData.dGraph)
     setTreeData(saveData.tree)
     setTotalContainerKey(saveData.containerKeys)
     setTotalGraphKeys(saveData.graphKeys)
