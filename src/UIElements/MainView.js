@@ -115,9 +115,6 @@ export class MainProgramClass extends React.Component {
                 menu: LeftMenuType.TreeView,
                 selectedObject: null,
             });
-            if(getPropertyChange() === true){
-                createSaveState();
-            }
         }
 
         // if the selected object has a left menu,

@@ -499,6 +499,7 @@ export class ContainmentTree extends React.Component {
             setSelectedPackageKey(1);
             initialPackageAdded = true;
             createSaveState();
+            console.log('constructor save')
         }
         
 

@@ -21,6 +21,7 @@ import { vertexDeleteElement } from './CanvasDraw';
 
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { getIsStatic } from '../Config';
+import { createSaveState } from '../Serialisation/NewFileManager';
 
 
 
@@ -384,6 +385,7 @@ export class LeftMenu extends React.Component{
     deselectElement(){
         this.props.setLeftMenu(null);
         canvasDraw.drawAll();
+        createSaveState()
     }
 
     showTreeView(){
