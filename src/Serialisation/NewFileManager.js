@@ -1,5 +1,5 @@
 import {addObject, currentObjects, drawAll, getCurrentContainerKey, getTotalGraphs, getTotalContainerKeys as getTotalPackageKeys, 
-    setCurrentObjects, setNewGraph, setNewContainerKey, setTotalGraphKeys, setTotalContainerKey, updateArrows} from "../UIElements/CanvasDraw"
+    setCurrentObjects, setNewGraph, setNewContainerKey, setTotalGraphKeys, setTotalContainerKey, updateArrows, getCurrentGraph} from "../UIElements/CanvasDraw"
 
 import {setTranslationColumns, translationColumns} from "../UIElements/SemanticDomainEditor"
 
@@ -14,22 +14,24 @@ import { getDecoyPackageData, getDecoyGraphData, getDecoyVertexData, getPackageD
     setPackageData, setGraphData, setSelectedPackageKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
 import { getMaxSaveStates } from "../Config";
 
+const lodash = require('lodash');
+
 
 //Get all the data that needs to be saved, to restore a session
 export function getSaveData() {
-    let vertexObjects = currentObjects.flatten(true, false);
-    let arrowObjects = currentObjects.flatten(false, true);
-    let treeData = JSON.parse(JSON.stringify(getTreeData()))
-    let packageData = JSON.parse(JSON.stringify(getPackageData()))
-    let decoyPackageData = JSON.parse(JSON.stringify(getDecoyPackageData()))
-    let vertexData = JSON.parse(JSON.stringify(getVertexData()));
-    let decoyVertexData = JSON.parse(JSON.stringify(getDecoyVertexData()));
-    let graphObjects = JSON.parse(JSON.stringify(getGraphData()));
-    console.log(getDecoyGraphData())
-    let decoyGraphObjects = JSON.parse(JSON.stringify(getDecoyGraphData())); 
+    
+    let vertexObjects =  lodash.cloneDeep((currentObjects.flatten(true, false)));
+    let arrowObjects = lodash.cloneDeep((currentObjects.flatten(false, true)));
+    let treeData = lodash.cloneDeep(getTreeData());
+    let packageData = lodash.cloneDeep(getPackageData());
+    let decoyPackageData = lodash.cloneDeep(getDecoyPackageData());
+    let vertexData = lodash.cloneDeep(getVertexData());
+    let decoyVertexData = lodash.cloneDeep(getDecoyVertexData());
+    let graphObjects = lodash.cloneDeep(getGraphData());
+    let decoyGraphObjects = lodash.cloneDeep(getDecoyGraphData()) ;
     let totalContainerKeys = getTotalPackageKeys();
     let totalGraphs = getTotalGraphs();
-    let currentGraph = getCurrentContainerKey();
+    let currentGraph = getCurrentGraph();
     let currentKey = getCurrentContainerKey();
     let currentPackage = getSelectedPackageKey();
 
@@ -357,9 +359,10 @@ function loadDirect(saveData){
     setTotalGraphKeys(saveData.graphKeys)
     setCurrentObjects(new Graph(saveData.vertices, saveData.arrows));
     updateArrows()
-    setSelectedPackageKey(saveData.currentCon)
+    setSelectedPackageKey(saveData.currentKey)
     setNewContainerKey(saveData.currentKey)
     setNewGraph(saveData.currentGra)
+    console.log(getCurrentGraph())
     drawAll()
 
 }
@@ -391,6 +394,8 @@ export function createSaveState(){
     if(saveStates.length > maxSavedStates){
         saveStates.pop()
     }
+    //console.log("saveStates")
+    //console.log(saveStates)
 }
 
 
