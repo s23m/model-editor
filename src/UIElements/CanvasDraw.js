@@ -1345,6 +1345,7 @@ export function onLeftMouseRelease(canvas, x, y) {
             firstArrowJoint = false;
         }
         createSaveState()
+        console.log('arrow tool save')
     }
 
     if (canvas.tool === Tool.Vertex) {
@@ -1354,6 +1355,7 @@ export function onLeftMouseRelease(canvas, x, y) {
         canvas.props.setLeftMenu(newObject);
         canvas.props.setMode(Tool.Select);
         createSaveState();
+        console.log('vertex tool save')
     }
     if (canvas.tool === Tool.Artifact) {
         let newObject = createArtifact(canvas, mouseStartX, mouseStartY);

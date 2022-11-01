@@ -111,6 +111,7 @@ export class Canvas extends React.Component {
             canvasDraw.drawAll()
 
             createSaveState()
+            console.log('drop save')
         }
 
     }
@@ -242,8 +243,7 @@ export class Canvas extends React.Component {
             if (canvas.tool === Tool.Select) {
                 mouseUpXY[0] = x; mouseUpXY[1] = y;
                 canvasDraw.drawAll()
-                if(mouseDownXY[0] === mouseUpXY[0] && mouseDownXY[1] === mouseUpXY[1]) return // checks if the mouse moved between mouse down and mouse up
-                createSaveState() // if mouse did move that means something was dragged and we create save state
+
             }
 			else {
                 canvasDraw.onLeftMouseRelease(canvas, x, y);
