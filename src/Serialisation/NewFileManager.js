@@ -133,7 +133,7 @@ export function load(jsonString){
     setVertexData(saveData.treeVertex);
     setDecoyVertexData(saveData.dTreeVertex);
     setGraphData(saveData.graph)
-    setDecoyGraphData(saveData.dGrraph)
+    setDecoyGraphData(saveData.dGraph)
     setTreeData(saveData.tree)
     setTotalContainerKey(saveData.containerKeys)
     setTotalGraphKeys(saveData.graphKeys)
@@ -353,7 +353,7 @@ function loadDirect(saveData){
     setVertexData(saveData.treeVertex);
     setDecoyVertexData(saveData.dTreeVertex);
     setGraphData(saveData.graph)
-    setDecoyGraphData(saveData.dGrraph)
+    setDecoyGraphData(saveData.dGraph)
     setTreeData(saveData.tree)
     setTotalContainerKey(saveData.containerKeys)
     setTotalGraphKeys(saveData.graphKeys)

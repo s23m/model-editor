@@ -2,7 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-import { currentObjects,} from "../UIElements/CanvasDraw";
+import { ContactSupportOutlined } from "@material-ui/icons";
+import { currentObjects, getCurrentObjects,} from "../UIElements/CanvasDraw";
 import {SemanticIdentity} from "./SemanticIdentity";
 
 
@@ -448,15 +449,17 @@ export class Graph {
     //UUID data isn't being saved properly upstream, so this is a way around that.
     ArrowUUIDSource(object){
         object = this.getVertexNode(object);
-        //first index is source, second is destination
         let returnArray = [];
 
-        //Match an arrow
-        let i = 0;
-        for (let arrow of this.arrows) {
-            if (arrow.sourceVertexNode !== null && arrow.sourceVertex.semanticIdentity.UUID === object.vertex.semanticIdentity.UUID) {
-                returnArray[i] = arrow;
-                i += 1;
+        console.log(object.vertex.semanticIdentity.UUID)
+
+        let currentObjects = getCurrentObjects()
+
+        console.log(currentObjects)
+
+        for(let arrow of currentObjects.arrows){
+            if(arrow.arrow.pathData[arrow.arrow.pathData.length - 1][1] === object.vertex.semanticIdentity.UUID){
+                returnArray.push(arrow)
             }
         }
 
@@ -465,19 +468,22 @@ export class Graph {
 
     ArrowUUIDDest(object){
         object = this.getVertexNode(object);
-        //first index is source, second is destination
         let returnArray = [];
 
-        //Match an arrow
-        let i = 0;
-        for (let arrow of this.arrows) {
-            if (arrow.destVertexNode !== null && arrow.destVertex.semanticIdentity.UUID === object.vertex.semanticIdentity.UUID) {
-                returnArray[i] = arrow;
-                i += 1;
+        console.log(object.vertex.semanticIdentity.UUID)
+
+        let currentObjects = getCurrentObjects()
+
+        console.log(currentObjects)
+
+        for(let arrow of currentObjects.arrows){
+            if(arrow.arrow.pathData[0][1] === object.vertex.semanticIdentity.UUID){
+                returnArray.push(arrow)
             }
         }
 
         return returnArray;
+
     }
 
     //Removes and object while shifting it's children's position in the tree
