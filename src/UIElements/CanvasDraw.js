@@ -693,8 +693,8 @@ export function compareSizesToMoveAll(Object) {
         if (item.typeName === "Arrow") {
 
             //If the object is connected to destination
-            if (objectID === item.destVertexUUID) {
-                box = getObjectFromUUID(item.sourceVertexUUID);
+            if (objectID === item.pathData[0][1]) {
+                box = getObjectFromUUID(item.pathData[item.pathData.length - 1][1]);
                 if ((box.height + 10) * box.width < (Object.height + 10) * Object.width) {
                     boxArray.push(box);
 
@@ -714,8 +714,8 @@ export function compareSizesToMoveAll(Object) {
 
             }
             //If the object is connected to Source
-            else if (objectID === item.sourceVertexUUID) {
-                box = getObjectFromUUID(item.destVertexUUID);
+            else if (objectID === item.pathData[item.pathData.length - 1][1]) {
+                box = getObjectFromUUID(item.pathData[0][1]);
                 if ((box.height + 10) * box.width < (Object.height + 10) * Object.width) {
                     boxArray.push(box);
                 }
