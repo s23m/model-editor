@@ -1,5 +1,5 @@
-## Capstone S23M Graph Editor
-A repository to house all code and configuration artefacts produced by the LCLB team in collaboration with S23M (continuing on work from the Overdrive and Ponos teams).
+## S23M Model Editor
+A repository to house all code and configuration artefacts produced by S23M and its collaborators (continuing on work from the LCLB, Ponos and Overdrive teams).
 
 Live builds hosted @ https://s23m.github.io/lclb/
 
