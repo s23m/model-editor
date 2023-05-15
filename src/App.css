@@ -18,22 +18,37 @@
 
 .TopMenus {
     display: flex;
-    width: 100vw;
     height: 5vh;
     border: 1px groove #666666;
     flex-direction: row;
 	background-color:#D3D3D3;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+#Repository-Dropdown, #Account {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    height: 5vh;
+    width: fit-content;
+    border: 1px solid  #666666;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;
+	background-color:#D3D3D3;
+	font-size: calc(1vh + 1vw);
 }
 
 #File-Menu{
-	display: flex;
-    /*border: 2px solid black;*/
+    display: flex;
     width: 5vw;
     align-items: center;
     justify-content: center;
     height: 5.1vh;
 	background-color:#D3D3D3;
-	border:none;
+	border: 1px solid black;
+    border-radius: 4px;
 	font-size: calc(0.6vh + 0.6vw);
 }
 
@@ -233,7 +248,6 @@ input,button{
     flex-direction: row;
     height: 5vh;
     width: 5vh;
-
     align-items: center;
     justify-content: center;
 	background-color:#D3D3D3;
