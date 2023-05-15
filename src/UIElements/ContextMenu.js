@@ -57,26 +57,32 @@ export class ContextMenu extends React.Component {
             else if(e.target.id === "Rename"){
                 menuType = "Rename";
                 this.setState({showMenu: true})
+                document.getElementById("RenameBox").focus();
             }
             else if(e.target.id === "RenameVertex"){
                 menuType = "RenameVertex";
                 this.setState({showMenu: true})
+                document.getElementById("RenameVertexBox").focus();
             }
             else if(e.target.id === "RenameGraph"){
                 menuType = "RenameGraph";
                 this.setState({showMenu: true})
+                document.getElementById("RenameGraphBox").focus();
             }
             else if(e.target.id === "AddVertex"){
                 menuType = "AddVertex";
                 this.setState({showMenu: true})
+                document.getElementById("VertexNameBox").focus();
             }
             else if(e.target.id === "AddGraph"){
                 menuType = "AddGraph";
                 this.setState({showMenu: true})
+                document.getElementById("GraphNameBox").focus();
             }
             else if(e.target.id === "AddPackage"){
                 menuType = "AddPackage";
                 this.setState({showMenu: true})
+                document.getElementById("PackageNameBox").focus();
             }
             else if(e.target.id === "DeletePackage"){
                 menuType = "DeletePackage";
