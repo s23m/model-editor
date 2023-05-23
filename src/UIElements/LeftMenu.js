@@ -4,9 +4,9 @@
 
 import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
-import {LineColourToStringName,} from "../DataStructures/ArrowProperties"
-import { ContainmentTree,} from "./ContainmentTree";
-import {serverURL} from ".//MainView"
+import { LineColourToStringName, } from "../DataStructures/ArrowProperties"
+import { ContainmentTree, } from "./ContainmentTree";
+import { serverURL } from ".//MainView"
 import { SketchPicker } from 'react-color';
 
 // Icons
@@ -16,7 +16,7 @@ import iconSelect from "../Resources/select.svg"
 import iconSpecialisation from "../Resources/specialisation.svg";
 import iconVisibility from "../Resources/visibility.svg"
 
-import {deleteElement} from "./CanvasDraw";
+import { deleteElement } from "./CanvasDraw";
 import { vertexDeleteElement } from './CanvasDraw';
 
 import DropdownButton from "react-bootstrap/DropdownButton";
@@ -35,7 +35,7 @@ export const LeftMenuType = {
     //FTreeView: "FocussedTreeView"
 
     Artifact: "Artifact",
-    Container:"Container"
+    Container: "Container"
 
 };
 
@@ -65,15 +65,15 @@ export const Tool = {
 // for undo/redo, dont want to create a save state each time left menu is opened and nothing is changed
 export let PropertyChange = false;
 
-export function getPropertyChange(){
+export function getPropertyChange() {
     return PropertyChange;
 }
-export function resetPropertyChange(){
+export function resetPropertyChange() {
     PropertyChange = false;
 }
 // class to display the left hand menu, where we will be showing
 // object editing tools for now
-export class LeftMenu extends React.Component{
+export class LeftMenu extends React.Component {
 
     constructor(props) {
         super(props);
@@ -91,18 +91,18 @@ export class LeftMenu extends React.Component{
 
         this.formRef = null;
 
-        this.setFormRef = element =>{
+        this.setFormRef = element => {
             this.formRef = element;
         };
 
-        
+
         //this.setIcons();
-        
+
 
     }
-    handleChange(event){
-        this.setState({title: event.target.value})
-        this.setState({title:""})
+    handleChange(event) {
+        this.setState({ title: event.target.value })
+        this.setState({ title: "" })
         this.setTitle();
         this.setContent();
     }
@@ -111,33 +111,33 @@ export class LeftMenu extends React.Component{
         this.menu = this.props.mainState.menu;
         this.selectedItem = this.props.mainState.drawMode;
         this.props.setMode(this.selectedItem)
-        document.addEventListener("keydown", this.onKeyPressed.bind(this));  
-        if(getIsStatic() === false){
+        document.addEventListener("keydown", this.onKeyPressed.bind(this));
+        if (getIsStatic() === false) {
             this.setIcons()
         }
-        else{
-        this.setIconsStatic();
+        else {
+            this.setIconsStatic();
         }
     }
 
 
     //For quickKeys
     onKeyPressed(e) {
-        if (e.keyCode === 46){
-            if(this.state.selectedObject.typeName === "Vertex"){
+        if (e.keyCode === 46) {
+            if (this.state.selectedObject.typeName === "Vertex") {
                 vertexDeleteElement(this.state.selectedObject);
             }
-            else{
+            else {
                 deleteElement(this.state.selectedObject);
             }
-            this.setState({menu:"TreeView"});
+            this.setState({ menu: "TreeView" });
             canvasDraw.drawAll();
         }
 
-        
+
     }
-    
-    static getDerivedStateFromProps(props,state) {
+
+    static getDerivedStateFromProps(props, state) {
 
         return {
             menu: props.mainState.menu,
@@ -150,12 +150,12 @@ export class LeftMenu extends React.Component{
 
 
         let leftMenu = document.getElementById("VertexMenu");
-        if(leftMenu === null){
+        if (leftMenu === null) {
             leftMenu = document.getElementById("ArrowMenu");
         }
-        if(leftMenu !== null){
+        if (leftMenu !== null) {
             leftMenu.addEventListener("keypress", (e) => {
-                if(e.key === "Enter") {
+                if (e.key === "Enter") {
                     e.preventDefault();
                 }
             })
@@ -164,25 +164,25 @@ export class LeftMenu extends React.Component{
     }
 
     setIcons() {
-        fetch(serverURL + '/icons/list',{
-            method:'GET',
+        fetch(serverURL + '/icons/list', {
+            method: 'GET',
             headers: {
                 'Accept': '*/*',
             },
         })
-            .then((res) => {return res.json()})
+            .then((res) => { return res.json() })
             .then((data) => {
                 let fileNames = [];
                 data.icons.forEach((icon) => {
                     fileNames.push(icon)
                 });
                 console.log(fileNames)
-                this.setState({fileNames:fileNames})
+                this.setState({ fileNames: fileNames })
             })
-            
+
     }
 
-    async setIconsStatic(){
+    async setIconsStatic() {
         const iconNames = ['Activity.png',
             'Agent.png',
             'BioSphere.png',
@@ -208,8 +208,8 @@ export class LeftMenu extends React.Component{
             'Team.png',
             'Trust.png',
             'UI Device.png']
-            this.setState({fileNames:iconNames})
-          
+        this.setState({ fileNames: iconNames })
+
     }
 
     //VERTEX SETTERS
@@ -287,7 +287,7 @@ export class LeftMenu extends React.Component{
         PropertyChange = true;
     }
 
-    toggleAbstract(){
+    toggleAbstract() {
         this.state.selectedObject.toggleAbstract()
         canvasDraw.drawAll()
         PropertyChange = true;
@@ -300,24 +300,24 @@ export class LeftMenu extends React.Component{
         this.state.fileNames.forEach(fileName => {
             if (fileName.slice(-6, -4) === "_n") {
                 name = fileName.slice(0, -6);
-                dropdownOptions.push(<div className="DropdownItem" ref={fileName} key={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' disabled="disabled" /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => {this.setIcon(fileName)}}/></div> </div>)
+                dropdownOptions.push(<div className="DropdownItem" ref={fileName} key={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' disabled="disabled" /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => { this.setIcon(fileName) }} /></div> </div>)
             } else {
                 name = fileName.slice(0, -4);
-                dropdownOptions.push(<div className="DropdownItem" ref={fileName} key={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldTextBeSelected(fileName)} onClick={() => {this.setText(fileName)}} /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => {this.setIcon(fileName)}}/></div> </div>)
+                dropdownOptions.push(<div className="DropdownItem" ref={fileName} key={fileName}> <div className="dropdownLabel">{name}</div> <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldTextBeSelected(fileName)} onClick={() => { this.setText(fileName) }} /> </div>  <div className="checkBoxContainer"><input type='checkbox' defaultChecked={this.shouldIconBeSelected(fileName)} onClick={() => { this.setIcon(fileName) }} /></div> </div>)
             }
         });
 
         return <DropdownButton title="Category Selector" name="Icons" id="IconSelector" className="IconSelector" >
             {dropdownOptions}
         </DropdownButton>;
-        
+
     }
 
     getVertexColour = () => {
         return this.state.selectedObject.getColour()
     };
 
-    setVertexColour = (colour) =>{
+    setVertexColour = (colour) => {
         this.state.selectedObject.setColour(colour.hex);
         canvasDraw.updateVertex(this.state.selectedObject);
         canvasDraw.drawAll()
@@ -325,12 +325,12 @@ export class LeftMenu extends React.Component{
     };
 
     getColourPicker() {
-        return <DropdownButton title = "Colour Selector" id = "ColourSelector">
-        <SketchPicker
-            color={this.getVertexColour}
-            onChangeComplete={this.setVertexColour}
-            presetColors = {["#FFD5A9","#F5B942","#FFFFFF"]}
-        /></DropdownButton>
+        return <DropdownButton title="Colour Selector" id="ColourSelector">
+            <SketchPicker
+                color={this.getVertexColour}
+                onChangeComplete={this.setVertexColour}
+                presetColors={["#FFD5A9", "#F5B942", "#FFFFFF"]}
+            /></DropdownButton>
     }
 
     shouldTextBeSelected(fileName) {
@@ -353,92 +353,94 @@ export class LeftMenu extends React.Component{
         PropertyChange = true;
     }
 
-    setNavigable(side){
+    setNavigable(side) {
         this.state.selectedObject.toggleNavigable(side);
         document.getElementById("SourceIsNavigable").checked = this.state.selectedObject.getNavigable(0);
         document.getElementById("DestIsNavigable").checked = this.state.selectedObject.getNavigable(1);
         canvasDraw.drawAll()
         PropertyChange = true;
-        this.setState({menu: LeftMenuType.Arrow})
+        this.setState({ menu: LeftMenuType.Arrow })
     }
 
-    setAggregation(side){
-        if(!this.state.selectedObject.getNavigable(side)){
+    setAggregation(side) {
+        if (!this.state.selectedObject.getNavigable(side)) {
             this.state.selectedObject.toggleNavigable(side);
         }
         this.state.selectedObject.toggleAggregation(side);
         let SourceAggregation = this.state.selectedObject.getAggregation(0);
         let DestAggregation = this.state.selectedObject.getAggregation(1);
-        if(SourceAggregation) {
+        if (SourceAggregation) {
             document.getElementById("SourceIsNavigable").checked = true;
         }
-        if(DestAggregation){
+        if (DestAggregation) {
             document.getElementById("DestIsNavigable").checked = true;
         }
         document.getElementById("SourceIsAggregation").checked = SourceAggregation;
-        document.getElementById("DestIsAggregation").checked = DestAggregation;
+
+        {/*document.getElementById("DestIsAggregation").checked = DestAggregation;*/ }
+
         canvasDraw.drawAll()
         PropertyChange = true;
-        this.setState({menu: LeftMenuType.Arrow})
+        this.setState({ menu: LeftMenuType.Arrow })
     }
 
-    deselectElement(){
+    deselectElement() {
         this.props.setLeftMenu(null);
         canvasDraw.drawAll();
         createSaveState()
     }
 
-    showTreeView(){
+    showTreeView() {
         this.state.selectedObject(null)
         canvasDraw.drawAll();
     }
 
-    stripElement(e){
+    stripElement(e) {
         e.preventDefault()
         this.state.selectedObject.trimPath();
         canvasDraw.drawAll()
     }
 
-   
+
     deleteTitle = () => {
-        this.setState({title: ""})
+        this.setState({ title: "" })
     };
 
 
-// return the correct menu based on the selected item
-    getMenu = () =>{
+    // return the correct menu based on the selected item
+    getMenu = () => {
 
-        
+
 
         let leftMenuContents;
 
-        let toolbar = <div id = "Toolbar" className = "Toolbar">
-            <div id = "Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt ="Select"/></div>
+        let toolbar = <div id="Toolbar" className="Toolbar">
+            <div id="Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt="Select" /></div>
 
-            <div id = "Vertex" className="ToolbarItem" onClick={() => {this.props.setMode(Tool.Vertex); }} onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt ="Vertex"/></div>
+            <div id="Vertex" className="ToolbarItem" onClick={() => { this.props.setMode(Tool.Vertex); }} onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt="Vertex" /></div>
 
-            <div id = "Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt ="Edge"/></div>
+            <div id="Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt="Edge" /></div>
 
-            <div id = "Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt ="Specialisation"/></div>
-            
-            <div id = "Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt ="Visibility"/></div>
+            <div id="Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt="Specialisation" /></div>
+
+            <div id="Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt="Visibility" /></div>
 
         </div>;
 
         if (this.state.menu === LeftMenuType.TreeView) {
-            leftMenuContents = <ContainmentTree setLeftMenu = {this.props.setLeftMenu} />
+            leftMenuContents = <ContainmentTree setLeftMenu={this.props.setLeftMenu} />
 
         } else if (this.state.menu === LeftMenuType.Vertex) {
             canvasDraw.drawAll();
-            
-            leftMenuContents = <div id = "VertexMenu">
+
+            leftMenuContents = <div id="VertexMenu">
                 <div className="LeftHeader">Vertex Properties</div>
                 <label className="LeftLabel">Title</label>
-                <input id="LeftTitle" className="LeftTitle" value={this.state.selectedObject.title} onChange={this.handleChange}/>
+                <input id="LeftTitle" className="LeftTitle" value={this.state.selectedObject.title} onChange={this.handleChange} />
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Content</label>
-                <textarea id="LeftContent" className ="LeftContent" value={this.state.selectedObject.getContentAsString()} onChange={this.handleChange}/>
+                <textarea id="LeftContent" className="LeftContent" value={this.state.selectedObject.getContentAsString()} onChange={this.handleChange} />
                 <label className="LeftSpacer">&nbsp;</label>
 
                 {this.getS23MIconsSelector()}
@@ -448,89 +450,203 @@ export class LeftMenu extends React.Component{
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <label className="LeftLabel">Is Abstract?</label>
-                <input type="checkbox" id="IsAbstract" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAbstract()} onClick={() => this.toggleAbstract()}/>
+                <input type="checkbox" id="IsAbstract" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getAbstract()} onClick={() => this.toggleAbstract()} />
                 <label className="LeftSpacer">&nbsp;</label>
 
                 <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                 <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => { vertexDeleteElement(this.state.selectedObject); this.deselectElement()}}>Remove</button>
+                <button className="LeftMenuButton" onClick={() => { vertexDeleteElement(this.state.selectedObject); this.deselectElement() }}>Remove</button>
 
                 <label className="LeftSpacer">&nbsp;</label>
-                
+
 
             </div>;
-            
+
         } else if (this.state.menu === LeftMenuType.Arrow) {
 
-            if(this.state.selectedObject.edgeType === Tool.Edge){
+            if (this.state.selectedObject.edgeType === Tool.Edge) {
 
-            leftMenuContents = <div id = "ArrowMenu">
-                <div className="LeftHeader">Edge Properties</div>
-
-                <label className="LeftLabel">Source Is Navigable?</label>
-                <input type="checkbox" id="SourceIsNavigable" className="LeftCheckbox" checked={this.state.selectedObject.getNavigable(0)} onChange={() => this.setNavigable(0)}/>
-
-                <label className="LeftLabel">Destination Is Navigable?</label>
-                <input type="checkbox" id="DestIsNavigable" className="LeftCheckbox" checked={this.state.selectedObject.getNavigable(1)} onChange={() => this.setNavigable(1)}/>
-
-                <label className="LeftLabel">Source Is Aggregation?</label>
-                <input type="checkbox" id="SourceIsAggregation" className="LeftCheckbox" checked={this.state.selectedObject.getAggregation(0)}onChange={() => this.setAggregation(0)}/>
-
-                <label className="LeftLabel">Destination Is Aggregation?</label>
-                <input type="checkbox" id="DestIsAggregation" className="LeftCheckbox" checked={this.state.selectedObject.getAggregation(1)} onChange={() => this.setAggregation(1)}/>
-
-                <label className="LeftLabel">Line Colour</label>
-                <select name="LineColour" id="LineColour" className="LeftSelector" defaultValue={LineColourToStringName[this.state.selectedObject.lineColour]} onChange={() => this.setColour()}>
-                    <option value = "Black">Black</option>
-                    <option value = "Red">Red</option>
-                    <option value = "Blue">Blue</option>
-                    <option value = "Green">Green</option>
-                </select>
-                <label className="LeftSpacer">&nbsp;</label>
-
-                {/* -1 represents n or *  */}
-                <label className="LeftLabel">Source Cardinality</label>
-                <div className="CardinalityArea"> <div className="LeftCheckboxLabel"> Visible: </div> <input type="checkbox" id = "sourceCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getSourceCardinalityVisibility()} onChange={() => {this.toggleSourceCardinalityVisibility();canvasDraw.drawAll()}}/>
-                    <input type="number" id = "sourceFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getSourceCardinalityLowerBound()} min="0" max="25" onChange={() => this.updateCardinality()}/>
-                    <label>..</label>
-                    <input type="number" id = "sourceToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getSourceCardinalityUpperBound()} min="-1" max="25" onChange={() => this.updateCardinality()}/>
-                </div>
-
-
-                <label className="LeftLabel">Destination Cardinality</label>
-                <div className="CardinalityArea"> <div className="LeftCheckboxLabel">Visible:</div> <input type="checkbox" id = "destCardinalityShown" className="LeftCheckbox" defaultChecked={this.state.selectedObject.getDestCardinalityVisibility()} onChange={() => {this.toggleDestCardinalityVisibility();canvasDraw.drawAll()}}/>
-                    <input type="number" id = "destFromCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getDestCardinalityLowerBound()} min="0" max="25" onChange={() => this.updateCardinality()}/>
-                    <label>..</label>
-                    <input type="number" id = "destToCardindality" className="CardinalityBox" defaultValue={this.state.selectedObject.getDestCardinalityUpperBound()} min="-1" max="25" onChange={() => this.updateCardinality()}/>
-                </div>
-
-                <label className="LeftLabel">Source Label</label>
-                    <input id="SourceLabel" className="LeftTitle" defaultValue={this.state.selectedObject.sourceEdgeEnd.label} onKeyUp={() => this.setStartLabel()}/>
-                <label className="LeftSpacer">&nbsp;</label>
-
-                <label className="LeftLabel">Destination Label</label>
-                    <input id="DestLabel" className="LeftTitle" defaultValue={this.state.selectedObject.destEdgeEnd.label} onKeyUp={() => this.setEndLabel()}/>
-                <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement()}}>Remove</button>
-                <label className="LeftSpacer">&nbsp;</label>
-                <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
-                <label className="LeftSpacer">&nbsp;</label>
-
-            </div>
-            }else{
-                leftMenuContents = <form id = "ArrowMenu">
+                leftMenuContents = (
+                    <div id="ArrowMenu">
+                        <div className="LeftHeader">
+                            <h3 className='MenuTitle'>Edge Properties</h3>
+                        </div>
+                        <div className='LeftBody'>
+                            <div className='LeftBodyMenu'>
+                                <div className='Selector'>
+                                    <label className="LeftLabel">Line Colour:</label>
+                                    <select name="LineColour" id="LineColour" className="LeftSelector" defaultValue={LineColourToStringName[this.state.selectedObject.lineColour]} onChange={() => this.setColour()}>
+                                        <option value="Black">Black</option>
+                                        <option value="Red">Red</option>
+                                        <option value="Blue">Blue</option>
+                                        <option value="Green">Green</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className='LeftBodyMenu'>
+                                <div className='OptionTitle'>
+                                    <h4>From Edge</h4>
+                                </div>
+                                <div className='MenuOptions'>
+                                    <ul>
+                                        <li className='LabelItem'>
+                                            <label className='LeftLabel'>Label:</label>
+                                            <input
+                                                id='SourceLabel'
+                                                className='FromInput'
+                                                defaultValue={this.state.selectedObject.sourceEdgeEnd.label}
+                                                onKeyUp={() => this.setStartLabel()}
+                                            />
+                                        </li>
+                                        <li>
+                                            <label className="LeftLabel">Aggregation:</label>
+                                            <input
+                                                type="checkbox"
+                                                id="SourceIsAggregation"
+                                                className="LeftCheckbox"
+                                                checked={this.state.selectedObject.getAggregation(0)}
+                                                onChange={() => this.setAggregation(0)}
+                                            />
+                                        </li>
+                                        <li>
+                                            <label className="LeftLabel">Navigable:</label>
+                                            <input
+                                                type="checkbox"
+                                                id="SourceIsNavigable"
+                                                className="LeftCheckbox"
+                                                checked={this.state.selectedObject.getNavigable(0)}
+                                                onChange={() => this.setNavigable(0)}
+                                            />
+                                        </li>
+                                        <li className='CardinalItem'>
+                                            {/* -1 represents n or *  */}
+                                            <label className="LeftLabel">Cardinality:</label>
+                                            <input
+                                                type="number"
+                                                id="sourceFromCardindality"
+                                                className="CardinalityBox"
+                                                defaultValue={this.state.selectedObject.getSourceCardinalityLowerBound()}
+                                                min="0" max="25"
+                                                onChange={() => this.updateCardinality()}
+                                            />
+                                            <label>..</label>
+                                            <input
+                                                type="number"
+                                                id="sourceToCardindality"
+                                                className="CardinalityBox"
+                                                defaultValue={this.state.selectedObject.getSourceCardinalityUpperBound()}
+                                                min="-1" max="25"
+                                                onChange={() => this.updateCardinality()}
+                                            />
+                                        </li>
+                                        <li>
+                                            <label className="LeftLabel">Visible:</label>
+                                            <input
+                                                type="checkbox"
+                                                id="sourceCardinalityShown"
+                                                className="LeftCheckbox"
+                                                defaultChecked={this.state.selectedObject.getSourceCardinalityVisibility()}
+                                                onChange={() => {
+                                                    this.toggleSourceCardinalityVisibility();
+                                                    canvasDraw.drawAll()
+                                                }}
+                                            />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className='LeftBodyMenu'>
+                                <div className='OptionTitle'>
+                                    <h4>To Edge</h4>
+                                </div>
+                                <div className='MenuOptions'>
+                                    <ul>
+                                        <li className='LabelItem'>
+                                            <label className='LeftLabel'>Label:</label>
+                                            <input
+                                                id='DestLabel'
+                                                className='DestInput'
+                                                defaultValue={this.state.selectedObject.destEdgeEnd.label}
+                                                onKeyUp={() => this.setEndLabel()}
+                                            />
+                                        </li>
+                                        <li>
+                                            <label className="LeftLabel">Navigable:</label>
+                                            <input
+                                                type="checkbox"
+                                                id="DestIsNavigable"
+                                                className="LeftCheckbox"
+                                                checked={this.state.selectedObject.getNavigable(1)}
+                                                onChange={() => this.setNavigable(1)}
+                                            />
+                                        </li>
+                                        <li className='CardinalItem'>
+                                            {/* -1 represents n or *  */}
+                                            <label className="LeftLabel">Cardinality:</label>
+                                            <input
+                                                type="number"
+                                                id="destFromCardindality"
+                                                className="CardinalityBox"
+                                                defaultValue={this.state.selectedObject.getDestCardinalityLowerBound()}
+                                                min="0" max="25"
+                                                onChange={() => this.updateCardinality()}
+                                            />
+                                            <label>..</label>
+                                            <input
+                                                type="number"
+                                                id="destToCardindality"
+                                                className="CardinalityBox"
+                                                defaultValue={this.state.selectedObject.getDestCardinalityUpperBound()}
+                                                min="-1" max="25"
+                                                onChange={() => this.updateCardinality()}
+                                            />
+                                        </li>
+                                        <li>
+                                            <label className="LeftLabel">Visible:</label>
+                                            <input
+                                                type="checkbox"
+                                                id="destCardinalityShown"
+                                                className="LeftCheckbox"
+                                                defaultChecked={this.state.selectedObject.getDestCardinalityVisibility()}
+                                                onChange={() => {
+                                                    this.toggleDestCardinalityVisibility();
+                                                    canvasDraw.drawAll()
+                                                }}
+                                            />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className='LeftBodyMenu'>
+                                <button
+                                    className="LeftMenuButton"
+                                    onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove</button>
+                                <label className="LeftSpacer">&nbsp;</label>
+                                <button
+                                    className="LeftMenuButton"
+                                    onClick={() => this.deselectElement()}>Show Tree View</button>
+                            </div>
+                        </div>
+                        {/* NOT NEEDED
+                        <label className="LeftLabel">Destination Is Aggregation?</label>
+                        <input type="checkbox" id="DestIsAggregation" className="LeftCheckbox" checked={this.state.selectedObject.getAggregation(1)} onChange={() => this.setAggregation(1)} />
+                        */}
+                    </div>
+                )
+            } else {
+                leftMenuContents = <form id="ArrowMenu">
                     <div className="LeftHeader">Selected Edge</div>
                     <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                     <label className="LeftSpacer">&nbsp;</label>
-                    <button className="LeftMenuButton" onClick={() => {deleteElement(this.state.selectedObject); this.deselectElement()}}>Remove</button>
-                    </form>
+                    <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove</button>
+                </form>
             }
         }
 
         return <div>{toolbar}<form ref={this.setFormRef} className={this.props.className}>
             {leftMenuContents}
-            </form></div>;
-        
+        </form></div>;
+
     };
 
     render() {

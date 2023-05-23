@@ -45,14 +45,14 @@
     /*border-radius: 10px;*/
 }
 
-input,button{
+input,button, select{
     font-family: 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: Black;
-    font-size: calc(0.8vh + 0.8vw);
+    font-size: calc(0.7vh + 0.7vw);
     display: flex;
 }
 
@@ -351,18 +351,81 @@ input,button{
 	font-size:calc(0.7vh + 0.7vw);
 }
 
-.vertexPath{
+.LeftBody {
     display: flex;
-    flex-wrap: nowrap;
     flex-direction: column;
-    /***border: none;
-    border-top: 2px groove #666666;
-    border-bottom: 2px groove #666666;***/
-    align-items: center;
-    justify-content: center;
-    /*background-color: white;*/
-    width: 35vw;
-	font-size:calc(0.7vh + 0.7vw);
+    align-items: flex-start;
+    justify-content: left;
+    font-size: calc(0.7vh + 0.7vw);
+}
+
+.MenuTitle {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.LeftBodyMenu{
+    align-items: flex-start;
+    border-top: solid 0.3vh rgba(185, 184, 184, 0.596);
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 3vh;
+    padding-top: 1vh;
+    width: 100%;
+}
+
+.OptionTitle h4{
+    padding-bottom: 2vh;
+    margin: 0;
+}
+
+.LeftBody .MenuOptions {
+    width: 100%;
+}
+
+.LeftBody ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.LeftBody ul li{
+    width: 100%;
+    display: inline-flex;
+    margin-bottom: 1vh;
+    justify-content: space-between;
+}
+
+.LeftBody label {
+    width: fit-content;
+    padding-inline-end: 1vw;
+}
+
+.LabelItem input {
+    width: 8vw;
+}
+
+.LeftBodyMenu .Selector {
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+}
+
+.LeftBodyMenu .Selector :hover{
+    cursor: pointer;
+}
+
+.LeftSelector {
+    width: 8vw;
+    text-align-last: center;
+}
+
+.LeftBody ul .CardinalItem {
+    margin-top: 2vh;
 }
 
 .LeftTitle {
@@ -382,7 +445,6 @@ input,button{
     flex-wrap: nowrap;
     flex-direction: column;
     /*border: 2px groove #666666;*/
-    height: 7vh;
     justify-content: center;
     width:15vw;
 	font-size:calc(0.7vh + 0.7vw);
@@ -412,13 +474,8 @@ input,button{
     display: none;
 }
 
-.LeftSelector {
-    width: 15vw;
-    text-align-last: center;
-}
-
 .CardinalityBox{
-    width: 5vw;
+    width: 2.5vw;
 }
 
 .Canvas {
@@ -461,4 +518,18 @@ img {
 
 .hidden {
     display: none;
+}
+
+.vertexPath{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    /***border: none;
+    border-top: 2px groove #666666;
+    border-bottom: 2px groove #666666;***/
+    align-items: center;
+    justify-content: center;
+    /*background-color: white;*/
+    width: 35vw;
+	font-size:calc(0.7vh + 0.7vw);
 }
