@@ -7,16 +7,17 @@ import '../App.css';
 import * as canvasDraw from "./CanvasDraw";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import { Canvas } from './Canvas';
-import { getPropertyChange, LeftMenu, LeftMenuType, StringToLeftMenuType, Tool } from './LeftMenu';
+import { /*getPropertyChange*/ LeftMenu, LeftMenuType, StringToLeftMenuType, Tool } from './LeftMenu';
 import SemanticDomainEditor from "./SemanticDomainEditor";
 import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
-import { save, load, importLoad, undo, redo, createSaveState } from '../Serialisation/NewFileManager'
+import { save, saveRepo, publishModel, load, importLoad, undo, redo /*createSaveState*/ } from '../Serialisation/NewFileManager'
 
 
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
 import iconHelp from "../Resources/help.svg"
+import githubicon from "../Resources/S23M_Icons/githubicon.png"
 
 
 
@@ -225,6 +226,14 @@ export class MainProgramClass extends React.Component {
         this.setLeftMenuToTree();
     }
 
+    async sayHello(){
+        alert("Hello");
+    }
+
+    async sayGoodbye(){
+        alert("Goodbye");
+    }
+
 
 
     render() {
@@ -266,28 +275,47 @@ export class MainProgramClass extends React.Component {
                             </div>
                         </Dropdown.Item>
 
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="save-to-repository" onClick={() => saveRepo()}>Save To Repository</button>
+                            </div>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="publish-model" onClick={() => publishModel()}>Publish Model</button>
+                            </div>
+                        </Dropdown.Item>
+
                     </DropdownButton>
 
                     <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>Semantic Editor</div>
 
 
                     <input className="SelectedGraph" id="SelectedGraph" type="text" name="selectedGraph" readOnly='readonly' />
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>
                     <div className="TopBarIcon" onClick={() => this.zoom('+')}> + </div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.mainUndo()} ><img src={iconUndo} alt="Delete Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.mainRedo()} ><img src={iconRedo} alt="Add Container" /></div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" ><a href="UserManual.pdf"><img src={iconHelp} alt="Help" /></a></div>
-
+                    <DropdownButton variant="Primary" id="Repository-Dropdown" title="Repository" size="lg">
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="Grant-Visibility" onClick={() => alert("This will be the grant visibility button")}>Grant Visibility</button>
+                            </div>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="Import-Model" onClick={() => alert("This button will import a model")}>Import Model</button>
+                            </div>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="Grant-Discoverability" onClick={() => alert("This will be the grant visibility button")}>Grant Discoverability</button>
+                            </div>
+                        </Dropdown.Item>
+                    </DropdownButton>
+                    <div className="TopBarIcon" id="Account" onClick={() => this.sayGoodbye()}>Account</div>
                 </div>
 
                 <div className="LowerPanel" id="LowerPanel">

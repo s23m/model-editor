@@ -44,7 +44,7 @@ export var savedArrows = [];
 
 export let currentContainerKey = 0;
 //Total keys are to identify what key to give the next created object
-export let totalContainerKeys = 0
+export let totalContainerKeys = 0 // semi colon 
 
 export let currentGraph = 0;
 export let totalGraphs = 0;
