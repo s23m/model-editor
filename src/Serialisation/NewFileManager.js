@@ -13,6 +13,7 @@ import { getDecoyPackageData, getDecoyGraphData, getDecoyVertexData, getPackageD
     getSelectedPackageKey, getTreeData, getVertexData, setDecoyPackageData, setDecoyGraphData, setDecoyVertexData, 
     setPackageData, setGraphData, setSelectedPackageKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
 import { getMaxSaveStates } from "../Config";
+import JSZip from 'jszip';
 
 const lodash = require('lodash'); //testing
 
@@ -59,21 +60,33 @@ export function getSaveData() {
     return saveData;
 }
 
-export function saveAllPackagesSeperate() {
-    let JSONdata = getSaveData();
-    for(let currpackage of JSONdata.packages){
-        if(currpackage.parentContainerKey === 0){
-            let topLevelPackage = JSON.stringify(currpackage);
-            let dataFile = new Blob([topLevelPackage], {type: 'text/json'});
-            let title = JSON.stringify(currpackage.title);
-            let DLelement = document.createElement("a");
-            DLelement.href = URL.createObjectURL(dataFile);
-            DLelement.download = `${title}.json`;
-            document.body.appendChild(DLelement);
-            DLelement.click();
-            document.body.removeChild(DLelement);
-        }
+function trimIconOffSaveTitle(string){
+    const lastSpace = string.lastIndexOf(' ');
+    if(lastSpace !== -1){
+        return string.slice(0, lastSpace);
+    } else {
+        return string;
     }
+}
+
+export async function saveAllPackagesSeperate() {
+    let JSONdata = getSaveData();
+    let zip = new JSZip();
+  
+    for (let currpackage of JSONdata.packages) {
+      if (currpackage.parentContainerKey === 0) {
+        let topLevelPackage = JSON.stringify(currpackage);
+        zip.file(`${trimIconOffSaveTitle(currpackage.text)}.json`, topLevelPackage);
+      }
+    }
+  
+    let zipContent = await zip.generateAsync({ type: 'blob' });
+    let DLelement = document.createElement('a');
+    DLelement.href = URL.createObjectURL(zipContent);
+    DLelement.download = 'packages.zip';
+    document.body.appendChild(DLelement);
+    DLelement.click();
+    document.body.removeChild(DLelement);
 }
 
 export function saveSelectedPackage() {
