@@ -1,10 +1,8 @@
-import { handleAddGraph, handleAddPackage, handleAddVertex } from "./UIElements/ContainmentTree";
-
 //Icons used for Treeview objects
 const packageIcon = "📁";
 const treeVertexEmptyIcon = "🟧";
 const treeVertexFullIcon = "📂";
-const graphIcon = '📈';
+const diagramIcon = '📈';
 
 export function getPackageIcon(){
     return packageIcon;
@@ -18,8 +16,8 @@ export function getTreeVertexFullIcon(){
     return treeVertexFullIcon;
 }
 
-export function getGraphIcon(){
-    return graphIcon;
+export function getDiagramIcon(){
+    return diagramIcon;
 }
 
 //How many times you can undo/redo from an action
@@ -28,19 +26,6 @@ const maxSaveStates = 20;
 
 export function getMaxSaveStates(){
     return maxSaveStates;
-}
-
-//Objects inititally created
-export function initialObjects(){
-    handleAddPackage("Package");
-    handleAddGraph("Graph",1) 
-    handleAddPackage("SubPackage",1)
-    handleAddVertex("Vertex",1)
-    handleAddVertex("Vertex 2",1)
-    handleAddPackage("Package 2")
-    handleAddGraph("Graph 2",5)
-    handleAddVertex("Vertex 3",5)
-
 }
 
 //true to use static implementation of category selector, false to use dynamic

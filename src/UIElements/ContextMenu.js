@@ -5,7 +5,7 @@ import { setNewContainerKey, getCurrentGraph, setNewGraph, findIntersected, getG
      currentObjects, drawAll, updateVertex} from "./CanvasDraw";
 import {handleAddVertex, handleDeleteVertex, getVertexData} from "./ContainmentTree";
 import { createSaveState } from '../Serialisation/NewFileManager';
-import { getGraphIcon, getPackageIcon, getTreeVertexEmptyIcon, getTreeVertexFullIcon } from '../Config';
+import { getDiagramIcon, getPackageIcon, getTreeVertexEmptyIcon, getTreeVertexFullIcon } from '../Config';
 
 //Name of the right clicked item where "Default" is a non-object such as empty canvas space
 let rightClickedItem = "Default"; 
@@ -285,7 +285,7 @@ export class ContextMenu extends React.Component {
             }
 
             //if target is existing graph, load graph menu
-            if(e.target.text.includes(getGraphIcon())){
+            if(e.target.text.includes(getDiagramIcon())){
                 for(let graph of getGraphData()){
                     if(e.target.text === graph.text){
                         menuType = "Graph"
@@ -373,7 +373,7 @@ export class ContextMenu extends React.Component {
                     <div className="CMSelected" id="CMSelected"><b>{rightClickedItem}</b></div>   
                     <div className="CMitem" id="Rename"> Rename</div>
                     <div className="CMitem" id="AddVertex"> Add Vertex</div>
-                    <div className="CMitem" id="AddGraph"> Add Graph</div>
+                    <div className="CMitem" id="AddGraph"> Add Diagram</div>
                     <div className="CMitem" id="AddPackage"> Add Package</div>
                     <div className="CMitem" id="DeletePackage"> Delete Package</div>
                     </div>
@@ -425,7 +425,7 @@ export class ContextMenu extends React.Component {
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
                     <div className="CMitem" id="RenameGraph"> Rename </div>
                     <div className="CMitem" id="MoveGraph"> Move To </div>
-                    <div className="CMitem" id="DeleteGraph"> Delete Graph </div>
+                    <div className="CMitem" id="DeleteGraph"> Delete Diagram </div>
                     </div>
                 )
             }
@@ -491,7 +491,7 @@ export class ContextMenu extends React.Component {
 
                     <div className="ContextMenu" style={{top: yPos,left: xPos,}}>
                     <div className="CMSelected" id="CMSelected"> <b>{rightClickedItem}</b> </div>   
-                    <input className="CMText" id="GraphNameBox" type="text" name="nameGraph" placeholder='Graph Name'/>
+                    <input className="CMText" id="GraphNameBox" type="text" name="nameGraph" placeholder='Diagram Name'/>
                     </div>
                 )
             }
@@ -503,7 +503,7 @@ export class ContextMenu extends React.Component {
                     <div className="CMitem" id="Bi-Nav"> Navigate </div>   
                     <div className="CMitem" id="RenameVertex"> Rename</div>
                     <div className="CMitem" id="AddVertex"> Add Vertex</div>
-                    <div className="CMitem" id="AddGraph"> Add Graph</div>
+                    <div className="CMitem" id="AddGraph"> Add Diagram</div>
                     <div className="CMitem" id="AddPackage"> Add Package</div>
                     <div className="CMitem" id="DeleteVertex"> Delete Vertex </div>
                     </div>

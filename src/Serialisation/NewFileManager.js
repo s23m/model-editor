@@ -28,7 +28,7 @@ export function getSaveData() {
     let vertexData = lodash.cloneDeep(getVertexData());
     let decoyVertexData = lodash.cloneDeep(getDecoyVertexData());
     let graphObjects = lodash.cloneDeep(getGraphData());
-    let decoyGraphObjects = lodash.cloneDeep(getDecoyGraphData()) ;
+    let decoyGraphObjects = lodash.cloneDeep(getDecoyGraphData());
     let totalContainerKeys = getTotalPackageKeys();
     let totalGraphs = getTotalGraphs();
     let currentGraph = getCurrentGraph();
@@ -57,6 +57,27 @@ export function getSaveData() {
     };
 
     return saveData;
+}
+
+export function saveAllPackagesSeperate() {
+    let JSONdata = getSaveData();
+    for(let currpackage of JSONdata.packages){
+        if(currpackage.parentContainerKey === 0){
+            let topLevelPackage = JSON.stringify(currpackage);
+            let dataFile = new Blob([topLevelPackage], {type: 'text/json'});
+            let title = JSON.stringify(currpackage.title);
+            let DLelement = document.createElement("a");
+            DLelement.href = URL.createObjectURL(dataFile);
+            DLelement.download = `${title}.json`;
+            document.body.appendChild(DLelement);
+            DLelement.click();
+            document.body.removeChild(DLelement);
+        }
+    }
+}
+
+export function saveSelectedPackage() {
+    
 }
 
 
