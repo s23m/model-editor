@@ -1,26 +1,31 @@
-import {addObject, currentObjects, drawAll, getCurrentContainerKey, getTotalGraphs, getTotalContainerKeys as getTotalPackageKeys, 
-    setCurrentObjects, setNewGraph, setNewContainerKey, setTotalGraphKeys, setTotalContainerKey, updateArrows, getCurrentGraph} from "../UIElements/CanvasDraw"
+import {
+    addObject, currentObjects, drawAll, getCurrentContainerKey, getTotalGraphs, getTotalContainerKeys as getTotalPackageKeys,
+    setCurrentObjects, setNewGraph, setNewContainerKey, setTotalGraphKeys, setTotalContainerKey, updateArrows, getCurrentGraph
+} from "../UIElements/CanvasDraw"
 
-import {setTranslationColumns, translationColumns} from "../UIElements/SemanticDomainEditor"
+import { setTranslationColumns, translationColumns } from "../UIElements/SemanticDomainEditor"
 
-import {Vertex} from "../DataStructures/Vertex";
-import {Arrow} from "../DataStructures/Arrow";
-import {Cardinality} from "../DataStructures/Cardinality";
-import {EdgeEnd} from "../DataStructures/EdgeEnd";
-import {Graph} from "../DataStructures/Graph";
+import { Vertex } from "../DataStructures/Vertex";
+import { Arrow } from "../DataStructures/Arrow";
+import { Cardinality } from "../DataStructures/Cardinality";
+import { EdgeEnd } from "../DataStructures/EdgeEnd";
+import { Graph } from "../DataStructures/Graph";
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity";
-import { getDecoyPackageData, getDecoyGraphData, getDecoyVertexData, getPackageData, getGraphData, 
-    getSelectedPackageKey, getTreeData, getVertexData, setDecoyPackageData, setDecoyGraphData, setDecoyVertexData, 
-    setPackageData, setGraphData, setSelectedPackageKey, setTreeData, setVertexData } from "../UIElements/ContainmentTree";
+import {
+    getDecoyPackageData, getDecoyGraphData, getDecoyVertexData, getPackageData, getGraphData,
+    getSelectedPackageKey, getTreeData, getVertexData, setDecoyPackageData, setDecoyGraphData, setDecoyVertexData,
+    setPackageData, setGraphData, setSelectedPackageKey, setTreeData, setVertexData
+} from "../UIElements/ContainmentTree";
 import { getMaxSaveStates } from "../Config";
+import JSZip from 'jszip';
 
 const lodash = require('lodash'); //testing
 
 
 //Get all the data that needs to be saved, to restore a session
 export function getSaveData() {
-    
-    let vertexObjects =  lodash.cloneDeep((currentObjects.flatten(true, false)));
+
+    let vertexObjects = lodash.cloneDeep((currentObjects.flatten(true, false)));
     let arrowObjects = lodash.cloneDeep((currentObjects.flatten(false, true)));
     let treeData = lodash.cloneDeep(getTreeData());
     let packageData = lodash.cloneDeep(getPackageData());
@@ -28,7 +33,7 @@ export function getSaveData() {
     let vertexData = lodash.cloneDeep(getVertexData());
     let decoyVertexData = lodash.cloneDeep(getDecoyVertexData());
     let graphObjects = lodash.cloneDeep(getGraphData());
-    let decoyGraphObjects = lodash.cloneDeep(getDecoyGraphData()) ;
+    let decoyGraphObjects = lodash.cloneDeep(getDecoyGraphData());
     let totalContainerKeys = getTotalPackageKeys();
     let totalGraphs = getTotalGraphs();
     let currentGraph = getCurrentGraph();
@@ -59,12 +64,49 @@ export function getSaveData() {
     return saveData;
 }
 
+function trimIconOffSaveTitle(string) {
+    const lastSpace = string.lastIndexOf(' ');
+    if (lastSpace !== -1) {
+        return string.slice(0, lastSpace);
+    } else {
+        return string;
+    }
+}
+
+export async function saveAllPackagesSeperate() {
+    let JSONdata = getSaveData();
+    let zip = new JSZip();
+
+    if (JSONdata.packages.length !== 0) {
+        for (let currpackage of JSONdata.packages) {
+            if (currpackage.parentContainerKey === 0) {
+                let topLevelPackage = JSON.stringify(currpackage);
+                zip.file(`${trimIconOffSaveTitle(currpackage.text)}.json`, topLevelPackage);
+            }
+        }
+
+        let zipContent = await zip.generateAsync({ type: 'blob' });
+        let DLelement = document.createElement('a');
+        DLelement.href = URL.createObjectURL(zipContent);
+        DLelement.download = 'packages.zip';
+        document.body.appendChild(DLelement);
+        DLelement.click();
+        document.body.removeChild(DLelement);
+    } else {
+        alert("No top level packages to save!");
+    }
+}
+
+export function saveSelectedPackage() {
+
+}
+
 
 //Create the JSON file with the save data
-export function save(){
+export function save() {
     let JSONdata = getSaveData();
     let dataTransformed = JSON.stringify(JSONdata);
-    let dataFile = new Blob([dataTransformed], {type: 'text/json'});
+    let dataFile = new Blob([dataTransformed], { type: 'text/json' });
     //default file name
     let title = prompt("Please name your file", 's23m Graph')
 
@@ -78,56 +120,56 @@ export function save(){
 
 }
 
-export function saveRepo(){
+export function saveRepo() {
     //
 }
 
-export function publishModel(){
+export function publishModel() {
     //
 }
 
 //Replace current editor "state" with data from file
-export function load(jsonString){
+export function load(jsonString) {
     if (jsonString == null) return;
     let saveData = JSON.parse(jsonString);
 
     //TreeVertices need to convert semanticIdentity back to a sI object
-    for(let vert of saveData.treeVertex){
-        vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
-            vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
+    for (let vert of saveData.treeVertex) {
+        vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name, vert.semanticIdentity.description, vert.semanticIdentity.abbreviation,
+            vert.semanticIdentity.shortAbbreviation, vert.semanticIdentity.UUID, vert.semanticIdentity.translations)
     }
     //vertexs and arrows need to be converted back to their explicit types
     var newVertices = [];
     var newArrows = [];
 
     //vertices
-    for(let vert of saveData.vertices){
+    for (let vert of saveData.vertices) {
         setSelectedPackageKey(vert.vertexContainerKey)
         setNewContainerKey(vert.vertexContainerKey)
         setNewGraph(vert.vertexGraphKey)
-        vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
-            vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
-        vert = new Vertex ({newConstructor: 1,loadedVertex: vert})
+        vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name, vert.semanticIdentity.description, vert.semanticIdentity.abbreviation,
+            vert.semanticIdentity.shortAbbreviation, vert.semanticIdentity.UUID, vert.semanticIdentity.translations)
+        vert = new Vertex({ newConstructor: 1, loadedVertex: vert })
         newVertices.push(vert)
     }
 
     //arrows
-    function remakeSemantic(semantic){
+    function remakeSemantic(semantic) {
         return new SemanticIdentity(semantic.name, semantic.description, semantic.abbreviation, semantic.shortAbbreviation, semantic.UUID, semantic.translations);
     }
-    function remakeCardinality(cardinality){
+    function remakeCardinality(cardinality) {
         return new Cardinality(cardinality.numLowerBound, cardinality.numUpperBound, cardinality.attachedToUUID, cardinality.isVisible, remakeSemantic(cardinality.semanticIdentity));
     }
-    function remakeEdge(edge){
+    function remakeEdge(edge) {
         return new EdgeEnd(edge.attachedToUUID, edge.headType, remakeCardinality(edge.cardinality), edge.label, remakeSemantic(edge.semanticIdentity));
     }
-    function remakeArrow(arrow){
+    function remakeArrow(arrow) {
         var newArrow = new Arrow(newVertices, arrow.pathData, arrow.edgeType, remakeSemantic(arrow.semanticIdentity));
-            newArrow.sourceEdgeEnd = remakeEdge(arrow.sourceEdgeEnd);
-            newArrow.destEdgeEnd = remakeEdge(arrow.destEdgeEnd);
-            return newArrow;
+        newArrow.sourceEdgeEnd = remakeEdge(arrow.sourceEdgeEnd);
+        newArrow.destEdgeEnd = remakeEdge(arrow.destEdgeEnd);
+        return newArrow;
     }
-    for(let arrow of saveData.arrows){
+    for (let arrow of saveData.arrows) {
         setSelectedPackageKey(arrow.arrowContainerKey)
         setNewContainerKey(arrow.arrowContainerKey)
         setNewGraph(arrow.arrowGraphKey)
@@ -158,7 +200,7 @@ export function load(jsonString){
 }
 
 //Import a package or save file into root
-export function importLoad(jsonString){
+export function importLoad(jsonString) {
     //load the file
     if (jsonString == null) return;
     let saveData = JSON.parse(jsonString);
@@ -168,39 +210,39 @@ export function importLoad(jsonString){
     let packageKeyMap = [];
     let graphKeyMap = [];
     // list of arrows that have already updated. Used to stop arrows updating multiple times due to newkeys overlapping with oldkey numbers.
-    let arrowUpdated = []; 
+    let arrowUpdated = [];
     let containerKeys = getTotalPackageKeys();
     let graphKeys = getTotalGraphs();
 
     //assign a new key for each package/vertex
-    for(let container of saveData.packages){
+    for (let container of saveData.packages) {
         containerKeys++;
-        let containerKey = {originalKey: container.containerKey, originalParentKey: container.parentContainerKey, newKey: containerKeys, newParentKey: 0}
+        let containerKey = { originalKey: container.containerKey, originalParentKey: container.parentContainerKey, newKey: containerKeys, newParentKey: 0 }
         packageKeyMap.push(containerKey)
     }
-    for(let vert of saveData.treeVertex){
+    for (let vert of saveData.treeVertex) {
         containerKeys++;
-        let containerKey = {originalKey: vert.containerKey, originalParentKey: vert.parentContainerKey, newKey: containerKeys, newParentKey: 0}
+        let containerKey = { originalKey: vert.containerKey, originalParentKey: vert.parentContainerKey, newKey: containerKeys, newParentKey: 0 }
         packageKeyMap.push(containerKey)
     }
-    for(let graph of saveData.graph){
+    for (let graph of saveData.graph) {
         graphKeys++;
-        let graphKey = {originalGraphKey: graph.graphKey, originalKey: graph.containerKey, newGraphKey: graphKeys, newKey: 0}
+        let graphKey = { originalGraphKey: graph.graphKey, originalKey: graph.containerKey, newGraphKey: graphKeys, newKey: 0 }
         graphKeyMap.push(graphKey)
     }
 
     //assign new relative parent keys
-    for(let packages of packageKeyMap){
-        for(let packagesCompare of packageKeyMap){
-            if(packages.originalParentKey === packagesCompare.originalKey){
+    for (let packages of packageKeyMap) {
+        for (let packagesCompare of packageKeyMap) {
+            if (packages.originalParentKey === packagesCompare.originalKey) {
                 packages.newParentKey = packagesCompare.newKey;
             }
         }
     }
 
-    for(let graphs of graphKeyMap){
-        for(let packages of packageKeyMap){
-            if(graphs.originalKey === packages.originalKey){
+    for (let graphs of graphKeyMap) {
+        for (let packages of packageKeyMap) {
+            if (graphs.originalKey === packages.originalKey) {
                 graphs.newKey = packages.newKey;
             }
         }
@@ -209,7 +251,7 @@ export function importLoad(jsonString){
 
 
     //assign the new keys to the vertex's, graph's and packages
-    for(let i = 0; i < saveData.packages.length; i++){
+    for (let i = 0; i < saveData.packages.length; i++) {
         saveData.packages[i].containerKey = packageKeyMap[i].newKey;
         saveData.packages[i].parentContainerKey = packageKeyMap[i].newParentKey;
 
@@ -220,7 +262,7 @@ export function importLoad(jsonString){
         saveData.dPackages[i].parentContainerKey = packageKeyMap[i].newParentKey;
     }
 
-    for(let i = saveData.packages.length; i < saveData.packages.length + saveData.treeVertex.length; i++){
+    for (let i = saveData.packages.length; i < saveData.packages.length + saveData.treeVertex.length; i++) {
         saveData.treeVertex[i - saveData.packages.length].containerKey = packageKeyMap[i].newKey;
         saveData.treeVertex[i - saveData.packages.length].parentContainerKey = packageKeyMap[i].newParentKey;
 
@@ -231,7 +273,7 @@ export function importLoad(jsonString){
         saveData.dTreeVertex[i - saveData.packages.length].parentContainerKey = packageKeyMap[i].newParentKey;
     }
 
-    for(let i =0; i< saveData.graph.length; i++){
+    for (let i = 0; i < saveData.graph.length; i++) {
         saveData.graph[i].containerKey = graphKeyMap[i].newKey
         saveData.graph[i].graphKey = graphKeyMap[i].newGraphKey
 
@@ -243,71 +285,71 @@ export function importLoad(jsonString){
     }
 
     //assign the new keys to vertex's and arrows
-    for(let packages of packageKeyMap){
-        
-        for(let vertex of saveData.vertices){
-            if(vertex.vertexContainerKey === packages.originalKey){
+    for (let packages of packageKeyMap) {
+
+        for (let vertex of saveData.vertices) {
+            if (vertex.vertexContainerKey === packages.originalKey) {
                 vertex.vertexContainerKey = packages.newKey;
             }
         }
 
-        for(let arrow of saveData.arrows){
-            if(arrow.arrowContainerKey === packages.originalKey && !arrowUpdated.includes(arrow)){
+        for (let arrow of saveData.arrows) {
+            if (arrow.arrowContainerKey === packages.originalKey && !arrowUpdated.includes(arrow)) {
                 arrow.arrowContainerKey = packages.newKey;
                 arrowUpdated.push(arrow);
             }
         }
-            
+
     }
 
-    for(let graphs of graphKeyMap){
-        for(let vertex of saveData.vertices){
-            if(vertex.vertexGraphKey === graphs.originalGraphKey){
+    for (let graphs of graphKeyMap) {
+        for (let vertex of saveData.vertices) {
+            if (vertex.vertexGraphKey === graphs.originalGraphKey) {
                 vertex.vertexGraphKey = graphs.newGraphKey;
             }
         }
 
-        for(let arrow of saveData.arrows){
-            if(arrow.arrowGraphKey === graphs.originalGraphKey){
+        for (let arrow of saveData.arrows) {
+            if (arrow.arrowGraphKey === graphs.originalGraphKey) {
                 arrow.arrowGraphKey = graphs.newGraphKey;
             }
         }
     }
-    
+
 
     //recreat vertex/arrow objects as in load()
 
     var newVertices = [];
     var newArrows = [];
-    for(let vert of saveData.vertices){
-        vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name,vert.semanticIdentity.description,vert.semanticIdentity.abbreviation,
-            vert.semanticIdentity.shortAbbreviation,vert.semanticIdentity.UUID,vert.semanticIdentity.translations)
-        vert = new Vertex ({newConstructor: 1,loadedVertex: vert})
+    for (let vert of saveData.vertices) {
+        vert.semanticIdentity = new SemanticIdentity(vert.semanticIdentity.name, vert.semanticIdentity.description, vert.semanticIdentity.abbreviation,
+            vert.semanticIdentity.shortAbbreviation, vert.semanticIdentity.UUID, vert.semanticIdentity.translations)
+        vert = new Vertex({ newConstructor: 1, loadedVertex: vert })
         newVertices.push(vert)
     }
 
-    function remakeSemantic(semantic){
+    function remakeSemantic(semantic) {
         return new SemanticIdentity(semantic.name, semantic.description, semantic.abbreviation, semantic.shortAbbreviation, semantic.UUID, semantic.translations);
     }
 
-    function remakeCardinality(cardinality){
+    function remakeCardinality(cardinality) {
         return new Cardinality(cardinality.numLowerBound, cardinality.numUpperBound, cardinality.attachedToUUID, cardinality.isVisible, remakeSemantic(cardinality.semanticIdentity));
     }
- 
-    function remakeEdge(edge){
+
+    function remakeEdge(edge) {
         return new EdgeEnd(edge.attachedToUUID, edge.headType, remakeCardinality(edge.cardinality), edge.label, remakeSemantic(edge.semanticIdentity));
     }
 
-    function remakeArrow(arrow){
+    function remakeArrow(arrow) {
         var newArrow = new Arrow(newVertices, arrow.pathData, arrow.edgeType, remakeSemantic(arrow.semanticIdentity));
-            newArrow.setContainerKey(arrow.arrowContainerKey)
-            newArrow.setGraphKey(arrow.arrowGraphKey)
-            newArrow.sourceEdgeEnd = remakeEdge(arrow.sourceEdgeEnd);
-            newArrow.destEdgeEnd = remakeEdge(arrow.destEdgeEnd);
-            return newArrow;
+        newArrow.setContainerKey(arrow.arrowContainerKey)
+        newArrow.setGraphKey(arrow.arrowGraphKey)
+        newArrow.sourceEdgeEnd = remakeEdge(arrow.sourceEdgeEnd);
+        newArrow.destEdgeEnd = remakeEdge(arrow.destEdgeEnd);
+        return newArrow;
     }
 
-    for(let arrow of saveData.arrows){
+    for (let arrow of saveData.arrows) {
         arrow = remakeArrow(arrow)
         newArrows.push(arrow)
     }
@@ -321,17 +363,17 @@ export function importLoad(jsonString){
     setVertexData(getVertexData().concat(saveData.treeVertex))
     setDecoyVertexData(getDecoyVertexData().concat(saveData.dTreeVertex))
 
-    setGraphData(getGraphData().concat(saveData.graph)) 
+    setGraphData(getGraphData().concat(saveData.graph))
     setDecoyGraphData(getDecoyGraphData().concat(saveData.dGraph))
 
 
     //vertex's and arrows add to current data
 
 
-    for(let vertex of newVertices){
+    for (let vertex of newVertices) {
         addObject(vertex)
     }
-    for(let arrow of newArrows){
+    for (let arrow of newArrows) {
         addObject(arrow)
     }
 
@@ -347,13 +389,13 @@ export function importLoad(jsonString){
     updateArrows()
     drawAll()
 
-     
 
- return;
+
+    return;
 }
 
 //Loads saveData in memory (not from json string)
-function loadDirect(saveData){
+function loadDirect(saveData) {
 
     setTranslationColumns(saveData.translationColumns)
     setPackageData(saveData.packages);
@@ -379,27 +421,27 @@ function loadDirect(saveData){
 let saveStates = []
 let currentState = 0
 //Save states limit as its all stored in memeory (save states are relativley small though and only scale to be a few kilobytes per object though)
-let maxSavedStates = getMaxSaveStates(); 
+let maxSavedStates = getMaxSaveStates();
 
-export function getsaveStates(){
+export function getsaveStates() {
     return saveStates;
 }
 
 
-export function createSaveState(){
+export function createSaveState() {
 
     //This line is needed as some of the variables in saveData
     let newData = Object.assign({}, getSaveData());
     //Remove everything infront of the current state if not most recent eg. When the user has hit undo and then does an action
-    if(currentState !== 0){
-        for(let i = 0; i < currentState; i++){
+    if (currentState !== 0) {
+        for (let i = 0; i < currentState; i++) {
             saveStates.shift()
         }
         currentState = 0;
     }
     //push the chnage to saveStates and remove the oldest state if above threshold
     saveStates.unshift(newData)
-    if(saveStates.length > maxSavedStates){
+    if (saveStates.length > maxSavedStates) {
         saveStates.pop()
     }
     //console.log("saveStates")
@@ -407,16 +449,16 @@ export function createSaveState(){
 }
 
 
-export function undo(){
-    if(currentState < (maxSavedStates - 1) && saveStates[currentState + 1] !== undefined && saveStates.length !== 0){
-        currentState ++
+export function undo() {
+    if (currentState < (maxSavedStates - 1) && saveStates[currentState + 1] !== undefined && saveStates.length !== 0) {
+        currentState++
         loadDirect(saveStates[currentState])
     }
 }
 
-export function redo(){
-    if(currentState > 0 && saveStates.length !== 0){
-        currentState --
+export function redo() {
+    if (currentState > 0 && saveStates.length !== 0) {
+        currentState--
         loadDirect(saveStates[currentState])
     }
 }

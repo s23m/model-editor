@@ -11,18 +11,17 @@ import { /*getPropertyChange*/ LeftMenu, LeftMenuType, StringToLeftMenuType, Too
 import SemanticDomainEditor from "./SemanticDomainEditor";
 import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
-import { save, saveRepo, publishModel, load, importLoad, undo, redo /*createSaveState*/ } from '../Serialisation/NewFileManager'
+import { save, saveRepo, publishModel, load, importLoad, undo, redo, saveAllPackagesSeperate } from '../Serialisation/NewFileManager'
 
 
 import iconRedo from "../Resources/redo.svg"
 import iconUndo from "../Resources/undo.svg"
 import iconHelp from "../Resources/help.svg"
-import githubicon from "../Resources/S23M_Icons/githubicon.png"
 
 
 
 export const version = 1;
-export const serverURL = 'http://localhost:8080'
+export const serverURL = 'http://localhost:8080';
 
 
 export class MainProgramClass extends React.Component {
@@ -187,6 +186,27 @@ export class MainProgramClass extends React.Component {
         return 0;
     }
 
+    /**
+     * not fully working yet, this should be a function to automatically import all JSON files from a directory
+     * @param {event} event 
+     */
+    importSavedFiles = (event) => {
+        let refreshTree = this.setLeftMenuToTree; // This is used so we can point to setLeftMenuToTree within the reader object
+
+        const files = event.target.files;
+        const reader = new FileReader();
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            reader.readAsText(file);
+            reader.onload = () => {
+                const text = reader.result;
+                importLoad(text);
+                refreshTree();
+            };
+        }
+    };
+
     // Method For Loading a File
     showFile = () => {
         this.loadImport("Load");
@@ -226,11 +246,11 @@ export class MainProgramClass extends React.Component {
         this.setLeftMenuToTree();
     }
 
-    async sayHello(){
+    async sayHello() {
         alert("Hello");
     }
 
-    async sayGoodbye(){
+    async sayGoodbye() {
         alert("Goodbye");
     }
 
@@ -272,6 +292,12 @@ export class MainProgramClass extends React.Component {
                         <Dropdown.Item>
                             <div className="TopBar">
                                 <button id="json-downloader" onClick={() => save()}>Save (as Json)</button>
+                            </div>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="json-package-downloader" onClick={() => saveAllPackagesSeperate()}>Save Packages As Seperate Files</button>
                             </div>
                         </Dropdown.Item>
 
