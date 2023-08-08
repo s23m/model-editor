@@ -23,6 +23,7 @@ import iconHelp from "../Resources/help.svg"
 export const version = 1;
 export const serverURL = 'http://localhost:8080';
 
+const CLIENT_ID = "180fba17230e08fc195f";
 
 export class MainProgramClass extends React.Component {
 
@@ -250,8 +251,9 @@ export class MainProgramClass extends React.Component {
         alert("Hello");
     }
 
-    async sayGoodbye() {
-        alert("Goodbye");
+    async loginWithGithub(){
+        window.location.assign("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
+        // returns with code: 9765640985900e3f60d8
     }
 
 
@@ -341,7 +343,7 @@ export class MainProgramClass extends React.Component {
                             </div>
                         </Dropdown.Item>
                     </DropdownButton>
-                    <div className="TopBarIcon" id="Account" onClick={() => this.sayGoodbye()}>Account</div>
+                    <div className="TopBarIcon" id="Account" onClick={this.loginWithGithub}>GitHub Account</div>
                 </div>
 
                 <div className="LowerPanel" id="LowerPanel">
