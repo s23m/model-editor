@@ -5,10 +5,7 @@
 
 
 
-//-------Lee's github stuff-----------
-//const CLIENT_ID = "180fba17230e08fc195f";
-//const CLIENT_SECRET = "44c1d4c9b95762428306f34b317459c1552d4a06";
-//------------------------------------
+
 
 export class GitHubUser {
 

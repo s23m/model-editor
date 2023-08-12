@@ -16,6 +16,8 @@
     flex-direction: column;
 }
 
+/*-------------------modal styling-----------------*/
+
 #Github-Modal{
     display: none;
     border: 2px solid black;
@@ -24,6 +26,8 @@
     height: 60vh;
     width: 40vw;
 }
+
+/*-------------------------------------------------*/
 
 .TopMenus {
     display: flex;
