@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-.App {
+.App{
     text-align: center;
 }
 
@@ -14,6 +14,15 @@
     width:100vw;
     height:100vh;
     flex-direction: column;
+}
+
+#Github-Modal{
+    display: none;
+    border: 2px solid black;
+    border-radius: 15%;
+    background-color: #D3D3D3;
+    height: 60vh;
+    width: 40vw;
 }
 
 .TopMenus {

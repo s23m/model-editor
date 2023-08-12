@@ -7,7 +7,6 @@ const fs = require('fs');
 const path = require('path');
 
 app.use(cors());
-app.use(require("body-parser").json());
 app.use(pino);
 
 app.use(function (req,res,next) {
