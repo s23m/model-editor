@@ -1,9 +1,14 @@
-[comment]: <> (log in with github on the github webpage)
-[comment]: <> (go to settings via profile icon in top right)
-[comment]: <> (go to developer settings at the bottom of left menu)
-[comment]: <> (go to OAuth Apps in left hand side menu)
-[comment]: <> (click "Register a new application")
-[comment]: <> (Application name: "S23M-Model-Editor")
-[comment]: <> (Homepage URL: "http://localhost:3000/lclb")
-[comment]: <> (Authorization callback URL: "http://localhost:3000/lclb")
-[comment]: <> (click "Register application")
+1. Open Model Editor
+2. Click github account button on model editor
+3. Enter your github username
+4. Enter your github email address
+
+To retrieve client secret and client id
+
+1. Open GitHub and login
+2. Click the GitHub Developer website to create App Client Id and Client Secret.
+3. Add your app name and enter any additional information required. And click the Register application button.
+4. This will display the Client Id, copy this into the model editor section for client id.
+5. Go back to Github and click generate new client secret. copy this into the model editor section for client secret.
+
+Save Changes
