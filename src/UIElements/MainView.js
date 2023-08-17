@@ -12,6 +12,7 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
 import { save, saveRepo, publishModel, load, importLoad, undo, redo, saveAllPackagesSeperate } from '../Serialisation/NewFileManager'
+import { fetchUserData } from '../OAuthUsers/GithubFunctionality';
 
 
 import iconRedo from "../Resources/redo.svg"
@@ -251,7 +252,7 @@ export class MainProgramClass extends React.Component {
 
     async showGithubUserForm() {
         let modal = document.getElementById('Github-Modal');
-        modal.style.display = 'flex';
+        modal.style.display === 'none' ? modal.style.display = 'flex' : modal.style.display = 'none';
     }
 
     render() {
@@ -323,6 +324,11 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarIcon" onClick={() => this.mainRedo()} ><img src={iconRedo} alt="Add Container" /></div>
                     <div className="TopBarIcon" ><a href="UserManual.pdf"><img src={iconHelp} alt="Help" /></a></div>
                     <DropdownButton variant="Primary" id="Repository-Dropdown" title="Repository" size="lg">
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="Test-User-Call" onClick={fetchUserData}>Test Github User Call</button>
+                            </div>
+                        </Dropdown.Item>
                         <Dropdown.Item>
                             <div className="TopBar">
                                 <button id="Grant-Visibility" onClick={() => alert("This will be the grant visibility button")}>Grant Visibility</button>
