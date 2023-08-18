@@ -7,11 +7,11 @@ import '../App.css';
 import * as canvasDraw from "./CanvasDraw";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import { Canvas } from './Canvas';
-import { getPropertyChange, LeftMenu, LeftMenuType, StringToLeftMenuType, Tool } from './LeftMenu';
+import { /*getPropertyChange*/ LeftMenu, LeftMenuType, StringToLeftMenuType, Tool } from './LeftMenu';
 import SemanticDomainEditor from "./SemanticDomainEditor";
 import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
-import { save, load, importLoad, undo, redo, createSaveState } from '../Serialisation/NewFileManager'
+import { save, saveRepo, publishModel, load, importLoad, undo, redo, saveAllPackagesSeperate } from '../Serialisation/NewFileManager'
 
 
 import iconRedo from "../Resources/redo.svg"
@@ -21,7 +21,7 @@ import iconHelp from "../Resources/help.svg"
 
 
 export const version = 1;
-export const serverURL = 'http://localhost:8080'
+export const serverURL = 'http://localhost:8080';
 
 
 export class MainProgramClass extends React.Component {
@@ -186,6 +186,27 @@ export class MainProgramClass extends React.Component {
         return 0;
     }
 
+    /**
+     * not fully working yet, this should be a function to automatically import all JSON files from a directory
+     * @param {event} event 
+     */
+    importSavedFiles = (event) => {
+        let refreshTree = this.setLeftMenuToTree; // This is used so we can point to setLeftMenuToTree within the reader object
+
+        const files = event.target.files;
+        const reader = new FileReader();
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            reader.readAsText(file);
+            reader.onload = () => {
+                const text = reader.result;
+                importLoad(text);
+                refreshTree();
+            };
+        }
+    };
+
     // Method For Loading a File
     showFile = () => {
         this.loadImport("Load");
@@ -223,6 +244,14 @@ export class MainProgramClass extends React.Component {
     async mainRedo() {
         await redo();
         this.setLeftMenuToTree();
+    }
+
+    async sayHello() {
+        alert("Hello");
+    }
+
+    async sayGoodbye() {
+        alert("Goodbye");
     }
 
 
@@ -266,28 +295,53 @@ export class MainProgramClass extends React.Component {
                             </div>
                         </Dropdown.Item>
 
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="json-package-downloader" onClick={() => saveAllPackagesSeperate()}>Save Packages As Seperate Files</button>
+                            </div>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="save-to-repository" onClick={() => saveRepo()}>Save To Repository</button>
+                            </div>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="publish-model" onClick={() => publishModel()}>Publish Model</button>
+                            </div>
+                        </Dropdown.Item>
+
                     </DropdownButton>
 
                     <div className="TopBar" onClick={() => this.toggleSemanticDomainState()}>Semantic Editor</div>
 
 
                     <input className="SelectedGraph" id="SelectedGraph" type="text" name="selectedGraph" readOnly='readonly' />
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.zoom('-')}> - </div>
                     <div className="TopBarIcon" onClick={() => this.zoom('+')}> + </div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" onClick={() => this.mainUndo()} ><img src={iconUndo} alt="Delete Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.mainRedo()} ><img src={iconRedo} alt="Add Container" /></div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
-                    <div className="TopBarSpace">&nbsp;</div>
                     <div className="TopBarIcon" ><a href="UserManual.pdf"><img src={iconHelp} alt="Help" /></a></div>
-
+                    <DropdownButton variant="Primary" id="Repository-Dropdown" title="Repository" size="lg">
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="Grant-Visibility" onClick={() => alert("This will be the grant visibility button")}>Grant Visibility</button>
+                            </div>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="Import-Model" onClick={() => alert("This button will import a model")}>Import Model</button>
+                            </div>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="Grant-Discoverability" onClick={() => alert("This will be the grant visibility button")}>Grant Discoverability</button>
+                            </div>
+                        </Dropdown.Item>
+                    </DropdownButton>
+                    <div className="TopBarIcon" id="Account" onClick={() => this.sayGoodbye()}>Account</div>
                 </div>
 
                 <div className="LowerPanel" id="LowerPanel">

@@ -13,7 +13,7 @@ import { drawAll } from "./CanvasDraw";
 import {VertexNode} from "../DataStructures/Graph.js"
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity.js";
 import { createSaveState } from '../Serialisation/NewFileManager';
-import {getGraphIcon, getPackageIcon, getTreeVertexEmptyIcon, getTreeVertexFullIcon, initialObjects} from '../Config.js';
+import {getDiagramIcon, getPackageIcon, getTreeVertexEmptyIcon, getTreeVertexFullIcon } from '../Config.js';
 
 // Accesor for tree data
 let treeData = [];
@@ -306,17 +306,17 @@ export function handleRenamePackage(newName,rKey){
 
 /**
  * Add Graph to Treeview
- * @param {string} graphName 
+ * @param {string} diagramName 
  * @param {number} rKey 
  */
-export function handleAddGraph(graphName, rKey=getSelectedPackageKey()){
+export function handleAddGraph(diagramName, rKey=getSelectedPackageKey()){
     //stops the creation of graphs in the root or otherwise non-existent packages
     if(rKey <= 0) return 
 
     incrementTotalGraph();
     
     let decoyGraphThing = {
-        text: graphName + " " + getGraphIcon(),
+        text: diagramName + " " + getDiagramIcon(),
         children: [],
         data: NaN,
         state: {opened: true},
@@ -329,7 +329,7 @@ export function handleAddGraph(graphName, rKey=getSelectedPackageKey()){
     decoyGraphObjects.push(decoyGraphThing);
 
     let tempGraphThing = {
-        text: graphName + " " + getGraphIcon(),
+        text: diagramName + " " + getDiagramIcon(),
         children: [],
         data: decoyGraphObjects[graphObjects.length],
         state: {opened: true},
@@ -355,8 +355,8 @@ export function handleDeleteGraph(selectedGraphKey){
 export function handleRenameGraph(newName,gKey){
     for (let i = 0; i < graphObjects.length; i++){
         if (graphObjects[i].graphKey === gKey){
-            graphObjects[i].text = newName + " " + getGraphIcon();
-            graphObjects[i].data.text = newName + " " + getGraphIcon();
+            graphObjects[i].text = newName + " " + getDiagramIcon();
+            graphObjects[i].data.text = newName + " " + getDiagramIcon();
             break;
         }
     }
@@ -492,7 +492,6 @@ export class ContainmentTree extends React.Component {
         treeData = []; 
 
         if (initialPackageAdded === false){
-            initialObjects()
 
             setNewPackageKey(1);
             setNewGraphKey(1);
