@@ -12,7 +12,7 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
 import { save, saveRepo, publishModel, load, importLoad, undo, redo, saveAllPackagesSeperate } from '../Serialisation/NewFileManager'
-import { fetchUserData } from '../OAuthUsers/GithubFunctionality';
+import { fetchUserData, createUserRepo } from '../OAuthUsers/GithubFunctionality';
 
 
 import iconRedo from "../Resources/redo.svg"
@@ -327,6 +327,11 @@ export class MainProgramClass extends React.Component {
                         <Dropdown.Item>
                             <div className="TopBar">
                                 <button id="Test-User-Call" onClick={fetchUserData}>Test Github User Call</button>
+                            </div>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="Test-Repo-Creation" onClick={createUserRepo}>Test Create Model-Repo</button>
                             </div>
                         </Dropdown.Item>
                         <Dropdown.Item>
