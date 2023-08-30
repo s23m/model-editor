@@ -120,14 +120,6 @@ export function save() {
 
 }
 
-export function saveRepo() {
-    //
-}
-
-export function publishModel() {
-    //
-}
-
 //Replace current editor "state" with data from file
 export function load(jsonString) {
     if (jsonString == null) return;
