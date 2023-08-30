@@ -11,8 +11,8 @@ import { /*getPropertyChange*/ LeftMenu, LeftMenuType, StringToLeftMenuType, Too
 import SemanticDomainEditor from "./SemanticDomainEditor";
 import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
-import { save, saveRepo, publishModel, load, importLoad, undo, redo, saveAllPackagesSeperate } from '../Serialisation/NewFileManager'
-import { fetchUserData, createUserRepo } from '../OAuthUsers/GithubFunctionality';
+import { save, load, importLoad, undo, redo, saveAllPackagesSeperate } from '../Serialisation/NewFileManager'
+import { fetchUserData, createUserRepo, uploadFileToRepo } from '../OAuthUsers/GithubFunctionality';
 
 
 import iconRedo from "../Resources/redo.svg"
@@ -302,13 +302,7 @@ export class MainProgramClass extends React.Component {
 
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <button id="save-to-repository" onClick={() => saveRepo()}>Save To Repository</button>
-                            </div>
-                        </Dropdown.Item>
-
-                        <Dropdown.Item>
-                            <div className="TopBar">
-                                <button id="publish-model" onClick={() => publishModel()}>Publish Model</button>
+                                <button id="save-to-repository" onClick={uploadFileToRepo}>Save To Repository</button>
                             </div>
                         </Dropdown.Item>
 
