@@ -643,7 +643,7 @@ export class LeftMenu extends React.Component {
                                 <label className="LeftSpacer">&nbsp;</label>
                                 <button
                                     className="LeftMenuButton"
-                                    onClick={() => this.deselectElement()}>Show Tree View</button>
+                                    onClick={() => this.deselectElement()}>Save</button>
                             </div>
                         </div>
                         {/* NOT NEEDED
