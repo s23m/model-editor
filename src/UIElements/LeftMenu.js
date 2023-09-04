@@ -100,6 +100,7 @@ export class LeftMenu extends React.Component {
 
 
     }
+
     handleChange(event) {
         this.setState({ title: event.target.value })
         this.setState({ title: "" })
@@ -248,16 +249,19 @@ export class LeftMenu extends React.Component {
 
     setStartLabel() {
         let newLabel = document.getElementById("SourceLabel").value;
-        this.state.selectedObject.setStartLabel(newLabel);
+        this.state.selectedObject.storeStartLabel(newLabel);
+        document.getElementById("SourceLabel").value = newLabel;
         canvasDraw.drawAll();
         PropertyChange = true;
+        this.setState({ menu: LeftMenuType.Arrow })
     }
 
     setEndLabel() {
         let newLabel = document.getElementById("DestLabel").value;
-        this.state.selectedObject.setEndLabel(newLabel);
+        this.state.selectedObject.storeEndLabel(newLabel);
         canvasDraw.drawAll();
         PropertyChange = true;
+        this.setState({ menu: LeftMenuType.Arrow })
     }
 
     updateCardinality() {
@@ -354,35 +358,51 @@ export class LeftMenu extends React.Component {
     }
 
     setNavigable(side) {
-        this.state.selectedObject.toggleNavigable(side);
-        document.getElementById("SourceIsNavigable").checked = this.state.selectedObject.getNavigable(0);
-        document.getElementById("DestIsNavigable").checked = this.state.selectedObject.getNavigable(1);
-        canvasDraw.drawAll()
+        const selectedObject = this.state.selectedObject;
+
+        selectedObject.toggleNavigable(side);
+
+        this.setState({
+            // Assuming 'SourceIsNavigable' and 'DestIsNavigable' are state properties
+            SourceIsNavigable: selectedObject.getNavigable(0),
+            DestIsNavigable: selectedObject.getNavigable(1),
+        });
+
+        canvasDraw.drawAll();
         PropertyChange = true;
-        this.setState({ menu: LeftMenuType.Arrow })
+        this.setState({ menu: LeftMenuType.Arrow });
     }
 
     setAggregation(side) {
-        if (!this.state.selectedObject.getNavigable(side)) {
-            this.state.selectedObject.toggleNavigable(side);
-        }
-        this.state.selectedObject.toggleAggregation(side);
-        let SourceAggregation = this.state.selectedObject.getAggregation(0);
-        let DestAggregation = this.state.selectedObject.getAggregation(1);
-        if (SourceAggregation) {
-            document.getElementById("SourceIsNavigable").checked = true;
-        }
-        if (DestAggregation) {
-            document.getElementById("DestIsNavigable").checked = true;
-        }
-        document.getElementById("SourceIsAggregation").checked = SourceAggregation;
+        const selectedObject = this.state.selectedObject;
 
-        {/*document.getElementById("DestIsAggregation").checked = DestAggregation;*/ }
+        if (!selectedObject.getNavigable(side)) {
+            selectedObject.toggleNavigable(side);
+        }
 
-        canvasDraw.drawAll()
+        selectedObject.toggleAggregation(side);
+
+        const sourceAggregation = selectedObject.getAggregation(0);
+        const destAggregation = selectedObject.getAggregation(1);
+
+        this.setState({
+            // Assuming 'SourceIsNavigable' and 'DestIsNavigable' are state properties
+            SourceIsNavigable: sourceAggregation,
+            DestIsNavigable: destAggregation,
+        });
+
+        canvasDraw.drawAll();
+
+        this.setState({
+            // Assuming 'SourceIsAggregation' and 'DestIsAggregation' are state properties
+            SourceIsAggregation: sourceAggregation,
+            // You can decide whether or not to set DestIsAggregation based on your logic
+        });
+
         PropertyChange = true;
-        this.setState({ menu: LeftMenuType.Arrow })
+        this.setState({ menu: LeftMenuType.Arrow });
     }
+
 
     deselectElement() {
         this.props.setLeftMenu(null);
@@ -417,7 +437,7 @@ export class LeftMenu extends React.Component {
         let toolbar = <div id="Toolbar" className="Toolbar">
             <div id="Select" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Select)}><img src={iconSelect} alt="Select" /></div>
 
-            <div id="Vertex" className="ToolbarItem" onClick={() => { this.props.setMode(Tool.Vertex); }} onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt="Vertex" /></div>
+            <div id="Vertex" className="ToolbarItem" onClick={() => { this.props.setMode(Tool.Vertex); this.props.setLeftMenu(null) }} onKeyDown={() => this.onKeyPressed()}    ><img src={iconVertex} alt="Vertex" /></div>
 
             <div id="Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt="Edge" /></div>
 
@@ -463,7 +483,6 @@ export class LeftMenu extends React.Component {
             </div>;
 
         } else if (this.state.menu === LeftMenuType.Arrow) {
-
             if (this.state.selectedObject.edgeType === Tool.Edge) {
 
                 leftMenuContents = (
@@ -494,7 +513,7 @@ export class LeftMenu extends React.Component {
                                             <input
                                                 id='SourceLabel'
                                                 className='FromInput'
-                                                defaultValue={this.state.selectedObject.sourceEdgeEnd.label}
+                                                defaultValue={this.state.selectedObject.getStartLabel()}
                                                 onKeyUp={() => this.setStartLabel()}
                                             />
                                         </li>
@@ -566,7 +585,7 @@ export class LeftMenu extends React.Component {
                                             <input
                                                 id='DestLabel'
                                                 className='DestInput'
-                                                defaultValue={this.state.selectedObject.destEdgeEnd.label}
+                                                defaultValue={this.state.selectedObject.getEndLabel()}
                                                 onKeyUp={() => this.setEndLabel()}
                                             />
                                         </li>

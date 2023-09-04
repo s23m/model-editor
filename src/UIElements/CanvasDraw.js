@@ -6,9 +6,9 @@ import { Vertex } from "../DataStructures/Vertex";
 import { Arrow } from "../DataStructures/Arrow";
 import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
-import {getGraphNameFromKey, getVertexData, handleAddVertex} from "./ContainmentTree";
+import { getGraphNameFromKey, getVertexData, handleAddVertex } from "./ContainmentTree";
 import { createSaveState } from "../Serialisation/NewFileManager";
-import {selectedCanvasObject} from "./Canvas"
+import { selectedCanvasObject } from "./Canvas"
 import { getTreeVertexEmptyIcon } from "../Config";
 
 //false unless the onMouseMove function is executing, Is used to stop vertex created with leftmenu tool creating multiple vertex's when dragging for an inital size
@@ -49,10 +49,10 @@ export let totalContainerKeys = 0 // semi colon
 export let currentGraph = 0;
 export let totalGraphs = 0;
 
-export function setTotalContainerKey(newData){
+export function setTotalContainerKey(newData) {
     totalContainerKeys = newData;
 }
-export function setTotalGraphKeys(newData){
+export function setTotalGraphKeys(newData) {
     totalGraphs = newData;
 }
 
@@ -87,9 +87,9 @@ export function setNewGraph(newGraph) {
     try {
         document.getElementById("SelectedGraph").value = getGraphNameFromKey(newGraph)
     } catch (error) {
-        
+
     }
-    
+
 
 }
 
@@ -355,8 +355,8 @@ function resizeObjectOnMouseMove(e, resizeVars) {
     //grab object and arrows connected to it
     // update arrows
     updateA();
-    
-    
+
+
 }
 
 // Sets the objects uuid and adds it to the root of currentObjects
@@ -463,7 +463,7 @@ export function onLeftMousePress(canvas, x, y) {
                     resizeObjectOnMouseMove(e, resizeVars);
 
                 };
-                
+
                 return;
             }
         }
@@ -1283,21 +1283,21 @@ export function onLeftMouseRelease(canvas, x, y) {
     canvasElement.onmousemove = null;
 
     if (arrowToolSelected()) {
-        
+
 
         if (getConnectionDataForArrow(x, y).snapped && !firstArrowJoint) {
             // Create
             let secondObject = findIntersected(x, y);
             let newObject = null;
             let firstObject = arrowPath[0] // the first position in the arrowpath array will either be null or the first vertex that is clicked with an arrow. 
-                                            // therefor the arrow will not be created unless the first object that is clicked with the arrow tool is a vertex. - cooper
-            
+            // therefor the arrow will not be created unless the first object that is clicked with the arrow tool is a vertex. - cooper
+
             if (firstObject !== null && secondObject !== null && savedArrows !== null) {
                 // create the arrow using the createObject function rather than the other function they were using as this seems much more stable - cooper
                 // also deleted a weird forloop that they had that i assume was for stopping the arrow overlap issue, but they themselves commented that it doesnt work
-                newObject = createObject(canvas, mouseStartX, mouseStartY, x, y); 
-               
-            } 
+                newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
+
+            }
 
             // Reset path
             arrowPath = [];
@@ -1335,7 +1335,7 @@ export function onLeftMouseRelease(canvas, x, y) {
 
             //save object here
             previousObject = findIntersected(x, y);
-  
+
             arrowPath.push(getConnectionDataForArrow(x, y).coord);
             lastX = x;
             lastY = y;
@@ -1404,7 +1404,7 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
     //compareSizesToMoveAll returns any connected vertices to the selected along with the arrows themselves to be updated
     let [friendObject, arrowsVert, arrowsHoriz, allArrows] = compareSizesToMoveAll(selectedObject);
 
-        //If the selected block has a friend (connected by arrow) it will begin to try and identify friends of friends
+    //If the selected block has a friend (connected by arrow) it will begin to try and identify friends of friends
     if (friendObject !== null || friendObject.length >= 1) {
         let ObjectsToCheck = friendObject;
         let nextObjects = [];
@@ -1430,12 +1430,12 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
                         friendObject.push(newfriendObject[p]);
                     }
 
-                } 
+                }
             }
-           
+
         }
         //Updates the friendlist to begin a new search. 
-        ObjectsToCheck = nextObjects; 
+        ObjectsToCheck = nextObjects;
 
 
 
@@ -1514,7 +1514,7 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                     conData = getConnectionDataForArrow(arrowsVert[j].path[1][0], arrowsVert[j].path[1][1]);
 
 
-                        StickArrowToObject(conData, arrowsVert[j], 0);
+                    StickArrowToObject(conData, arrowsVert[j], 0);
                 }
             }
             else if (arrowsHoriz !== null) {
@@ -1528,7 +1528,7 @@ function moveObject(e, object, friends, F, savedObjects = null, S, saveDisX, sav
                     StickArrowToObject(conData, arrowsHoriz[k], 0);
                 }
             }
-            else if (allArrows !== null){
+            else if (allArrows !== null) {
             }
 
             object.x = x;
@@ -1619,8 +1619,8 @@ function createArtifact(canvas, x1, y1) {
         let vy2 = findNearestGridY(pos[3], 0);
 
         // Add vertex
-        return new Vertex({title: "", content: [""], x:  pos[0], y:  findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1});
-        
+        return new Vertex({ title: "", content: [""], x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1 });
+
 
     }
     return null;
@@ -1635,7 +1635,7 @@ function createContainer(canvas, x1, y1) {
         let vy2 = findNearestGridY(pos[3], 0);
 
         // Add Container
-        let newVert =  new Vertex({title: "new Container", content: [""], x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1});
+        let newVert = new Vertex({ title: "new Container", content: [""], x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1 });
         newVert.setIsContainer(true);
         return newVert;
 
@@ -1645,23 +1645,23 @@ function createContainer(canvas, x1, y1) {
 
 //Links the container with the mirrorSemantic to the container with the Base (Mirror becomes base)
 
-export function linkContainer(baseUUID,mirrorUUID){
+export function linkContainer(baseUUID, mirrorUUID) {
     let baseSemantic = null;
     //Since rootvertices was made as a set, cant just find indexes to reference, have to keep for looping to what we want
-    for(let i of currentObjects.rootVertices){
-        if(i.vertex.semanticIdentity.UUID === baseUUID){
+    for (let i of currentObjects.rootVertices) {
+        if (i.vertex.semanticIdentity.UUID === baseUUID) {
             baseSemantic = i;
             break
         }
     }
-    for(let i of currentObjects.rootVertices){
-        if(i.vertex.semanticIdentity.UUID === mirrorUUID){
+    for (let i of currentObjects.rootVertices) {
+        if (i.vertex.semanticIdentity.UUID === mirrorUUID) {
             i.vertex.semanticIdentity = baseSemantic.vertex.semanticIdentity;
             break
         }
     }
-    for(let i of currentObjects.rootVertices){
-        if(i.vertex.semanticIdentity.UUID === baseUUID){
+    for (let i of currentObjects.rootVertices) {
+        if (i.vertex.semanticIdentity.UUID === baseUUID) {
             updateLinkedContainers(baseSemantic.vertex);
         }
     }
@@ -1670,9 +1670,9 @@ export function linkContainer(baseUUID,mirrorUUID){
 }
 //Updates the appearances of linked containers to match the input container
 //Without a source container or doing a general scan, containers would be matched to copy the first vertex in the set, not the one that most recently changed
-export function updateLinkedContainers(inputContainer){
-    for(let i of currentObjects.rootVertices){
-        if(inputContainer.semanticIdentity.UUID === i.vertex.semanticIdentity.UUID){
+export function updateLinkedContainers(inputContainer) {
+    for (let i of currentObjects.rootVertices) {
+        if (inputContainer.semanticIdentity.UUID === i.vertex.semanticIdentity.UUID) {
             i.vertex.title = inputContainer.title
             i.vertex.content = inputContainer.content
             i.vertex.icons = inputContainer.icons
@@ -1685,15 +1685,15 @@ export function updateLinkedContainers(inputContainer){
 }
 
 //Function for creating a vertex object without the left menu tools - Lachlan
-export function createVertex(x1, y1, width, height,name,content,colour,icons,imageElements,fontSize,semanticIdentity){
+export function createVertex(x1, y1, width, height, name, content, colour, icons, imageElements, fontSize, semanticIdentity) {
 
-    return new Vertex({title: name,content: content, colour: colour, x: x1, y: findNearestGridY(y1, 1), width: width, height: height, semanticIdentity: semanticIdentity});
+    return new Vertex({ title: name, content: content, colour: colour, x: x1, y: findNearestGridY(y1, 1), width: width, height: height, semanticIdentity: semanticIdentity });
 
 }
 
-export function updateVertex(selectedObject){ // function to update the data of the contaimnment tree object and all other objects sharing the semantic- cooper
+export function updateVertex(selectedObject) { // function to update the data of the contaimnment tree object and all other objects sharing the semantic- cooper
     let vertex;
-    if(selectedObject.type !== "treeVertex"){
+    if (selectedObject.type !== "treeVertex") {
         vertex = getLinkedVertex(selectedObject); // 'vertex' refers to the treeview object.
 
         vertex.text = selectedObject.title + " " + getTreeVertexEmptyIcon();
@@ -1702,36 +1702,36 @@ export function updateVertex(selectedObject){ // function to update the data of 
         vertex.height = selectedObject.height;
 
     }
-    else{
+    else {
         vertex = selectedObject;
     }
 
 
-    for(let verticies of currentObjects.flatten()){
-        if(vertex.semanticIdentity.UUID === verticies.originalUUID && verticies !== selectedObject){ // updates all of the canvas objects that come from the treeview object.
+    for (let verticies of currentObjects.flatten()) {
+        if (vertex.semanticIdentity.UUID === verticies.originalUUID && verticies !== selectedObject) { // updates all of the canvas objects that come from the treeview object.
 
             //check if This graph vertex is in a different package to the base vertex, if so make it white and add location
 
-            if(vertex.parentContainerKey === verticies.vertexContainerKey){
-                
-            //If the vertex's graph is in same package
-            verticies.title = vertex.text.replace(" " + getTreeVertexEmptyIcon(), "")
-            verticies.colour = vertex.colour;
-            verticies.content = vertex.content;
+            if (vertex.parentContainerKey === verticies.vertexContainerKey) {
+
+                //If the vertex's graph is in same package
+                verticies.title = vertex.text.replace(" " + getTreeVertexEmptyIcon(), "")
+                verticies.colour = vertex.colour;
+                verticies.content = vertex.content;
             }
-            else{
-            verticies.title = vertex.text.replace(" " + getTreeVertexEmptyIcon(), "")
-            verticies.colour = "#FFFFFF";
-            verticies.content = vertex.content;
+            else {
+                verticies.title = vertex.text.replace(" " + getTreeVertexEmptyIcon(), "")
+                verticies.colour = "#FFFFFF";
+                verticies.content = vertex.content;
             }
         }
     }
 }
 
-export function getLinkedVertex(selectedObject){ // grabs the contaiment tree object - cooper
-    for(let vertex of getVertexData()){
-        if(vertex.semanticIdentity.UUID === selectedObject.originalUUID)
-        return vertex;
+export function getLinkedVertex(selectedObject) { // grabs the contaiment tree object - cooper
+    for (let vertex of getVertexData()) {
+        if (vertex.semanticIdentity.UUID === selectedObject.originalUUID)
+            return vertex;
     }
 }
 
@@ -1747,10 +1747,10 @@ function createObject(canvas, x1, y1, x2, y2) {
 
         // Add vertex
         console.log("draw vertex")
-        let newVert = handleAddVertex("Drawn Vertex" ,getCurrentContainerKey())
+        let newVert = handleAddVertex("Drawn Vertex", getCurrentContainerKey())
 
-        return new Vertex({title: "Drawn Vertex", content: newVert,colour: newVert.colour, x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1, semanticIdentity: newVert.semanticIdentity});
-        
+        return new Vertex({ title: "Drawn Vertex", content: newVert, colour: newVert.colour, x: pos[0], y: findNearestGridY(y1, 1), width: pos[2] - pos[0], height: vy2 - vy1, semanticIdentity: newVert.semanticIdentity });
+
 
     } else if (arrowToolSelected()) {
         // Generate path
@@ -1771,7 +1771,7 @@ function createObject(canvas, x1, y1, x2, y2) {
         }
 
         // Create arrow
-        
+
         let arrow = new Arrow(currentObjectsFlattened, newPath, arrowType);
         arrow.rebuildPath(currentObjectsFlattened);
         return arrow;
