@@ -639,7 +639,12 @@ export class LeftMenu extends React.Component {
                             <div className='LeftBodyMenu'>
                                 <button
                                     className="LeftMenuButton"
-                                    onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove</button>
+                                    onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove from Model</button>
+                                <label className="LeftSpacer">&nbsp;</label>
+                                {/*"Remove from Diagram" not fully implemented*/}
+                                <button
+                                    className="LeftMenuButton"
+                                    onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove from Diagram</button>
                                 <label className="LeftSpacer">&nbsp;</label>
                                 <button
                                     className="LeftMenuButton"
