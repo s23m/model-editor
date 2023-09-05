@@ -3,23 +3,17 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import React from 'react';
-
+import { GithubModal } from './OAuthUsers/GithubModal';
 import './App.css';
 
-
 function App() {
-
   return (
- 
-        <div className="App">
-            <div id='program'>
-            </div>
-        </div>
-
+    <div className="App">
+      <GithubModal />
+      <div id='program'>
+      </div>
+    </div>
   );
-
-
 }
-
 
 export default App;

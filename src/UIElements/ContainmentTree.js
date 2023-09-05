@@ -1,20 +1,21 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/. 
- */
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at https://mozilla.org/MPL/2.0/.
+*/
 
 import React from 'react';
 import TreeView from 'react-simple-jstree';
 
-import { currentObjects, setNewContainerKey as setNewPackageKey, getTotalContainerKeys, incrementTotalContainerKeys, 
-    getCurrentGraph, setNewGraph as setNewGraphKey, getTotalGraphs, incrementTotalGraphs as incrementTotalGraph, getCurrentObjects} from "./CanvasDraw";
+import {
+    currentObjects, setNewContainerKey as setNewPackageKey, getTotalContainerKeys, incrementTotalContainerKeys,
+    getCurrentGraph, setNewGraph as setNewGraphKey, getTotalGraphs, incrementTotalGraphs as incrementTotalGraph, getCurrentObjects
+} from "./CanvasDraw";
 
 import { drawAll } from "./CanvasDraw";
-import {VertexNode} from "../DataStructures/Graph.js"
+import { VertexNode } from "../DataStructures/Graph.js"
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity.js";
 import { createSaveState } from '../Serialisation/NewFileManager';
-import {getDiagramIcon, getPackageIcon, getTreeVertexEmptyIcon, getTreeVertexFullIcon } from '../Config.js';
-
+import { getDiagramIcon, getPackageIcon, getTreeVertexEmptyIcon, getTreeVertexFullIcon } from '../Config.js';
 // Accesor for tree data
 let treeData = [];
 
@@ -28,7 +29,7 @@ let decoyPackageData = [];
 let vertexData = [];
 
 // The decoy Vertex something to do with past teams indexing? can probably refactor and remove them? - Lachlan
-let decoyVertexData = [] 
+let decoyVertexData = []
 
 // Stores data for Graphs
 let graphObjects = [];
@@ -44,70 +45,70 @@ let selectedContainerKey = 0;
 
 
 
-export function setSelectedPackageKey(newKey){
+export function setSelectedPackageKey(newKey) {
     selectedContainerKey = newKey;
 }
 
-export function getSelectedPackageKey(){
+export function getSelectedPackageKey() {
     return selectedContainerKey;
 }
 
-export function getTreeData(){
+export function getTreeData() {
     return treeData;
 }
 
-export function setTreeData(newTreeData){
+export function setTreeData(newTreeData) {
     treeData = newTreeData;
 }
 
-export function getPackageData(){
+export function getPackageData() {
     return packageData;
 }
 
-export function setPackageData(newPackageData){
+export function setPackageData(newPackageData) {
     packageData = newPackageData;
 }
 
-export function getDecoyPackageData(){
+export function getDecoyPackageData() {
     return decoyPackageData
 }
 
-export function setDecoyPackageData(newData){
+export function setDecoyPackageData(newData) {
     decoyPackageData = newData;
 }
 
-export function getVertexData(){
+export function getVertexData() {
     return vertexData;
 }
 
-export function setVertexData(newData){
+export function setVertexData(newData) {
     vertexData = newData;
 }
 
-export function getDecoyVertexData(){
+export function getDecoyVertexData() {
     return decoyVertexData
 }
 
-export function setDecoyVertexData(newData){
+export function setDecoyVertexData(newData) {
     decoyVertexData = newData;
 }
 
 //returns a concated array of the Package and vertex (Tree
-export function getContainerData(){
+export function getContainerData() {
     return packageData.concat(vertexData);
 }
 
-export function getGraphData(){
+export function getGraphData() {
     return graphObjects;
 }
 
-export function setGraphData(newData){
+export function setGraphData(newData) {
     graphObjects = newData;
 }
-export function getDecoyGraphData(){
+export function getDecoyGraphData() {
     return decoyGraphObjects;
 }
-export function setDecoyGraphData(newData){
+export function setDecoyGraphData(newData) {
     decoyGraphObjects = newData;
 }
 
@@ -117,25 +118,25 @@ export function setDecoyGraphData(newData){
 /**
  * Loads the First available/oldest Graph
  */
-function loadFirstGraph(){
+function loadFirstGraph() {
     //Load first Graph
-    if(graphObjects.length > 0){
+    if (graphObjects.length > 0) {
         setNewPackageKey(graphObjects[0].data.containerKey)
         setNewGraphKey(graphObjects[0].data.graphKey)
         setSelectedPackageKey(graphObjects[0].data.containerKey)
     }
     //set keys to (none selected) values
-    else{
+    else {
         setNewPackageKey(0)
         setNewGraphKey(-1)
         setSelectedPackageKey(0)
     }
     //load the graph to canvas
-    for (let item of currentObjects.flatten()){
-        if (item.typeName === "Vertex" && item.getGraphKey() === getCurrentGraph()){
+    for (let item of currentObjects.flatten()) {
+        if (item.typeName === "Vertex" && item.getGraphKey() === getCurrentGraph()) {
             item.setPresent();
         }
-        else if (item.getGraphKey() !== getCurrentGraph() && item.typeName === "Vertex"){
+        else if (item.getGraphKey() !== getCurrentGraph() && item.typeName === "Vertex") {
             item.setAway();
         }
     }
@@ -148,15 +149,15 @@ function loadFirstGraph(){
  * @param {string} packageName Name of new Package
  * @param {number} parentKey Index of Parent, Defaults to 0 ("Root")
  */
-export function handleAddPackage(packageName, parentKey = 0){
+export function handleAddPackage(packageName, parentKey = 0) {
 
     incrementTotalContainerKeys();
 
     let tempPackageThing = {
-        text: packageName + " " + getPackageIcon(), 
+        text: packageName + " " + getPackageIcon(),
         children: treeData[getTotalContainerKeys()],
         data: NaN,
-        state: {opened: true},
+        state: { opened: true },
         type: "Package",
         typeName: "Package",
         containerKey: getTotalContainerKeys(),
@@ -166,16 +167,16 @@ export function handleAddPackage(packageName, parentKey = 0){
     decoyPackageData.push(tempPackageThing)
 
     let packageThing2 = {
-        text: packageName + " " + getPackageIcon(), 
+        text: packageName + " " + getPackageIcon(),
         children: treeData[getTotalContainerKeys()],
         data: decoyPackageData[packageData.length],
-        state: {opened: true},
+        state: { opened: true },
         type: "Package",
         typeName: "Package",
         containerKey: getTotalContainerKeys(),
         parentContainerKey: parentKey
     }
-    
+
     packageData.push(packageThing2);
 }
 /**
@@ -184,17 +185,17 @@ export function handleAddPackage(packageName, parentKey = 0){
  * @param {number} parentKey 
  * @returns Created Vertex Object
  */
-export function handleAddVertex(vertexName, parentKey = 0){
+export function handleAddVertex(vertexName, parentKey = 0) {
     //Create a new package using the known node type
 
     incrementTotalContainerKeys();
-    let sID = new SemanticIdentity(vertexName,"","","", undefined ,[])
+    let sID = new SemanticIdentity(vertexName, "", "", "", undefined, [])
 
     let tempVertexThing = {
-        text: vertexName + " " + getTreeVertexEmptyIcon(), 
+        text: vertexName + " " + getTreeVertexEmptyIcon(),
         children: treeData[getTotalContainerKeys()],
         data: NaN,
-        state: {opened: true},
+        state: { opened: true },
         type: "treeVertex",
         typeName: "VertexNode",
         originalVertex: true,
@@ -204,7 +205,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
         colour: "#FFD5A9",
         height: 50,
         width: 70,
-        icons: [[],[],[]],
+        icons: [[], [], []],
         imageElements: {},
         fontSize: 12,
         semanticIdentity: sID
@@ -216,7 +217,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
         text: vertexName + " " + getTreeVertexEmptyIcon(), //If icon is changed, youll have to change the package icon in context menu too
         children: treeData[getTotalContainerKeys()],
         data: decoyVertexData[vertexData.length],
-        state: {opened: true},
+        state: { opened: true },
         type: "treeVertex",
         typeName: "VertexNode",
         originalVertex: true,
@@ -226,7 +227,7 @@ export function handleAddVertex(vertexName, parentKey = 0){
         colour: "#FFD5A9",
         height: 50,
         width: 70,
-        icons: [[],[],[]],
+        icons: [[], [], []],
         imageElements: {},
         fontSize: 12,
         semanticIdentity: sID
@@ -238,12 +239,12 @@ export function handleAddVertex(vertexName, parentKey = 0){
 /**
  * @param {number} selectedContainerKey 
  */
-export function handleDeletePackage(selectedContainerKey){ 
-    for (let i = 0; i < packageData.length; i++){
-        if (packageData[i].containerKey === selectedContainerKey){
+export function handleDeletePackage(selectedContainerKey) {
+    for (let i = 0; i < packageData.length; i++) {
+        if (packageData[i].containerKey === selectedContainerKey) {
             deletePackageChildren(packageData[i]);
-            decoyPackageData.splice(i,1); 
-            packageData.splice(i,1); 
+            decoyPackageData.splice(i, 1);
+            packageData.splice(i, 1);
         }
     }
     //set index to first graph
@@ -253,14 +254,14 @@ export function handleDeletePackage(selectedContainerKey){
  * Delete a vertex From Treedata, and appearances on graphs
  * @param {*} selectedUUID 
  */
-export function handleDeleteVertex(selectedUUID){
-    for(let vertex of currentObjects.flatten()){
-        if(vertex.originalUUID === selectedUUID){
+export function handleDeleteVertex(selectedUUID) {
+    for (let vertex of currentObjects.flatten()) {
+        if (vertex.originalUUID === selectedUUID) {
             currentObjects.remove(vertex)
         }
     }
-    for(let i = 0; i < vertexData.length; i++){
-        if(vertexData[i].semanticIdentity.UUID === selectedUUID){
+    for (let i = 0; i < vertexData.length; i++) {
+        if (vertexData[i].semanticIdentity.UUID === selectedUUID) {
             vertexData.splice(i, 1)
             decoyVertexData.splice(i, 1)
         }
@@ -268,18 +269,18 @@ export function handleDeleteVertex(selectedUUID){
     drawAll();
 }
 
-function deletePackageChildren(selectedPackage){
+function deletePackageChildren(selectedPackage) {
     let packageChildren = selectedPackage.children;
-    for (let i = 0; i < packageChildren.length; i++){
-        if (packageChildren[i].type === "Package"){
+    for (let i = 0; i < packageChildren.length; i++) {
+        if (packageChildren[i].type === "Package") {
             let selectedContainerKey = packageChildren[i].containerKey;
             handleDeletePackage(selectedContainerKey);
         }
-        else if (packageChildren[i].type === "Graph"){
+        else if (packageChildren[i].type === "Graph") {
             let selectedGraphKey = packageChildren[i].graphKey;
             handleDeleteGraph(selectedGraphKey);
         }
-        else if (packageChildren[i].type === "treeVertex"){
+        else if (packageChildren[i].type === "treeVertex") {
             let selectedUUID = packageChildren[i].semanticIdentity.UUID;
             handleDeleteVertex(selectedUUID);
         }
@@ -287,17 +288,17 @@ function deletePackageChildren(selectedPackage){
 }
 
 
-export function handleRenamePackage(newName,rKey){
-    if(newName !== ""){
-        for (let i = 0; i < packageData.length; i++){
-            if (packageData[i].containerKey === rKey){
+export function handleRenamePackage(newName, rKey) {
+    if (newName !== "") {
+        for (let i = 0; i < packageData.length; i++) {
+            if (packageData[i].containerKey === rKey) {
                 packageData[i].text = newName + " " + getPackageIcon();
                 packageData[i].data.text = newName + " " + getPackageIcon();
                 break;
             }
         }
     }
-    else{
+    else {
         console.log("Cannot have empty name")
     }
 }
@@ -309,17 +310,17 @@ export function handleRenamePackage(newName,rKey){
  * @param {string} diagramName 
  * @param {number} rKey 
  */
-export function handleAddGraph(diagramName, rKey=getSelectedPackageKey()){
+export function handleAddGraph(diagramName, rKey = getSelectedPackageKey()) {
     //stops the creation of graphs in the root or otherwise non-existent packages
-    if(rKey <= 0) return 
+    if (rKey <= 0) return
 
     incrementTotalGraph();
-    
+
     let decoyGraphThing = {
         text: diagramName + " " + getDiagramIcon(),
         children: [],
         data: NaN,
-        state: {opened: true},
+        state: { opened: true },
         type: "Graph",
         typeName: "Graph",
         containerKey: rKey,
@@ -332,19 +333,19 @@ export function handleAddGraph(diagramName, rKey=getSelectedPackageKey()){
         text: diagramName + " " + getDiagramIcon(),
         children: [],
         data: decoyGraphObjects[graphObjects.length],
-        state: {opened: true},
+        state: { opened: true },
         type: "Graph",
         typeName: "Graph",
         containerKey: rKey,
         graphKey: getTotalGraphs(),
     };
- 
+
     graphObjects.push(tempGraphThing);
 }
 
-export function handleDeleteGraph(selectedGraphKey){
-    for (let i = 0; i < graphObjects.length; i++){
-        if (graphObjects[i].graphKey === selectedGraphKey){
+export function handleDeleteGraph(selectedGraphKey) {
+    for (let i = 0; i < graphObjects.length; i++) {
+        if (graphObjects[i].graphKey === selectedGraphKey) {
             graphObjects.splice(i, 1);
             decoyGraphObjects.splice(i, 1);
         }
@@ -352,9 +353,9 @@ export function handleDeleteGraph(selectedGraphKey){
     loadFirstGraph()
 }
 
-export function handleRenameGraph(newName,gKey){
-    for (let i = 0; i < graphObjects.length; i++){
-        if (graphObjects[i].graphKey === gKey){
+export function handleRenameGraph(newName, gKey) {
+    for (let i = 0; i < graphObjects.length; i++) {
+        if (graphObjects[i].graphKey === gKey) {
             graphObjects[i].text = newName + " " + getDiagramIcon();
             graphObjects[i].data.text = newName + " " + getDiagramIcon();
             break;
@@ -363,13 +364,13 @@ export function handleRenameGraph(newName,gKey){
 }
 
 /**
- * 
+ *
  * @param {number} selectedGraphKey 
  * @returns {number} The Key of The Graphs Parent Container
  */
-export function getGraphContainerKey(selectedGraphKey){ 
-    for(let i = 0; i < graphObjects.length; i++){
-        if (graphObjects[i].graphKey === selectedGraphKey){
+export function getGraphContainerKey(selectedGraphKey) {
+    for (let i = 0; i < graphObjects.length; i++) {
+        if (graphObjects[i].graphKey === selectedGraphKey) {
             return graphObjects[i].containerKey
         }
     }
@@ -380,21 +381,21 @@ export function getGraphContainerKey(selectedGraphKey){
  * @param {number} gKey 
  * @param {number} newkey 
  */
-export function handleGraphRebase(gKey,newkey){
-    for(let graph of graphObjects){
-        if(graph.graphKey === gKey){
-           for(let objectPackages of graph.children){  
+export function handleGraphRebase(gKey, newkey) {
+    for (let graph of graphObjects) {
+        if (graph.graphKey === gKey) {
+            for (let objectPackages of graph.children) {
                 let objects = objectPackages.children
-                for(let object of objects){
+                for (let object of objects) {
                     object.containerkey = newkey;
-                    if(object.data.typeName === "Vertex"){
-                    object.data.vertexContainerKey = newkey;
+                    if (object.data.typeName === "Vertex") {
+                        object.data.vertexContainerKey = newkey;
                     }
-                    else{
-                    object.data.arrowContainerKey = newkey;
+                    else {
+                        object.data.arrowContainerKey = newkey;
                     }
                 }
-            } 
+            }
             graph.containerKey = newkey;
         }
     }
@@ -410,13 +411,13 @@ export function handleGraphRebase(gKey,newkey){
  * @param {number} parsedContainerKey 
  * @returns Array of Container's children
  */
-function determineOwnership(parsedContainerKey){
+function determineOwnership(parsedContainerKey) {
     let returnArray = []
     let i = 0
-    for (let vertexOrArrow of treeData){
-        if(vertexOrArrow !== undefined){
-            if (vertexOrArrow.type === "Graph"){
-                if (vertexOrArrow.containerKey === parsedContainerKey){
+    for (let vertexOrArrow of treeData) {
+        if (vertexOrArrow !== undefined) {
+            if (vertexOrArrow.type === "Graph") {
+                if (vertexOrArrow.containerKey === parsedContainerKey) {
                     returnArray.push(treeData[i])
                 }
             }
@@ -432,21 +433,21 @@ function determineOwnership(parsedContainerKey){
  * @param {*} parsedContainerKey 
  * @returns Array of Container's SubContainer's
  */
-function determineSubPackages(parsedContainerKey){
+function determineSubPackages(parsedContainerKey) {
     let returnArray = []
-    for (let Container of getContainerData()){
-        if(Container.parentContainerKey === parsedContainerKey)
-        returnArray.push(Container)
+    for (let Container of getContainerData()) {
+        if (Container.parentContainerKey === parsedContainerKey)
+            returnArray.push(Container)
     }
     return returnArray
 }
 
-export function getGraphNameFromKey(key){
+export function getGraphNameFromKey(key) {
     let graph = graphObjects.find(graph => graph.graphKey === key)
     return graph.text
 }
 
-export function getContainerNameFromKey(key){
+export function getContainerNameFromKey(key) {
     let packages = getContainerData().find(packages => packages.containerKey === key)
     return packages.text
 }
@@ -455,14 +456,14 @@ export function getContainerNameFromKey(key){
 let initialPackageAdded = false;
 
 export class ContainmentTree extends React.Component {
-    
+
 
     componentDidMount() {
         document.getElementById("LowerPanel").addEventListener('dragstart', this.dragStart);
     }
-    componentDidUpdate(){
+    componentDidUpdate() {
     }
-    
+
     componentWillUnmount() {
         document.getElementById("LowerPanel").removeEventListener('dragstart', this.dragStart);
     }
@@ -471,27 +472,27 @@ export class ContainmentTree extends React.Component {
         //click required as JStree requires a "Selecting a node" to bring data forward. (Element only stores name)
         e.target.click();
         let vertData = 0;
-        for(let packages of getContainerData()){
-            if(getSelectedPackageKey() === packages.containerKey)
-            vertData = packages;
+        for (let packages of getContainerData()) {
+            if (getSelectedPackageKey() === packages.containerKey)
+                vertData = packages;
         }
         let data = vertData;
-        //Prevents errors when a package or graph is dragged etc. 
-        if(vertData.type === "treeVertex"){
-        e.dataTransfer.setData('text/plain',data.semanticIdentity.UUID)
+        //Prevents errors when a package or graph is dragged etc.
+        if (vertData.type === "treeVertex") {
+            e.dataTransfer.setData('text/plain', data.semanticIdentity.UUID)
         }
-        else{
+        else {
             console.log("This object has no drag/drop feature")
         }
-     }
-    
+    }
+
 
     constructor(props) {
         super(props);
 
-        treeData = []; 
+        treeData = [];
 
-        if (initialPackageAdded === false){
+        if (initialPackageAdded === false) {
 
             setNewPackageKey(1);
             setNewGraphKey(1);
@@ -500,62 +501,67 @@ export class ContainmentTree extends React.Component {
             createSaveState();
             console.log('constructor save')
         }
-        
+
 
         // Push the graph objects in
-        for (let graph of graphObjects){
-            treeData.push(graph);           
-            
+        for (let graph of graphObjects) {
+            treeData.push(graph);
+
         }
         //define owenerships
-        for (let packages of getContainerData()){ 
-            let canvasItems = determineOwnership(packages.containerKey) 
+        for (let packages of getContainerData()) {
+            let canvasItems = determineOwnership(packages.containerKey)
             let subPackageItems = determineSubPackages(packages.containerKey)
             let combinedItems = canvasItems.concat(subPackageItems)
             packages.children = combinedItems;
-                
+
 
         }
 
-        //define ownership of canvas arrows   
-        for (let packages of getContainerData()){ 
-            let vertex = new VertexNode() 
-            if (vertex.toTreeViewElement("Arrow Package", packages.containerKey) !== undefined){
+        //define ownership of canvas arrows  
+        for (let packages of getContainerData()) {
+            let vertex = new VertexNode()
+            if (vertex.toTreeViewElement("Arrow Package", packages.containerKey) !== undefined) {
                 packages.children.push(vertex.toTreeViewElement("Arrow Package", packages.containerKey))
-            }  
-            
+            }
+
         }
         //determine if vertex's are empty or not
-        for(let vert of getVertexData()){
-            if(vert.children.length === 0){
-                vert.text = vert.text.replace(" " + getTreeVertexEmptyIcon(),"");
-                vert.text = vert.text.replace(" " + getTreeVertexFullIcon(),"");
+        for (let vert of getVertexData()) {
+            if (vert.children.length === 0) {
+                vert.text = vert.text.replace(" " + getTreeVertexEmptyIcon(), "");
+                vert.text = vert.text.replace(" " + getTreeVertexFullIcon(), "");
                 vert.text = vert.text + " " + getTreeVertexEmptyIcon();
             }
-            else{
-                vert.text = vert.text.replace(" " + getTreeVertexEmptyIcon(),"");
-                vert.text = vert.text.replace(" " + getTreeVertexFullIcon(),"");
+            else {
+                vert.text = vert.text.replace(" " + getTreeVertexEmptyIcon(), "");
+                vert.text = vert.text.replace(" " + getTreeVertexFullIcon(), "");
                 vert.text = vert.text + " " + getTreeVertexFullIcon()
             }
         }
 
         //Determine which packages are root packages
         packageDataRoot = [];
-        for (let packages of getContainerData()){
-            if(packages.parentContainerKey ===0){
+        for (let packages of getContainerData()) {
+            if (packages.parentContainerKey === 0) {
                 packageDataRoot.push(packages)
             }
 
         }
+        const retrievedValue = JSON.parse(localStorage.getItem('GithubUser'));
 
         //Set the TreeData
         this.state = {
             data: {
                 core: {
                     data: [
-                        { text: "Root", 
-                        children: packageDataRoot, state: { opened: true }, 
-                        root: true},
+                        {
+                            text: retrievedValue && retrievedValue.username !== null
+                                ? retrievedValue.username : "Root",
+                            children: packageDataRoot,
+                            state: { opened: true },
+                            root: true
+                        },
                     ]
                 }
             },
@@ -572,26 +578,26 @@ export class ContainmentTree extends React.Component {
         console.log(getCurrentObjects())
 
         //catch undefined data type eg. root
-        try{
-            if(data.node.data.type === "Package" || data.node.data.type === "treeVertex" ){
+        try {
+            if (data.node.data.type === "Package" || data.node.data.type === "treeVertex") {
                 setSelectedPackageKey(data.node.data.containerKey)
             }
 
-            else if (data.node.data.type === "Graph"){
+            else if (data.node.data.type === "Graph") {
                 setNewGraphKey(data.node.data.graphKey);
                 setNewPackageKey(data.node.data.containerKey);
                 setSelectedPackageKey(data.node.data.containerKey)
                 // Move everything away
-                for (let item of currentObjects.flatten()){
-                    if (item.typeName === "Vertex" && item.getGraphKey() === getCurrentGraph()){
+                for (let item of currentObjects.flatten()) {
+                    if (item.typeName === "Vertex" && item.getGraphKey() === getCurrentGraph()) {
                         item.setPresent();
                     }
-                    else if (item.getGraphKey() !== getCurrentGraph() && item.typeName === "Vertex"){
+                    else if (item.getGraphKey() !== getCurrentGraph() && item.typeName === "Vertex") {
                         item.setAway();
                     }
                 }
             }
-            
+
             else if (data.selected.length === 1 && data.node.data !== null && data.node.data.type === undefined) {
                 let UUID = data.node.data.semanticIdentity.UUID;
                 for (let vertex of currentObjects.flatten()) {
@@ -600,21 +606,21 @@ export class ContainmentTree extends React.Component {
                             selectedVertex: vertex
                         });
                         setNewPackageKey(vertex.vertexContainerKey);
-                        setNewGraphKey(vertex.vertexGraphKey); 
+                        setNewGraphKey(vertex.vertexGraphKey);
                         setSelectedPackageKey(vertex.vertexContainerKey)
-                        
-                        for (let item of currentObjects.flatten()){
-                            if (item.typeName === "Vertex" && item.getGraphKey() === getCurrentGraph()){
+
+                        for (let item of currentObjects.flatten()) {
+                            if (item.typeName === "Vertex" && item.getGraphKey() === getCurrentGraph()) {
                                 item.setPresent();
                             }
-                            else if (item.getGraphKey() !== getCurrentGraph() && item.typeName === "Vertex"){
+                            else if (item.getGraphKey() !== getCurrentGraph() && item.typeName === "Vertex") {
                                 item.setAway();
                             }
                         }
                         this.props.setLeftMenu(this.state.selectedVertex);
                     }
                 }
-            } 
+            }
             else {
                 this.setState({
                     selectedVertex: null
@@ -622,16 +628,16 @@ export class ContainmentTree extends React.Component {
             }
             drawAll();
         }
-        catch(e){
+        catch (e) {
             console.log("If True,a null type error has been caught, If the selected object should be selectable, this is an issue")
         }
         //If the user clicks the root package
-        try{
-            if(data.node.original.root === true){
+        try {
+            if (data.node.original.root === true) {
                 setSelectedPackageKey(0) //containerkey 0 will be used for root
             }
         }
-        catch(e){
+        catch (e) {
         }
 
 

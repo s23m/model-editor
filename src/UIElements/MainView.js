@@ -12,6 +12,7 @@ import SemanticDomainEditor from "./SemanticDomainEditor";
 import { resetRows } from "./SemanticDomainEditor";
 import { ContextMenu } from './ContextMenu'
 import { save, saveRepo, publishModel, load, importLoad, undo, redo, saveAllPackagesSeperate } from '../Serialisation/NewFileManager'
+import { fetchUserData, createUserRepo } from '../OAuthUsers/GithubFunctionality';
 
 
 import iconRedo from "../Resources/redo.svg"
@@ -22,7 +23,6 @@ import iconHelp from "../Resources/help.svg"
 
 export const version = 1;
 export const serverURL = 'http://localhost:8080';
-
 
 export class MainProgramClass extends React.Component {
 
@@ -250,11 +250,10 @@ export class MainProgramClass extends React.Component {
         alert("Hello");
     }
 
-    async sayGoodbye() {
-        alert("Goodbye");
+    async showGithubUserForm() {
+        let modal = document.getElementById('Github-Modal');
+        modal.style.display === 'none' ? modal.style.display = 'flex' : modal.style.display = 'none';
     }
-
-
 
     render() {
         let GUI =
@@ -327,6 +326,16 @@ export class MainProgramClass extends React.Component {
                     <DropdownButton variant="Primary" id="Repository-Dropdown" title="Repository" size="lg">
                         <Dropdown.Item>
                             <div className="TopBar">
+                                <button id="Test-User-Call" onClick={fetchUserData}>Test Github User Call</button>
+                            </div>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="Test-Repo-Creation" onClick={createUserRepo}>Test Create Model-Repo</button>
+                            </div>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                            <div className="TopBar">
                                 <button id="Grant-Visibility" onClick={() => alert("This will be the grant visibility button")}>Grant Visibility</button>
                             </div>
                         </Dropdown.Item>
@@ -341,7 +350,7 @@ export class MainProgramClass extends React.Component {
                             </div>
                         </Dropdown.Item>
                     </DropdownButton>
-                    <div className="TopBarIcon" id="Account" onClick={() => this.sayGoodbye()}>Account</div>
+                    <div className="TopBarIcon" id="Account" onClick={this.showGithubUserForm}>GitHub Account</div>
                 </div>
 
                 <div className="LowerPanel" id="LowerPanel">

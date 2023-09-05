@@ -1,3 +1,4 @@
+
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
@@ -10,7 +11,6 @@ import { getGraphNameFromKey, getVertexData, handleAddVertex } from "./Containme
 import { createSaveState } from "../Serialisation/NewFileManager";
 import { selectedCanvasObject } from "./Canvas"
 import { getTreeVertexEmptyIcon } from "../Config";
-
 //false unless the onMouseMove function is executing, Is used to stop vertex created with leftmenu tool creating multiple vertex's when dragging for an inital size
 let dragging = false;
 
@@ -44,7 +44,7 @@ export var savedArrows = [];
 
 export let currentContainerKey = 0;
 //Total keys are to identify what key to give the next created object
-export let totalContainerKeys = 0 // semi colon 
+export let totalContainerKeys = 0 // semi colon
 
 export let currentGraph = 0;
 export let totalGraphs = 0;
@@ -507,7 +507,7 @@ export function onLeftMousePress(canvas, x, y) {
 
 //aligning lines when large box moved
 export function checkArrowsConnectedToBox(Object) {
-    // check arrows which one matches the box that was moved by its ID 
+    // check arrows which one matches the box that was moved by its ID
 
     // check how much the box has changed
     let objectID;
@@ -677,7 +677,7 @@ export function compareSizesToMoveAll(Object) {
 
     //for loop to get all the arrows
     //for loop to check destination and source
-    //if object ID is equal 
+    //if object ID is equal
     //find whichever one is not the currently selected block
     // if it's smaller move it else do nothing
 
@@ -931,7 +931,7 @@ export function lineIntersect(canvas, x, y, secondObject) {
     }
 
 
-    //previous object is left 
+    //previous object is left
     else if (previousObject.x + previousObject.width < secondObject.x) {
 
         //Previous is smaller
@@ -1152,7 +1152,7 @@ export function collectMehBox(boxes, arrows, bigbox, item, index) {
 //Bigbox - The larger important box
 //boxes - list of all the boxes being moved
 //arrows - arrows connect to the above boxes
-//index - denotes the side that boxes are connected to 
+//index - denotes the side that boxes are connected to
 export function arrangeboxesandarrows(bigbox, boxes, arrows, index) {
     //index = 1 = up
     if (boxes.length >= 2) {
@@ -1289,6 +1289,7 @@ export function onLeftMouseRelease(canvas, x, y) {
             // Create
             let secondObject = findIntersected(x, y);
             let newObject = null;
+
             let firstObject = arrowPath[0] // the first position in the arrowpath array will either be null or the first vertex that is clicked with an arrow. 
             // therefor the arrow will not be created unless the first object that is clicked with the arrow tool is a vertex. - cooper
 
@@ -1434,6 +1435,7 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
             }
 
         }
+
         //Updates the friendlist to begin a new search. 
         ObjectsToCheck = nextObjects;
 
@@ -1764,7 +1766,7 @@ function createObject(canvas, x1, y1, x2, y2) {
         //because createObject is always running when moving mouse
         //
         // if current mouse pos is not over a box, don't create arrow
-        // if removed here, it is still removed in another function 
+        // if removed here, it is still removed in another function
         //let intersection = findIntersected(x2, y2);
         if (newPath[0][0] !== 0) {
             return null;
@@ -1836,3 +1838,4 @@ function clearCanvas() {
     canvasContext.fillStyle = "#ffffff";
     canvasContext.fillRect(0, 0, canvasWidth, canvasHeight);
 }
+
