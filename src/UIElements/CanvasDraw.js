@@ -1289,7 +1289,8 @@ export function onLeftMouseRelease(canvas, x, y) {
             // Create
             let secondObject = findIntersected(x, y);
             let newObject = null;
-            let firstObject = arrowPath[0] // the first position in the arrowpath array will either be null or the first vertex that is clicked with an arrow.
+
+            let firstObject = arrowPath[0] // the first position in the arrowpath array will either be null or the first vertex that is clicked with an arrow. 
             // therefor the arrow will not be created unless the first object that is clicked with the arrow tool is a vertex. - cooper
 
             if (firstObject !== null && secondObject !== null && savedArrows !== null) {
@@ -1434,7 +1435,8 @@ export function onMiddleClick(canvas, x, y, savedObjects = null, shiftDown = fal
             }
 
         }
-        //Updates the friendlist to begin a new search.
+
+        //Updates the friendlist to begin a new search. 
         ObjectsToCheck = nextObjects;
 
 
