@@ -3,11 +3,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { SemanticIdentity } from "./SemanticIdentity";
-import {drawMarker, getDistance,} from "../UIElements/CanvasDraw";
-import {getGraphContainerKey} from "../UIElements/ContainmentTree";
+import { drawMarker, getDistance, } from "../UIElements/CanvasDraw";
+import { getGraphContainerKey } from "../UIElements/ContainmentTree";
 import * as ArrowProps from "./ArrowProperties";
 import { EdgeEnd } from "./EdgeEnd";
-import {Tool} from "../UIElements/LeftMenu";
+import { Tool } from "../UIElements/LeftMenu";
 import * as canvasDraw from "../UIElements/CanvasDraw"
 
 export class Arrow {
@@ -22,7 +22,7 @@ export class Arrow {
     constructor(objectsList, pathData, type, semanticIdentity) {
         this.typeName = "Arrow";
 
-        if (semanticIdentity !== undefined || objectsList === null){
+        if (semanticIdentity !== undefined || objectsList === null) {
             this.semanticIdentity = semanticIdentity;
         } else {
             if (objectsList.length > 1) {
@@ -48,7 +48,7 @@ export class Arrow {
 
         // Construct Path
         this.rebuildPath();
-        
+
         // Type
 
         this.lineColour = ArrowProps.LineColour.BLACK;
@@ -56,7 +56,7 @@ export class Arrow {
 
         if (type === Tool.Edge || type === Tool.Specialisation || type === Tool.Visibility) {
             this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE
-        }else{
+        } else {
             console.log("Failed to find correct tool");
             this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE
         }
@@ -64,14 +64,14 @@ export class Arrow {
         if (type === Tool.Edge) {
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
             this.typeName = "Arrow";
-        }else if (type === Tool.Specialisation){
+        } else if (type === Tool.Specialisation) {
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.TRIANGLE
             this.typeName = "Arrow";
-        }else if (type === Tool.Visibility){
+        } else if (type === Tool.Visibility) {
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
             this.lineType = ArrowProps.LineType.DASHED
             this.typeName = "Arrow";
-        }else{
+        } else {
             console.log("Failed to find correct tool");
             this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
         }
@@ -82,8 +82,11 @@ export class Arrow {
 
         this.sourceIsNavigable = false;
         this.destIsNavigable = false;
+
         this.sourceIsAggregation = false;
         this.destIsAggregation = false;
+
+        this.sourceEdgeEnd.label = "";
 
         // Graph key for rendering
         this.arrowGraphKey = canvasDraw.getCurrentGraph();
@@ -93,127 +96,119 @@ export class Arrow {
     }
 
     // Set the Graph key
-    setGraphKey(key){
+    setGraphKey(key) {
         this.arrowGraphKey = key;
     }
 
-    getGraphKey(){
+    getGraphKey() {
         return this.arrowGraphKey;
     }
 
     // Set the Container key. This is done in ContainmentTree.js
-    setContainerKey(key){
+    setContainerKey(key) {
         this.arrowContainerKey = key;
     }
 
     // Return the Container key. This is called in CanvasDraw
-    getContainerKey(){
+    getContainerKey() {
         return this.arrowContainerKey;
     }
 
-    toggleNavigable(side){
-        if(side === 0) {
-            this.sourceIsNavigable = !this.sourceIsNavigable;
-        }else if(side === 1){
-            this.destIsNavigable = !this.destIsNavigable;
-        }
-        if(this.sourceIsAggregation){
-            this.sourceIsNavigable = true;
-        }
-        if(this.destIsAggregation){
-            this.destIsNavigable = true;
+    // Set & Get For Navigable
+    toggleNavigable(side) {
+        const { sourceEdgeEnd, destEdgeEnd } = this;
+        const { sourceIsAggregation, destIsAggregation } = this;
+        let sourceIsNavigable = this.sourceIsNavigable;
+        let destIsNavigable = this.destIsNavigable;
+
+        if (side === 0) {
+            sourceIsNavigable = !sourceIsNavigable;
+        } else if (side === 1) {
+            destIsNavigable = !destIsNavigable;
         }
 
-        if(this.sourceIsNavigable && this.destIsNavigable){
-            if(this.sourceIsAggregation){
-                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
-                this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
-            }
-            else if(this.destIsAggregation){
-                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
-                this.destEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
-            }else{
-                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
-                this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
-            }
-        }else if(this.sourceIsNavigable){
-            if(this.sourceIsAggregation){
-                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
-                this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
-            }else {
-                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
-                this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
-            }
-        }else if(this.destIsNavigable){
-            if(this.destIsAggregation){
-                this.destEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
-                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
-            }else {
-                this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
-                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
-            }
-        }else{
-            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
-            this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+        if (sourceIsAggregation) {
+            sourceIsNavigable = true;
+        }
+        if (destIsAggregation) {
+            destIsNavigable = true;
         }
 
+        if (sourceIsNavigable && destIsNavigable) {
+            sourceEdgeEnd.type = sourceIsAggregation ? ArrowProps.EdgeEnd.FILLED_DIAMOND : ArrowProps.EdgeEnd.ARROW;
+            destEdgeEnd.type = destIsAggregation ? ArrowProps.EdgeEnd.FILLED_DIAMOND : ArrowProps.EdgeEnd.ARROW;
+        } else if (sourceIsNavigable) {
+            sourceEdgeEnd.type = sourceIsAggregation ? ArrowProps.EdgeEnd.FILLED_DIAMOND : ArrowProps.EdgeEnd.ARROW;
+            destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+        } else if (destIsNavigable) {
+            destEdgeEnd.type = destIsAggregation ? ArrowProps.EdgeEnd.FILLED_DIAMOND : ArrowProps.EdgeEnd.ARROW;
+            sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+        } else {
+            sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+            destEdgeEnd.type = ArrowProps.EdgeEnd.NONE;
+        }
+
+        this.sourceIsNavigable = sourceIsNavigable;
+        this.destIsNavigable = destIsNavigable;
     }
 
-    toggleAggregation(side){
-        if(side === 0){
-            this.sourceIsAggregation = !this.sourceIsAggregation;
-            if(this.destIsAggregation && this.sourceIsAggregation){
-                this.destIsAggregation = false;
-            }
-        }else{
-            this.destIsAggregation = !this.destIsAggregation;
-            if(this.destIsAggregation && this.sourceIsAggregation){
-                this.sourceIsAggregation = false;
-            }
-        }
 
-
-        if(this.sourceIsAggregation) {
-            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
-            if(this.destIsNavigable){
-                this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
-            }else{
-                this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
-            }
-        }else if(this.destIsAggregation){
-            this.destEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
-            if(this.sourceIsNavigable){
-                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
-            }else{
-                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE
-            }
-        }else{
-            // this updates the arrow heads so they are correct
-            this.toggleNavigable(100)
-        }
-    }
-
-    getNavigable(side){
-        if(side === 0){
+    getNavigable(side) {
+        if (side === 0) {
             return this.sourceIsNavigable;
-        }else{
+        } else {
             return this.destIsNavigable;
         }
 
     }
 
-    getAggregation(side){
-        if(side === 0){
+    // Set & Get for Aggregation
+    toggleAggregation(side) {
+        if (side === 0) {
+            this.sourceIsAggregation = !this.sourceIsAggregation;
+            if (this.destIsAggregation && this.sourceIsAggregation) {
+                this.destIsAggregation = false;
+            }
+        } else {
+            this.destIsAggregation = !this.destIsAggregation;
+            if (this.destIsAggregation && this.sourceIsAggregation) {
+                this.sourceIsAggregation = false;
+            }
+        }
+
+
+        if (this.sourceIsAggregation) {
+            this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
+            if (this.destIsNavigable) {
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
+            } else {
+                this.destEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+            }
+        } else if (this.destIsAggregation) {
+            this.destEdgeEnd.type = ArrowProps.EdgeEnd.FILLED_DIAMOND;
+            if (this.sourceIsNavigable) {
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.ARROW;
+            } else {
+                this.sourceEdgeEnd.type = ArrowProps.EdgeEnd.NONE
+            }
+        } else {
+            // this updates the arrow heads so they are correct
+            this.toggleNavigable(100)
+        }
+    }
+
+    getAggregation(side) {
+        if (side === 0) {
             return this.sourceIsAggregation
-        }else{
+        } else {
             return this.destIsAggregation
         }
 
     }
 
-    trimPath(){
-        this.pathData = [this.pathData[0], this.pathData[this.pathData.length-1]];
-        this.path = [this.path[0], this.path[this.path.length-1]];
+    trimPath() {
+        this.pathData = [this.pathData[0], this.pathData[this.pathData.length - 1]];
+        this.path = [this.path[0], this.path[this.path.length - 1]];
     }
 
     // Rebuilds path from cached pathData
@@ -252,37 +247,37 @@ export class Arrow {
     // and pathItem[3] is where the arrow is from/end is on the y axis of the vertex(0..1) - cooper
     getZerothCasePathItem(objects, pathItem) {
         for (let i = 0; i < objects.length; i++) {
-           // if(objects[0].semanticIdentity.UUID === objects[1].semanticIdentity.UUID){
+            // if(objects[0].semanticIdentity.UUID === objects[1].semanticIdentity.UUID){
 
-           // }
+            // }
             if (objects[i] !== null && objects[i] !== undefined) {
                 if (objects[i].semanticIdentity.UUID === pathItem[1]) {
-                    
-                    
-                  //  let minX = objects[i].x
-                   // let maxX = objects[i].x + objects[i].width
-                   // let minY = objects[i].y
-                   // let maxY = objects[i].y + objects[i].realHeight // get the minimum and maximum x,y coords for the object. 
-                                                                    // this will serve as a range so that arrows can't automatically pass these points
-                    let newX = pathItem[2]*objects[i].width + objects[i].x;
-                    let newY = pathItem[3]*objects[i].realHeight + objects[i].y;
+
+
+                    //  let minX = objects[i].x
+                    // let maxX = objects[i].x + objects[i].width
+                    // let minY = objects[i].y
+                    // let maxY = objects[i].y + objects[i].realHeight // get the minimum and maximum x,y coords for the object. 
+                    // this will serve as a range so that arrows can't automatically pass these points
+                    let newX = pathItem[2] * objects[i].width + objects[i].x;
+                    let newY = pathItem[3] * objects[i].realHeight + objects[i].y;
                     let x = newX
                     let y = newY
-                    
-                 //   if (newX <= minX){
-                  //      x = minX
-                  //  }
-                  //  else if (newX >= maxX){
+
+                    //   if (newX <= minX){
+                    //      x = minX
+                    //  }
+                    //  else if (newX >= maxX){
                     //    x = maxX
                     //}
                     //else if (newY <= minY){
-                      //  y = minY
+                    //  y = minY
                     //}
                     //else if (newY >= maxY){
-                     //   y = maxY
+                    //   y = maxY
                     //}
-                   
-              
+
+
                     return [x, y]
                 }
             }
@@ -292,17 +287,17 @@ export class Arrow {
         return null;
     }
 
-    getObjectUUIDList(){
+    getObjectUUIDList() {
         let output = [];
-            this.pathData.forEach((item) => {
-                let index = this.pathData.indexOf(item);
-                if(item == null){
-                    this.pathData[index] = [1,this.path[index][0],this.path[index][1]]
-                }
-                if (this.pathData[index][0] === 0) {
-                    output.push(item[1])
-                }
-            });
+        this.pathData.forEach((item) => {
+            let index = this.pathData.indexOf(item);
+            if (item == null) {
+                this.pathData[index] = [1, this.path[index][0], this.path[index][1]]
+            }
+            if (this.pathData[index][0] === 0) {
+                output.push(item[1])
+            }
+        });
         return output
     }
 
@@ -327,6 +322,7 @@ export class Arrow {
         this.selected = selected;
     }
 
+    // Source Cardinality 
     updateSourceCardinality(lowerBound, upperBound, visibility) {
         this.sourceEdgeEnd.updateCardinality(lowerBound, upperBound, visibility);
     }
@@ -347,6 +343,7 @@ export class Arrow {
         return this.sourceEdgeEnd.cardinality.upperBound;
     }
 
+    // Destination Cardinality
     updateDestCardinality(lowerBound, upperBound, visibility) {
         this.destEdgeEnd.updateCardinality(lowerBound, upperBound, visibility);
     }
@@ -367,12 +364,22 @@ export class Arrow {
         return this.destEdgeEnd.cardinality.upperBound;
     }
 
-    setStartLabel(label) {
+    // Set & Get for Start label
+    storeStartLabel(label) {
         this.sourceEdgeEnd.label = label;
     }
 
-    setEndLabel(label) {
+    getStartLabel() {
+        return this.sourceEdgeEnd.label;
+    }
+
+    // Set & Get for End label
+    storeEndLabel(label) {
         this.destEdgeEnd.label = label;
+    }
+
+    getEndLabel() {
+        return this.destEdgeEnd.label;
     }
 
     setLineColour(lineColour) {
@@ -396,25 +403,25 @@ export class Arrow {
     // Creates nodes for an algorithmn to path find around a vertex
     createPathNodesForVertex(vertex, nodeIndex, d) {
         // Set ids
-        let topLeft     = nodeIndex++;
-        let top         = nodeIndex++;
-        let topRight    = nodeIndex++;
-        let right       = nodeIndex++;
+        let topLeft = nodeIndex++;
+        let top = nodeIndex++;
+        let topRight = nodeIndex++;
+        let right = nodeIndex++;
         let bottomRight = nodeIndex++;
-        let bottom      = nodeIndex++;
-        let bottomLeft  = nodeIndex++;
-        let left        = nodeIndex++;
+        let bottom = nodeIndex++;
+        let bottomLeft = nodeIndex++;
+        let left = nodeIndex++;
 
         // Create nodes for: fromVertex
         let vertexNodes = [];
-        vertexNodes.push([topLeft,     vertex.x-d,              vertex.y+vertex.height+d, [left, top]]);               // Top    Left
-        vertexNodes.push([top,         vertex.x+vertex.width/2, vertex.y+vertex.height+d, [topLeft, topRight]]);       // Top
-        vertexNodes.push([topRight,    vertex.x+vertex.width+d, vertex.y+vertex.height+d, [top, right]]);              // Top    Right
-        vertexNodes.push([right,       vertex.x+vertex.width+d, vertex.y+vertex.height/2, [topRight, bottomRight]]);   //        Right
-        vertexNodes.push([bottomRight, vertex.x+vertex.width+d, vertex.y-d,               [right, bottom]]);           // Bottom Right
-        vertexNodes.push([bottom,      vertex.x+vertex.width/2, vertex.y-d,               [bottomRight, bottomLeft]]); // Bottom
-        vertexNodes.push([bottomLeft,  vertex.x-d,              vertex.y-d,               [bottomRight, left]]);       // Bottom Left
-        vertexNodes.push([left,        vertex.x-d,              vertex.y+vertex.height/2, [bottomLeft, topLeft]]);     //        Left
+        vertexNodes.push([topLeft, vertex.x - d, vertex.y + vertex.height + d, [left, top]]);               // Top    Left
+        vertexNodes.push([top, vertex.x + vertex.width / 2, vertex.y + vertex.height + d, [topLeft, topRight]]);       // Top
+        vertexNodes.push([topRight, vertex.x + vertex.width + d, vertex.y + vertex.height + d, [top, right]]);              // Top    Right
+        vertexNodes.push([right, vertex.x + vertex.width + d, vertex.y + vertex.height / 2, [topRight, bottomRight]]);   //        Right
+        vertexNodes.push([bottomRight, vertex.x + vertex.width + d, vertex.y - d, [right, bottom]]);           // Bottom Right
+        vertexNodes.push([bottom, vertex.x + vertex.width / 2, vertex.y - d, [bottomRight, bottomLeft]]); // Bottom
+        vertexNodes.push([bottomLeft, vertex.x - d, vertex.y - d, [bottomRight, left]]);       // Bottom Left
+        vertexNodes.push([left, vertex.x - d, vertex.y + vertex.height / 2, [bottomLeft, topLeft]]);     //        Left
         return [nodeIndex, vertexNodes];
     }
 
@@ -428,13 +435,13 @@ export class Arrow {
         this.destEdgeEnd.draw(canvasContext, this.getEX(), this.getEY(), lineAngle, this.lineColour);
     }
 
-    isPathSegmentLR(startIndex,endIndex){
+    isPathSegmentLR(startIndex, endIndex) {
         let indexSx = this.path[startIndex][0];
         let indexEx = this.path[endIndex][0];
         let indexSy = this.path[startIndex][1];
         let indexEy = this.path[endIndex][1];
 
-        return Math.abs(indexSx-indexEx) > Math.abs(indexSy-indexEy)
+        return Math.abs(indexSx - indexEx) > Math.abs(indexSy - indexEy)
     }
 
     getTextOffsets(canvasContext, sourceText, destText, sourceCtext, destCtext) {
@@ -462,11 +469,11 @@ export class Arrow {
         let eyFlip = true;
 
         // true if arrow is landscape, false if arrow is portrait;
-        let E1index = this.path.length-2;
-        let E2index = this.path.length-1;
+        let E1index = this.path.length - 2;
+        let E2index = this.path.length - 1;
 
-        let startLRArrow = this.isPathSegmentLR(0,1);
-        let endLRArrow = this.isPathSegmentLR(E1index,E2index);
+        let startLRArrow = this.isPathSegmentLR(0, 1);
+        let endLRArrow = this.isPathSegmentLR(E1index, E2index);
 
         let SSX = this.path[0][0];
         let SSY = this.path[0][1];
@@ -500,35 +507,35 @@ export class Arrow {
 
 
         if (sxFlip) {
-            sxOffset = charWidth/2;
+            sxOffset = charWidth / 2;
             if (startLRArrow) {
-                sxOffsetc = charWidth/2;
+                sxOffsetc = charWidth / 2;
             } else {
-                sxOffsetc = -1*(sourceCtextWidth+charWidth/2)
+                sxOffsetc = -1 * (sourceCtextWidth + charWidth / 2)
             }
         } else {
-            sxOffset = -1*(sourceTextWidth+charWidth/2);
+            sxOffset = -1 * (sourceTextWidth + charWidth / 2);
             if (startLRArrow) {
-                sxOffsetc = -1*(sourceCtextWidth+charWidth/2)
+                sxOffsetc = -1 * (sourceCtextWidth + charWidth / 2)
             } else {
-                sxOffsetc = charWidth/2;
+                sxOffsetc = charWidth / 2;
             }
         }
-        
+
 
         if (syFlip) {
             syOffset = textHeight;
             if (startLRArrow) {
-                syOffsetc = -1*(textHeight/2)
+                syOffsetc = -1 * (textHeight / 2)
             } else {
                 syOffsetc = syOffset;
             }
         } else {
-            syOffset = -1*(textHeight/2);
+            syOffset = -1 * (textHeight / 2);
             if (startLRArrow) {
                 syOffsetc = syOffset;
             } else {
-                syOffsetc = -1*(textHeight/2)
+                syOffsetc = -1 * (textHeight / 2)
             }
         }
 
@@ -538,18 +545,18 @@ export class Arrow {
         eyFlip = !eyFlip;
 
         if (exFlip) {
-            exOffset = charWidth/2;
+            exOffset = charWidth / 2;
             if (endLRArrow) {
-                exOffsetc = charWidth/2;
+                exOffsetc = charWidth / 2;
             } else {
-                exOffsetc = -1*(destCtextWidth+charWidth/2)
+                exOffsetc = -1 * (destCtextWidth + charWidth / 2)
             }
         } else {
-            exOffset = -1*(destTextWidth+charWidth/2);
+            exOffset = -1 * (destTextWidth + charWidth / 2);
             if (endLRArrow) {
-                exOffsetc = -1*(destCtextWidth+charWidth/2)
+                exOffsetc = -1 * (destCtextWidth + charWidth / 2)
             } else {
-                exOffsetc = charWidth/2;
+                exOffsetc = charWidth / 2;
             }
         }
 
@@ -557,12 +564,12 @@ export class Arrow {
         if (eyFlip) {
             eyOffset = textHeight;
             if (endLRArrow) {
-                eyOffsetc = -1*(textHeight/2);
+                eyOffsetc = -1 * (textHeight / 2);
             } else {
                 eyOffsetc = eyOffset;
             }
         } else {
-            eyOffset = -1*(textHeight/2);
+            eyOffset = -1 * (textHeight / 2);
             if (endLRArrow) {
                 eyOffsetc = textHeight;
             } else {
@@ -571,7 +578,7 @@ export class Arrow {
         }
 
 
-        return [sxOffset,syOffset,exOffset,eyOffset,sxOffsetc,syOffsetc,exOffsetc,eyOffsetc]
+        return [sxOffset, syOffset, exOffset, eyOffset, sxOffsetc, syOffsetc, exOffsetc, eyOffsetc]
     }
 
 
@@ -579,7 +586,7 @@ export class Arrow {
     drawLabelsAndCardinalities(canvasContext) {
         let sourceCardText = this.sourceEdgeEnd.cardinality.toString();
         let destCardText = this.destEdgeEnd.cardinality.toString();
-        let Offsets = this.getTextOffsets(canvasContext,this.sourceEdgeEnd.label,this.destEdgeEnd.label,sourceCardText,destCardText);
+        let Offsets = this.getTextOffsets(canvasContext, this.sourceEdgeEnd.label, this.destEdgeEnd.label, sourceCardText, destCardText);
 
         canvasContext.fillStyle = "#000";
 
@@ -618,9 +625,9 @@ export class Arrow {
         canvasContext.strokeStyle = this.lineColour;
 
         // Draw Lines
-        for (let i = 0; i < this.path.length-1; i++) {
+        for (let i = 0; i < this.path.length - 1; i++) {
             let from = this.path[i];
-            let to = this.path[i+1];
+            let to = this.path[i + 1];
 
             canvasContext.beginPath();
             canvasContext.moveTo(from[0], from[1]);
@@ -645,9 +652,9 @@ export class Arrow {
     }
 
     intersects(cx, cy) {
-        for (let i = 0; i < this.path.length-1; i++) {
+        for (let i = 0; i < this.path.length - 1; i++) {
             let from = this.path[i];
-            let to = this.path[i+1];
+            let to = this.path[i + 1];
 
             if (this.intersectsSegment(cx, cy, from, to)) return true;
         }
@@ -662,7 +669,7 @@ export class Arrow {
 
         let threshold = 1;
 
-        return (m+n-threshold < l);
+        return (m + n - threshold < l);
     }
 
     // Get first x/y
@@ -683,21 +690,21 @@ export class Arrow {
 
     // Get second last x/y
     getNEX() {
-        let index = this.path.length-2;
+        let index = this.path.length - 2;
         if (index < 0) index = 0;
         return this.path[index][0];
     }
     getNEY() {
-        let index = this.path.length-2;
+        let index = this.path.length - 2;
         if (index < 0) index = 0;
         return this.path[index][1];
     }
 
     // Get last x/y
     getEX() {
-        return this.path[this.path.length-1][0];
+        return this.path[this.path.length - 1][0];
     }
     getEY() {
-        return this.path[this.path.length-1][1];
+        return this.path[this.path.length - 1][1];
     }
 }
