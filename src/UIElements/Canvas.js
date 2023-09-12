@@ -13,8 +13,23 @@ let mouseUpXY = []; // stores where the mouse is button is let go
 
 let lastSelectWasCanvas = false;
 
+// Current selected object
 export let selectedCanvasObject = null;
+export function setSelected(intersection) {
+    selectedCanvasObject = intersection;
+}
+export function getSelected() {
+    return this.selectedCanvasObject;
+}
 
+// Object selected after the first object
+export let nextSelectedCanvasObject = null;
+export function setNextSelected(intersection) {
+    nextSelectedCanvasObject = intersection;
+}
+export function getNextSelected() {
+    return this.nextSelectedCanvasObject;
+}
 
 export class Canvas extends React.Component {
     constructor(props) {
@@ -23,7 +38,6 @@ export class Canvas extends React.Component {
 
         this.state = {}
     }
-
 
     componentDidMount() {
         this.zoom = this.props.mainState.zoomLevel;
@@ -141,8 +155,14 @@ export class Canvas extends React.Component {
         // If it was a left click
         if (e.button === 0 && !selectMultiple) {
             let intersection = canvasDraw.findIntersected(x, y);
-            selectedCanvasObject = intersection
-            console.log(selectedCanvasObject)
+
+            // If an object has already been selected, make the current intersection the second object
+            if (selectedCanvasObject === null) {
+                selectedCanvasObject = intersection
+            } else {
+                nextSelectedCanvasObject = intersection
+            }
+
             // check if there's an object
             if (intersection !== null) {
                 lastSelectWasCanvas = false;
@@ -153,7 +173,31 @@ export class Canvas extends React.Component {
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
                     canvasDraw.onMiddleClick(canvas, x, y, null, selectDown);
 
+                    // Update the current object to the second object
+                    if (nextSelectedCanvasObject !== null) {
+                        selectedCanvasObject = nextSelectedCanvasObject;
+                        nextSelectedCanvasObject = null
+                    }
+
                 } else {
+                    console.log(selectedCanvasObject)
+                    if (nextSelectedCanvasObject !== null) {
+                        // Check if the first selected object and the second selected object are edges
+                        if (selectedCanvasObject.typeName === "Arrow" && nextSelectedCanvasObject.typeName === "Arrow") {
+                            // Check if the selected objects are the same
+                            if (selectedCanvasObject.path === nextSelectedCanvasObject.path) {
+                                return;
+                            }
+
+                            window.alert("Please deselect edge by using the save button or clicking on the canvas first.");
+                            nextSelectedCanvasObject = null;
+                            return;
+
+                        } else {
+                            selectedCanvasObject = nextSelectedCanvasObject;
+                            nextSelectedCanvasObject = null
+                        }
+                    }
                     this.props.setLeftMenu(canvasDraw.findIntersected(x, y));
                     canvasDraw.saveBlockStates(canvas, x, y, 1);
                     canvasDraw.onLeftMousePress(canvas, x, y);
@@ -170,6 +214,8 @@ export class Canvas extends React.Component {
                     console.log('creatin save canvas')
                 }
                 lastSelectWasCanvas = true;
+                selectedCanvasObject = null;
+                nextSelectedCanvasObject = null;
             }
 
         }

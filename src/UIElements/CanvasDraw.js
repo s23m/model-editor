@@ -8,7 +8,7 @@ import { Tool } from "./LeftMenu";
 import { Graph } from "../DataStructures/Graph";
 import { getGraphNameFromKey, getVertexData, handleAddVertex } from "./ContainmentTree";
 import { createSaveState } from "../Serialisation/NewFileManager";
-import { selectedCanvasObject } from "./Canvas"
+import { selectedCanvasObject, setSelected } from "./Canvas"
 import { getTreeVertexEmptyIcon } from "../Config";
 
 //false unless the onMouseMove function is executing, Is used to stop vertex created with leftmenu tool creating multiple vertex's when dragging for an inital size
@@ -1296,7 +1296,7 @@ export function onLeftMouseRelease(canvas, x, y) {
                 // create the arrow using the createObject function rather than the other function they were using as this seems much more stable - cooper
                 // also deleted a weird forloop that they had that i assume was for stopping the arrow overlap issue, but they themselves commented that it doesnt work
                 newObject = createObject(canvas, mouseStartX, mouseStartY, x, y);
-
+                setSelected(newObject);
             }
 
             // Reset path
@@ -1307,6 +1307,8 @@ export function onLeftMouseRelease(canvas, x, y) {
             if (newObject !== null) {
                 addObject(newObject);
             }
+
+
 
             drawAll(currentObjects);
 
