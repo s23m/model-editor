@@ -3,6 +3,7 @@
 * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import React from 'react';
+import axios from 'axios';
 import '../App.css';
 import * as canvasDraw from "./CanvasDraw";
 import { DropdownButton, Dropdown } from "react-bootstrap";
@@ -186,6 +187,80 @@ export class MainProgramClass extends React.Component {
         return 0;
     }
 
+    getFilesFromRepo = async () => {
+        // check for github user
+        const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
+        if(githubUser){
+          const owner = githubUser.username;
+          const repo = 'Model-Repository';
+          const accessToken = githubUser.accessToken;
+          const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
+      
+          const config = {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              Accept: 'application/vnd.github+json',
+              "Content-Type" : 'application/json',
+            }
+          }
+          axios.get(apiUrl, config)
+            .then(response => {
+              console.log(response.data);
+              this.showRepoFileSelector(response.data);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
+      }
+      
+      // function which takes array returned when GET requesting repo content and omitting a path
+      showRepoFileSelector = (files) => {
+        const popup = document.getElementById('popup');
+        popup.style.display = "block";
+        files.forEach( file => {
+          const button = document.createElement('button');
+          button.textContent = file.name;
+          button.addEventListener('click', async () => {
+            try {
+              this.loadGithubFileContent(file.name);
+              popup.style.display = 'none';
+            } catch (error) {
+              console.error('Error: ', error);
+            }
+          });
+          popup.appendChild(button);
+        })
+      }
+      
+      loadGithubFileContent = async (filepath) => {
+        const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
+        if(githubUser){
+          const owner = githubUser.username;
+          const repo = 'Model-Repository';
+          const accessToken = githubUser.accessToken;
+          const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filepath}`;
+      
+          const config = {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              Accept: 'application/vnd.github+json',
+              "Content-Type" : 'application/json',
+            }
+          }
+          axios.get(apiUrl, config)
+            .then(response => {
+              console.log(response.data);
+              const decodedContent = Buffer.from(response.data.content, 'base64').toString('utf-8');
+              importLoad(decodedContent);
+              this.setLeftMenuToTree();
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
+      }
+
     /**
      * not fully working yet, this should be a function to automatically import all JSON files from a directory
      * @param {event} event 
@@ -330,12 +405,12 @@ export class MainProgramClass extends React.Component {
                         </Dropdown.Item>
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <button id="Grant-Visibility" onClick={() => alert("This will be the grant visibility button")}>Grant Visibility</button>
+                                <button id="Import-Model" onClick={this.getFilesFromRepo}>Import Model</button>
                             </div>
                         </Dropdown.Item>
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <button id="Import-Model" onClick={() => alert("This button will import a model")}>Import Model</button>
+                                <button id="Grant-Visibility" onClick={() => alert("This will be the grant visibility button")}>Grant Visibility</button>
                             </div>
                         </Dropdown.Item>
                         <Dropdown.Item>

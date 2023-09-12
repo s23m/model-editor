@@ -85,10 +85,6 @@ export const createUserRepo = async () => {
   }
 };
 
-
-
-
-
 export const uploadFileToRepo = async () => {
   const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
   if(githubUser){
@@ -139,10 +135,4 @@ export const uploadFileToRepo = async () => {
         console.error('Error uploading or updating file: ', error);
       });
   }
-}
-
-export const getFileFromRepo = async () => {
-  // check for github user
-
-  // if successful, make get request
 }
