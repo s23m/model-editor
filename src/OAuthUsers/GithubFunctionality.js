@@ -50,7 +50,8 @@ export const fetchUserData = async () => {
 
 export const createUserRepo = async () => {
   const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
-  const reponame = window.prompt("What would you like to name the repository?");
+  //const reponame = window.prompt("What would you like to name the repository?");
+  const reponame = 'Model-Repository'; // will go back to dynamic naming once we progress further
   if (githubUser) {
     try {
       const response = await axios.post('https://api.github.com/user/repos', {
