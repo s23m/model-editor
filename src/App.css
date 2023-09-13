@@ -51,6 +51,29 @@
 
 /*-------------------------------------------------*/
 
+/*------------file selection popup-----------------*/
+
+#popup{
+    display: none;
+    width: fit-content;
+    height: fit-content;
+    background-color: lightgrey;
+    border: 2px solid black;
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    text-align: center;;
+}
+
+#popup button{
+    margin: 10px;
+}
+
+/*-------------------------------------------------*/
+
 .TopMenus {
     display: flex;
     height: 5vh;
