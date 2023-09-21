@@ -3,11 +3,92 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
  .App {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     height: 100vh;
+    width: 100vw;
   }
+
+/*-----stuff for top menu to attempt to simplify styling-------*/
+
+/* #File-Menu{
+    display: flex;
+    width: 5vw;
+    align-items: center;
+    justify-content: center;
+    height: 4.7vh;
+	background-color:#D3D3D3;
+	border: 1px solid black;
+    border-radius: 4px;
+	font-size: calc(0.6vh + 0.6vw);
+} */
+
+/* .TopBar {
+    display: flex;
+    min-height: 4.65vh;
+    width: 9.75vw;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    flex-direction: column;
+    border-left:0.125vw solid black;
+    border-right:0.125vw solid black;
+    border-radius: 3px;
+ } */
+
+ /* .SelectedGraph{
+    display: flex;
+    flex-direction: row;
+    background-color: #ffffff;
+    border: 2px solid #666666;
+    width: 7.5vw;
+    border-radius: 6px;
+    align-items: center;
+    justify-content: center;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: calc(0.6vh + 0.6vw);
+} */
+
+.TopMenus {
+    display: flex;
+    height: 5vh;
+    border: 1px groove #666666;
+    flex-direction: row;
+	background-color:#D3D3D3;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
+
+.TopBarIcon {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    height: 100%;
+    width: 10vh;
+    border: 1px solid  #666666;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;
+	background-color:#D3D3D3;
+	font-size: calc(1vh + 1vw);
+}
+
+.SemanticDomain {
+    position: fixed;
+    width: 100vw;
+    height: 95vh;
+    top: 5vh;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+    background: white; /* Just to visualize the extent */
+}
+
+/*------------------------------------------------------------*/
 
 /*-------------------modal styling-----------------*/
 
@@ -74,16 +155,6 @@
 
 /*-------------------------------------------------*/
 
-.TopMenus {
-    display: flex;
-    height: 5vh;
-    border: 1px groove #666666;
-    flex-direction: row;
-	background-color:#D3D3D3;
-    align-items: flex-start;
-    justify-content: space-between;
-}
-
 #Repository-Dropdown, #Account {
     display: flex;
     flex-wrap: nowrap;
@@ -96,18 +167,6 @@
     justify-content: center;
 	background-color:#D3D3D3;
 	font-size: calc(1vh + 1vw);
-}
-
-#File-Menu{
-    display: flex;
-    width: 5vw;
-    align-items: center;
-    justify-content: center;
-    height: 5.1vh;
-	background-color:#D3D3D3;
-	border: 1px solid black;
-    border-radius: 4px;
-	font-size: calc(0.6vh + 0.6vw);
 }
 
 #IconSelector{
@@ -194,21 +253,8 @@ input,button, select{
     display: flex;
     flex-wrap: nowrap;
     height: 95vh;
+    width: 100vw;
 }
-
-.TopBar {
-    display: flex;
-    /*border: 2px groove #666666;*/
-    min-height: 4.65vh;
-    width: 9.75vw;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    flex-direction: column;
-    border-left:0.125vw solid black;
-    border-right:0.125vw solid black;
-    border-radius: 3px;
- }
 
 
 #downloader, #json-downloader,#File-Select-Import, #File-Select, #file{
@@ -236,81 +282,6 @@ input,button, select{
 
 .DropdownItem{
     background: white;
-}
-
-
-.TopBarLabel {
-    display: flex;
-    flex-direction: row;
-    /*border: 2px groove #666666;*/
-    height: 5vh;
-    width: 10vw;
-    align-items: center;
-    justify-content: center;
-}
-
-.TopBarIdentifier{
-    display: block;
-    flex-direction: row;
-    /*border: 2px groove #666666;*/
-    height: 5vh;
-    width: 10vw;
-    line-height: 5vh;
-    text-align: end;
-    border-right: 0;
-}
-
-.TopBarSelector{
-    display: flex;
-    flex-direction: row;
-    /*border: 2px groove #666666;*/
-    height: 4.55vh;
-    width: 5vw;
-    align-items: center;
-    justify-content: center;
-}
-
-.TopBarSearch {
-    display: flex;
-    flex-direction: row;
-    border: 1px solid #666666;
-    /*height: 4.7vh;*/
-    width: 15vw;
-    border-radius: 4px;
-    align-items: center;
-    justify-content: center;
-    color: Black;
-    text-align: center;
-    font-size: calc(0.6vh + 0.6vw);
-    
-}
-
-.TopBarIcon {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    height: 4.7vh;
-    width: 10vh;
-    border: 1px solid  #666666;
-    border-radius: 4px;
-    align-items: center;
-    justify-content: center;
-	background-color:#D3D3D3;
-	font-size: calc(1vh + 1vw);
-
-}
-
-.TopBarSpace {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    height: 5vh;
-    width: 5vh;
-    align-items: center;
-    justify-content: center;
-	background-color:#D3D3D3;
-	font-size: calc(1vh + 1vw);
-
 }
 
 .ContextMenu{
@@ -363,21 +334,6 @@ input,button, select{
     resize:horizontal;
     overflow: auto;
 	background-color:#D3D3D3;
-}
-
-
-.SelectedGraph{
-    display: flex;
-    flex-direction: row;
-    background-color: #ffffff;
-    border: 2px solid #666666;
-    width: 7.5vw;
-    border-radius: 6px;
-    align-items: center;
-    justify-content: center;
-    color: rgb(0, 0, 0);
-    text-align: center;
-    font-size: calc(0.6vh + 0.6vw);
 }
 
 .Toolbar {
@@ -551,8 +507,7 @@ input,button, select{
 }
 
 .Canvas {
-    height: 94vh;
-    width:85vw;
+    width: 85vw;
     overflow-x: scroll;
     overflow-y: scroll;
     border: 1px solid black;
@@ -576,16 +531,6 @@ img {
     image-rendering: -o-crisp-edges; /* Opera */
     image-rendering: crisp-edges;
     -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
-}
-
-.SemanticDomain {
-    position: fixed;
-    top: 5.7vh;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    overflow: auto;
-    background: white; /* Just to visualize the extent */
 }
 
 .hidden {
