@@ -23,6 +23,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { getIsStatic } from '../Config';
 import { createSaveState } from '../Serialisation/NewFileManager';
 
+import { setSelected, setNextSelected } from './Canvas';
 
 
 
@@ -386,7 +387,6 @@ export class LeftMenu extends React.Component {
         const destAggregation = selectedObject.getAggregation(1);
 
         this.setState({
-            // Assuming 'SourceIsNavigable' and 'DestIsNavigable' are state properties
             SourceIsNavigable: sourceAggregation,
             DestIsNavigable: destAggregation,
         });
@@ -394,9 +394,7 @@ export class LeftMenu extends React.Component {
         canvasDraw.drawAll();
 
         this.setState({
-            // Assuming 'SourceIsAggregation' and 'DestIsAggregation' are state properties
             SourceIsAggregation: sourceAggregation,
-            // You can decide whether or not to set DestIsAggregation based on your logic
         });
 
         PropertyChange = true;
@@ -407,6 +405,8 @@ export class LeftMenu extends React.Component {
     deselectElement() {
         this.props.setLeftMenu(null);
         canvasDraw.drawAll();
+        setSelected(null);
+        setNextSelected(null);
         createSaveState()
     }
 
