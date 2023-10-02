@@ -125,7 +125,13 @@ export class LeftMenu extends React.Component {
 
     //For quickKeys
     onKeyPressed(e) {
+        // Delete key pressed
         if (e.keyCode === 46) {
+            // Do nothing if no object is selected
+            if (this.state.selectedObject === null) {
+                return;
+            }
+
             if (this.state.selectedObject.typeName === "Vertex") {
                 vertexDeleteElement(this.state.selectedObject);
             }
@@ -135,8 +141,6 @@ export class LeftMenu extends React.Component {
             this.setState({ menu: "TreeView" });
             canvasDraw.drawAll();
         }
-
-
     }
 
     static getDerivedStateFromProps(props, state) {
