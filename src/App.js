@@ -10,6 +10,7 @@ function App() {
   return (
     <div className="App">
       <GithubModal />
+      <div id="popup"></div>
       <div id='program'>
       </div>
     </div>

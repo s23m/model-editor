@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getSaveData } from '../Serialisation/NewFileManager';
 
 const GITHUB_TOKEN_PAGE = 'https://github.com/settings/tokens/new';
 
@@ -48,7 +49,8 @@ export const fetchUserData = async () => {
 
 export const createUserRepo = async () => {
   const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
-  const reponame = window.prompt("What would you like to name the repository?");
+  //const reponame = window.prompt("What would you like to name the repository?");
+  const reponame = 'Model-Repository'; // will go back to dynamic naming once we progress further
   if (githubUser) {
     try {
       const response = await axios.post('https://api.github.com/user/repos', {
@@ -82,3 +84,55 @@ export const createUserRepo = async () => {
     console.log('github user not found');
   }
 };
+
+export const uploadFileToRepo = async () => {
+  const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
+  if(githubUser){
+    const owner = githubUser.username;
+    const repo = 'Model-Repository';    
+    const accessToken = githubUser.accessToken;
+    const jsonData = getSaveData();
+    const fileName = window.prompt("What would you like to name your file?");
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${fileName}.json`;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/vnd.github+json',
+        "Content-Type": 'application/json',
+      }
+    }
+
+    const jsonContent = JSON.stringify(jsonData, null, 2);
+    const base64Data = Buffer.from(jsonContent).toString('base64');
+
+    axios.get(apiUrl, config)
+      .then(response => {
+        const requestData = {
+          message: `Updating ${fileName}`,
+          content: base64Data,
+          sha: response.data.sha
+        };
+
+        return axios.put(apiUrl, requestData, config);
+      })
+      .catch(error => {
+        if(error.response.status === 404) {
+          const requestData = {
+            message: `Uploading ${fileName}`,
+            content: base64Data,
+          };
+
+          return axios.put(apiUrl, requestData, config);
+        } else {
+          console.error('Error: ', error);
+        }
+      })
+      .then(response => {
+        console.log('successful', response.data);
+      })
+      .catch(error => {
+        console.error('Error uploading or updating file: ', error);
+      });
+  }
+}
