@@ -26,3 +26,9 @@ The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### Node Version Issues
+
+If the project is not building properly, or starting properly, it is possible that an incorrect node version is being used. In this case, see the following GitHub releases to install [nvm](https://github.com/coreybutler/nvm-windows/releases).
+
+once nvm is installed, install node version 14.12.0, and then use that version when running the above npm commands.
