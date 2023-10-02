@@ -257,6 +257,7 @@ export class ContextMenu extends React.Component {
 
     
     handleContextMenu = (e) => {
+        const hold =JSON.parse(localStorage.getItem('GithubUser'));
         e.preventDefault();//prevent default stops the regular contextmenu from appearing
 
         /*as alot of the "data" is in the back end and not in the html element displayed,
@@ -307,7 +308,7 @@ export class ContextMenu extends React.Component {
                 }
             }
 
-            if(e.target.text === "Root"){
+            if(e.target.text === "Root"||e.target.text === hold.username){
                 
                 menuType = "Root"
                 rightClickedItem = e.target.text;

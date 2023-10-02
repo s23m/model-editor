@@ -136,3 +136,27 @@ export const uploadFileToRepo = async () => {
       });
   }
 }
+
+
+
+
+/*
+// on launch user enters github username, and then retrieves token
+// creates default model repo
+// default params 
+FOR EACH USER
+1 root for github
+1 root for local
+
+const githubUser = JSON.parse(localStorage.getItem('githubUser));
+
+
+const root = {username: githubUser.username, type: {another object}} -> in localstorage
+
+const sessionRoots = {username: {who owns the session}, roots: [array of root objects]} -> in sessionStorage
+
+
+
+
+
+*/

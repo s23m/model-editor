@@ -2,18 +2,44 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
- .App {
+.Program{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     height: 100vh;
     width: 100vw;
-  }
+}
+
+.TopMenus {
+    display: flex;
+    height: 5%;
+    flex-direction: row;
+    background-color: #D3D3D3;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
+
+.LowerPanel {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 95%;
+    width: 100%;
+}
+
+.SemanticDomain {
+    position: fixed;
+    width: 100%;
+    height: 95%;
+    top: 5%;
+    overflow: auto;
+    background: white;
+    /* Just to visualize the extent */
+}
 
 /*-----stuff for top menu to attempt to simplify styling-------*/
 
-/* #File-Menu{
+#File-Menu{
     display: flex;
     width: 5vw;
     align-items: center;
@@ -23,9 +49,10 @@
 	border: 1px solid black;
     border-radius: 4px;
 	font-size: calc(0.6vh + 0.6vw);
-} */
+    z-index: 100;
+}
 
-/* .TopBar {
+.TopBar {
     display: flex;
     min-height: 4.65vh;
     width: 9.75vw;
@@ -36,9 +63,9 @@
     border-left:0.125vw solid black;
     border-right:0.125vw solid black;
     border-radius: 3px;
- } */
+ }
 
- /* .SelectedGraph{
+.SelectedGraph{
     display: flex;
     flex-direction: row;
     background-color: #ffffff;
@@ -50,42 +77,21 @@
     color: rgb(0, 0, 0);
     text-align: center;
     font-size: calc(0.6vh + 0.6vw);
-} */
-
-.TopMenus {
-    display: flex;
-    height: 5vh;
-    border: 1px groove #666666;
-    flex-direction: row;
-	background-color:#D3D3D3;
-    align-items: flex-start;
-    justify-content: space-evenly;
 }
 
 .TopBarIcon {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    height: 100%;
     width: 10vh;
-    border: 1px solid  #666666;
     border-radius: 4px;
-    align-items: center;
-    justify-content: center;
-	background-color:#D3D3D3;
-	font-size: calc(1vh + 1vw);
+    text-align: center;
+    font-size: calc(1vh + 1vw);
 }
 
-.SemanticDomain {
-    position: fixed;
-    width: 100vw;
-    height: 95vh;
-    top: 5vh;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    overflow: auto;
-    background: white; /* Just to visualize the extent */
+.ContextMenu {
+    position: absolute;
+    background: #ffffff;
+    border: solid #444444;
+    border-radius: 5px;
+    z-index: 100;
 }
 
 /*------------------------------------------------------------*/
@@ -113,20 +119,20 @@
     margin: 15px;
 }
 
-.modal-content{
+.modal-content {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 }
 
-.modal-body{
+.modal-body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.form-control{
+.form-control {
     width: 100%;
 }
 
@@ -134,7 +140,7 @@
 
 /*------------file selection popup-----------------*/
 
-#popup{
+#popup {
     display: none;
     width: fit-content;
     height: fit-content;
@@ -146,41 +152,44 @@
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 20px;
-    text-align: center;;
+    text-align: center;
 }
 
-#popup button{
+#popup button {
     margin: 10px;
 }
 
 /*-------------------------------------------------*/
 
-#Repository-Dropdown, #Account {
+#Repository-Dropdown,
+#Account {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
     height: 5vh;
     width: fit-content;
-    border: 1px solid  #666666;
+    border: 1px solid #666666;
     border-radius: 4px;
     align-items: center;
     justify-content: center;
-	background-color:#D3D3D3;
-	font-size: calc(1vh + 1vw);
+    background-color: #D3D3D3;
+    font-size: calc(1vh + 1vw);
 }
 
-#IconSelector{
+#IconSelector {
     /*background: white;*/
     width: 100%;
     height: 100%;
-	font-size:calc(0.7vh + 0.7vw);
+    font-size: calc(0.7vh + 0.7vw);
     /*border-radius: 10px;*/
 }
 
-input,button, select{
+input,
+button,
+select {
     font-family: 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: Black;
@@ -188,22 +197,22 @@ input,button, select{
     display: flex;
 }
 
-.IconSelector .dropdown-menu.show{
+.IconSelector .dropdown-menu.show {
     background-color: white;
     /***border: 2px groove #666666;***/
     overflow-y: auto;
     max-height: 35vh;
 }
 
-#ColourSelector{
+#ColourSelector {
     /*background: white;*/
     width: 100%;
     height: 100%;
-	font-size:calc(0.7vh + 0.7vw);
+    font-size: calc(0.7vh + 0.7vw);
     /*border-radius: 10px;*/
 }
 
-.ColourSelector div.dropdown-menu.show{
+.ColourSelector div.dropdown-menu.show {
     background-color: white;
     border: 2px groove #666666;
     overflow-y: auto;
@@ -211,53 +220,50 @@ input,button, select{
     width: 200px;
 }
 
-.DropdownItem{
+.DropdownItem {
     display: flex;
     flex-direction: row;
     justify-content: right;
     align-items: center;
 }
 
-.buttonOfSomeForm{
+.buttonOfSomeForm {
     display: flex;
     flex-direction: row;
     justify-content: right;
     align-items: center;
 }
 
-.dropdownLabel{
+.dropdownLabel {
     width: 15vw;
-	font-size:calc(0.7vh + 0.7vw);
+    font-size: calc(0.7vh + 0.7vw);
 }
 
-.checkBoxContainer{
+.checkBoxContainer {
     width: 5vw;
 }
 
-.CardinalityArea{
+.CardinalityArea {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-.LeftCheckboxLabel{
+.LeftCheckboxLabel {
     width: 10vw;
 }
 
-.LeftCheckbox{
+.LeftCheckbox {
     width: 2vw;
 }
 
-.LowerPanel {
-    display: flex;
-    flex-wrap: nowrap;
-    height: 95vh;
-    width: 100vw;
-}
 
-
-#downloader, #json-downloader,#File-Select-Import, #File-Select, #file{
+#downloader,
+#json-downloader,
+#File-Select-Import,
+#File-Select,
+#file {
     color: black;
     text-decoration: none;
     border: none;
@@ -269,30 +275,26 @@ input,button, select{
     white-space: normal;
 }
 
-.hidden{
+.hidden {
     display: none;
     width: 100%;
     height: 100%;
     z-index: 100;
 }
 
-#downloader:hover, #json-downloader:hover, #File-Select:hover{
+#downloader:hover,
+#json-downloader:hover,
+#File-Select:hover {
     cursor: pointer;
 }
 
-.DropdownItem{
+.DropdownItem {
     background: white;
 }
 
-.ContextMenu{
-    position: absolute;
-    background:#ffffff;
-    border: solid #444444;
-    border-radius: 5px;
 
-}
 
-.CMSelected{
+.CMSelected {
     padding: 8px 10px;
     font-size: 15px;
     color: rgb(0, 0, 0);
@@ -301,7 +303,7 @@ input,button, select{
     border-radius: 0px;
 }
 
-.CMitem{
+.CMitem {
     padding: 8px 10px;
     font-size: 15px;
     color: rgb(0, 0, 0);
@@ -309,7 +311,7 @@ input,button, select{
     border-radius: 0px;
 }
 
-.CMText{
+.CMText {
     border: 1px solid #666666;
     /*height: 4.7vh;*/
     width: 10vw;
@@ -322,7 +324,7 @@ input,button, select{
     font-size: calc(0.6vh + 0.6vw);
 }
 
-.LeftMenus{
+.LeftMenus {
     display: flex;
     height: 90vh;
     width: 15vw;
@@ -331,9 +333,9 @@ input,button, select{
     border-top: none;
     background: none;
     z-index: 5;
-    resize:horizontal;
+    resize: horizontal;
     overflow: auto;
-	background-color:#D3D3D3;
+    background-color: #D3D3D3;
 }
 
 .Toolbar {
@@ -342,16 +344,17 @@ input,button, select{
     flex-direction: row;
     /***border: 2px groove #666666;***/
     height: 4.7vh;
-    width:15vw;
+    width: 15vw;
 }
 
-.ToolbarItem{
+.ToolbarItem {
     display: flex;
     width: calc(15vw/4);
     justify-content: center;
 }
 
-.VertexMenu, .ArrowMenu{
+.VertexMenu,
+.ArrowMenu {
     max-width: 15vw;
 }
 
@@ -362,10 +365,11 @@ input,button, select{
     /***border: 2px groove #666666;***/
     height: calc(93vh/3);
     justify-content: center;
-    width:14.7vw;
+    width: 14.7vw;
 }
 
-.LeftLabel, .LeftMenuButton {
+.LeftLabel,
+.LeftMenuButton {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
@@ -376,7 +380,7 @@ input,button, select{
     justify-content: center;
     /*background-color: white;*/
     width: 15vw;
-	font-size:calc(0.7vh + 0.7vw);
+    font-size: calc(0.7vh + 0.7vw);
 }
 
 .LeftBody {
@@ -392,7 +396,7 @@ input,button, select{
     margin-top: 0;
 }
 
-.LeftBodyMenu{
+.LeftBodyMenu {
     align-items: flex-start;
     border-top: solid 0.3vh rgba(185, 184, 184, 0.596);
     display: flex;
@@ -402,7 +406,7 @@ input,button, select{
     width: 100%;
 }
 
-.OptionTitle h4{
+.OptionTitle h4 {
     padding-bottom: 2vh;
     margin: 0;
 }
@@ -411,7 +415,7 @@ input,button, select{
     width: 100%;
 }
 
-.LeftBody ul{
+.LeftBody ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -420,7 +424,7 @@ input,button, select{
     align-items: flex-end;
 }
 
-.LeftBody ul li{
+.LeftBody ul li {
     width: 100%;
     display: inline-flex;
     margin-bottom: 1vh;
@@ -443,7 +447,7 @@ input,button, select{
     cursor: pointer;
 }
 
-.LeftBodyMenu .Selector :hover{
+.LeftBodyMenu .Selector :hover {
     cursor: pointer;
 }
 
@@ -464,18 +468,18 @@ input,button, select{
     justify-content: center;
     width: 14.6vw;
     /*background-color: #E0FFFF;*/
-	background-color:white;
-	font-size:calc(0.7vh + 0.7vw);
+    background-color: white;
+    font-size: calc(0.7vh + 0.7vw);
 }
 
-.LeftHeader{
+.LeftHeader {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
     /*border: 2px groove #666666;*/
     justify-content: center;
-    width:15vw;
-	font-size:calc(0.7vh + 0.7vw);
+    width: 15vw;
+    font-size: calc(0.7vh + 0.7vw);
     /*background-color: #DDEEFF;*/
 }
 
@@ -485,12 +489,12 @@ input,button, select{
     border-bottom: 2px groove #666666;*/
     align-items: center;
     justify-content: center;
-    resize:none;
+    resize: none;
     height: 10vh;
     width: 14.6vw;
     /*background-color: #E0FFFF;*/
-	background-color:white;
-	font-size:calc(0.7vh + 0.7vw);
+    background-color: white;
+    font-size: calc(0.7vh + 0.7vw);
 }
 
 .jstree-node {
@@ -498,11 +502,11 @@ input,button, select{
     text-align: left;
 }
 
-.jstree li > a > .jstree-icon {
+.jstree li>a>.jstree-icon {
     display: none;
 }
 
-.CardinalityBox{
+.CardinalityBox {
     width: 2.5vw;
 }
 
@@ -527,17 +531,20 @@ img {
     display: block;
     width: 40%;
     height: auto;
-    image-rendering: -moz-crisp-edges; /* Firefox */
-    image-rendering: -o-crisp-edges; /* Opera */
+    image-rendering: -moz-crisp-edges;
+    /* Firefox */
+    image-rendering: -o-crisp-edges;
+    /* Opera */
     image-rendering: crisp-edges;
-    -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+    -ms-interpolation-mode: nearest-neighbor;
+    /* IE (non-standard property) */
 }
 
 .hidden {
     display: none;
 }
 
-.vertexPath{
+.vertexPath {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
@@ -548,5 +555,5 @@ img {
     justify-content: center;
     /*background-color: white;*/
     width: 35vw;
-	font-size:calc(0.7vh + 0.7vw);
+    font-size: calc(0.7vh + 0.7vw);
 }
