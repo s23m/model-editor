@@ -23,7 +23,7 @@
     background-color: #D3D3D3;
     align-items: center;
     justify-content: space-evenly;
-    font-size: var(--top-menu-font-size);
+    
 }
 
 .LowerPanel {
@@ -350,8 +350,7 @@ select {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
-    /***border: 2px groove #666666;***/
-    height: 4.7vh;
+    height: var(--top-menu-icon-height);
     width: 15vw;
 }
 
