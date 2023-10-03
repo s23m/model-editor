@@ -24,6 +24,7 @@ import iconHelp from "../Resources/help.svg"
 
 export const version = 1;
 export const serverURL = 'http://localhost:8080';
+const manualUrl =  "../public/UserManual.pdf";
 
 export class MainProgramClass extends React.Component {
 
@@ -325,8 +326,13 @@ export class MainProgramClass extends React.Component {
         alert("Hello");
     }
 
+    openUserManual = () => {
+        window.open(manualUrl, '_blank');
+    };
+
     async showGithubUserForm() {
         let modal = document.getElementById('Github-Modal');
+        console.log(modal);
         modal.style.display === 'none' ? modal.style.display = 'flex' : modal.style.display = 'none';
     }
 
@@ -388,7 +394,7 @@ export class MainProgramClass extends React.Component {
                     <div className="TopBarIcon" onClick={() => this.mainUndo()} ><img src={iconUndo} alt="Delete Container" /></div>
                     <div className="TopBarIcon" onClick={() => this.mainRedo()} ><img src={iconRedo} alt="Add Container" /></div>
                     <div className="TopBarIcon" ><a href="UserManual.pdf"><img src={iconHelp} alt="Help" /></a></div>
-                    <DropdownButton variant="Primary" id="Repository-Dropdown" title="Repository" className="TopBarIcon" size="lg">
+                    <DropdownButton variant="Primary" id="Repository-Dropdown" title="Repository" size="lg">
                         <Dropdown.Item>
                             <div className="TopBar">
                                 <button id="Test-User-Call" onClick={fetchUserData}>Test Github User Call</button>
