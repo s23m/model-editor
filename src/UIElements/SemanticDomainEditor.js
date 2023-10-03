@@ -201,6 +201,7 @@ export default () => {
                     placeholder="Column name"
                     aria-label="Column name"
                     aria-describedby="basic-addon2"
+                    style={{width: "98%"}}
                 />
                 <InputGroup.Append>
                     <Button variant="outline-secondary" onClick={() => addColumn()}>Add</Button>
