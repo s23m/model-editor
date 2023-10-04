@@ -24,7 +24,7 @@ import iconHelp from "../Resources/help.svg"
 
 export const version = 1;
 export const serverURL = 'http://localhost:8080';
-const manualUrl =  "../public/UserManual.pdf";
+//const manualUrl =  "../public/UserManual.pdf";
 
 export class MainProgramClass extends React.Component {
 
@@ -218,6 +218,10 @@ export class MainProgramClass extends React.Component {
     // function which takes array returned when GET requesting repo content and omitting a path
     showRepoFileSelector = (files) => {
         const popup = document.getElementById('popup');
+        const fileList = document.getElementById('file-list');
+        while (fileList.firstChild) {
+            fileList.removeChild(fileList.firstChild);
+        }
         popup.style.display = "block";
         files.forEach(file => {
             const button = document.createElement('button');
@@ -230,7 +234,7 @@ export class MainProgramClass extends React.Component {
                     console.error('Error: ', error);
                 }
             });
-            popup.appendChild(button);
+            fileList.appendChild(button);
         })
     }
 
@@ -326,14 +330,19 @@ export class MainProgramClass extends React.Component {
         alert("Hello");
     }
 
-    openUserManual = () => {
-        window.open(manualUrl, '_blank');
-    };
+    // need to figure out how to open the pdf located in model-editor/public/UserManual.pdf
+    // openUserManual = () => {
+    //     window.open(manualUrl, '_blank');
+    // };
 
     async showGithubUserForm() {
         let modal = document.getElementById('Github-Modal');
         console.log(modal);
         modal.style.display === 'none' ? modal.style.display = 'flex' : modal.style.display = 'none';
+    }
+
+    addTree = () => {
+
     }
 
     render() {

@@ -6,11 +6,19 @@ import React from 'react';
 import { GithubModal } from './OAuthUsers/GithubModal';
 import './App.css';
 
+const closePopup = () => {
+  const container = document.getElementById("popup");
+  container.style.display = "none";
+}
+
 function App() {
   return (
     <div className="App">
       <GithubModal />
-      <div id="popup"></div>
+      <div id="popup">
+        <span className="close-popup" onClick={closePopup}>X</span>
+        <div id="file-list"></div>
+      </div>
       <div id='program'>
       </div>
     </div>

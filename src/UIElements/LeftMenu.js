@@ -6,7 +6,7 @@ import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
 import { LineColourToStringName, } from "../DataStructures/ArrowProperties"
 import { ContainmentTree, } from "./ContainmentTree";
-import { serverURL } from ".//MainView"
+import { serverURL} from ".//MainView";
 import { SketchPicker } from 'react-color';
 
 // Icons
