@@ -12,9 +12,9 @@ import {assignElement} from "./UIElements/CanvasDraw";
 
 
 ReactDOM.render(
-  //<React.StrictMode>
+  <React.StrictMode>
     <App />,
-  //</React.StrictMode>,
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

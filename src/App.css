@@ -1,13 +1,13 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
-:root{
+:root {
     --top-menu-font-size: calc(0.6vh + 0.6vw);
     --top-menu-icon-height: 4.7vh;
 }
 
 
-.Program{
+.Program {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -23,7 +23,7 @@
     background-color: #D3D3D3;
     align-items: center;
     justify-content: space-evenly;
-    
+
 }
 
 .LowerPanel {
@@ -44,18 +44,34 @@
     /* Just to visualize the extent */
 }
 
+#Tree-Container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.close-popup {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    cursor: pointer;
+    color: red;
+    font-weight: bold;
+}
+
 /*-----stuff for top menu to attempt to simplify styling-------*/
 
-#File-Menu{
+#File-Menu {
     display: flex;
     width: 5vw;
     align-items: center;
     justify-content: center;
     height: var(--top-menu-icon-height);
-	background-color:#D3D3D3;
-	border: 1px solid black;
+    background-color: #D3D3D3;
+    border: 1px solid black;
     border-radius: 4px;
-	font-size: var(--top-menu-font-size);
+    font-size: var(--top-menu-font-size);
     z-index: 4;
 }
 
@@ -67,12 +83,12 @@
     justify-content: center;
     background-color: white;
     flex-direction: column;
-    border-left:0.125vw solid black;
-    border-right:0.125vw solid black;
+    border-left: 0.125vw solid black;
+    border-right: 0.125vw solid black;
     border-radius: 3px;
- }
+}
 
-.SelectedGraph{
+.SelectedGraph {
     display: flex;
     flex-direction: row;
     background-color: #ffffff;
@@ -100,6 +116,7 @@
     background: #ffffff;
     border: solid #444444;
     border-radius: 5px;
+    z-index: 5;
 }
 
 /*------------------------------------------------------------*/
@@ -162,6 +179,7 @@
     transform: translate(-50%, -50%);
     padding: 20px;
     text-align: center;
+    z-index: 3;
 }
 
 #popup button {
@@ -330,12 +348,13 @@ select {
     justify-content: center;
     color: Black;
     text-align: center;
-    font-size: calc(0.6vh + 0.6vw);
+    font-size: var(--top-menu-font-size);
 }
 
 .LeftMenus {
     display: flex;
     height: 90vh;
+    min-width: 15vw;
     width: 15vw;
     /***border: 2px groove #666666;***/
     flex-direction: column;

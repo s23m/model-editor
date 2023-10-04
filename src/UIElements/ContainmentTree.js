@@ -4,13 +4,13 @@
 */
 
 import React from 'react';
+import axios from 'axios';
 import TreeView from 'react-simple-jstree';
 
 import {
     currentObjects, setNewContainerKey as setNewPackageKey, getTotalContainerKeys, incrementTotalContainerKeys,
     getCurrentGraph, setNewGraph as setNewGraphKey, getTotalGraphs, incrementTotalGraphs as incrementTotalGraph, getCurrentObjects
 } from "./CanvasDraw";
-
 import { drawAll } from "./CanvasDraw";
 import { VertexNode } from "../DataStructures/Graph.js"
 import { SemanticIdentity } from "../DataStructures/SemanticIdentity.js";
@@ -454,6 +454,110 @@ export function getContainerNameFromKey(key) {
 
 //Flag for when the editor is first opened or a new file is loaded.
 let initialPackageAdded = false;
+class GitHubUserContainmentTree extends React.Component {
+    constructor() {
+      super();
+      this.state = {
+        data: {
+          core: {
+            data: [
+              {
+                text: "GitHub Files", // Root node label
+                children: [], // Initialize with an empty array
+                state: { opened: false }, // Start with the root node closed
+                root: true,
+              },
+            ],
+          },
+        },
+        selectedVertex: null,
+      };
+    }
+  
+    componentDidMount() {
+      // Update the tree data with GitHub files when the component mounts
+      this.updateTreeData();
+    }
+  
+    // Function to get files from the GitHub repository
+    getFilesFromRepo = async () => {
+      // check for github user
+      const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
+      if (githubUser) {
+        const owner = githubUser.username;
+        const repo = 'Model-Repository';
+        const accessToken = githubUser.accessToken;
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
+  
+        const config = {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/vnd.github+json',
+            "Content-Type": 'application/json',
+          }
+        };
+  
+        try {
+          const response = await axios.get(apiUrl, config);
+          return response.data;
+        } catch (error) {
+          console.log(error);
+          return [];
+        }
+      }
+    }
+  
+    // Function to update the tree data with GitHub files
+    updateTreeData = async () => {
+      const githubFiles = await this.getFilesFromRepo();
+  
+      // Create children nodes for each GitHub file
+      const childrenNodes = githubFiles.map((file, index) => ({
+        text: file.name,
+        content: file, // You can pass the entire file object as data
+        state: { opened: false },
+        type: "File", // Optional: You can specify a type for each node
+        id: `file-${index}`, // Optional: You can assign a unique id to each node
+      }));
+  
+      // Update the state with the children nodes
+      this.setState(prevState => ({
+        data: {
+          core: {
+            ...prevState.data.core,
+            data: [
+              {
+                ...prevState.data.core.data[0],
+                children: childrenNodes, // Update children nodes
+              },
+            ],
+          },
+        },
+      }));
+    }
+  
+    handleNodeClick = (e, data) => {
+      // Handle the click event on tree nodes as needed
+      const selectedNode = data.node;
+      console.log("Clicked node:", selectedNode);
+      // You can access selectedNode.content to access the file content
+    };
+  
+    render() {
+      return (
+        <div>
+          <TreeView
+            treeData={this.state.data}
+            onChange={this.handleNodeClick}
+            className="treeview"
+            id="treeview"
+            draggable="true"
+            onOpen={this.updateTreeData} // Call updateTreeData when the root node is opened
+          />
+        </div>
+      );
+    }
+  }
 
 export class ContainmentTree extends React.Component {
 
@@ -548,7 +652,9 @@ export class ContainmentTree extends React.Component {
             }
 
         }
-        const retrievedValue = JSON.parse(localStorage.getItem('GithubUser'));
+
+        //const retrievedValue = JSON.parse(localStorage.getItem('GithubUser'));
+        
 
         //Set the TreeData
         this.state = {
@@ -556,8 +662,9 @@ export class ContainmentTree extends React.Component {
                 core: {
                     data: [
                         {
-                            text: retrievedValue && retrievedValue.username !== null
-                                ? retrievedValue.username : "Root",
+                            // text: retrievedValue && retrievedValue.username !== null
+                            //     ? retrievedValue.username : "Root",
+                            text: "Root",
                             children: packageDataRoot,
                             state: { opened: true },
                             root: true
@@ -565,7 +672,7 @@ export class ContainmentTree extends React.Component {
                     ]
                 }
             },
-            selectedVertex: null
+            selectedVertex: null,
         }
     }
 
@@ -575,7 +682,8 @@ export class ContainmentTree extends React.Component {
      * @param {*} data The treeNodes data
      */
     handleElementSelect(e, data) {
-        console.log(getCurrentObjects())
+        //console.log(getCurrentObjects())
+        console.log(data.node);
 
         //catch undefined data type eg. root
         try {
@@ -642,13 +750,12 @@ export class ContainmentTree extends React.Component {
 
 
     }
-
     render() {
         const data = this.state.data;
         return (
-            <div>
+            <div id="Tree-Container">
                 <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} className="treeview" id="treeview" draggable="true" />
-
+                <GitHubUserContainmentTree />
             </div>
         )
     }
