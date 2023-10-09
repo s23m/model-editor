@@ -26,6 +26,7 @@ export class ContextMenu extends React.Component {
     }
 
     componentDidMount() {
+        //console.log(this);
         document.addEventListener("click", this.handleClick);
         document.addEventListener("contextmenu", this.handleContextMenu);
         document.addEventListener("keypress", this.handleKey);
@@ -33,6 +34,7 @@ export class ContextMenu extends React.Component {
     }
 
     componentWillUnmount() {
+        //console.log(this);
         document.removeEventListener("click", this.handleClick);
         document.removeEventListener("contextmenu", this.handleContextMenu);
         document.removeEventListener("keypress", this.handleKey);

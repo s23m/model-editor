@@ -126,12 +126,16 @@ export class LeftMenu extends React.Component {
     //For quickKeys
     onKeyPressed(e) {
         if (e.keyCode === 46) {
-            if (this.state.selectedObject.typeName === "Vertex") {
-                vertexDeleteElement(this.state.selectedObject);
-            }
-            else {
-                deleteElement(this.state.selectedObject);
-            }
+            if(this.state.selectedObject){
+                if (this.state.selectedObject.typeName === "Vertex") {
+                    vertexDeleteElement(this.state.selectedObject);
+                }
+                else {
+                    deleteElement(this.state.selectedObject);
+                }
+            } else {
+                window.alert("cannot delete, no object selected");
+            }            
             this.setState({ menu: "TreeView" });
             canvasDraw.drawAll();
         }
@@ -441,9 +445,9 @@ export class LeftMenu extends React.Component {
 
             <div id="Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt="Edge" /></div>
 
-            <div id="Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt="Specialisation" /></div>
+            {/* <div id="Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt="Specialisation" /></div>
 
-            <div id="Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt="Visibility" /></div>
+            <div id="Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt="Visibility" /></div> */}
 
         </div>;
 
@@ -642,28 +646,24 @@ export class LeftMenu extends React.Component {
                                     onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove from Model</button>
                                 <label className="LeftSpacer">&nbsp;</label>
                                 {/*"Remove from Diagram" not fully implemented*/}
-                                <button
+                                {/* <button
                                     className="LeftMenuButton"
                                     onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove from Diagram</button>
-                                <label className="LeftSpacer">&nbsp;</label>
+                                <label className="LeftSpacer">&nbsp;</label> */}
                                 <button
                                     className="LeftMenuButton"
                                     onClick={() => this.deselectElement()}>Save</button>
                             </div>
                         </div>
-                        {/* NOT NEEDED
-                        <label className="LeftLabel">Destination Is Aggregation?</label>
-                        <input type="checkbox" id="DestIsAggregation" className="LeftCheckbox" checked={this.state.selectedObject.getAggregation(1)} onChange={() => this.setAggregation(1)} />
-                        */}
                     </div>
                 )
             } else {
-                leftMenuContents = <form id="ArrowMenu">
+                leftMenuContents = <div id="ArrowMenu">
                     <div className="LeftHeader">Selected Edge</div>
                     <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                     <label className="LeftSpacer">&nbsp;</label>
                     <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove</button>
-                </form>
+                </div>
             }
         }
 

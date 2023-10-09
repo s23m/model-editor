@@ -145,10 +145,10 @@ export class VertexNode {
                         let ourSourceEnd = currentObjects.flatten()[i].pathData[currentObjects.flatten()[i].pathData.length - 1][1]
                         let ourDestEnd = currentObjects.flatten()[i].pathData[0][1]
                         
-                        console.log(currentObjects.flatten()[i].pathData)
+                        //console.log(currentObjects.flatten()[i].pathData)
 
-                        console.log(ourSourceEnd)
-                        console.log(ourDestEnd)
+                        //console.log(ourSourceEnd)
+                        //console.log(ourDestEnd)
 
                         let textSource = "N/A"
                         let textDest = "N/A"
@@ -156,8 +156,11 @@ export class VertexNode {
 
                         // Looking through all of the current objects and matching the uuids
                         for (let j = 0; j < currentObjects.flatten().length; j++){
+                            //console.log(currentObjects.flatten());
+                            //console.log(ourSourceEnd);
                         
                             let someObject = currentObjects.flatten()[j]
+                            //console.log(someObject);
                             
                             if (someObject.typeName === "Vertex"){
                             
@@ -206,8 +209,8 @@ export class VertexNode {
 
                         finalString = textSource + " " + arrowIcon + " " + textDest
 
-                        console.log(textSource)
-                        console.log(textDest)
+                        //console.log(textSource)
+                        //console.log(textDest)
 
                         let tempTreeObj = {
                             text: finalString,
