@@ -283,7 +283,7 @@ export class Arrow {
             }
         }
 
-        console.log(" [Ignore this when importing] Could not find vertex to connect for pathItem", pathItem);
+        //console.log(" [Ignore this when importing] Could not find vertex to connect for pathItem", pathItem);
         return null;
     }
 

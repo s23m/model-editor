@@ -9,7 +9,7 @@ import TreeView from 'react-simple-jstree';
 
 import {
     currentObjects, setNewContainerKey as setNewPackageKey, getTotalContainerKeys, incrementTotalContainerKeys,
-    getCurrentGraph, setNewGraph as setNewGraphKey, getTotalGraphs, incrementTotalGraphs as incrementTotalGraph, getCurrentObjects
+    getCurrentGraph, setNewGraph as setNewGraphKey, getTotalGraphs, incrementTotalGraphs as incrementTotalGraph, /*getCurrentObjects*/
 } from "./CanvasDraw";
 import { drawAll } from "./CanvasDraw";
 import { VertexNode } from "../DataStructures/Graph.js"
@@ -538,8 +538,7 @@ class GitHubUserContainmentTree extends React.Component {
   
     handleNodeClick = (e, data) => {
       // Handle the click event on tree nodes as needed
-      const selectedNode = data.node;
-      console.log("Clicked node:", selectedNode);
+      //console.log("Clicked node:", selectedNode);
       // You can access selectedNode.content to access the file content
     };
   

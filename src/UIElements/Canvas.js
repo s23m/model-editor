@@ -140,7 +140,7 @@ export class Canvas extends React.Component {
 
     // What happens if u click anywhere on the canvas
     mouseDown = (e, canvas) => {
-        console.log('click')
+        console.log(canvas);
         let position = canvasDraw.getGraphXYFromMouseEvent(e);
         let x = position[0]; let y = position[1];
         this.setState({
@@ -158,12 +158,14 @@ export class Canvas extends React.Component {
 
             // If an object has already been selected, make the current intersection the second object
             if (selectedCanvasObject === null) {
+            
                 selectedCanvasObject = intersection
             } else {
                 nextSelectedCanvasObject = intersection
             }
 
             // check if there's an object
+            console.log(intersection);
             if (intersection !== null) {
                 lastSelectWasCanvas = false;
                 //if object is a box, move the object
@@ -180,12 +182,12 @@ export class Canvas extends React.Component {
                     }
 
                 } else {
-                    console.log(selectedCanvasObject)
                     if (nextSelectedCanvasObject !== null) {
                         // Check if the first selected object and the second selected object are edges
                         if (selectedCanvasObject.typeName === "Arrow" && nextSelectedCanvasObject.typeName === "Arrow") {
                             // Check if the selected objects are the same
                             if (selectedCanvasObject.path === nextSelectedCanvasObject.path) {
+                                console.log('ya yeet lee likes feet')
                                 return;
                             }
 
@@ -211,7 +213,7 @@ export class Canvas extends React.Component {
                 canvasDraw.onLeftMousePress(canvas, x, y);
                 if (lastSelectWasCanvas === false) {
                     createSaveState()
-                    console.log('creatin save canvas')
+                    console.log('creating save canvas');
                 }
                 lastSelectWasCanvas = true;
                 selectedCanvasObject = null;
@@ -228,7 +230,7 @@ export class Canvas extends React.Component {
 
         //mouse down
         if (e.button === 0 && selectMultiple) {
-
+            
             let intersection = canvasDraw.findIntersected(x, y);
             // check if there's an object
             if (intersection === null) {

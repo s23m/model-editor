@@ -45,7 +45,6 @@ export class MainProgramClass extends React.Component {
 
     componentDidMount() {
         this.setMode(Tool.Select);
-        console.log("Mounted");
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -55,6 +54,10 @@ export class MainProgramClass extends React.Component {
         }
         div = document.getElementById(this.state.SelectedTool);
         div.style.backgroundColor = "#CFFFFF";
+
+        // console.log("prevProps: " + JSON.stringify(prevProps));
+        // console.log("prevState: " + JSON.stringify(prevState));
+        // console.log("snapshot: " + snapshot);
     }
 
     zoom = (type) => {
