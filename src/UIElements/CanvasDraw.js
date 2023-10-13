@@ -1129,141 +1129,144 @@ export function lineIntersect(canvas, x, y, secondObject) {
 
 }
 //
-export function collectMehBox(boxes, arrows, bigbox, item, index) {
+// code for automatically shifting and resizing boxes to match S23m modeling preferences. caused issues with drawing arrows between packages so has been commented out.
+// suspected area of issue code lines 1146 - 1166.
 
-    if (bigbox.semanticIdentity.UUID === item.destVertexUUID) {
-        let box = getObjectFromUUID(item.sourceVertexUUID);
-        if ((bigbox.y) * index + (box.y) * (1 - index) > (box.y + box.height + 10) * index + (bigbox.y + bigbox.height + 10) * (1 - index)) {
-            boxes.push(box);
-            arrows.push(item);
-        }
+// export function collectMehBox(boxes, arrows, bigbox, item, index) {
 
-
-    } else if (bigbox.semanticIdentity.UUID === item.sourceVertexUUID) {
-        let box = getObjectFromUUID(item.destVertexUUID);
-        if ((bigbox.y) * index + (box.y) * (1 - index) > (box.y + box.height + 10) * index + (bigbox.y + bigbox.height + 10) * (1 - index)) {
-            boxes.push(box);
-            arrows.push(item);
-        }
-    }
-    return [boxes, arrows];
-}
-//Will arrange boxes and arrows in linked order above or below the big box.
-//Bigbox - The larger important box
-//boxes - list of all the boxes being moved
-//arrows - arrows connect to the above boxes
-//index - denotes the side that boxes are connected to
-export function arrangeboxesandarrows(bigbox, boxes, arrows, index) {
-    //index = 1 = up
-    if (boxes.length >= 2) {
-        let b = 0;
-        let x = bigbox.x;
-        let y = bigbox.y + (bigbox.height + 30) * (1 - index);
-        for (b; b < boxes.length; b++) {
-            boxes[b].x = x;
-            boxes[b].y = y - ((boxes[b].height + 30) * index);
-            x = x + boxes[b].width + 20;
-
-            if (boxes[b].x + boxes[b].width > bigbox.x + bigbox.width) {
-                bigbox.width = bigbox.width + boxes[b].width
-            }
-        }
-        b = 0;
-        for (b; b < boxes.length; b++) {
-            let conData = getConnectionDataForArrow(boxes[b].x + boxes[b].width / 2, bigbox.y + (bigbox.height + 10) * (1 - index));
-            arrows[b].pathData[1] = conData['nearest'];
-            StickArrowToObject(conData, arrows[b], 1);
-        }
-    }
-}
-//
-export function collectsidebox(boxes, arrows, bigbox, item, index) {
-
-    if (bigbox.semanticIdentity.UUID === item.destVertexUUID) {
-        let box = getObjectFromUUID(item.sourceVertexUUID);
-        if ((bigbox.x) * index + (box.x) * (1 - index) > (box.x + box.width) * index + (bigbox.x + bigbox.width) * (1 - index)) {
-            boxes.push(box);
-            arrows.push(item);
-        }
+//     if (bigbox.semanticIdentity.UUID === item.destVertexUUID) {
+//         let box = getObjectFromUUID(item.sourceVertexUUID);
+//         if ((bigbox.y) * index + (box.y) * (1 - index) > (box.y + box.height + 10) * index + (bigbox.y + bigbox.height + 10) * (1 - index)) {
+//             boxes.push(box);
+//             arrows.push(item);
+//         }
 
 
-    } else if (bigbox.semanticIdentity.UUID === item.sourceVertexUUID) {
-        let box = getObjectFromUUID(item.destVertexUUID);
-        if ((bigbox.x) * index + (box.x) * (1 - index) > (box.x + box.width) * index + (bigbox.x + bigbox.width) * (1 - index)) {
-            boxes.push(box);
-            arrows.push(item);
-        }
-    }
-    return [boxes, arrows];
-}
-export function arrangeboxesandarrowshorizontal(bigbox, boxes, arrows, index) {
-    //index = 0 = right
-    if (boxes.length >= 2) {
-        let b = 0;
-        let x = bigbox.x + (bigbox.width + 30) * (1 - index);
-        let y = bigbox.y;
-        for (b; b < boxes.length; b++) {
-            boxes[b].x = x - ((boxes[b].width + 30) * index);
-            boxes[b].y = y;
-            y = y + boxes[b].height + 20;
-            //extending box
-            if (boxes[b].y + boxes[b].height + 10 > bigbox.y + bigbox.height + 10) {
-                bigbox.height = bigbox.height + boxes[b].height;
-            }
-        }
-        b = 0;
-        for (b; b < boxes.length; b++) {
-            let conData = getConnectionDataForArrow(bigbox.x + (bigbox.width) * (1 - index), boxes[b].y + (boxes[b].height + 10) / 2);
-            arrows[b].pathData[1] = conData['nearest'];
-            StickArrowToObject(conData, arrows[b], 1);
-        }
-    }
-}
+//     } else if (bigbox.semanticIdentity.UUID === item.sourceVertexUUID) {
+//         let box = getObjectFromUUID(item.destVertexUUID);
+//         if ((bigbox.y) * index + (box.y) * (1 - index) > (box.y + box.height + 10) * index + (bigbox.y + bigbox.height + 10) * (1 - index)) {
+//             boxes.push(box);
+//             arrows.push(item);
+//         }
+//     }
+//     return [boxes, arrows];
+// }
+// //Will arrange boxes and arrows in linked order above or below the big box.
+// //Bigbox - The larger important box
+// //boxes - list of all the boxes being moved
+// //arrows - arrows connect to the above boxes
+// //index - denotes the side that boxes are connected to
+// export function arrangeboxesandarrows(bigbox, boxes, arrows, index) {
+//     //index = 1 = up
+//     if (boxes.length >= 2) {
+//         let b = 0;
+//         let x = bigbox.x;
+//         let y = bigbox.y + (bigbox.height + 30) * (1 - index);
+//         for (b; b < boxes.length; b++) {
+//             boxes[b].x = x;
+//             boxes[b].y = y - ((boxes[b].height + 30) * index);
+//             x = x + boxes[b].width + 20;
 
-export function shiftBoxes(secondObject) {
-    //if box is within horizontal bounds
+//             if (boxes[b].x + boxes[b].width > bigbox.x + bigbox.width) {
+//                 bigbox.width = bigbox.width + boxes[b].width
+//             }
+//         }
+//         b = 0;
+//         for (b; b < boxes.length; b++) {
+//             let conData = getConnectionDataForArrow(boxes[b].x + boxes[b].width / 2, bigbox.y + (bigbox.height + 10) * (1 - index));
+//             arrows[b].pathData[1] = conData['nearest'];
+//             StickArrowToObject(conData, arrows[b], 1);
+//         }
+//     }
+// }
+// //
+// export function collectsidebox(boxes, arrows, bigbox, item, index) {
 
-    let upBoxes = [];
-    let upArrows = [];
-    let downBoxes = [];
-    let downArrows = [];
-    let leftBoxes = [];
-    let leftArrows = [];
-    let rightBoxes = [];
-    let rightArrows = [];
-    let [bigBox, smallBox] = checkBoxSizesAndReturnBigBox(previousObject, secondObject);
-
-    //grab all arrows connected to either object
-    //Index 0 means down index 1 means up
-
-    currentObjects.flatten().forEach((item) => {
-        if (item.typeName === "Arrow") {
-            //get the big box because it has all the arrows connected
-            if (bigBox.y + bigBox.height + 10 < smallBox.y && smallBox.x > bigBox.x && smallBox.x + smallBox.width < bigBox.x + bigBox.width) {
-                [downBoxes, downArrows] = collectMehBox(downBoxes, downArrows, bigBox, item, 0);
+//     if (bigbox.semanticIdentity.UUID === item.destVertexUUID) {
+//         let box = getObjectFromUUID(item.sourceVertexUUID);
+//         if ((bigbox.x) * index + (box.x) * (1 - index) > (box.x + box.width) * index + (bigbox.x + bigbox.width) * (1 - index)) {
+//             boxes.push(box);
+//             arrows.push(item);
+//         }
 
 
-            } else if (bigBox.y > (smallBox.y + smallBox.height + 10) && smallBox.x > bigBox.x && smallBox.x + smallBox.width < bigBox.x + bigBox.width) {
-                [upBoxes, upArrows] = collectMehBox(upBoxes, upArrows, bigBox, item, 1);
+//     } else if (bigbox.semanticIdentity.UUID === item.sourceVertexUUID) {
+//         let box = getObjectFromUUID(item.destVertexUUID);
+//         if ((bigbox.x) * index + (box.x) * (1 - index) > (box.x + box.width) * index + (bigbox.x + bigbox.width) * (1 - index)) {
+//             boxes.push(box);
+//             arrows.push(item);
+//         }
+//     }
+//     return [boxes, arrows];
+// }
+// export function arrangeboxesandarrowshorizontal(bigbox, boxes, arrows, index) {
+//     //index = 0 = right
+//     if (boxes.length >= 2) {
+//         let b = 0;
+//         let x = bigbox.x + (bigbox.width + 30) * (1 - index);
+//         let y = bigbox.y;
+//         for (b; b < boxes.length; b++) {
+//             boxes[b].x = x - ((boxes[b].width + 30) * index);
+//             boxes[b].y = y;
+//             y = y + boxes[b].height + 20;
+//             //extending box
+//             if (boxes[b].y + boxes[b].height + 10 > bigbox.y + bigbox.height + 10) {
+//                 bigbox.height = bigbox.height + boxes[b].height;
+//             }
+//         }
+//         b = 0;
+//         for (b; b < boxes.length; b++) {
+//             let conData = getConnectionDataForArrow(bigbox.x + (bigbox.width) * (1 - index), boxes[b].y + (boxes[b].height + 10) / 2);
+//             arrows[b].pathData[1] = conData['nearest'];
+//             StickArrowToObject(conData, arrows[b], 1);
+//         }
+//     }
+// }
 
-            } else if (bigBox.x > smallBox.x + smallBox.width && smallBox.y > bigBox.y && smallBox.y + smallBox.height + 10 < bigBox.y + bigBox.height + 10) {
-                console.log("left ran");
-                [leftBoxes, leftArrows] = collectsidebox(leftBoxes, leftArrows, bigBox, item, 1);
+// export function shiftBoxes(secondObject) {
+//     //if box is within horizontal bounds
 
-            } else if (bigBox.x + bigBox.width < smallBox.x && smallBox.y > bigBox.y && smallBox.y + smallBox.height + 10 < bigBox.y + bigBox.height + 10) {
-                console.log("right ran");
-                [rightBoxes, rightArrows] = collectsidebox(rightBoxes, rightArrows, bigBox, item, 0);
-            }
-        }
-    });
-    //Do stuff to boxes
-    //1 = up
-    //0 = down
-    arrangeboxesandarrows(bigBox, downBoxes, downArrows, 0);
-    arrangeboxesandarrows(bigBox, upBoxes, upArrows, 1);
-    arrangeboxesandarrowshorizontal(bigBox, leftBoxes, leftArrows, 1);
-    arrangeboxesandarrowshorizontal(bigBox, rightBoxes, rightArrows, 0);
-}
+//     let upBoxes = [];
+//     let upArrows = [];
+//     let downBoxes = [];
+//     let downArrows = [];
+//     let leftBoxes = [];
+//     let leftArrows = [];
+//     let rightBoxes = [];
+//     let rightArrows = [];
+//     let [bigBox, smallBox] = checkBoxSizesAndReturnBigBox(previousObject, secondObject);
+
+//     //grab all arrows connected to either object
+//     //Index 0 means down index 1 means up
+
+//     currentObjects.flatten().forEach((item) => {
+//         if (item.typeName === "Arrow") {
+//             //get the big box because it has all the arrows connected
+//             if (bigBox.y + bigBox.height + 10 < smallBox.y && smallBox.x > bigBox.x && smallBox.x + smallBox.width < bigBox.x + bigBox.width) {
+//                 [downBoxes, downArrows] = collectMehBox(downBoxes, downArrows, bigBox, item, 0);
+
+
+//             } else if (bigBox.y > (smallBox.y + smallBox.height + 10) && smallBox.x > bigBox.x && smallBox.x + smallBox.width < bigBox.x + bigBox.width) {
+//                 [upBoxes, upArrows] = collectMehBox(upBoxes, upArrows, bigBox, item, 1);
+
+//             } else if (bigBox.x > smallBox.x + smallBox.width && smallBox.y > bigBox.y && smallBox.y + smallBox.height + 10 < bigBox.y + bigBox.height + 10) {
+//                 console.log("left ran");
+//                 [leftBoxes, leftArrows] = collectsidebox(leftBoxes, leftArrows, bigBox, item, 1);
+
+//             } else if (bigBox.x + bigBox.width < smallBox.x && smallBox.y > bigBox.y && smallBox.y + smallBox.height + 10 < bigBox.y + bigBox.height + 10) {
+//                 console.log("right ran");
+//                 [rightBoxes, rightArrows] = collectsidebox(rightBoxes, rightArrows, bigBox, item, 0);
+//             }
+//         }
+//     });
+//     //Do stuff to boxes
+//     //1 = up
+//     //0 = down
+//     arrangeboxesandarrows(bigBox, downBoxes, downArrows, 0);
+//     arrangeboxesandarrows(bigBox, upBoxes, upArrows, 1);
+//     arrangeboxesandarrowshorizontal(bigBox, leftBoxes, leftArrows, 1);
+//     arrangeboxesandarrowshorizontal(bigBox, rightBoxes, rightArrows, 0);
+// }
 
 export function onLeftMouseRelease(canvas, x, y) {
 
@@ -1327,11 +1330,13 @@ export function onLeftMouseRelease(canvas, x, y) {
                 canvas.props.setLeftMenu(newObject);
             }
 
-            canvas.props.setMode(Tool.Select);
-            if (previousObject !== null && secondObject !== null) {
-                shiftBoxes(secondObject);
-            }
-            previousObject = null;
+            //commented out as it utilized the functions which were causing errors (shiftBoxes)
+            // canvas.props.setMode(Tool.Select);
+            // if (previousObject !== null && secondObject !== null) {
+            //     shiftBoxes(secondObject);
+            //     
+            // }
+            // previousObject = null;
 
         } else {
             //maybe here where we can disable compound lines

@@ -655,7 +655,7 @@ export class ContainmentTree extends React.Component {
 
         }
 
-        //const retrievedValue = JSON.parse(localStorage.getItem('GithubUser'));
+        const retrievedValue = JSON.parse(localStorage.getItem('GithubUser'));
         
 
         //Set the TreeData
@@ -664,9 +664,11 @@ export class ContainmentTree extends React.Component {
                 core: {
                     data: [
                         {
-                            // text: retrievedValue && retrievedValue.username !== null
-                            //     ? retrievedValue.username : "Root",
-                            text: "Root",
+                            text: retrievedValue && retrievedValue.username !== null
+                                 ? retrievedValue.username : "Root", // if a users has added their github account. their username is taken from local storage and change the  
+                                 // name of the the highest level package to the users github username. otherwise package name is Root.
+                                 //the addition of multiple github user fuctionality will require the github username to be retrieved from
+                                 //github api call rather than local storage.
                             children: packageDataRoot,
                             state: { opened: true },
                             root: true

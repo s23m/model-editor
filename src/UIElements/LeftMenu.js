@@ -445,9 +445,9 @@ export class LeftMenu extends React.Component {
 
             <div id="Edge" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Edge)}><img src={iconEdge} alt="Edge" /></div>
 
-            {/* <div id="Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt="Specialisation" /></div>
+            <div id="Specialisation" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Specialisation)}><img src={iconSpecialisation} alt="Specialisation" /></div>
 
-            <div id="Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt="Visibility" /></div> */}
+            <div id="Visibility" className="ToolbarItem" onClick={() => this.props.setMode(Tool.Visibility)}><img src={iconVisibility} alt="Visibility" /></div>
 
         </div>;
 
