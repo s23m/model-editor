@@ -377,6 +377,10 @@ export class MainProgramClass extends React.Component {
                             <input type="file" id="File-Select-Import" onChange={this.importFile} />
                         </div>
 
+                        <div className="TopBar">
+                            <button id="Import-Model" onClick={this.getFilesFromRepo}>Import Model From Model-Repository</button>
+                        </div>
+
                         <Dropdown.Item>
                             <div className="TopBar">
                                 <button id="json-downloader" onClick={() => save()}>Save (as Json)</button>
@@ -415,11 +419,6 @@ export class MainProgramClass extends React.Component {
                         <Dropdown.Item>
                             <div className="TopBar">
                                 <button id="Test-Repo-Creation" onClick={createUserRepo}>Test Create Model-Repo</button>
-                            </div>
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                            <div className="TopBar">
-                                <button id="Import-Model" onClick={this.getFilesFromRepo}>Import Model</button>
                             </div>
                         </Dropdown.Item>
                         <Dropdown.Item>

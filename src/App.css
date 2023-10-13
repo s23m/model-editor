@@ -51,7 +51,7 @@
     justify-content: space-between;
 }
 
-.close-popup {
+.close-popup, .close-modal {
     position: absolute;
     top: 5px;
     right: 8px;
@@ -132,10 +132,10 @@
     left: 50%;
     transform: translate(-50%, -50%);
     border: 2px solid black;
-    border-radius: 15%;
+    border-radius: 5px;
     background-color: #D3D3D3;
-    height: 40vh;
-    width: 50vw;
+    height: fit-content;
+    width: fit-content;
     z-index: 2;
 }
 
