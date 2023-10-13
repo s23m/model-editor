@@ -58,8 +58,8 @@ export const fetchUserData = async () => {
  */
 export const createUserRepo = async () => {
   const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
-  //const reponame = window.prompt("What would you like to name the repository?");
   const reponame = 'Model-Repository'; // will go back to dynamic naming once we progress further
+
   if (githubUser) {
     try {
       const response = await axios.post('https://api.github.com/user/repos', {
@@ -70,7 +70,9 @@ export const createUserRepo = async () => {
           Authorization: `Bearer ${githubUser.accessToken}`,
         },
       });
-      const status = response.status
+
+      const status = response.status;
+
       if (status === 200 || status === 201) {
         const repoData = response.data;
         console.log('Repository created:', repoData);
@@ -78,19 +80,17 @@ export const createUserRepo = async () => {
       } else if (status === 404) {
         window.alert('Unable to locate GitHub API endpoint.');
       } else if (status === 409) {
-        window.alert('Repository already exists.  Choose a different repository name.');
+        window.alert('Repository already exists. Choose a different repository name.');
       } else if (status === 422) {
         window.alert('Unable to process request. Check your input data.');
       }
     } catch (error) {
-     
-        window.alert(`An error occurred while creating the repository for ${githubUser.username}. Please ensure credentials are correct`);
-     
+      window.alert(error);
       console.error(`Error creating Github repo for ${githubUser.username}:`, error);
     }
   } else {
-    window.alert('No github user found in localStorage\n\nTry adding one with the "Github Account" button');
-    console.log('github user not found');
+    window.alert('No GitHub user found in localStorage.\n\nTry adding one with the "Github Account" button');
+    console.log('GitHub user not found');
   }
 };
 
