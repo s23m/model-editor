@@ -1,0 +1,18 @@
+Helpful notes and potential future issues for web editor.
+
+1. Functionality for resizing and moving packages in the canvas has been commented out as it was causing the issues with drawing arrows between packages.
+the suspected area of of code causing the issue is in line 1146 - 1166 of CanvasDraw. error with drawing lines occured for packages that are ENTIRELY above or below prevoisly 
+selected package.
+
+2. Much of the existing funtionality relies on only one root package existing. 
+If/ when multiple root packages need to exist for future functionality, existing code will need to be refactored futher. 
+Creating a new treeview and utilizing existing code to mimic a second root package seemed promising however was not implemented due to time constraints.
+
+3. DrawAll function. this function is used throughout the code, adds all objects onto canvas. it clears the canvas and redraws each object. Inefficient and suspected to be the cause of some minor bugs.
+
+
+4. Left Menu nested forms. Left menu has conditionally displayed <form> tags, which have been nested. This is incorrect HTML practise, doesnt seem to cause any issues at the moment hoever could cause issues in the future. 
+This may also cause issues in other browsers however it seems to be ok in chrome and firefox.
+
+
+5. Arrow draws even when it is not connected to another package. When something else is selected (not another package) arrow values should be set back to default and that arrow should be removed from objects.
