@@ -4,7 +4,7 @@
 */
 
 import React from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 import TreeView from 'react-simple-jstree';
 
 import {
@@ -454,109 +454,112 @@ export function getContainerNameFromKey(key) {
 
 //Flag for when the editor is first opened or a new file is loaded.
 let initialPackageAdded = false;
-class GitHubUserContainmentTree extends React.Component {
-    constructor() {
-      super();
-      this.state = {
-        data: {
-          core: {
-            data: [
-              {
-                text: "GitHub Files", // Root node label
-                children: [], // Initialize with an empty array
-                state: { opened: false }, // Start with the root node closed
-                root: true,
-              },
-            ],
-          },
-        },
-        selectedVertex: null,
-      };
-    }
+/*
+The below class was created as a start to the second root concept, it has not been removed, and instead commented as hopefully a future team might be able to use it.
+*/
+// class GitHubUserContainmentTree extends React.Component {
+//     constructor() {
+//       super();
+//       this.state = {
+//         data: {
+//           core: {
+//             data: [
+//               {
+//                 text: "GitHub Files", // Root node label
+//                 children: [], // Initialize with an empty array
+//                 state: { opened: false }, // Start with the root node closed
+//                 root: true,
+//               },
+//             ],
+//           },
+//         },
+//         selectedVertex: null,
+//       };
+//     }
   
-    componentDidMount() {
-      // Update the tree data with GitHub files when the component mounts
-      this.updateTreeData();
-    }
+//     componentDidMount() {
+//       // Update the tree data with GitHub files when the component mounts
+//       this.updateTreeData();
+//     }
   
-    // Function to get files from the GitHub repository
-    getFilesFromRepo = async () => {
-      // check for github user
-      const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
-      if (githubUser) {
-        const owner = githubUser.username;
-        const repo = 'Model-Repository';
-        const accessToken = githubUser.accessToken;
-        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
+//     // Function to get files from the GitHub repository
+//     getFilesFromRepo = async () => {
+//       // check for github user
+//       const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
+//       if (githubUser) {
+//         const owner = githubUser.username;
+//         const repo = 'Model-Repository';
+//         const accessToken = githubUser.accessToken;
+//         const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
   
-        const config = {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: 'application/vnd.github+json',
-            "Content-Type": 'application/json',
-          }
-        };
+//         const config = {
+//           headers: {
+//             Authorization: `Bearer ${accessToken}`,
+//             Accept: 'application/vnd.github+json',
+//             "Content-Type": 'application/json',
+//           }
+//         };
   
-        try {
-          const response = await axios.get(apiUrl, config);
-          return response.data;
-        } catch (error) {
-          console.log(error);
-          return [];
-        }
-      }
-    }
+//         try {
+//           const response = await axios.get(apiUrl, config);
+//           return response.data;
+//         } catch (error) {
+//           console.log(error);
+//           return [];
+//         }
+//       }
+//     }
   
-    // Function to update the tree data with GitHub files
-    updateTreeData = async () => {
-      const githubFiles = await this.getFilesFromRepo();
+//     // Function to update the tree data with GitHub files
+//     updateTreeData = async () => {
+//       const githubFiles = await this.getFilesFromRepo();
   
-      // Create children nodes for each GitHub file
-      const childrenNodes = githubFiles.map((file, index) => ({
-        text: file.name,
-        content: file, // You can pass the entire file object as data
-        state: { opened: false },
-        type: "File", // Optional: You can specify a type for each node
-        id: `file-${index}`, // Optional: You can assign a unique id to each node
-      }));
+//       // Create children nodes for each GitHub file
+//       const childrenNodes = githubFiles.map((file, index) => ({
+//         text: file.name,
+//         content: file, // You can pass the entire file object as data
+//         state: { opened: false },
+//         type: "File", // Optional: You can specify a type for each node
+//         id: `file-${index}`, // Optional: You can assign a unique id to each node
+//       }));
   
-      // Update the state with the children nodes
-      this.setState(prevState => ({
-        data: {
-          core: {
-            ...prevState.data.core,
-            data: [
-              {
-                ...prevState.data.core.data[0],
-                children: childrenNodes, // Update children nodes
-              },
-            ],
-          },
-        },
-      }));
-    }
+//       // Update the state with the children nodes
+//       this.setState(prevState => ({
+//         data: {
+//           core: {
+//             ...prevState.data.core,
+//             data: [
+//               {
+//                 ...prevState.data.core.data[0],
+//                 children: childrenNodes, // Update children nodes
+//               },
+//             ],
+//           },
+//         },
+//       }));
+//     }
   
-    handleNodeClick = (e, data) => {
-      // Handle the click event on tree nodes as needed
-      //console.log("Clicked node:", selectedNode);
-      // You can access selectedNode.content to access the file content
-    };
+//     handleNodeClick = (e, data) => {
+//       // Handle the click event on tree nodes as needed
+//       //console.log("Clicked node:", selectedNode);
+//       // You can access selectedNode.content to access the file content
+//     };
   
-    render() {
-      return (
-        <div>
-          <TreeView
-            treeData={this.state.data}
-            onChange={this.handleNodeClick}
-            className="treeview"
-            id="treeview"
-            draggable="true"
-            onOpen={this.updateTreeData} // Call updateTreeData when the root node is opened
-          />
-        </div>
-      );
-    }
-  }
+//     render() {
+//       return (
+//         <div>
+//           <TreeView
+//             treeData={this.state.data}
+//             onChange={this.handleNodeClick}
+//             className="treeview"
+//             id="treeview"
+//             draggable="true"
+//             onOpen={this.updateTreeData} // Call updateTreeData when the root node is opened
+//           />
+//         </div>
+//       );
+//     }
+//   }
 
 export class ContainmentTree extends React.Component {
 
@@ -753,8 +756,7 @@ export class ContainmentTree extends React.Component {
         const data = this.state.data;
         return (
             <div id="Tree-Container">
-                <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} className="treeview" id="treeview" draggable="true" />
-                <GitHubUserContainmentTree />
+                <TreeView treeData={data} onChange={(e, data) => this.handleElementSelect(e, data)} className="treeview" id="treeview" draggable="true" /> 
             </div>
         )
     }

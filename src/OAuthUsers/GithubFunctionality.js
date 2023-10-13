@@ -3,10 +3,16 @@ import { getSaveData } from '../Serialisation/NewFileManager';
 
 const GITHUB_TOKEN_PAGE = 'https://github.com/settings/tokens/new';
 
+/**
+ * Simple function which redirects users to the GitHub page for generating a token
+ */
 export async function getNewToken() {
   window.open(GITHUB_TOKEN_PAGE);
 }
 
+/**
+ * This function is used to test if the github api calls are working and can return all the user data for the GithubUser which has been stored in localStorage
+ */
 export const fetchUserData = async () => {
   try {
     const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
@@ -47,6 +53,9 @@ export const fetchUserData = async () => {
   }
 };
 
+/**
+ * Function which creates a personal Model-Repository, currently with a static name declaration. Future iteration could allow for naming of Repositories.
+ */
 export const createUserRepo = async () => {
   const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
   //const reponame = window.prompt("What would you like to name the repository?");
@@ -65,7 +74,7 @@ export const createUserRepo = async () => {
       if (status === 200 || status === 201) {
         const repoData = response.data;
         console.log('Repository created:', repoData);
-        window.alert('Repository has been successfully created.');
+        window.alert('Repository has been successfully created.\n\nFor now, you will only be able to create a single Model-Repository for yourself.');
       } else if (status === 404) {
         window.alert('Unable to locate GitHub API endpoint.');
       } else if (status === 409) {
@@ -85,6 +94,9 @@ export const createUserRepo = async () => {
   }
 };
 
+/**
+ * Function which uploads the current up to date JSON Serialisation to the Model-Repository which was created in the "createUserRepo" function.
+ */
 export const uploadFileToRepo = async () => {
   const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
   if(githubUser){
