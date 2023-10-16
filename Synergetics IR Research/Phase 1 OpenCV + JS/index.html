@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="index.css">  
+  <title>OpenCV.js Sandbox</title>
+</head>
+<body>
+  <div class="header-container">
+    <h2>OpenCV.js Shape Detector</h2>
+  </div>
+
+  <div class="status">
+    <p id="status">OpenCV.js is loading...</p>
+  </div>
+
+  <div class="wrapper">
+    <div class="container">
+        <div id="images-column" class="images-column">
+          <img class="input-image" id="input-image" alt="No Image" src="https://via.placeholder.com/400x300.png?text=Input"/>
+          <canvas id="output-image" class="output-image" height="300" width="400"></canvas>
+        </div>
+
+        <div class="buttons-column">
+          <div class="upload-container">
+              <label htmlFor="file-input">
+                  Upload Image
+              </label>
+              <input type="file" accept="image/*" id="file-input" name="file" />
+          </div>
+          <div class="thresholdTypeContainer">
+            <label for="thresholdTypeDropdown">Threshold Type:</label>
+            <select id="thresholdTypeDropdown">
+              <option value="0">Binary</option>
+              <option value="1">Binary Inverted</option>
+              <option value="2">Truncation</option>
+              <option value="3">To-Zero</option>
+              <option value="4">To-Zero Inverted</option>
+              <option value="7">Mask</option>
+              <option value="8">Otsu</option>
+              <option value="16">Triangle</option>
+              <!-- Add more threshold types as needed -->
+            </select>
+          </div>
+          <div>
+            <label for="upperThresholdSlider">Upper Threshold:</label>
+            <input type="range" id="upperThresholdSlider" min="0" max="255" value="255">
+            <span id="upperThresholdLabel"></span>
+          </div>
+          <div class="lowerSlider">
+            <label for="lowerThresholdSlider">Lower Threshold:</label>
+            <input type="range" id="lowerThresholdSlider" min="0" max="255" value="200">
+            <span id="lowerThresholdLabel"></span>
+          </div>
+          <button id="detect-button" class="button" onclick="detect()">Detect Shapes</button> 
+        </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+    const Module = {
+    // https://emscripten.org/docs/api_reference/module.html#Module.onRuntimeInitialized
+    onRuntimeInitialized() {
+      document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
+    }
+  };
+</script>
+<script src="index.js" type="text/javascript"></script>
+<script async src="opencv.js" type="text/javascript"></script>
+</body>
+</html>
