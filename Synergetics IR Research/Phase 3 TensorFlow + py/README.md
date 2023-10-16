@@ -19,3 +19,5 @@ Once the variables have been configured, open a terminal and navigate to where t
 And hit ENTER.
 
 The program will output its results as PNG images files in the same directory that the script is located.
+
+GitHub limits file sizes to 25MB, so our model wasn't able to be added to this repository. If you wish to use the custom-trained model by Synergetics as a base, it can be downloaded from Google Drive [here](https://drive.google.com/file/d/1E3RnWxH-0rTIHQCcaNqazkhN8TxOahHY/view?usp=drive_link). If the link is unavailable for any reason, reach out to Jack Girard at n11252511@qut.edu.au.
