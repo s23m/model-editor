@@ -24,6 +24,7 @@ import iconHelp from "../Resources/help.svg"
 
 export const version = 1;
 export const serverURL = 'http://localhost:8080';
+//const manualUrl =  "../public/UserManual.pdf";
 
 export class MainProgramClass extends React.Component {
 
@@ -44,7 +45,6 @@ export class MainProgramClass extends React.Component {
 
     componentDidMount() {
         this.setMode(Tool.Select);
-        console.log("Mounted");
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -54,6 +54,10 @@ export class MainProgramClass extends React.Component {
         }
         div = document.getElementById(this.state.SelectedTool);
         div.style.backgroundColor = "#CFFFFF";
+
+        // console.log("prevProps: " + JSON.stringify(prevProps));
+        // console.log("prevState: " + JSON.stringify(prevState));
+        // console.log("snapshot: " + snapshot);
     }
 
     zoom = (type) => {
@@ -190,76 +194,80 @@ export class MainProgramClass extends React.Component {
     getFilesFromRepo = async () => {
         // check for github user
         const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
-        if(githubUser){
-          const owner = githubUser.username;
-          const repo = 'Model-Repository';
-          const accessToken = githubUser.accessToken;
-          const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
-      
-          const config = {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              Accept: 'application/vnd.github+json',
-              "Content-Type" : 'application/json',
+        if (githubUser) {
+            const owner = githubUser.username;
+            const repo = 'Model-Repository';
+            const accessToken = githubUser.accessToken;
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    Accept: 'application/vnd.github+json',
+                    "Content-Type": 'application/json',
+                }
             }
-          }
-          axios.get(apiUrl, config)
-            .then(response => {
-              console.log(response.data);
-              this.showRepoFileSelector(response.data);
-            })
-            .catch(error => {
-              console.log(error);
-            });
+            axios.get(apiUrl, config)
+                .then(response => {
+                    console.log(response.data);
+                    this.showRepoFileSelector(response.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
-      }
-      
-      // function which takes array returned when GET requesting repo content and omitting a path
-      showRepoFileSelector = (files) => {
+    }
+
+    // function which takes array returned when GET requesting repo content and omitting a path
+    showRepoFileSelector = (files) => {
         const popup = document.getElementById('popup');
-        popup.style.display = "block";
-        files.forEach( file => {
-          const button = document.createElement('button');
-          button.textContent = file.name;
-          button.addEventListener('click', async () => {
-            try {
-              this.loadGithubFileContent(file.name);
-              popup.style.display = 'none';
-            } catch (error) {
-              console.error('Error: ', error);
-            }
-          });
-          popup.appendChild(button);
-        })
-      }
-      
-      loadGithubFileContent = async (filepath) => {
-        const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
-        if(githubUser){
-          const owner = githubUser.username;
-          const repo = 'Model-Repository';
-          const accessToken = githubUser.accessToken;
-          const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filepath}`;
-      
-          const config = {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              Accept: 'application/vnd.github+json',
-              "Content-Type" : 'application/json',
-            }
-          }
-          axios.get(apiUrl, config)
-            .then(response => {
-              console.log(response.data);
-              const decodedContent = Buffer.from(response.data.content, 'base64').toString('utf-8');
-              importLoad(decodedContent);
-              this.setLeftMenuToTree();
-            })
-            .catch(error => {
-              console.log(error);
-            });
+        const fileList = document.getElementById('file-list');
+        while (fileList.firstChild) {
+            fileList.removeChild(fileList.firstChild);
         }
-      }
+        popup.style.display = "block";
+        files.forEach(file => {
+            const button = document.createElement('button');
+            button.textContent = file.name;
+            button.addEventListener('click', async () => {
+                try {
+                    this.loadGithubFileContent(file.name);
+                    popup.style.display = 'none';
+                } catch (error) {
+                    console.error('Error: ', error);
+                }
+            });
+            fileList.appendChild(button);
+        })
+    }
+
+    loadGithubFileContent = async (filepath) => {
+        const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
+        if (githubUser) {
+            const owner = githubUser.username;
+            const repo = 'Model-Repository';
+            const accessToken = githubUser.accessToken;
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filepath}`;
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    Accept: 'application/vnd.github+json',
+                    "Content-Type": 'application/json',
+                }
+            }
+            axios.get(apiUrl, config)
+                .then(response => {
+                    console.log(response.data);
+                    const decodedContent = Buffer.from(response.data.content, 'base64').toString('utf-8');
+                    importLoad(decodedContent);
+                    this.setLeftMenuToTree();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    }
 
     /**
      * not fully working yet, this should be a function to automatically import all JSON files from a directory
@@ -325,18 +333,24 @@ export class MainProgramClass extends React.Component {
         alert("Hello");
     }
 
+    // need to figure out how to open the pdf located in model-editor/public/UserManual.pdf
+    // openUserManual = () => {
+    //     window.open(manualUrl, '_blank');
+    // };
+
     async showGithubUserForm() {
         let modal = document.getElementById('Github-Modal');
+        console.log(modal);
         modal.style.display === 'none' ? modal.style.display = 'flex' : modal.style.display = 'none';
+    }
+
+    addTree = () => {
+
     }
 
     render() {
         let GUI =
             <><ContextMenu setLeftMenuToTree={this.setLeftMenuToTree} /><div className="Program">
-                <div className={this.semanticTableEnabled ? "SemanticDomain" : "hidden"}>
-                    <SemanticDomainEditor />
-                </div>
-
                 <div className="TopMenus">
 
                     <DropdownButton variant="Primary" id="File-Menu" title="File" size="lg">
@@ -361,6 +375,10 @@ export class MainProgramClass extends React.Component {
                         <div className="TopBar">
                             <label>Import</label>
                             <input type="file" id="File-Select-Import" onChange={this.importFile} />
+                        </div>
+
+                        <div className="TopBar">
+                            <button id="Import-Model" onClick={this.getFilesFromRepo}>Import Model From Model-Repository</button>
                         </div>
 
                         <Dropdown.Item>
@@ -405,11 +423,6 @@ export class MainProgramClass extends React.Component {
                         </Dropdown.Item>
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <button id="Import-Model" onClick={this.getFilesFromRepo}>Import Model</button>
-                            </div>
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                            <div className="TopBar">
                                 <button id="Grant-Visibility" onClick={() => alert("This will be the grant visibility button")}>Grant Visibility</button>
                             </div>
                         </Dropdown.Item>
@@ -421,12 +434,14 @@ export class MainProgramClass extends React.Component {
                     </DropdownButton>
                     <div className="TopBarIcon" id="Account" onClick={this.showGithubUserForm}>GitHub Account</div>
                 </div>
-
                 <div className="LowerPanel" id="LowerPanel">
                     <LeftMenu setMode={this.setMode} setLeftMenu={this.setLeftMenu} mainState={this.state} className="LeftMenus" />
                     <div className="Canvas" id="Canvas">
                         <Canvas setLeftMenu={this.setLeftMenu} setMode={this.setMode} mainState={this.state} />
                     </div>
+                </div>
+                <div className={this.semanticTableEnabled ? "SemanticDomain" : "hidden"}>
+                    <SemanticDomainEditor />
                 </div>
             </div></>;
         return GUI

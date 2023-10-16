@@ -1,13 +1,125 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+:root {
+    --top-menu-font-size: calc(0.6vh + 0.6vw);
+    --top-menu-icon-height: 4.7vh;
+}
 
- .App {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+.Program {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     height: 100vh;
-  }
+    width: 100vw;
+}
+
+.TopMenus {
+    display: flex;
+    height: 5%;
+    flex-direction: row;
+    background-color: #D3D3D3;
+    align-items: center;
+    justify-content: space-evenly;
+
+}
+
+.LowerPanel {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 95%;
+    width: 100%;
+}
+
+.SemanticDomain {
+    position: fixed;
+    width: 100%;
+    height: 95%;
+    top: 5%;
+    overflow: auto;
+    background: white;
+    z-index: 2;
+    /* Just to visualize the extent */
+}
+
+#Tree-Container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.close-popup, .close-modal {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    cursor: pointer;
+    color: red;
+    font-weight: bold;
+}
+
+/*-----stuff for top menu to attempt to simplify styling-------*/
+
+#File-Menu {
+    display: flex;
+    width: 5vw;
+    align-items: center;
+    justify-content: center;
+    height: var(--top-menu-icon-height);
+    background-color: #D3D3D3;
+    border: 1px solid black;
+    border-radius: 4px;
+    font-size: var(--top-menu-font-size);
+    z-index: 4;
+}
+
+.TopBar {
+    display: flex;
+    min-height: var(--top-menu-icon-height);
+    width: 9.75vw;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    flex-direction: column;
+    border-left: 0.125vw solid black;
+    border-right: 0.125vw solid black;
+    border-radius: 3px;
+}
+
+.SelectedGraph {
+    display: flex;
+    flex-direction: row;
+    background-color: #ffffff;
+    border: 2px solid #666666;
+    width: 7.5vw;
+    border-radius: 6px;
+    align-items: center;
+    justify-content: center;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: var(--top-menu-font-size);
+}
+
+.TopBarIcon {
+    width: 10vh;
+    height: var(--top-menu-icon-height);
+    border-radius: 4px;
+    text-align: center;
+    font-size: calc(1vh + 1vw);
+    border: 1px solid black;
+}
+
+.ContextMenu {
+    position: absolute;
+    background: #ffffff;
+    border: solid #444444;
+    border-radius: 5px;
+    z-index: 5;
+}
+
+/*------------------------------------------------------------*/
 
 /*-------------------modal styling-----------------*/
 
@@ -20,10 +132,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
     border: 2px solid black;
-    border-radius: 15%;
+    border-radius: 5px;
     background-color: #D3D3D3;
-    height: 40vh;
-    width: 50vw;
+    height: fit-content;
+    width: fit-content;
+    z-index: 2;
 }
 
 #Github-Modal-Dialog {
@@ -32,20 +145,20 @@
     margin: 15px;
 }
 
-.modal-content{
+.modal-content {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 }
 
-.modal-body{
+.modal-body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.form-control{
+.form-control {
     width: 100%;
 }
 
@@ -53,7 +166,7 @@
 
 /*------------file selection popup-----------------*/
 
-#popup{
+#popup {
     display: none;
     width: fit-content;
     height: fit-content;
@@ -65,63 +178,45 @@
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 20px;
-    text-align: center;;
+    text-align: center;
+    z-index: 3;
 }
 
-#popup button{
+#popup button {
     margin: 10px;
 }
 
 /*-------------------------------------------------*/
 
-.TopMenus {
-    display: flex;
-    height: 5vh;
-    border: 1px groove #666666;
-    flex-direction: row;
-	background-color:#D3D3D3;
-    align-items: flex-start;
-    justify-content: space-between;
-}
-
-#Repository-Dropdown, #Account {
+#Repository-Dropdown,
+#Account {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
-    height: 5vh;
+    height: var(--top-menu-icon-height);
     width: fit-content;
-    border: 1px solid  #666666;
+    border: 1px solid #666666;
     border-radius: 4px;
     align-items: center;
     justify-content: center;
-	background-color:#D3D3D3;
-	font-size: calc(1vh + 1vw);
+    background-color: #D3D3D3;
+    font-size: var(--top-menu-font-size);
 }
 
-#File-Menu{
-    display: flex;
-    width: 5vw;
-    align-items: center;
-    justify-content: center;
-    height: 5.1vh;
-	background-color:#D3D3D3;
-	border: 1px solid black;
-    border-radius: 4px;
-	font-size: calc(0.6vh + 0.6vw);
-}
-
-#IconSelector{
+#IconSelector {
     /*background: white;*/
     width: 100%;
     height: 100%;
-	font-size:calc(0.7vh + 0.7vw);
+    font-size: calc(0.7vh + 0.7vw);
     /*border-radius: 10px;*/
 }
 
-input,button, select{
+input,
+button,
+select {
     font-family: 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: Black;
@@ -129,22 +224,22 @@ input,button, select{
     display: flex;
 }
 
-.IconSelector .dropdown-menu.show{
+.IconSelector .dropdown-menu.show {
     background-color: white;
     /***border: 2px groove #666666;***/
     overflow-y: auto;
     max-height: 35vh;
 }
 
-#ColourSelector{
+#ColourSelector {
     /*background: white;*/
     width: 100%;
     height: 100%;
-	font-size:calc(0.7vh + 0.7vw);
+    font-size: calc(0.7vh + 0.7vw);
     /*border-radius: 10px;*/
 }
 
-.ColourSelector div.dropdown-menu.show{
+.ColourSelector div.dropdown-menu.show {
     background-color: white;
     border: 2px groove #666666;
     overflow-y: auto;
@@ -152,66 +247,50 @@ input,button, select{
     width: 200px;
 }
 
-.DropdownItem{
+.DropdownItem {
     display: flex;
     flex-direction: row;
     justify-content: right;
     align-items: center;
 }
 
-.buttonOfSomeForm{
+.buttonOfSomeForm {
     display: flex;
     flex-direction: row;
     justify-content: right;
     align-items: center;
 }
 
-.dropdownLabel{
+.dropdownLabel {
     width: 15vw;
-	font-size:calc(0.7vh + 0.7vw);
+    font-size: calc(0.7vh + 0.7vw);
 }
 
-.checkBoxContainer{
+.checkBoxContainer {
     width: 5vw;
 }
 
-.CardinalityArea{
+.CardinalityArea {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-.LeftCheckboxLabel{
+.LeftCheckboxLabel {
     width: 10vw;
 }
 
-.LeftCheckbox{
+.LeftCheckbox {
     width: 2vw;
 }
 
-.LowerPanel {
-    display: flex;
-    flex-wrap: nowrap;
-    height: 95vh;
-}
 
-.TopBar {
-    display: flex;
-    /*border: 2px groove #666666;*/
-    min-height: 4.65vh;
-    width: 9.75vw;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    flex-direction: column;
-    border-left:0.125vw solid black;
-    border-right:0.125vw solid black;
-    border-radius: 3px;
- }
-
-
-#downloader, #json-downloader,#File-Select-Import, #File-Select, #file{
+#downloader,
+#json-downloader,
+#File-Select-Import,
+#File-Select,
+#file {
     color: black;
     text-decoration: none;
     border: none;
@@ -223,105 +302,26 @@ input,button, select{
     white-space: normal;
 }
 
-.hidden{
+.hidden {
     display: none;
     width: 100%;
     height: 100%;
     z-index: 100;
 }
 
-#downloader:hover, #json-downloader:hover, #File-Select:hover{
+#downloader:hover,
+#json-downloader:hover,
+#File-Select:hover {
     cursor: pointer;
 }
 
-.DropdownItem{
+.DropdownItem {
     background: white;
 }
 
 
-.TopBarLabel {
-    display: flex;
-    flex-direction: row;
-    /*border: 2px groove #666666;*/
-    height: 5vh;
-    width: 10vw;
-    align-items: center;
-    justify-content: center;
-}
 
-.TopBarIdentifier{
-    display: block;
-    flex-direction: row;
-    /*border: 2px groove #666666;*/
-    height: 5vh;
-    width: 10vw;
-    line-height: 5vh;
-    text-align: end;
-    border-right: 0;
-}
-
-.TopBarSelector{
-    display: flex;
-    flex-direction: row;
-    /*border: 2px groove #666666;*/
-    height: 4.55vh;
-    width: 5vw;
-    align-items: center;
-    justify-content: center;
-}
-
-.TopBarSearch {
-    display: flex;
-    flex-direction: row;
-    border: 1px solid #666666;
-    /*height: 4.7vh;*/
-    width: 15vw;
-    border-radius: 4px;
-    align-items: center;
-    justify-content: center;
-    color: Black;
-    text-align: center;
-    font-size: calc(0.6vh + 0.6vw);
-    
-}
-
-.TopBarIcon {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    height: 4.7vh;
-    width: 10vh;
-    border: 1px solid  #666666;
-    border-radius: 4px;
-    align-items: center;
-    justify-content: center;
-	background-color:#D3D3D3;
-	font-size: calc(1vh + 1vw);
-
-}
-
-.TopBarSpace {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    height: 5vh;
-    width: 5vh;
-    align-items: center;
-    justify-content: center;
-	background-color:#D3D3D3;
-	font-size: calc(1vh + 1vw);
-
-}
-
-.ContextMenu{
-    position: absolute;
-    background:#ffffff;
-    border: solid #444444;
-    border-radius: 5px;
-
-}
-
-.CMSelected{
+.CMSelected {
     padding: 8px 10px;
     font-size: 15px;
     color: rgb(0, 0, 0);
@@ -330,7 +330,7 @@ input,button, select{
     border-radius: 0px;
 }
 
-.CMitem{
+.CMitem {
     padding: 8px 10px;
     font-size: 15px;
     color: rgb(0, 0, 0);
@@ -338,7 +338,7 @@ input,button, select{
     border-radius: 0px;
 }
 
-.CMText{
+.CMText {
     border: 1px solid #666666;
     /*height: 4.7vh;*/
     width: 10vw;
@@ -348,54 +348,39 @@ input,button, select{
     justify-content: center;
     color: Black;
     text-align: center;
-    font-size: calc(0.6vh + 0.6vw);
+    font-size: var(--top-menu-font-size);
 }
 
-.LeftMenus{
+.LeftMenus {
     display: flex;
     height: 90vh;
+    min-width: 15vw;
     width: 15vw;
     /***border: 2px groove #666666;***/
     flex-direction: column;
     border-top: none;
     background: none;
-    z-index: 5;
-    resize:horizontal;
+    resize: horizontal;
     overflow: auto;
-	background-color:#D3D3D3;
-}
-
-
-.SelectedGraph{
-    display: flex;
-    flex-direction: row;
-    background-color: #ffffff;
-    border: 2px solid #666666;
-    width: 7.5vw;
-    border-radius: 6px;
-    align-items: center;
-    justify-content: center;
-    color: rgb(0, 0, 0);
-    text-align: center;
-    font-size: calc(0.6vh + 0.6vw);
+    background-color: #D3D3D3;
 }
 
 .Toolbar {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
-    /***border: 2px groove #666666;***/
-    height: 4.7vh;
-    width:15vw;
+    height: var(--top-menu-icon-height);
+    width: 15vw;
 }
 
-.ToolbarItem{
+.ToolbarItem {
     display: flex;
     width: calc(15vw/4);
     justify-content: center;
 }
 
-.VertexMenu, .ArrowMenu{
+.VertexMenu,
+.ArrowMenu {
     max-width: 15vw;
 }
 
@@ -406,10 +391,11 @@ input,button, select{
     /***border: 2px groove #666666;***/
     height: calc(93vh/3);
     justify-content: center;
-    width:14.7vw;
+    width: 14.7vw;
 }
 
-.LeftLabel, .LeftMenuButton {
+.LeftLabel,
+.LeftMenuButton {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
@@ -420,7 +406,7 @@ input,button, select{
     justify-content: center;
     /*background-color: white;*/
     width: 15vw;
-	font-size:calc(0.7vh + 0.7vw);
+    font-size: calc(0.7vh + 0.7vw);
 }
 
 .LeftBody {
@@ -436,7 +422,7 @@ input,button, select{
     margin-top: 0;
 }
 
-.LeftBodyMenu{
+.LeftBodyMenu {
     align-items: flex-start;
     border-top: solid 0.3vh rgba(185, 184, 184, 0.596);
     display: flex;
@@ -446,7 +432,7 @@ input,button, select{
     width: 100%;
 }
 
-.OptionTitle h4{
+.OptionTitle h4 {
     padding-bottom: 2vh;
     margin: 0;
 }
@@ -455,7 +441,7 @@ input,button, select{
     width: 100%;
 }
 
-.LeftBody ul{
+.LeftBody ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -464,7 +450,7 @@ input,button, select{
     align-items: flex-end;
 }
 
-.LeftBody ul li{
+.LeftBody ul li {
     width: 100%;
     display: inline-flex;
     margin-bottom: 1vh;
@@ -487,7 +473,7 @@ input,button, select{
     cursor: pointer;
 }
 
-.LeftBodyMenu .Selector :hover{
+.LeftBodyMenu .Selector :hover {
     cursor: pointer;
 }
 
@@ -508,18 +494,18 @@ input,button, select{
     justify-content: center;
     width: 14.6vw;
     /*background-color: #E0FFFF;*/
-	background-color:white;
-	font-size:calc(0.7vh + 0.7vw);
+    background-color: white;
+    font-size: calc(0.7vh + 0.7vw);
 }
 
-.LeftHeader{
+.LeftHeader {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
     /*border: 2px groove #666666;*/
     justify-content: center;
-    width:15vw;
-	font-size:calc(0.7vh + 0.7vw);
+    width: 15vw;
+    font-size: calc(0.7vh + 0.7vw);
     /*background-color: #DDEEFF;*/
 }
 
@@ -529,12 +515,12 @@ input,button, select{
     border-bottom: 2px groove #666666;*/
     align-items: center;
     justify-content: center;
-    resize:none;
+    resize: none;
     height: 10vh;
     width: 14.6vw;
     /*background-color: #E0FFFF;*/
-	background-color:white;
-	font-size:calc(0.7vh + 0.7vw);
+    background-color: white;
+    font-size: calc(0.7vh + 0.7vw);
 }
 
 .jstree-node {
@@ -542,17 +528,16 @@ input,button, select{
     text-align: left;
 }
 
-.jstree li > a > .jstree-icon {
+.jstree li>a>.jstree-icon {
     display: none;
 }
 
-.CardinalityBox{
+.CardinalityBox {
     width: 2.5vw;
 }
 
 .Canvas {
-    height: 94vh;
-    width:85vw;
+    width: 85vw;
     overflow-x: scroll;
     overflow-y: scroll;
     border: 1px solid black;
@@ -572,27 +557,20 @@ img {
     display: block;
     width: 40%;
     height: auto;
-    image-rendering: -moz-crisp-edges; /* Firefox */
-    image-rendering: -o-crisp-edges; /* Opera */
+    image-rendering: -moz-crisp-edges;
+    /* Firefox */
+    image-rendering: -o-crisp-edges;
+    /* Opera */
     image-rendering: crisp-edges;
-    -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
-}
-
-.SemanticDomain {
-    position: fixed;
-    top: 5.7vh;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    overflow: auto;
-    background: white; /* Just to visualize the extent */
+    -ms-interpolation-mode: nearest-neighbor;
+    /* IE (non-standard property) */
 }
 
 .hidden {
     display: none;
 }
 
-.vertexPath{
+.vertexPath {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
@@ -603,5 +581,5 @@ img {
     justify-content: center;
     /*background-color: white;*/
     width: 35vw;
-	font-size:calc(0.7vh + 0.7vw);
+    font-size: calc(0.7vh + 0.7vw);
 }

@@ -29,8 +29,14 @@ export function GithubModal() {
     window.alert(`New Github user created: ${JSON.stringify(githubUser)}`);
   };
 
+  const closeModal = () => {
+    const container = document.getElementById("Github-Modal");
+    container.style.display = "none";
+  }
+
   return (
     <div className="modal" id="Github-Modal" style={{ display: 'none' }}>
+      <span className="close-modal" onClick={closeModal}>X</span>
       <Modal.Dialog id="Github-Modal-Dialog">
         <Modal.Header id="Github-Modal-Header">
           <Modal.Title style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>

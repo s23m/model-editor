@@ -6,7 +6,7 @@ import React from 'react';
 import * as canvasDraw from "./CanvasDraw";
 import { LineColourToStringName, } from "../DataStructures/ArrowProperties"
 import { ContainmentTree, } from "./ContainmentTree";
-import { serverURL } from ".//MainView"
+import { serverURL} from ".//MainView";
 import { SketchPicker } from 'react-color';
 
 // Icons
@@ -129,6 +129,7 @@ export class LeftMenu extends React.Component {
         if (e.keyCode === 46) {
             // Do nothing if no object is selected
             if (this.state.selectedObject === null) {
+                console.log("cannot delete, no object selected");
                 return;
             }
 
@@ -647,28 +648,24 @@ export class LeftMenu extends React.Component {
                                     onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove from Model</button>
                                 <label className="LeftSpacer">&nbsp;</label>
                                 {/*"Remove from Diagram" not fully implemented*/}
-                                <button
+                                {/* <button
                                     className="LeftMenuButton"
                                     onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove from Diagram</button>
-                                <label className="LeftSpacer">&nbsp;</label>
+                                <label className="LeftSpacer">&nbsp;</label> */}
                                 <button
                                     className="LeftMenuButton"
                                     onClick={() => this.deselectElement()}>Save</button>
                             </div>
                         </div>
-                        {/* NOT NEEDED
-                        <label className="LeftLabel">Destination Is Aggregation?</label>
-                        <input type="checkbox" id="DestIsAggregation" className="LeftCheckbox" checked={this.state.selectedObject.getAggregation(1)} onChange={() => this.setAggregation(1)} />
-                        */}
                     </div>
                 )
             } else {
-                leftMenuContents = <form id="ArrowMenu">
+                leftMenuContents = <div id="ArrowMenu">
                     <div className="LeftHeader">Selected Edge</div>
                     <button className="LeftMenuButton" onClick={() => this.deselectElement()}>Deselect</button>
                     <label className="LeftSpacer">&nbsp;</label>
                     <button className="LeftMenuButton" onClick={() => { deleteElement(this.state.selectedObject); this.deselectElement() }}>Remove</button>
-                </form>
+                </div>
             }
         }
 
