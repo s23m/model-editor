@@ -125,22 +125,24 @@ export class LeftMenu extends React.Component {
 
     //For quickKeys
     onKeyPressed(e) {
+        // Delete key pressed
         if (e.keyCode === 46) {
-            if(this.state.selectedObject){
-                if (this.state.selectedObject.typeName === "Vertex") {
-                    vertexDeleteElement(this.state.selectedObject);
-                }
-                else {
-                    deleteElement(this.state.selectedObject);
-                }
-            } else {
-                window.alert("cannot delete, no object selected");
-            }            
+            // Do nothing if no object is selected
+            if (this.state.selectedObject === null) {
+                console.log("cannot delete, no object selected");
+                return;
+            }
+
+            if (this.state.selectedObject.typeName === "Vertex") {
+                vertexDeleteElement(this.state.selectedObject);
+            }
+            else {
+                deleteElement(this.state.selectedObject);
+            }
+            
             this.setState({ menu: "TreeView" });
             canvasDraw.drawAll();
         }
-
-
     }
 
     static getDerivedStateFromProps(props, state) {

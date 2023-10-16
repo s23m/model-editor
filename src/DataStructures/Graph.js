@@ -453,9 +453,6 @@ export class Graph {
     ArrowUUIDSource(object){
         object = this.getVertexNode(object);
         let returnArray = [];
-
-        console.log(object.vertex.semanticIdentity.UUID)
-
         let currentObjects = getCurrentObjects()
 
         console.log(currentObjects)
@@ -472,9 +469,6 @@ export class Graph {
     ArrowUUIDDest(object){
         object = this.getVertexNode(object);
         let returnArray = [];
-
-        console.log(object.vertex.semanticIdentity.UUID)
-
         let currentObjects = getCurrentObjects()
 
         console.log(currentObjects)
@@ -495,7 +489,10 @@ export class Graph {
             let newobject = this.getVertexNode(object);
             let isRemoved = this.rootVertices.has(newobject);
 
-
+            if (newobject === null) {
+                console.error("Attempted to remove non-existent vertex from Graph");
+                return false;
+            }
 
             //Remove from the root
             this.rootVertices.delete(newobject);
