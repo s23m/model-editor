@@ -213,6 +213,7 @@ export class MainProgramClass extends React.Component {
                     this.showRepoFileSelector(response.data);
                 })
                 .catch(error => {
+                    window.alert(error.response.data.message);
                     console.log(error);
                 });
         }
@@ -344,8 +345,32 @@ export class MainProgramClass extends React.Component {
         modal.style.display === 'none' ? modal.style.display = 'flex' : modal.style.display = 'none';
     }
 
-    addTree = () => {
+    goToModelRepo = async () => {
+        const githubUser = JSON.parse(localStorage.getItem('GithubUser'));
+        if(!githubUser){ // localstorage doesnt contain githubuser
+            window.alert('No GitHub user found in localStorage.\n\nTry adding one with the "Github Account" button');
+        } else { // localstorage does contain githubuser
+            const owner = githubUser.username;
+            const repo = 'Model-Repository';
+            const accessToken = githubUser.accessToken;
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}`;
 
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    Accept: 'application/vnd.github+json',
+                    "Content-Type": 'application/json',
+                }
+            }
+            axios.get(apiUrl, config)
+            .then(response => {
+                window.open(`https://github.com/${githubUser.username}/${repo}`);
+            })
+            .catch(error => {
+                window.alert(`${error.message}\n\nThis probably means you haven't created a repository yet.`);
+                console.log(error.message);
+            });
+        }
     }
 
     render() {
@@ -413,12 +438,17 @@ export class MainProgramClass extends React.Component {
                     <DropdownButton variant="Primary" id="Repository-Dropdown" title="Repository" size="lg">
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <button id="Test-User-Call" onClick={fetchUserData}>Test Github User Call</button>
+                                <button id="Test-User-Call" onClick={fetchUserData}>Show User Details</button>
                             </div>
                         </Dropdown.Item>
                         <Dropdown.Item>
                             <div className="TopBar">
-                                <button id="Test-Repo-Creation" onClick={createUserRepo}>Test Create Model-Repo</button>
+                                <button id="Test-Repo-Creation" onClick={createUserRepo}>Create Model-Repo</button>
+                            </div>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                            <div className="TopBar">
+                                <button id="Test-GoTo-Repo" onClick={this.goToModelRepo}>Go To Model-Repo</button>
                             </div>
                         </Dropdown.Item>
                         <Dropdown.Item>
